@@ -40,6 +40,8 @@ for (i in 1:length(xx)) {
 
 
 
-E = function(y) { integrate(eta.ii, lower=0, upper=10, y=y, xi=xi, yi=yi) }
+E = function(y, xi, yi) { integrate(eta.ii, lower=0, upper=10, y=y, xi=xi, yi=yi) }
 
 integrate(E, lower=0, upper=10, xi=5, yi=5)
+
+
