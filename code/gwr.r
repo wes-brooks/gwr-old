@@ -1,8 +1,12 @@
 library(spgwr)
 data(columbus)
 
+#Import the plotting functions:
+setwd("~/git/gwr/code")
+source("matplot.r")
+source("legend.r")
+
 pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)
-heads = c('pindpov', 'logitindpov', 'pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'pind', 'phisp', 'metro', 'pfampov', 'logitfampov')
 years = c('60', '70', '80', '90', '00', '06')
 column.map = list(pindpov='proportion individuals in poverty', 
     logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', 
@@ -12,7 +16,7 @@ column.map = list(pindpov='proportion individuals in poverty',
 
 pov2 = list()
 
-for (column.name in heads) {
+for (column.name in names(column.map)) {
     col = vector()
 
     for (year in years) {
@@ -29,7 +33,7 @@ for (column.name in heads) {
 
 #Find the columns we haven't yet matched:
 "%w/o%" <- function(x, y) x[!x %in% y]
-missed = names(pov) %w/o% outer(heads, years, FUN=function(x, y) {paste(x, y, sep="")})
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})
 
 for (column.name in missed) {
     col = rep(pov[,column.name], length(years))
@@ -73,6 +77,18 @@ W = function(x.i, xy.mat, bw) {
 }
 
 
+n=20
+xx = as.vector(quantile(df$x, 1:n/(n+1)))
+yy = as.vector(quantile(df$y, 1:n/(n+1)))
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))
+
+n = dim(pov)[1]
+D1 = matrix(rep(pov$x,n), n,n)
+D2 = matrix(rep(pov$y,n), n,n)
+
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)
+
+
 predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
 f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))
 
@@ -81,19 +97,21 @@ for (col in predictors) {
 }
 
 df = pov2[pov2$year==2006,]
+w.lasso.geo = list()
+coefs = list()
+ss = seq(0, 1, length.out=100)
 
 for(i in 1:dim(df)[1]) {
-    w = W(df[i, c('x', 'y')], df[,c('x','y')], bw=1)
+    w = bisquare(D[,i], bw=3)
 
     model = lm(f, data=df, weights=w)
     
     w.eig <- eigen(diag(w))
     w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)
-    w.lasso[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df$logitindpov))
-
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df$logitindpov))
+    
     for (col in predictors) {
-        coef = get(col)
-        assign(col, c(coef, model$coef[[col]]))
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])
     }
     
     print(i)
@@ -101,4 +119,32 @@ for(i in 1:dim(df)[1]) {
 
 bw = gwr.sel(income~1, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
 gwr.model1 = gwr(income~1, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
+
+gm.pag = gam(logitindpov ~ s(pag, k=10, by=as.matrix(ll)), data=df)
+
+
+#Set the directory to store plots
+plot_dir = "figures/"
+
+#plot the model outputs:
+for(pred in predictors) {    
+    #Isolate the genus to plot:
+    coef.surface = as.data.frame(cbind(locs[,c("x", "y")], get(pred)))
+    names(coef.surface)[3] = pred
+    
+    #contour plot of the data
+    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))
+    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))
+    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)
+    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)
+    
+    #Put the coefficients into a lat-long matrix
+    for(row in 1:dim(coef.surface)[1]) {
+        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = ifelse(!is.na(coef.surface[row,pred]), coef.surface[row,pred], NA)
+    }
+
+    #par(bty='n')
+    matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)
+
+}
 
