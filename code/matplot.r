@@ -1,4 +1,4 @@
-matplot <- function (x, cs1 = c(0, 1), cs2 = c(0, 1), cs3 = c(0, 1), extremes = NA, 
+gwr.matplot <- function (x, cs1 = c(0, 1), cs2 = c(0, 1), cs3 = c(0, 1), extremes = NA, 
     cellcolors = NA, show.legend = FALSE, nslices = 10, xlab = "Column", 
     ylab = "Row", do.hex = FALSE, axes = TRUE, show.values = FALSE, 
     vcol = NA, vcex = 1, border = "black", na.color = NA, xrange = NULL, 

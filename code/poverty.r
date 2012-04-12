@@ -1,5 +1,4 @@
 library(spgwr)
-data(columbus)
 
 #Import the plotting functions:
 setwd("~/git/gwr/code")
@@ -44,38 +43,13 @@ for (year in years) {
     pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))
 }
 
-#Convert pov2 from a list to a data frame.
+#Convert pov2 from a list to a data frame:
 pov2 = data.frame(pov2)
 
 #Correct the Y2K bug
 pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)
 pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
 
-#Define the bisquare weight function:
-bisquare = function(x, z, bw) {
-    ifelse( r(x=x, z=c(z[1], z[2])) < bw, (1 - (r(x=x, z=c(z[1],z[2]))/ bw)**2)**2, 0)
-}
-
-bisquare = function(R, bw) {
-    ifelse( R < bw, (1 - (R/bw)**2)**2, 0)
-}
-
-#Define the distance function
-r = function(x, z) { 
-    sqrt((x[1]-z[1])**2 + (x[2]-z[2])**2)
-}
-
-#Fix an x.i and get the distance to all other x's:
-R = function(x.i, xy.mat) {
-    R = sapply(1:dim(xy.mat)[1], FUN=function(i) {r(x.i, xy.mat[i,])} )
-    return(R)
-}
-
-W = function(x.i, xy.mat, bw) {
-    distance = R(x.i, xy.mat)
-    W = bisquare(distance, bw)
-    return(W)
-}
 
 #Define a grid of locations where we'll fit a GWR model:
 n=20
@@ -120,10 +94,9 @@ for(i in 1:dim(df)[1]) {
     print(i)
 }
 
-
 #Use the methods of spgwr to select a bandwidth and fit a GWR model for poverty:
-bw = gwr.sel(income~1, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
-gwr.model1 = gwr(income~1, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
+bw = gwr.sel(housing~crime+income, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
+gwr.pov = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
 
 #Make a GAM model for poverty:
 gm.pag = gam(logitindpov ~ s(pag, k=10, by=as.matrix(ll)), data=df)
@@ -132,24 +105,4 @@ gm.pag = gam(logitindpov ~ s(pag, k=10, by=as.matrix(ll)), data=df)
 #Set the directory to store plots
 plot_dir = "figures/"
 
-#plot the model outputs:
-for(pred in predictors) {    
-    #Isolate the variable to plot:
-    coef.surface = as.data.frame(cbind(locs[,c("x", "y")], get(pred)))
-    names(coef.surface)[3] = pred
-    
-    #Heatmap of the data
-    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))
-    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))
-    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)
-    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)
-    
-    #Put the coefficients into a lat-long matrix
-    for(row in 1:dim(coef.surface)[1]) {
-        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = ifelse(!is.na(coef.surface[row,pred]), coef.surface[row,pred], NA)
-    }
-
-    #par(bty='n')
-    matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)
-}
 

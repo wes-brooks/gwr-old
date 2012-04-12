@@ -1,0 +1,991 @@
+S.p = exp(-lambda.p * 5**alpha.p)
+S.p-2*se.S.p
+S.p+2*se.S.p
+S.s = exp(-lambda.s * 5**alpha.s)#
+g.s = grad.surv(5, alpha.s, lambda.s)#
+se.S.s = sqrt(t(g.s) %*% var.s %*% g.s)#
+#S.p=0.577, se.S.p=0.029 => 95% CI = (0.519, 0.634)
+S.s
+se.S.s
+S.s-2*se.S.s
+S.s+2*se.S.s
+library(spgwr)
+?gwr.sel
+setwd("~/git/gwr/code")
+dir()
+source("matplot.r")
+setwd("..")
+library(spgwr)#
+data(columbus)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("matplot.r")#
+source("legend.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame.#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
+pov2
+str(pov2)
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]
+str(df)
+bw = gwr.sel(income~1, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
+str(columbus)
+xy.mT
+xy.mAT
+xy.mat
+source("code/columbus.r")
+source("columbus.r")
+source("columbus.r")
+bw
+source("columbus.r")
+x
+y
+xx
+locs
+columbus
+bw = gwr.sel(income~1, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
+x = columbus$x
+y = columbus$y
+bw = gwr.sel(income~1, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
+b
+bw
+#
+gwr.model1 = gwr(housing~1, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
+gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
+gwr.model1
+f
+#Use the lasso for GWR models of income with 2006 data:#
+df = columbus#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=bw)#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    #w.eig <- eigen(diag(w))#
+    #w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    #w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    print(i)#
+}
+bisquare
+source("utils.r")
+bisquare = function(R, bw) {#
+    ifelse( R < bw, (1 - (R/bw)**2)**2, 0)#
+}
+#Use the lasso for GWR models of income with 2006 data:#
+df = columbus#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=bw)#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    #w.eig <- eigen(diag(w))#
+    #w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    #w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    print(i)#
+}
+coefs
+summary(coefs)
+summary(coefs[["crime"]])
+gwr.model1
+summary(coefs[["income"]])
+locs
+gwr.heatmap(gwr.model1, columbus, 'crime', locs)
+source("utils.r")
+gwr.heatmap <- function(model, variable, data, locations) {#
+    #plot the model outputs:#
+    for(pred in predictors) {    #
+        #Isolate the variable to plot:#
+        coef.surface = as.data.frame(cbind(locations[,c("x", "y")], data[[variable]]))#
+        names(coef.surface)[3] = pred#
+        #
+        #Heatmap of the data#
+        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)#
+        #
+        #Put the coefficients into a lat-long matrix#
+        for(row in 1:dim(coef.surface)[1]) {#
+            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+        }#
+    #
+        #par(bty='n')#
+        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+    }#
+}
+gwr.heatmap(gwr.model1, columbus, 'crime', locs)
+gwr.heatmap(gwr.model1, 'crime', columbus, locs)
+locs[,c('x','y')]
+locs
+locations
+location
+location = columbus[,c('x','y')]
+gwr.heatmap(gwr.model1, 'crime', columbus, location)
+library(plotrix)
+gwr.heatmap(gwr.model1, 'crime', columbus, location)
+str(gwr.model1)
+gwr.model1$coords
+gwr.model1@data$coords
+gwr.model1[['data']]$coords
+gwr.model1[['data']]
+gwr.model1$date
+gwr.model1$data
+gwr.model1$SDF
+gwr.model1$SDF[['data']]
+gwr.model1$SDF@data
+gwr.model1$SDF@data[['coords']]
+gwr.model1$SDF@data$coords
+gwr.model1$SDF@coords
+predict(gwr.model1, locs)
+locs
+predict(gwr.model1, locs)
+?gwr
+u?update
+?update
+update(gwr.model1, coords=locs)
+gwr.model2 = gwr(housing~crime+income, data=columbus, coords=locs, bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
+gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE, fit.points=locs)
+x
+y
+gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=FALSE, fit.points=locs)
+gwr.model1
+source("utils.r")
+update(gwr.model1, fit.points=locs)
+str(gwr.model1$SDF
+)
+gwr.heatmap <- function(model, variable, data) {#
+    #plot the model outputs:#
+    for(pred in predictors) {    #
+        #Isolate the variable to plot:#
+        locations = model$SDF@coords#
+        coef.surface = as.data.frame(cbind(locations, data[[variable]]))#
+        names(coef.surface)[3] = variable#
+        #
+        #Heatmap of the data#
+        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)#
+#
+         #
+        #
+        #Put the coefficients into a lat-long matrix#
+        for(row in 1:dim(coef.surface)[1]) {#
+            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+        }#
+    #
+        #par(bty='n')#
+        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+    }#
+}
+str(gwr.model1)
+?SDF
+gwr.heatmap <- function(model, variable, data) {#
+    #plot the model outputs:#
+    for(pred in predictors) {    #
+        #Isolate the variable to plot:#
+        locations = model$SDF@coords#
+        coef.surface = as.data.frame(cbind(locations, model$SDF@[['data']][[variable]]))#
+        names(coef.surface)[3] = variable#
+        #
+        #Heatmap of the data#
+        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)#
+#
+         #
+        #
+        #Put the coefficients into a lat-long matrix#
+        for(row in 1:dim(coef.surface)[1]) {#
+            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+        }#
+    #
+        #par(bty='n')#
+        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+    }#
+}
+gwr.heatmap <- function(model, variable, data) {#
+    #plot the model outputs:#
+    for(pred in predictors) {    #
+        #Isolate the variable to plot:#
+        locations = model$SDF@coords#
+        coef.surface = as.data.frame(cbind(locations, model$SDF@data[[variable]]))#
+        names(coef.surface)[3] = variable#
+        #
+        #Heatmap of the data#
+        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)#
+#
+         #
+        #
+        #Put the coefficients into a lat-long matrix#
+        for(row in 1:dim(coef.surface)[1]) {#
+            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+        }#
+    #
+        #par(bty='n')#
+        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+    }#
+}
+gwr.heatmap(gwr.model1, 'crime', 2)
+gwr.heatmap(gwr.model1, 'income', 2)
+summary(gwr.model1)
+gwr.model1
+locations = model$SDF@coords
+locations = gwr.model1$SDF@coords
+locations
+variable='crime'
+coef.surface = as.data.frame(cbind(locations, gwr.model1$SDF@data[[variable]]))
+str(coef.surface)
+names(coef.surface)[3] = variable
+str(coef.surface)
+mat = matrix(NA, nrow=length(locations[['y']]), ncol=length(locations[['y']]))
+locations
+locations[['y']]
+locations[['x']]
+locations$x
+locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))
+mat
+rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)
+mat
+?matplot
+?image
+?rect
+axis(1, at=1:20, labels=rownames(mat))
+columbus
+?columbus
+bw = gwr.sel(housing~crime+income, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
+bw
+bw = gwr.sel(housing~crime+income, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
+gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
+bw = gwr.sel(housing~crime+income, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
+gwr.col = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
+gwr.col
+gwr.columbus = gwr.col
+gwr.columbus
+gwr.heatmap <- function(model, variable) {#
+    #plot the model outputs:#
+    for(pred in predictors) {    #
+        #Isolate the variable to plot:#
+        locations = model$SDF@coords#
+        coef.surface = as.data.frame(cbind(locations, model$SDF@data[[variable]]))#
+        names(coef.surface)[3] = variable#
+        #
+        #Heatmap of the data#
+        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
+        #
+        #Put the coefficients into a lat-long matrix#
+        for(row in 1:dim(coef.surface)[1]) {#
+            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+        }#
+    #
+        #par(bty='n')#
+        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+    }#
+}
+gwr.heatmap(gwr.columbus, 'crime')
+bw = gwr.sel(housing~crime+income, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
+gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, fit.points=locs)
+gwr.heatmap(gwr.model1, 'crime')
+gwr.model1
+gwr.heatmap(gwr.model1, 'income')
+gwr.heatmap(gwr.model1, '(Intercept)')
+bw=2
+gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, fit.points=locs)
+gwr.heatmap(gwr.model1, '(Intercept)')
+gwr.heatmap(gwr.model1, 'crime')
+gwr.heatmap(gwr.model1, 'income')
+bw=7
+gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, fit.points=locs)
+gwr.heatmap(gwr.model1, '(Intercept)')
+bw=8
+gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, fit.points=locs)
+gwr.heatmap(gwr.model1, '(Intercept)')
+gwr.heatmap(gwr.model1, 'crime')
+bw = gwr.sel(housing~1, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
+gwr.columbus.1 = gwr(housing~1, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
+gwr.columbus.1
+N=20
+0:N - N/2
+x = rep(0:N - N/2, each=N+1)#
+y = rep(0:N - N/2, times=N+1)#
+#
+simulated = cbind(x,y)
+simulated
+#Simulate data for testing a GWR model:#
+#
+#Set up the location grid:#
+N = 20#
+x = rep(0:N - N/2, each=N+1)#
+y = rep(0:N - N/2, times=N+1)#
+#
+#Simulate the predictors independently of location:#
+mu.A = 0#
+sig.A = 1#
+A = rnorm((N+1)**2, mu.A, sig.A)#
+#
+mu.B = 1#
+sig.B = 2#
+B = rnorm((N+1)**2, mu.B, sig.B)#
+#
+mu.C = -1#
+sig.C = 3#
+C = rnorm((N+1)**2, mu.C, sig.C)#
+#
+#Simulate the output variable:#
+sig.err = 0.5#
+out = y + A*x + B + rnorm((N+1)**2, 0, sig.err)#
+#
+simulated = cbind(x, y, A, B, C, out)#
+#
+#Use the methods of spgwr to select a bandwidth and fit a GWR model for poverty:#
+bw = gwr.sel(out~A+B+C, data=simulated, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
+gwr.sim = gwr(out~A+B+C, data=simulated, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare)
+#Simulate data for testing a GWR model:#
+#
+#Set up the location grid:#
+N = 20#
+x = rep(0:N - N/2, each=N+1)#
+y = rep(0:N - N/2, times=N+1)#
+#
+#Simulate the predictors independently of location:#
+mu.A = 0#
+sig.A = 1#
+A = rnorm((N+1)**2, mu.A, sig.A)#
+#
+mu.B = 1#
+sig.B = 2#
+B = rnorm((N+1)**2, mu.B, sig.B)#
+#
+mu.C = -1#
+sig.C = 3#
+C = rnorm((N+1)**2, mu.C, sig.C)#
+#
+#Simulate the output variable:#
+sig.err = 0.5#
+out = y + A*x + B + rnorm((N+1)**2, 0, sig.err)#
+#
+simulated = data.frame(x, y, A, B, C, out)#
+#
+#Use the methods of spgwr to select a bandwidth and fit a GWR model for poverty:#
+bw = gwr.sel(out~A+B+C, data=simulated, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
+gwr.sim = gwr(out~A+B+C, data=simulated, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare)
+gwr.sim
+gwr.heatmap(gwr.sim, 'A')
+gwr.heatmap(gwr.sim, 'B')
+gwr.heatmap(gwr.sim, 'C')
+gwr.heatmap(gwr.sim, '(Intercept)')
+#Import the plotting functions:#
+library(plotrix)#
+setwd("~/git/gwr/code")#
+source("matplot.r")#
+source("legend.r")#
+#
+#Define the bisquare weight function:#
+bisquare = function(x, z, bw) {#
+    ifelse( r(x=x, z=c(z[1], z[2])) < bw, (1 - (r(x=x, z=c(z[1],z[2]))/ bw)**2)**2, 0)#
+}#
+#
+bisquare = function(R, bw) {#
+    ifelse( R < bw, (1 - (R/bw)**2)**2, 0)#
+}#
+#
+#Define the distance function#
+r = function(x, z) { #
+    sqrt((x[1]-z[1])**2 + (x[2]-z[2])**2)#
+}#
+#
+#Fix an x.i and get the distance to all other x's:#
+R = function(x.i, xy.mat) {#
+    R = sapply(1:dim(xy.mat)[1], FUN=function(i) {r(x.i, xy.mat[i,])} )#
+    return(R)#
+}#
+#
+W = function(x.i, xy.mat, bw) {#
+    distance = R(x.i, xy.mat)#
+    W = bisquare(distance, bw)#
+    return(W)#
+}#
+#
+gwr.heatmap <- function(model, variable) {#
+    #plot the model outputs:#
+    for(pred in predictors) {    #
+        #Isolate the variable to plot:#
+        locations = model$SDF@coords#
+        coef.surface = as.data.frame(cbind(locations, model$SDF@data[[variable]]))#
+        names(coef.surface)[3] = variable#
+        #
+        #Heatmap of the data#
+        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
+        #
+        #Put the coefficients into a lat-long matrix#
+        for(row in 1:dim(coef.surface)[1]) {#
+            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+        }#
+    #
+        #par(bty='n')#
+        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+    }#
+}
+source("utils.r")
+#Simulate data for testing a GWR model:#
+source("utils.r")#
+#
+#Set up the location grid:#
+N = 20#
+x = rep(0:N - N/2, each=N+1)#
+y = rep(0:N - N/2, times=N+1)#
+#
+#Simulate the predictors independently of location:#
+mu.A = 0#
+sig.A = 1#
+A = rnorm((N+1)**2, mu.A, sig.A)#
+#
+mu.B = 1#
+sig.B = 2#
+B = rnorm((N+1)**2, mu.B, sig.B)#
+#
+mu.C = -1#
+sig.C = 3#
+C = rnorm((N+1)**2, mu.C, sig.C)#
+#
+#Simulate the output variable:#
+sig.err = 0.5#
+out = y + A*x + B + rnorm((N+1)**2, 0, sig.err)#
+#
+simulated = data.frame(x, y, A, B, C, out)#
+#
+#Use the methods of spgwr to select a bandwidth and fit a GWR model for poverty:#
+bw = gwr.sel(out~A+B+C, data=simulated, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
+gwr.sim = gwr(out~A+B+C, data=simulated, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare)#
+#
+#
+#Homebrew GWR:#
+df = simulated#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('A', 'B', 'C')#
+output = 'out'#
+f = as.formula(paste("out ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(df)[1]#
+D1 = matrix(rep(df$x,n), n,n)#
+D2 = matrix(rep(df$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+#
+#Use the lasso for GWR model selection:#
+w.lasso.geo = list()#
+coefs = list()#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=3)#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    print(i)#
+}
+library(lasso)
+library(lars)
+#Simulate data for testing a GWR model:#
+source("utils.r")#
+library(lars)#
+library(spgwr)#
+#
+#Set up the location grid:#
+N = 20#
+x = rep(0:N - N/2, each=N+1)#
+y = rep(0:N - N/2, times=N+1)#
+#
+#Simulate the predictors independently of location:#
+mu.A = 0#
+sig.A = 1#
+A = rnorm((N+1)**2, mu.A, sig.A)#
+#
+mu.B = 1#
+sig.B = 2#
+B = rnorm((N+1)**2, mu.B, sig.B)#
+#
+mu.C = -1#
+sig.C = 3#
+C = rnorm((N+1)**2, mu.C, sig.C)#
+#
+#Simulate the output variable:#
+sig.err = 0.5#
+out = y + A*x + B + rnorm((N+1)**2, 0, sig.err)#
+#
+simulated = data.frame(x, y, A, B, C, out)#
+#
+#Use the methods of spgwr to select a bandwidth and fit a GWR model for poverty:#
+bw = gwr.sel(out~A+B+C, data=simulated, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
+gwr.sim = gwr(out~A+B+C, data=simulated, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare)#
+#
+#
+#
+#Homebrew GWR:#
+df = simulated#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('A', 'B', 'C')#
+output = 'out'#
+f = as.formula(paste("out ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(df)[1]#
+D1 = matrix(rep(df$x,n), n,n)#
+D2 = matrix(rep(df$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+#
+#Use the lasso for GWR model selection:#
+w.lasso.geo = list()#
+coefs = list()#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=bw)#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    print(i)#
+}
+coefs
+coefs[["(Intercept)"]]
+coefs[["Intercept"]]
+model
+model$coef[["(Intercept)"]]
+coefs[['(Intercept)']]
+c(coefs[['(Intercept)']])
+c(coefs[['(Intercept)']], 3)
+model$R2
+model
+str(model)
+summary(model)
+summary(model)$R2
+str(summary(model))
+summary(model)$sigma
+summary(model)[['sigma']]
+gwr.heatmap.homebrew <- function(model, variable) {#
+    #plot the model outputs:#
+    for(pred in predictors) {    #
+        #Isolate the variable to plot:#
+        locations = model[['coords']]#
+        coef.surface = as.data.frame(cbind(locations, model[['coefs']][[variable]]))#
+        names(coef.surface)[3] = variable#
+        #
+        #Heatmap of the data#
+        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
+        #
+        #Put the coefficients into a lat-long matrix#
+        for(row in 1:dim(coef.surface)[1]) {#
+            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+        }#
+    #
+        #par(bty='n')#
+        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+    }#
+}
+#
+#Homebrew GWR:#
+df = simulated#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('A', 'B', 'C')#
+output = 'out'#
+f = as.formula(paste("out ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(df)[1]#
+D1 = matrix(rep(df$x,n), n,n)#
+D2 = matrix(rep(df$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+#
+#Use the lasso for GWR model selection:#
+w.lasso.geo = list()#
+coefs = list()#
+diagnostics = list()#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=bw)#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    coefs[['(Intercept)']] = c(coefs[['(Intercept)']], model$coef[['(Intercept')]])#
+#
+    diagnostics[['R2']] = c(diagnostics[['R2']], summary(model)[['r.squared']])#
+    diagnostics[['sigma']] = c(diagnostics[['sigma']], summary(model)[['sigma']])#
+    diagnostics[['total weight']] = c(diagnostics[['total weight']], sum(w))#
+    #
+    print(i)#
+}#
+#
+model = list(coords=df[,c('x','y')], coefs=coefs, diags=diagnostics)
+#
+#Homebrew GWR:#
+df = simulated#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('A', 'B', 'C')#
+output = 'out'#
+f = as.formula(paste("out ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(df)[1]#
+D1 = matrix(rep(df$x,n), n,n)#
+D2 = matrix(rep(df$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+#
+#Use the lasso for GWR model selection:#
+w.lasso.geo = list()#
+coefs = list()#
+diagnostics = list()#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=bw)#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    coefs[['(Intercept)']] = c(coefs[['(Intercept)']], model$coef[['(Intercept)']])#
+#
+    diagnostics[['R2']] = c(diagnostics[['R2']], summary(model)[['r.squared']])#
+    diagnostics[['sigma']] = c(diagnostics[['sigma']], summary(model)[['sigma']])#
+    diagnostics[['total weight']] = c(diagnostics[['total weight']], sum(w))#
+    #
+    print(i)#
+}#
+#
+model = list(coords=df[,c('x','y')], coefs=coefs, diags=diagnostics)
+gwr.heatmap.homebrew(model, 'A')
+gwr.heatmap.homebrew(model, 'A')
+gwr.heatmap.homebrew(model, '(Intercept)')
+"Int" in "(Intercept)"
+"Int" %in% "(Intercept)"
+"Int" %!in% "(Intercept)"
+"Int" !%in% "(Intercept)"
+predictors=c()
+mm = model
+f = as.formula(paste("out ~ 1 + ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(df)[1]#
+D1 = matrix(rep(df$x,n), n,n)#
+D2 = matrix(rep(df$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+#
+#Use the lasso for GWR model selection:#
+w.lasso.geo = list()#
+coefs = list()#
+diagnostics = list()#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=bw)#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    coefs[['(Intercept)']] = c(coefs[['(Intercept)']], model$coef[['(Intercept)']])#
+#
+    diagnostics[['R2']] = c(diagnostics[['R2']], summary(model)[['r.squared']])#
+    diagnostics[['sigma']] = c(diagnostics[['sigma']], summary(model)[['sigma']])#
+    diagnostics[['total weight']] = c(diagnostics[['total weight']], sum(w))#
+    #
+    print(i)#
+}#
+#
+model = list(coords=df[,c('x','y')], coefs=coefs, diags=diagnostics)
+gwr.heatmap.homebrew(model, '(Intercept)')
+dev.new()
+gwr.heatmap.homebrew(model, '(Intercept)')
+model
+str(moel)
+str(moel)
+str(model)
+model[['coefs']][['(Intercept)']]
+variable=
+"(Intercept)"
+    #Isolate the variable to plot:#
+    locations = model[['coords']]#
+    coef.surface = as.data.frame(cbind(locations, model[['coefs']][[variable]]))#
+    names(coef.surface)[3] = variable#
+    #
+    #Heatmap of the data#
+    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
+    #
+    #Put the coefficients into a lat-long matrix#
+    for(row in 1:dim(coef.surface)[1]) {#
+        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+            ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+    }#
+#
+    #par(bty='n')#
+    matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)
+mdoel
+model
+#
+gwr.heatmap <- function(model, variable) { #
+    #Isolate the variable to plot:#
+    locations = model$SDF@coords#
+    coef.surface = as.data.frame(cbind(locations, model$SDF@data[[variable]]))#
+    names(coef.surface)[3] = variable#
+    #
+    #Heatmap of the data#
+    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
+    #
+    #Put the coefficients into a lat-long matrix#
+    for(row in 1:dim(coef.surface)[1]) {#
+        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+            ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+    }#
+#
+    #par(bty='n')#
+    matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+}#
+#
+gwr.heatmap.homebrew <- function(model, variable) {   #
+    #Isolate the variable to plot:#
+    locations = model[['coords']]#
+    coef.surface = as.data.frame(cbind(locations, model[['coefs']][[variable]]))#
+    names(coef.surface)[3] = variable#
+    #
+    #Heatmap of the data#
+    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
+    #
+    #Put the coefficients into a lat-long matrix#
+    for(row in 1:dim(coef.surface)[1]) {#
+        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+            ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+    }#
+#
+    #par(bty='n')#
+    matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+}
+gwr.heatmap.homebrew(model, "(Intercept)")
+mm
+mm#
+#
+#Homebrew GWR:#
+df = simulated#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('A', 'B', 'C')#
+output = 'out'#
+f = as.formula(paste("out ~ 1 + ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(df)[1]#
+D1 = matrix(rep(df$x,n), n,n)#
+D2 = matrix(rep(df$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+#
+#Use the lasso for GWR model selection:#
+w.lasso.geo = list()#
+coefs = list()#
+diagnostics = list()#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=bw)#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    coefs[['(Intercept)']] = c(coefs[['(Intercept)']], model$coef[['(Intercept)']])#
+#
+    diagnostics[['R2']] = c(diagnostics[['R2']], summary(model)[['r.squared']])#
+    diagnostics[['sigma']] = c(diagnostics[['sigma']], summary(model)[['sigma']])#
+    diagnostics[['total weight']] = c(diagnostics[['total weight']], sum(w))#
+    #
+    print(i)#
+}#
+#
+model = list(coords=df[,c('x','y')], coefs=coefs, diags=diagnostics, lasso=w.lasso.geo)
+model.lasso
+model[['lasso']]
+model[['lasso']][1]
+sumary(model[['lasso']][1])
+summary(model[['lasso']][1])
+str(model[['lasso']][1])
+plot(model[['lasso']][1])
+?lars
+plot.lars(model[['lasso']][1])
+?plot.lars
+str(model[['lasso']][1])
+plot.lars
+plot.lars(model[['lasso']][1], xvar='norm')
+model[['lasso']][1]$type
+(model[['lasso']][1])$type
+model[['lasso']][1]
+model[['lasso']][1][['type']]
+str(model[['lasso']][1])
+names(model[['lasso']][1])
+m1 = model[['lasso']][1]
+m1
+m1[[1]]
+names(model[['lasso']][1][[1]])
+str(model[['lasso']][[1])
+str(model[['lasso']][[1]])
+plot(model[['lasso']][[1]])
+plot(model[['lasso']][[1]])
+plot.new()
+plot(model[['lasso']][[1]])
