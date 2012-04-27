@@ -1,3 +1,413 @@
+?rmvnorm
+perc.model$coef
+perc.model$scale
+log(perc.model$scale)
+perc.model$coef[["(Intercept)"]]
+#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')#
+#
+#Apply the formula (p396 of Klein and Moeschberger) for the variance of the transformed params:#
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 1, 2)
+grad.lambda
+var.lambda = grad.lambda %*% perc.model$var %*% grad.lambda
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda
+var.lambda
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha
+var.alpha
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+lambda = exp(-mu * exp(-lsigma))#
+alpha = 1 / exp(lsigma)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda#
+#
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha
+alpha
+lambda
+sqrt#Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
+#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')#
+#
+#Extract the parameters as lambda and alpha:#
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+lambda = exp(-mu * exp(-lsigma))#
+alpha = 1 / exp(lsigma)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda#
+se.lambda = sqrt(var.lambda)#
+#
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha#
+se.alpha = sqrt(var.alpha)
+#Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
+#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')#
+#
+#Extract the parameters as lambda and alpha:#
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+lambda = exp(-mu * exp(-lsigma))#
+alpha = 1 / exp(lsigma)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda#
+se.lambda = sqrt(var.lambda)#
+#
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha#
+se.alpha = sqrt(var.alpha)
+se.aplha
+#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+surg.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull')#
+#
+#
+#Percutaneous implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.p = perc.model$coef[["(Intercept)"]]#
+lsigma.p = perc.model$scale#
+lambda.p = exp(-mu.p * exp(-lsigma.p))#
+alpha.p = 1 / exp(lsigma.p)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.p = matrix(c(exp(-lsigma.p - mu.p*exp(-lsigma.p)), mu.p * #
+                            exp(-lsigma.p - mu.p*exp(-lsigma.p))), 2, 1)#
+var.lambda.p = t(grad.lambda.p) %*% perc.model$var %*% grad.lambda.p#
+se.lambda.p = sqrt(var.lambda.p)#
+#
+grad.alpha.p = matrix(c(0, -exp(-lsigma.p)), 2, 1)#
+var.alpha.p = t(grad.alpha.p) %*% perc.model$var %*% grad.alpha.p#
+se.alpha.p = sqrt(var.alpha.p)#
+#
+#
+#Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = perc.model$coef[["(Intercept)"]]#
+lsigma.s = perc.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.s = matrix(c(exp(-lsigma.s - mu.s*exp(-lsigma.s)), mu.s *#
+                            exp(-lsigma.s - mu.s*exp(-lsigma.s))), 2, 1)#
+var.lambda.s = t(grad.lambda.s) %*% perc.model$var %*% grad.lambda.s#
+se.lambda.s = sqrt(var.lambda.s)#
+#
+grad.alpha.s = matrix(c(0, -exp(-lsigma.s)), 2, 1)#
+var.alpha.s = t(grad.alpha.s) %*% perc.model$var %*% grad.alpha.s#
+se.alpha.s = sqrt(var.alpha.s)
+se.alpha.p
+se.alpha.s
+#
+#
+#Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = surg.model$coef[["(Intercept)"]]#
+lsigma.s = surg.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.s = matrix(c(exp(-lsigma.s - mu.s*exp(-lsigma.s)), mu.s *#
+                            exp(-lsigma.s - mu.s*exp(-lsigma.s))), 2, 1)#
+var.lambda.s = t(grad.lambda.s) %*% surg.model$var %*% grad.lambda.s#
+se.lambda.s = sqrt(var.lambda.s)#
+#
+grad.alpha.s = matrix(c(0, -exp(-lsigma.s)), 2, 1)#
+var.alpha.s = t(grad.alpha.s) %*% surg.model$var %*% grad.alpha.s#
+se.alpha.s = sqrt(var.alpha.s)
+se.aplha.s
+se.alpha.s
+salpha.s
+alpha.s
+alpha.p
+se.lambda.s
+lambda.p
+se.lambda.p
+alpha.p
+se.alpha.p
+lmbda.s
+lambda.s
+se.lambda.s
+alpha.s
+se.alpha.s
+names(perc.model)
+perc.model$var
+(alpha.p-1)/se.alpha.p
+alpha.p
+se.alpha.p
+(alpha.s-1)/se.alpha.s
+pnorm(-20.25456)
+pnorm(-4.3053)
+W.s = (alpha.s-1)/se.alpha.s
+W.s
+perc.model[['loglik']]
+perc.model[['loglik']][1]
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+perc.model[['loglik']][1] - perc.model.0[['loglik']][1]
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])
+L.p = 2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])
+L.p
+p.W.p = pchisq(W.p**2, df=1)
+W.p = (alpha.p-1)/se.alpha.p #
+p.W.p = pchisq(W.p**2, df=1)
+p.W.p
+p.W.p = 1 - pchisq(W.p**2, df=1)
+pW.p
+p.W.p
+W.s = (alpha.s-1)/se.alpha.s #
+p.W.s = 1 - pchisq(W.s**2, df=1)
+p.W.s
+W.s
+pnorm(W.s)
+pchisq(1.96**2, df=1)
+p.L.p = 1-pchisq(L.p, df=1)
+p.L.p
+surg.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull', scale=1)#
+L.s = 2*(surg.model[['loglik']][1] - surg.model.0[['loglik']][1])#
+p.L.s = 1-pchisq(L.s, df=1)#
+#L.s = 7.18 => 0.008
+L.s
+p.L.s
+predict(perc.model, newdata=data.frame(time=5))
+?survreg.predict
+?predict.survreg
+predict(perc.model, newdata=data.frame(time=5), type='quantile')
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), mu * exp(-mu * exp(-lsigma) - lsigma), 0, -exp(-lsigma)), 2, 2)
+grad
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), 0, mu * exp(-mu * exp(-lsigma) - lsigma), -exp(-lsigma)), 2, 2)
+grad
+t(grad) %*% perc.model$var %*% grad
+var.p
+se.lambda.p
+se.lambda.p**2
+grad.p = matrix(c(-exp(-lsigma.p - mu.p*exp(-lsigma.p)), 0, mu * exp(-mu.p * exp(-lsigma.p) - lsigma.p), -exp(-lsigma.p)), 2, 2)
+t(grad.p) %*% perc.model$var %*% grad.p
+t(grad.p) %*% perc.model$var %*% grad.p[1,1]
+sqrt((t(grad.p) %*% perc.model$var %*% grad.p)[1,1])
+grad.alpha.p
+grad
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma)), 0, -exp(-lsigma)), 2, 2)
+t(grad) %*% perc.model$var %*% grad
+grad
+grad.p
+grad.lambda.p
+grad = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma)), 0, -exp(-lsigma)), 2, 2)
+t(grad) %*% perc.model$var %*% grad
+se.alpha.p**2
+#Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
+#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+surg.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull')#
+#
+#
+#Percutaneous implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.p = perc.model$coef[["(Intercept)"]]#
+lsigma.p = perc.model$scale#
+lambda.p = exp(-mu.p * exp(-lsigma.p))#
+alpha.p = 1 / exp(lsigma.p)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.p = matrix(c(-exp(-lsigma.p - mu.p*exp(-lsigma.p)), #
+                            mu.p * exp(-lsigma.p - mu.p*exp(-lsigma.p))), 2, 1)#
+var.lambda.p = t(grad.lambda.p) %*% perc.model$var %*% grad.lambda.p#
+se.lambda.p = sqrt(var.lambda.p)#
+#lambda=0.428, se.lambda=0.158#
+#
+grad.alpha.p = matrix(c(0, -exp(-lsigma.p)), 2, 1)#
+var.alpha.p = t(grad.alpha.p) %*% perc.model$var %*% grad.alpha.p#
+se.alpha.p = sqrt(var.alpha.p)#
+#alpha=0.157, se.alpha=0.042#
+#
+#
+#Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = surg.model$coef[["(Intercept)"]]#
+lsigma.s = surg.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.s = matrix(c(-exp(-lsigma.s - mu.s*exp(-lsigma.s)),#
+                            mu.s * exp(-lsigma.s - mu.s*exp(-lsigma.s))), 2, 1)#
+var.lambda.s = t(grad.lambda.s) %*% surg.model$var %*% grad.lambda.s#
+se.lambda.s = sqrt(var.lambda.s)#
+#lambda=0.182, se.lambda=0.072#
+#
+grad.alpha.s = matrix(c(0, -exp(-lsigma.s)), 2, 1)#
+var.alpha.s = t(grad.alpha.s) %*% surg.model$var %*% grad.alpha.s#
+se.alpha.s = sqrt(var.alpha.s)#
+#alpha=0.534, se.alpha=0.108#
+#
+#
+#Tests for alpha=1:#
+#Percutaneous implantation:#
+#Wald test:#
+W.p = (alpha.p-1)/se.alpha.p #
+p.W.p = 1 - pchisq(W.p**2, df=1)#
+#W.p=-20.2 => p<10**(-16)#
+#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+L.p = 2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])#
+p.L.p = 1-pchisq(L.p, df=1)#
+#L.p=7.18 => p=0.008#
+#
+#
+#Surgical implantation:#
+#Wald test:#
+W.s = (alpha.s-1)/se.alpha.s #
+p.W.s = 1 - pchisq(W.s**2, df=1)#
+#W.s=-4.31 => p<10**(-4)#
+#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+surg.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull', scale=1)#
+L.s = 2*(surg.model[['loglik']][1] - surg.model.0[['loglik']][1])#
+p.L.s = 1-pchisq(L.s, df=1)#
+#L.s=4.28 => p=0.039#
+#
+#
+#Value of survival function at five months:#
+#Percutaneous implantation:#
+S.p = exp(-lambda.p * 5**alpha.p)#
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma)), 0, -exp(-lsigma)), 2, 2)
+p.W.s
+W.s
+p.W.p
+W.p
+lambda.p
+se.lambda.p
+se.lambda.s
+lambda.s
+#Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
+#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+surg.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull')#
+#
+#
+#Percutaneous implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.p = perc.model$coef[["(Intercept)"]]#
+lsigma.p = perc.model$scale#
+lambda.p = exp(-mu.p * exp(-lsigma.p))#
+alpha.p = 1 / exp(lsigma.p)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.p = matrix(c(-exp(-lsigma.p - mu.p*exp(-lsigma.p)), #
+                    mu.p * exp(-lsigma.p - mu.p*exp(-lsigma.p)), 0, -exp(-lsigma.p)), 2, 2)#
+var.p = t(grad.p) %*% perc.model$var %*% grad.p#
+#
+se.p = sqrt(var.p[1,1])#
+#lambda=0.428, se.lambda=0.054#
+#
+se.alpha.p = sqrt(var.p[2,2])#
+#alpha=0.157, se.alpha=0.042#
+#
+#
+#Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = surg.model$coef[["(Intercept)"]]#
+lsigma.s = surg.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.s = matrix(c(-exp(-lsigma.s - mu.s*exp(-lsigma.s)),#
+                    mu.s * exp(-lsigma.s - mu.s*exp(-lsigma.s)), 0, -exp(-lsigma.s)), 2, 2)#
+var.s = t(grad.s) %*% surg.model$var %*% grad.s#
+#
+se.lambda.s = sqrt(var.s[1,1])#
+#lambda=0.182, se.lambda=0.057#
+#
+se.alpha.s = sqrt(var.s[2,2])#
+#alpha=0.534, se.alpha=0.108#
+#
+#
+#Tests for alpha=1:#
+#Percutaneous implantation:#
+#Wald test:#
+W.p = (alpha.p-1)/se.alpha.p #
+p.W.p = 1 - pchisq(W.p**2, df=1)#
+#W.p=-20.2 => p<10**(-16)#
+#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+L.p = 2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])#
+p.L.p = 1-pchisq(L.p, df=1)#
+#L.p=7.18 => p=0.008#
+#
+#
+#Surgical implantation:#
+#Wald test:#
+W.s = (alpha.s-1)/se.alpha.s #
+p.W.s = 1 - pchisq(W.s**2, df=1)#
+#W.s=-4.31 => p<10**(-4)#
+#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+surg.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull', scale=1)#
+L.s = 2*(surg.model[['loglik']][1] - surg.model.0[['loglik']][1])#
+p.L.s = 1-pchisq(L.s, df=1)#
+#L.s=4.28 => p=0.039#
+#
+#
+#Value of survival function at five months:#
+#Percutaneous implantation:#
+S.p = exp(-lambda.p * 5**alpha.p)
+W.p
+se.lambda.s
+lambda.s
+se.lambda.p
+se.alpha.p
+se.alpha.s
+se.lambda.s
+S.p
+grad.surv <- function(t, a, l) {#
+    return( matrix(c(-t**a * exp(-l * t**a), -l * t**a * log(t) * exp(-l * t**a)), 2, 1) )#
+}
+grad.surv(5, alpha.p, lambda.p)
+g = grad.surv(5, alpha.p, lambda.p)
+t(g) %*% var.p %*% g
+sqrt(t(g) %*% var.p %*% g)
+S.p
+S.p = exp(-lambda.p * 5**alpha.p)#
+g.p = grad.surv(5, alpha.p, lambda.p)#
+se.S.p = sqrt(t(g.p) %*% var.p %*% g.p)
+se.S.p
+S.p=2*se.S.p
 S.p = exp(-lambda.p * 5**alpha.p)
 S.p-2*se.S.p
 S.p+2*se.S.p
@@ -9,576 +419,6 @@ S.s
 se.S.s
 S.s-2*se.S.s
 S.s+2*se.S.s
-library(spgwr)
-?gwr.sel
-setwd("~/git/gwr/code")
-dir()
-source("matplot.r")
-setwd("..")
-library(spgwr)#
-data(columbus)#
-#
-#Import the plotting functions:#
-setwd("~/git/gwr/code")#
-source("matplot.r")#
-source("legend.r")#
-#
-#Import poverty data#
-pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
-years = c('60', '70', '80', '90', '00', '06')#
-column.map = list(pindpov='proportion individuals in poverty', #
-    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
-    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
-    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
-    logitfampov='logit( proportion families in poverty)')#
-#
-#Process the poverty data so that each column appears only once and the year is added as a column.#
-pov2 = list()#
-for (column.name in names(column.map)) {#
-    col = vector()#
-    for (year in years) {#
-        if (paste(column.name, year, sep="") %in% names(pov)) {#
-            indx = which(names(pov)==paste(column.name, year, sep=""))#
-            col = c(col, pov[,indx])#
-        }#
-        else { col = c(col, rep(NA, dim(pov)[1])) }#
-    }#
-    pov2[[column.name]] = col#
-}#
-#
-#Find the columns we haven't yet matched:#
-"%w/o%" <- function(x, y) x[!x %in% y]#
-missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
-#
-for (column.name in missed) {#
-    col = rep(pov[,column.name], length(years))#
-    pov2[[column.name]] = col#
-}#
-#
-#Add the year column to the pov2 data list.#
-pov2[['year']] = vector()#
-for (year in years) {#
-    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
-}#
-#
-#Convert pov2 from a list to a data frame.#
-pov2 = data.frame(pov2)#
-#
-#Correct the Y2K bug#
-pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
-pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
-pov2
-str(pov2)
-#Use the lasso for GWR models of poverty with 2006 data:#
-df = pov2[pov2$year==2006,]
-str(df)
-bw = gwr.sel(income~1, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
-str(columbus)
-xy.mT
-xy.mAT
-xy.mat
-source("code/columbus.r")
-source("columbus.r")
-source("columbus.r")
-bw
-source("columbus.r")
-x
-y
-xx
-locs
-columbus
-bw = gwr.sel(income~1, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
-x = columbus$x
-y = columbus$y
-bw = gwr.sel(income~1, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
-b
-bw
-#
-gwr.model1 = gwr(housing~1, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
-gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
-gwr.model1
-f
-#Use the lasso for GWR models of income with 2006 data:#
-df = columbus#
-w.lasso.geo = list()#
-coefs = list()#
-ss = seq(0, 1, length.out=100)#
-#
-for(i in 1:dim(df)[1]) {#
-    w = bisquare(D[,i], bw=bw)#
-#
-    model = lm(f, data=df, weights=w)#
-    #
-    #w.eig <- eigen(diag(w))#
-    #w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    #w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df$logitindpov))#
-    #
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    #
-    print(i)#
-}
-bisquare
-source("utils.r")
-bisquare = function(R, bw) {#
-    ifelse( R < bw, (1 - (R/bw)**2)**2, 0)#
-}
-#Use the lasso for GWR models of income with 2006 data:#
-df = columbus#
-w.lasso.geo = list()#
-coefs = list()#
-ss = seq(0, 1, length.out=100)#
-#
-for(i in 1:dim(df)[1]) {#
-    w = bisquare(D[,i], bw=bw)#
-#
-    model = lm(f, data=df, weights=w)#
-    #
-    #w.eig <- eigen(diag(w))#
-    #w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    #w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df$logitindpov))#
-    #
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    #
-    print(i)#
-}
-coefs
-summary(coefs)
-summary(coefs[["crime"]])
-gwr.model1
-summary(coefs[["income"]])
-locs
-gwr.heatmap(gwr.model1, columbus, 'crime', locs)
-source("utils.r")
-gwr.heatmap <- function(model, variable, data, locations) {#
-    #plot the model outputs:#
-    for(pred in predictors) {    #
-        #Isolate the variable to plot:#
-        coef.surface = as.data.frame(cbind(locations[,c("x", "y")], data[[variable]]))#
-        names(coef.surface)[3] = pred#
-        #
-        #Heatmap of the data#
-        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
-        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)#
-        #
-        #Put the coefficients into a lat-long matrix#
-        for(row in 1:dim(coef.surface)[1]) {#
-            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
-                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
-        }#
-    #
-        #par(bty='n')#
-        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
-    }#
-}
-gwr.heatmap(gwr.model1, columbus, 'crime', locs)
-gwr.heatmap(gwr.model1, 'crime', columbus, locs)
-locs[,c('x','y')]
-locs
-locations
-location
-location = columbus[,c('x','y')]
-gwr.heatmap(gwr.model1, 'crime', columbus, location)
-library(plotrix)
-gwr.heatmap(gwr.model1, 'crime', columbus, location)
-str(gwr.model1)
-gwr.model1$coords
-gwr.model1@data$coords
-gwr.model1[['data']]$coords
-gwr.model1[['data']]
-gwr.model1$date
-gwr.model1$data
-gwr.model1$SDF
-gwr.model1$SDF[['data']]
-gwr.model1$SDF@data
-gwr.model1$SDF@data[['coords']]
-gwr.model1$SDF@data$coords
-gwr.model1$SDF@coords
-predict(gwr.model1, locs)
-locs
-predict(gwr.model1, locs)
-?gwr
-u?update
-?update
-update(gwr.model1, coords=locs)
-gwr.model2 = gwr(housing~crime+income, data=columbus, coords=locs, bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
-gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE, fit.points=locs)
-x
-y
-gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=FALSE, fit.points=locs)
-gwr.model1
-source("utils.r")
-update(gwr.model1, fit.points=locs)
-str(gwr.model1$SDF
-)
-gwr.heatmap <- function(model, variable, data) {#
-    #plot the model outputs:#
-    for(pred in predictors) {    #
-        #Isolate the variable to plot:#
-        locations = model$SDF@coords#
-        coef.surface = as.data.frame(cbind(locations, data[[variable]]))#
-        names(coef.surface)[3] = variable#
-        #
-        #Heatmap of the data#
-        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
-        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)#
-#
-         #
-        #
-        #Put the coefficients into a lat-long matrix#
-        for(row in 1:dim(coef.surface)[1]) {#
-            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
-                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
-        }#
-    #
-        #par(bty='n')#
-        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
-    }#
-}
-str(gwr.model1)
-?SDF
-gwr.heatmap <- function(model, variable, data) {#
-    #plot the model outputs:#
-    for(pred in predictors) {    #
-        #Isolate the variable to plot:#
-        locations = model$SDF@coords#
-        coef.surface = as.data.frame(cbind(locations, model$SDF@[['data']][[variable]]))#
-        names(coef.surface)[3] = variable#
-        #
-        #Heatmap of the data#
-        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
-        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)#
-#
-         #
-        #
-        #Put the coefficients into a lat-long matrix#
-        for(row in 1:dim(coef.surface)[1]) {#
-            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
-                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
-        }#
-    #
-        #par(bty='n')#
-        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
-    }#
-}
-gwr.heatmap <- function(model, variable, data) {#
-    #plot the model outputs:#
-    for(pred in predictors) {    #
-        #Isolate the variable to plot:#
-        locations = model$SDF@coords#
-        coef.surface = as.data.frame(cbind(locations, model$SDF@data[[variable]]))#
-        names(coef.surface)[3] = variable#
-        #
-        #Heatmap of the data#
-        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
-        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)#
-#
-         #
-        #
-        #Put the coefficients into a lat-long matrix#
-        for(row in 1:dim(coef.surface)[1]) {#
-            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
-                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
-        }#
-    #
-        #par(bty='n')#
-        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
-    }#
-}
-gwr.heatmap(gwr.model1, 'crime', 2)
-gwr.heatmap(gwr.model1, 'income', 2)
-summary(gwr.model1)
-gwr.model1
-locations = model$SDF@coords
-locations = gwr.model1$SDF@coords
-locations
-variable='crime'
-coef.surface = as.data.frame(cbind(locations, gwr.model1$SDF@data[[variable]]))
-str(coef.surface)
-names(coef.surface)[3] = variable
-str(coef.surface)
-mat = matrix(NA, nrow=length(locations[['y']]), ncol=length(locations[['y']]))
-locations
-locations[['y']]
-locations[['x']]
-locations$x
-locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))
-mat
-rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)
-mat
-?matplot
-?image
-?rect
-axis(1, at=1:20, labels=rownames(mat))
-columbus
-?columbus
-bw = gwr.sel(housing~crime+income, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)
-bw
-bw = gwr.sel(housing~crime+income, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
-gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
-bw = gwr.sel(housing~crime+income, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
-gwr.col = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
-gwr.col
-gwr.columbus = gwr.col
-gwr.columbus
-gwr.heatmap <- function(model, variable) {#
-    #plot the model outputs:#
-    for(pred in predictors) {    #
-        #Isolate the variable to plot:#
-        locations = model$SDF@coords#
-        coef.surface = as.data.frame(cbind(locations, model$SDF@data[[variable]]))#
-        names(coef.surface)[3] = variable#
-        #
-        #Heatmap of the data#
-        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
-        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
-        #
-        #Put the coefficients into a lat-long matrix#
-        for(row in 1:dim(coef.surface)[1]) {#
-            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
-                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
-        }#
-    #
-        #par(bty='n')#
-        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
-    }#
-}
-gwr.heatmap(gwr.columbus, 'crime')
-bw = gwr.sel(housing~crime+income, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
-gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, fit.points=locs)
-gwr.heatmap(gwr.model1, 'crime')
-gwr.model1
-gwr.heatmap(gwr.model1, 'income')
-gwr.heatmap(gwr.model1, '(Intercept)')
-bw=2
-gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, fit.points=locs)
-gwr.heatmap(gwr.model1, '(Intercept)')
-gwr.heatmap(gwr.model1, 'crime')
-gwr.heatmap(gwr.model1, 'income')
-bw=7
-gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, fit.points=locs)
-gwr.heatmap(gwr.model1, '(Intercept)')
-bw=8
-gwr.model1 = gwr(housing~crime+income, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, fit.points=locs)
-gwr.heatmap(gwr.model1, '(Intercept)')
-gwr.heatmap(gwr.model1, 'crime')
-bw = gwr.sel(housing~1, data=columbus, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
-gwr.columbus.1 = gwr(housing~1, data=columbus, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare, hatmatrix=TRUE)
-gwr.columbus.1
-N=20
-0:N - N/2
-x = rep(0:N - N/2, each=N+1)#
-y = rep(0:N - N/2, times=N+1)#
-#
-simulated = cbind(x,y)
-simulated
-#Simulate data for testing a GWR model:#
-#
-#Set up the location grid:#
-N = 20#
-x = rep(0:N - N/2, each=N+1)#
-y = rep(0:N - N/2, times=N+1)#
-#
-#Simulate the predictors independently of location:#
-mu.A = 0#
-sig.A = 1#
-A = rnorm((N+1)**2, mu.A, sig.A)#
-#
-mu.B = 1#
-sig.B = 2#
-B = rnorm((N+1)**2, mu.B, sig.B)#
-#
-mu.C = -1#
-sig.C = 3#
-C = rnorm((N+1)**2, mu.C, sig.C)#
-#
-#Simulate the output variable:#
-sig.err = 0.5#
-out = y + A*x + B + rnorm((N+1)**2, 0, sig.err)#
-#
-simulated = cbind(x, y, A, B, C, out)#
-#
-#Use the methods of spgwr to select a bandwidth and fit a GWR model for poverty:#
-bw = gwr.sel(out~A+B+C, data=simulated, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
-gwr.sim = gwr(out~A+B+C, data=simulated, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare)
-#Simulate data for testing a GWR model:#
-#
-#Set up the location grid:#
-N = 20#
-x = rep(0:N - N/2, each=N+1)#
-y = rep(0:N - N/2, times=N+1)#
-#
-#Simulate the predictors independently of location:#
-mu.A = 0#
-sig.A = 1#
-A = rnorm((N+1)**2, mu.A, sig.A)#
-#
-mu.B = 1#
-sig.B = 2#
-B = rnorm((N+1)**2, mu.B, sig.B)#
-#
-mu.C = -1#
-sig.C = 3#
-C = rnorm((N+1)**2, mu.C, sig.C)#
-#
-#Simulate the output variable:#
-sig.err = 0.5#
-out = y + A*x + B + rnorm((N+1)**2, 0, sig.err)#
-#
-simulated = data.frame(x, y, A, B, C, out)#
-#
-#Use the methods of spgwr to select a bandwidth and fit a GWR model for poverty:#
-bw = gwr.sel(out~A+B+C, data=simulated, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
-gwr.sim = gwr(out~A+B+C, data=simulated, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare)
-gwr.sim
-gwr.heatmap(gwr.sim, 'A')
-gwr.heatmap(gwr.sim, 'B')
-gwr.heatmap(gwr.sim, 'C')
-gwr.heatmap(gwr.sim, '(Intercept)')
-#Import the plotting functions:#
-library(plotrix)#
-setwd("~/git/gwr/code")#
-source("matplot.r")#
-source("legend.r")#
-#
-#Define the bisquare weight function:#
-bisquare = function(x, z, bw) {#
-    ifelse( r(x=x, z=c(z[1], z[2])) < bw, (1 - (r(x=x, z=c(z[1],z[2]))/ bw)**2)**2, 0)#
-}#
-#
-bisquare = function(R, bw) {#
-    ifelse( R < bw, (1 - (R/bw)**2)**2, 0)#
-}#
-#
-#Define the distance function#
-r = function(x, z) { #
-    sqrt((x[1]-z[1])**2 + (x[2]-z[2])**2)#
-}#
-#
-#Fix an x.i and get the distance to all other x's:#
-R = function(x.i, xy.mat) {#
-    R = sapply(1:dim(xy.mat)[1], FUN=function(i) {r(x.i, xy.mat[i,])} )#
-    return(R)#
-}#
-#
-W = function(x.i, xy.mat, bw) {#
-    distance = R(x.i, xy.mat)#
-    W = bisquare(distance, bw)#
-    return(W)#
-}#
-#
-gwr.heatmap <- function(model, variable) {#
-    #plot the model outputs:#
-    for(pred in predictors) {    #
-        #Isolate the variable to plot:#
-        locations = model$SDF@coords#
-        coef.surface = as.data.frame(cbind(locations, model$SDF@data[[variable]]))#
-        names(coef.surface)[3] = variable#
-        #
-        #Heatmap of the data#
-        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
-        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
-        #
-        #Put the coefficients into a lat-long matrix#
-        for(row in 1:dim(coef.surface)[1]) {#
-            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
-                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
-        }#
-    #
-        #par(bty='n')#
-        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
-    }#
-}
-source("utils.r")
-#Simulate data for testing a GWR model:#
-source("utils.r")#
-#
-#Set up the location grid:#
-N = 20#
-x = rep(0:N - N/2, each=N+1)#
-y = rep(0:N - N/2, times=N+1)#
-#
-#Simulate the predictors independently of location:#
-mu.A = 0#
-sig.A = 1#
-A = rnorm((N+1)**2, mu.A, sig.A)#
-#
-mu.B = 1#
-sig.B = 2#
-B = rnorm((N+1)**2, mu.B, sig.B)#
-#
-mu.C = -1#
-sig.C = 3#
-C = rnorm((N+1)**2, mu.C, sig.C)#
-#
-#Simulate the output variable:#
-sig.err = 0.5#
-out = y + A*x + B + rnorm((N+1)**2, 0, sig.err)#
-#
-simulated = data.frame(x, y, A, B, C, out)#
-#
-#Use the methods of spgwr to select a bandwidth and fit a GWR model for poverty:#
-bw = gwr.sel(out~A+B+C, data=simulated, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
-gwr.sim = gwr(out~A+B+C, data=simulated, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare)#
-#
-#
-#Homebrew GWR:#
-df = simulated#
-#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('A', 'B', 'C')#
-output = 'out'#
-f = as.formula(paste("out ~ ", paste(predictors, collapse="+"), sep=""))#
-#
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
-}#
-#
-#Use this trick to compute the matrix of distances very quickly#
-n = dim(df)[1]#
-D1 = matrix(rep(df$x,n), n,n)#
-D2 = matrix(rep(df$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-#
-#Use the lasso for GWR model selection:#
-w.lasso.geo = list()#
-coefs = list()#
-#
-for(i in 1:dim(df)[1]) {#
-    w = bisquare(D[,i], bw=3)#
-#
-    model = lm(f, data=df, weights=w)#
-    #
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
-    #
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    #
-    print(i)#
-}
-library(lasso)
-library(lars)
 #Simulate data for testing a GWR model:#
 source("utils.r")#
 library(lars)#
@@ -613,306 +453,6 @@ bw = gwr.sel(out~A+B+C, data=simulated, coords=cbind(x,y), adapt=FALSE, gweight=
 gwr.sim = gwr(out~A+B+C, data=simulated, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare)#
 #
 #
-#
-#Homebrew GWR:#
-df = simulated#
-#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('A', 'B', 'C')#
-output = 'out'#
-f = as.formula(paste("out ~ ", paste(predictors, collapse="+"), sep=""))#
-#
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
-}#
-#
-#Use this trick to compute the matrix of distances very quickly#
-n = dim(df)[1]#
-D1 = matrix(rep(df$x,n), n,n)#
-D2 = matrix(rep(df$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-#
-#Use the lasso for GWR model selection:#
-w.lasso.geo = list()#
-coefs = list()#
-#
-for(i in 1:dim(df)[1]) {#
-    w = bisquare(D[,i], bw=bw)#
-#
-    model = lm(f, data=df, weights=w)#
-    #
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
-    #
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    #
-    print(i)#
-}
-coefs
-coefs[["(Intercept)"]]
-coefs[["Intercept"]]
-model
-model$coef[["(Intercept)"]]
-coefs[['(Intercept)']]
-c(coefs[['(Intercept)']])
-c(coefs[['(Intercept)']], 3)
-model$R2
-model
-str(model)
-summary(model)
-summary(model)$R2
-str(summary(model))
-summary(model)$sigma
-summary(model)[['sigma']]
-gwr.heatmap.homebrew <- function(model, variable) {#
-    #plot the model outputs:#
-    for(pred in predictors) {    #
-        #Isolate the variable to plot:#
-        locations = model[['coords']]#
-        coef.surface = as.data.frame(cbind(locations, model[['coefs']][[variable]]))#
-        names(coef.surface)[3] = variable#
-        #
-        #Heatmap of the data#
-        locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-        mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
-        rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-        colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
-        #
-        #Put the coefficients into a lat-long matrix#
-        for(row in 1:dim(coef.surface)[1]) {#
-            mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
-                ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
-        }#
-    #
-        #par(bty='n')#
-        matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
-    }#
-}
-#
-#Homebrew GWR:#
-df = simulated#
-#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('A', 'B', 'C')#
-output = 'out'#
-f = as.formula(paste("out ~ ", paste(predictors, collapse="+"), sep=""))#
-#
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
-}#
-#
-#Use this trick to compute the matrix of distances very quickly#
-n = dim(df)[1]#
-D1 = matrix(rep(df$x,n), n,n)#
-D2 = matrix(rep(df$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-#
-#Use the lasso for GWR model selection:#
-w.lasso.geo = list()#
-coefs = list()#
-diagnostics = list()#
-#
-for(i in 1:dim(df)[1]) {#
-    w = bisquare(D[,i], bw=bw)#
-#
-    model = lm(f, data=df, weights=w)#
-    #
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
-    #
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    coefs[['(Intercept)']] = c(coefs[['(Intercept)']], model$coef[['(Intercept')]])#
-#
-    diagnostics[['R2']] = c(diagnostics[['R2']], summary(model)[['r.squared']])#
-    diagnostics[['sigma']] = c(diagnostics[['sigma']], summary(model)[['sigma']])#
-    diagnostics[['total weight']] = c(diagnostics[['total weight']], sum(w))#
-    #
-    print(i)#
-}#
-#
-model = list(coords=df[,c('x','y')], coefs=coefs, diags=diagnostics)
-#
-#Homebrew GWR:#
-df = simulated#
-#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('A', 'B', 'C')#
-output = 'out'#
-f = as.formula(paste("out ~ ", paste(predictors, collapse="+"), sep=""))#
-#
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
-}#
-#
-#Use this trick to compute the matrix of distances very quickly#
-n = dim(df)[1]#
-D1 = matrix(rep(df$x,n), n,n)#
-D2 = matrix(rep(df$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-#
-#Use the lasso for GWR model selection:#
-w.lasso.geo = list()#
-coefs = list()#
-diagnostics = list()#
-#
-for(i in 1:dim(df)[1]) {#
-    w = bisquare(D[,i], bw=bw)#
-#
-    model = lm(f, data=df, weights=w)#
-    #
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
-    #
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    coefs[['(Intercept)']] = c(coefs[['(Intercept)']], model$coef[['(Intercept)']])#
-#
-    diagnostics[['R2']] = c(diagnostics[['R2']], summary(model)[['r.squared']])#
-    diagnostics[['sigma']] = c(diagnostics[['sigma']], summary(model)[['sigma']])#
-    diagnostics[['total weight']] = c(diagnostics[['total weight']], sum(w))#
-    #
-    print(i)#
-}#
-#
-model = list(coords=df[,c('x','y')], coefs=coefs, diags=diagnostics)
-gwr.heatmap.homebrew(model, 'A')
-gwr.heatmap.homebrew(model, 'A')
-gwr.heatmap.homebrew(model, '(Intercept)')
-"Int" in "(Intercept)"
-"Int" %in% "(Intercept)"
-"Int" %!in% "(Intercept)"
-"Int" !%in% "(Intercept)"
-predictors=c()
-mm = model
-f = as.formula(paste("out ~ 1 + ", paste(predictors, collapse="+"), sep=""))#
-#
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
-}#
-#
-#Use this trick to compute the matrix of distances very quickly#
-n = dim(df)[1]#
-D1 = matrix(rep(df$x,n), n,n)#
-D2 = matrix(rep(df$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-#
-#Use the lasso for GWR model selection:#
-w.lasso.geo = list()#
-coefs = list()#
-diagnostics = list()#
-#
-for(i in 1:dim(df)[1]) {#
-    w = bisquare(D[,i], bw=bw)#
-#
-    model = lm(f, data=df, weights=w)#
-    #
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
-    #
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    coefs[['(Intercept)']] = c(coefs[['(Intercept)']], model$coef[['(Intercept)']])#
-#
-    diagnostics[['R2']] = c(diagnostics[['R2']], summary(model)[['r.squared']])#
-    diagnostics[['sigma']] = c(diagnostics[['sigma']], summary(model)[['sigma']])#
-    diagnostics[['total weight']] = c(diagnostics[['total weight']], sum(w))#
-    #
-    print(i)#
-}#
-#
-model = list(coords=df[,c('x','y')], coefs=coefs, diags=diagnostics)
-gwr.heatmap.homebrew(model, '(Intercept)')
-dev.new()
-gwr.heatmap.homebrew(model, '(Intercept)')
-model
-str(moel)
-str(moel)
-str(model)
-model[['coefs']][['(Intercept)']]
-variable=
-"(Intercept)"
-    #Isolate the variable to plot:#
-    locations = model[['coords']]#
-    coef.surface = as.data.frame(cbind(locations, model[['coefs']][[variable]]))#
-    names(coef.surface)[3] = variable#
-    #
-    #Heatmap of the data#
-    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
-    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
-    #
-    #Put the coefficients into a lat-long matrix#
-    for(row in 1:dim(coef.surface)[1]) {#
-        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
-            ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
-    }#
-#
-    #par(bty='n')#
-    matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)
-mdoel
-model
-#
-gwr.heatmap <- function(model, variable) { #
-    #Isolate the variable to plot:#
-    locations = model$SDF@coords#
-    coef.surface = as.data.frame(cbind(locations, model$SDF@data[[variable]]))#
-    names(coef.surface)[3] = variable#
-    #
-    #Heatmap of the data#
-    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
-    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
-    #
-    #Put the coefficients into a lat-long matrix#
-    for(row in 1:dim(coef.surface)[1]) {#
-        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
-            ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
-    }#
-#
-    #par(bty='n')#
-    matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
-}#
-#
-gwr.heatmap.homebrew <- function(model, variable) {   #
-    #Isolate the variable to plot:#
-    locations = model[['coords']]#
-    coef.surface = as.data.frame(cbind(locations, model[['coefs']][[variable]]))#
-    names(coef.surface)[3] = variable#
-    #
-    #Heatmap of the data#
-    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
-    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
-    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
-    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
-    #
-    #Put the coefficients into a lat-long matrix#
-    for(row in 1:dim(coef.surface)[1]) {#
-        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
-            ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
-    }#
-#
-    #par(bty='n')#
-    matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
-}
-gwr.heatmap.homebrew(model, "(Intercept)")
-mm
-mm#
 #
 #Homebrew GWR:#
 df = simulated#
@@ -960,32 +500,1788 @@ for(i in 1:dim(df)[1]) {#
 }#
 #
 model = list(coords=df[,c('x','y')], coefs=coefs, diags=diagnostics, lasso=w.lasso.geo)
-model.lasso
-model[['lasso']]
-model[['lasso']][1]
-sumary(model[['lasso']][1])
-summary(model[['lasso']][1])
-str(model[['lasso']][1])
-plot(model[['lasso']][1])
-?lars
-plot.lars(model[['lasso']][1])
-?plot.lars
-str(model[['lasso']][1])
-plot.lars
-plot.lars(model[['lasso']][1], xvar='norm')
-model[['lasso']][1]$type
-(model[['lasso']][1])$type
-model[['lasso']][1]
-model[['lasso']][1][['type']]
-str(model[['lasso']][1])
-names(model[['lasso']][1])
-m1 = model[['lasso']][1]
-m1
-m1[[1]]
-names(model[['lasso']][1][[1]])
-str(model[['lasso']][[1])
-str(model[['lasso']][[1]])
-plot(model[['lasso']][[1]])
-plot(model[['lasso']][[1]])
-plot.new()
-plot(model[['lasso']][[1]])
+y=seq(1,100)
+sum(1/factorial(y))
+y=seq(0,100)
+sum(1/factorial(y))
+e
+exp(1)
+exp(1)/(exp(1)-1)
+y=seq(1,100)
+sum(y/factorial(y))
+sum(y/factorial(y) / (exp(1)-1))
+sum(exp(y)/factorial(y) / (exp(1)-1))
+sum(exp(2*y)/factorial(y) / (exp(1)-1))
+sum(exp(3*y)/factorial(y) / (exp(1)-1))
+library(spgwr)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("matplot.r")#
+source("legend.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov)[1]#
+D1 = matrix(rep(pov$x,n), n,n)#
+D2 = matrix(rep(pov$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)
+D
+D[1:10,1:10]
+DD=D[1:10,1:10]
+DD[-1,-1]
+D
+w
+bisquare(D)
+#Import the plotting functions:#
+library(plotrix)#
+setwd("~/git/gwr/code")#
+source("matplot.r")#
+#source("legend.r")#
+#
+#Define the bisquare weight function:#
+bisquare = function(x, z, bw) {#
+    ifelse( r(x=x, z=c(z[1], z[2])) < bw, (1 - (r(x=x, z=c(z[1],z[2]))/ bw)**2)**2, 0)#
+}#
+#
+bisquare = function(R, bw) {#
+    ifelse( R < bw, (1 - (R/bw)**2)**2, 0)#
+}#
+#
+#Define the distance function#
+r = function(x, z) { #
+    sqrt((x[1]-z[1])**2 + (x[2]-z[2])**2)#
+}#
+#
+#Fix an x.i and get the distance to all other x's:#
+R = function(x.i, xy.mat) {#
+    R = sapply(1:dim(xy.mat)[1], FUN=function(i) {r(x.i, xy.mat[i,])} )#
+    return(R)#
+}#
+#
+W = function(x.i, xy.mat, bw) {#
+    distance = R(x.i, xy.mat)#
+    W = bisquare(distance, bw)#
+    return(W)#
+}#
+#
+gwr.heatmap <- function(model, variable) { #
+    #Isolate the variable to plot:#
+    locations = model$SDF@coords#
+    coef.surface = as.data.frame(cbind(locations, model$SDF@data[[variable]]))#
+    names(coef.surface)[3] = variable#
+    #
+    #Heatmap of the data#
+    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
+    #
+    #Put the coefficients into a lat-long matrix#
+    for(row in 1:dim(coef.surface)[1]) {#
+        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+            ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+    }#
+#
+    #par(bty='n')#
+    gwr.matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+}#
+#
+gwr.heatmap.homebrew <- function(model, variable) {   #
+    #Isolate the variable to plot:#
+    locations = model[['coords']]#
+    coef.surface = as.data.frame(cbind(locations, model[['coefs']][[variable]]))#
+    names(coef.surface)[3] = variable#
+    #
+    #Heatmap of the data#
+    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
+    #
+    #Put the coefficients into a lat-long matrix#
+    for(row in 1:dim(coef.surface)[1]) {#
+        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = #
+            ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+    }#
+#
+    #par(bty='n')#
+    gwr.matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+}
+bisquare(D, bw=3)
+which(bisquare(D, bw=3)[,4]>0)
+which(bisquare(D, bw=3)[4,]>0)
+library(spgwr)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[1:100,]#
+df = pov3#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+cv_error = list()#
+raw_error = list()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=3)#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    print(i)#
+}
+library(spgwr)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[1:100,]#
+df = pov3#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = list()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,]#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    print(i)#
+}
+f
+df
+library(spgwr)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = list()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,]#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    print(i)#
+}
+library(lars)
+df
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = list()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,]#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    print(i)#
+}
+w.lasso.geo[[2]]
+predict(w.lasso.geo[[2]], df[2,])
+df[2,]
+?lars.predict
+?predict.lars
+predict.lars
+predict(w.lasso.geo[[2]], df[2,])
+predict(w.lasso.geo[[2]], df[2,], type='fit')
+predict(w.lasso.geo[[2]], newx=df[2,], type='fit')
+df[2,predictors]
+predict(w.lasso.geo[[2]], newx=df[2,predictors], type='fit')
+predict(w.lasso.geo[[2]], newx=df[2,predictors], type='fit') - df$logitindpov[2]
+predict(w.lasso.geo[[2]], newx=df[2,predictors], type='fit')$fit - df$logitindpov[2]
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = list()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,-i]#
+#
+    model = lm(f, data=df, weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    raw_error[[i]] = df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit')$fit#
+#
+    print(i)#
+}
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = list()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,-i]#
+#
+    model = lm(f, data=df[-i,], weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    raw_error[[i]] = df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit')$fit#
+#
+    print(i)#
+}
+as.matrix(df[-i,predictors])
+dim(as.matrix(df[-i,predictors]))
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = list()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,-i]#
+#
+    model = lm(f, data=df[-i,], weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    raw_error[[i]] = df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit')$fit#
+#
+    print(i)#
+}
+dim(w)
+dim(w.sqrt)
+dim(as.matrix(df[-i,predictors]))
+dim(w.sqrt) %*% dim(as.matrix(df[-i,predictors]))
+w.sqrt %*% as.matrix(df[-i,predictors])
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = list()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,-i]#
+#
+    model = lm(f, data=df[-i,], weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    raw_error[[i]] = df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit')$fit#
+#
+    print(i)#
+}
+w.eig
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = list()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,-i]#
+#
+    model = lm(f, data=df[-i,], weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    raw_error[[i]] = df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit')$fit#
+#
+    print(i)#
+}
+w
+dim(w)
+length(w)
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = list()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,-i]#
+#
+    model = lm(f, data=df[-i,], weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    raw_error[[i]] = df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit')$fit#
+#
+    print(i)#
+}
+raw_error
+as.matrix(raw_error)
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = data.frame()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,-i]#
+#
+    model = lm(f, data=df[-i,], weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    raw_error = rbind(raw_error, df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit')$fit)#
+#
+    print(i)#
+}
+raw_error
+dim(raw_error)
+predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit')
+predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit', mode='lambda')
+predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit', mode='l')
+predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit', mode='lambda', s=c(1,2,3))
+predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit', mode='lambda', s=seq(0, 10, 0.25))
+predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit', mode='lambda', s=seq(0, 2, 0.025))
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = data.frame()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,-i]#
+#
+    model = lm(f, data=df[-i,], weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    raw_error = rbind(raw_error, df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit', mode='lambda', s=seq(0, 2, 0.025))$fit)#
+#
+    print(i)#
+}
+raw_error
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = list()#
+raw_error = data.frame()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+lambda = seq(0, 2, 0.025)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,-i]#
+#
+    model = lm(f, data=df[-i,], weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    raw_error = rbind(raw_error, df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit', mode='lambda', s=lambda)$fit)#
+#
+    print(i)#
+}#
+#
+names(raw_error) = lambda
+raw_error[1:4,]
+library(spgwr)#
+library(lars)#
+#
+#Import the plotting functions:#
+setwd("~/git/gwr/code")#
+source("utils.r")#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#
+#
+#
+#Limit the data to just 100 points for now for computational reasons#
+pov3 = pov2[pov2$year==2006,][1:100,]#
+df = pov3#
+#
+#
+#
+#
+#Define a grid of locations where we'll fit a GWR model:#
+n=20#
+xx = as.vector(quantile(df$x, 1:n/(n+1)))#
+yy = as.vector(quantile(df$y, 1:n/(n+1)))#
+locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(pov3)[1]#
+D1 = matrix(rep(pov3$x,n), n,n)#
+D2 = matrix(rep(pov3$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+w = bisquare(D, bw=3)#
+#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+cv_error = data.frame()#
+w.lasso.geo = list()#
+coefs = list()#
+#
+#
+w.lasso.geo = list()#
+coefs = list()#
+ss = seq(0, 1, length.out=100)#
+lambda = seq(0, 2, 0.025)#
+#
+for(i in 1:dim(df)[1]) {#
+    w = D[i,-i]#
+#
+    model = lm(f, data=df[-i,], weights=w)#
+    #
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
+    #
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    #
+    cv_error = rbind(cv_error, df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit', mode='lambda', s=lambda)$fit)#
+#
+    print(i)#
+}#
+#
+names(cv_error) = lambda
+sum(cv_error**2[,1])
+sum(cv_error[,1]**2)
+sum(cv_error[,1])
+cv_error[,1]
+lengthcv_error[,1])
+length(cv_error[,1])
+sum((cv_error**2)[,1])
+for (k in dim(cv_error)[2]) {}
+for (k in dim(cv_error)[2]) {
+    print(k)
+    print(sum((cv_error**2)[k]))
+}
+for (k in dim(cv_error)[2]) {#
+    print(names(cv_error)[k])#
+    print(sum((cv_error**2)[k]))#
+}
+#
+for (k in 1:dim(cv_error)[2]) {#
+    cat(paste(names(cv_error)[k], ": ", sum((cv_error**2)[k]), "\n", sep=""))#
+}
+er = vector()#
+for (k in 1:dim(cv_error)[2]) {#
+    er = c(er, sum((cv_error**2)[k]))#
+    cat(paste(names(cv_error)[k], ": ", sum((cv_error**2)[k]), "\n", sep=""))#
+}
+plot(x=lambda, y=er)
+plot(x=lambda, y=er, type='l')
+t = seq(-10, 10, 0.2)
+a=4
+plot(x=t, y=(2*a+1)/2*(t-1)*log(1+t**2), type='l')
+plot(x=t, y=(1+t**2)**(-a-0.5), type='l')
+plot(x=t, y=(2*a+1)/2*log(1+t**2), type='l')
+plot(x=t, y=-(2*a+1)/2*log(1+t**2), type='l')
+par(new=TRUE)
+plot(x=t, y=-(2*a+1)*t*2, type='l')
+plot(x=t, y=-(2*a+1)*t**2, type='l')
+plot(x=t, y=-(2*a+1)/2*log(1+t**2), type='l')
+par(new=TRUE)
+plot(x=t, y=-(2*a+1)*t**2, type='l')
+plot(x=t, y=-(2*a+1)*t**2, type='l', ylim=c(-500, 0))
+par(new=TRUE)
+plot(x=t, y=-(2*a+1)/2*log(1+t**2), type='l', ylim=c(-500,0))
+plot(x=t, y=exp()-(2*a+1)/2*log(1+t**2)), type='l', ylim=c(-500,0))
+plot(x=t, y=exp(-(2*a+1)/2*log(1+t**2)), type='l', ylim=c(-500,0))
+par(new=TRUE)
+plot(x=t, y=exp(-(2*a+1)*t**2), type='l', ylim=c(-500, 0))
+plot(x=t, y=exp(-(2*a+1)*t**2), type='l', ylim=c(0, 1))
+par(new=TRUE)
+plot(x=t, y=exp(-(2*a+1)/2*log(1+t**2)), type='l', ylim=c(0,1))
