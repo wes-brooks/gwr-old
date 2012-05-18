@@ -1,9 +1,11 @@
+#Kernel function for the cubic smoothing spline
 rk <- function(x, z) {
     ((z-0.5)**2 - 1/12) * ((x-0.5)**2 - 1/12) / 4 - 
     ((abs(x-z) - 0.5)**4 - (abs(x-z)-0.5)**2 / 2 + 7/240) / 24
 }
 
 
+#Set up the X matrix (design matrix) for the smoothing spline
 spl.X <- function(x, xk) {
     q = length(xk) + 2
     n = length(x)
@@ -15,6 +17,8 @@ spl.X <- function(x, xk) {
 }
 
 
+
+#Set up the smooth
 spl.S <- function(xk) {
     q = length(xk) + 2
     S = matrix(0, q, q)
@@ -24,12 +28,15 @@ spl.S <- function(xk) {
 }
 
 
+#Find a matrix square root
 mat.sqrt <- function(S) {
     d = eigen(S, symmetric=TRUE)
     ev = ifelse(d$values>0, d$values, 0)
     rS = d$vectors %*% diag(ev**0.5) %*% t(d$vectors)
 }
 
+
+#Fit a penalized regression spline
 prs.fit <- function(y, x, xk, lambda) {
     q = length(xk) + 2
     n = length(x)
@@ -40,6 +47,7 @@ prs.fit <- function(y, x, xk, lambda) {
 }
 
 
+#Generate the smooths for an additive model
 am.setup <- function(x.list) {
     S = list()
     q.tot = sum(sapply(x.list, function(x) {length(unique(x))}))
@@ -68,6 +76,7 @@ am.setup <- function(x.list) {
 }
 
 
+#Fit an additive model to data
 fit.am <- function(y, X, S, sp) {
     dS = dim(S[[1]])
     S.tot = matrix(0, dS[1], dS[2])

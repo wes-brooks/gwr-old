@@ -91,7 +91,7 @@ coefs = list()
 w.lasso.geo = list()
 coefs = list()
 ss = seq(0, 1, length.out=100)
-lambda = seq(0, 2, 0.025)
+lambda = seq(0, 2, length.out=2000)
 
 for(i in 1:dim(df)[1]) {
     w = D[i,-i]
@@ -131,9 +131,7 @@ for (j in 1:dim(df)[1]) {
     
     affected = which(w[j,] > 0)
 
-    for(i in affected) {
-        
-    
+    for(i in affected) {    
         model = lm(f, data=loodf, weights=w)
         
         w.eig <- eigen(diag(w))
@@ -142,10 +140,17 @@ for (j in 1:dim(df)[1]) {
         
         for (col in predictors) {
             coefs[[j]][[col]] = c(coefs[[j]][[col]], model$coef[[col]])
-        }
-        
+        }        
         print(i)
-    }
-    
+    }    
     print(j)
+}
+
+
+#Plot the CV error along the lasso path for each data point
+pred = data.frame()
+l = seq(0, 1, length.out=1000)
+
+for(k in 1:100) {
+    pred = rbind(pred, abs(predict(w.lasso.geo[[k]], newx=pov3[k,predictors], mode='lambda', s=l)$fit - pov3$logitindpov[k]))
 }
