@@ -1,5 +1,12 @@
 library(spgwr)
 library(lars)
+library(maps)
+
+
+#extract reference data
+mapcounties <- map_data("county")
+mapstates <- map_data("state")
+
 
 #Import the plotting functions:
 setwd("~/git/gwr/code")
@@ -54,24 +61,26 @@ pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
 
 
 #Limit the data to just 100 points for now for computational reasons
-pov3 = pov2[pov2$year==2006,][1:100,]
-df = pov3
+pov2006 = pov2[pov2$year==2006,]
+df = pov2006
 
 
 
 
-#Define a grid of locations where we'll fit a GWR model:
-n=20
-xx = as.vector(quantile(df$x, 1:n/(n+1)))
-yy = as.vector(quantile(df$y, 1:n/(n+1)))
-locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))
+
 
 #Use this trick to compute the matrix of distances very quickly
-n = dim(pov3)[1]
-D1 = matrix(rep(pov3$x,n), n,n)
-D2 = matrix(rep(pov3$y,n), n,n)
+bw=3
+n = dim(pov2006)[1]
+D1 = matrix(rep(pov2006$x,n), n,n)
+D2 = matrix(rep(pov2006$y,n), n,n)
 D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)
-w = bisquare(D, bw=3)
+w = bisquare(D, bw=bw)
+
+
+
+
+
 
 
 #Define which variables we'll use as predictors of poverty:
@@ -83,22 +92,29 @@ for (col in predictors) {
     assign(col, vector())
 }
 
+
+model.data = df[,predictors]
+model.data[['logitindpov']] = df[['logitindpov']]
+
+
+
+
+
 cv_error = data.frame()
-w.lasso.geo = list()
-coefs = list()
-
-
 w.lasso.geo = list()
 coefs = list()
 ss = seq(0, 1, length.out=100)
 lambda = seq(0, 2, length.out=2000)
+l = vector()
+
+
 
 for(i in 1:dim(df)[1]) {
-    w = D[i,-i]
+    loow = w[i,-i]
 
-    model = lm(f, data=df[-i,], weights=w)
+    model = lm(f, data=model.data[-i,], weights=loow)
     
-    w.eig <- eigen(diag(w))
+    w.eig <- eigen(diag(loow))
     w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)
     w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))
     
@@ -106,51 +122,73 @@ for(i in 1:dim(df)[1]) {
         coefs[[col]] = c(coefs[[col]], model$coef[[col]])
     }
     
-    cv_error = rbind(cv_error, df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit', mode='lambda', s=lambda)$fit)
-
+    l = c(l, which.min(abs(predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[i,11]))/1000)
     print(i)
 }
 
-names(cv_error) = lambda
 
-er = vector()
-for (k in 1:dim(cv_error)[2]) {
-    er = c(er, sum((cv_error**2)[k]))
-    cat(paste(names(cv_error)[k], ": ", sum((cv_error**2)[k]), "\n", sep=""))
+
+#Prepare something for plotting:
+output = vector()
+var = 'pserve'
+df.temp = df
+for (i in 1:dim(df.temp)[1]) {
+    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])
 }
 
 
 
-for (j in 1:dim(df)[1]) {
-    loodf = df[-j,]
-    looD = D[-j,-j]
 
-    ss = seq(0, 1, length.out=100)
-    w.lasso.geo[[j]] = list()
-    coefs[[j]] = list()
-    
-    affected = which(w[j,] > 0)
+df.temp$output = output
+df.temp$lambda = l
 
-    for(i in affected) {    
-        model = lm(f, data=loodf, weights=w)
-        
-        w.eig <- eigen(diag(w))
-        w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)
-        w.lasso.geo[[j]][[i]] = lars(x=w.sqrt %*% as.matrix(loodf[,predictors]), y=as.matrix(loodf$logitindpov))
-        
-        for (col in predictors) {
-            coefs[[j]][[col]] = c(coefs[[j]][[col]], model$coef[[col]])
-        }        
-        print(i)
-    }    
-    print(j)
+
+
+
+#define color buckets
+colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")
+
+bin = vector()
+breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)
+for (i in 1:dim(df.temp)[1]) {
+    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))
+}
+df.temp$color = colors[bin]
+
+
+
+df.temp$county = tolower(as.character(df.temp$COUNTY))
+for (i in 1:dim(df.temp)[1]) {
+    county = gsub("['-. ]", '', df.temp$county[i])
+    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')
 }
 
 
-#Plot the CV error along the lasso path for each data point
-pred = data.frame()
-l = seq(0, 1, length.out=1000)
+#extract reference data
+mapcounties <- map_data("county")
+mapstates <- map_data("state")
 
-for(k in 1:100) {
-    pred = rbind(pred, abs(predict(w.lasso.geo[[k]], newx=pov3[k,predictors], mode='lambda', s=l)$fit - pov3$logitindpov[k]))
-}
+#limit our view to the midwest:
+midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]
+midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]
+
+#merge data with ggplot county coordinates
+midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))
+mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")
+mergedata <- mergedata[order(mergedata$group, mergedata$order),]
+
+#draw map
+map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))
+map <- map + scale_fill_gradient(low='white', high='red', limits=range(output)) + #scale_fill_brewer(palette="PuRd") +
+    coord_map(project="globular") +
+    opts(legend.position = "none")
+
+map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))
+
+#add state borders
+map <- map + geom_path(data = midweststates, colour = "white", size = .75)
+
+#add county borders
+map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)
+map
+
