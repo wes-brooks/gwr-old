@@ -1,6 +1,8 @@
 library(spgwr)
 library(lars)
 library(maps)
+library(ggplot2)
+library(fossil)
 
 
 #extract reference data
@@ -59,32 +61,13 @@ pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
 
 
 
-
-#Limit the data to just 100 points for now for computational reasons
-pov2006 = pov2[pov2$year==2006,]
-df = pov2006
-
-
-
-
-
-
-#Use this trick to compute the matrix of distances very quickly
-bw=3
-n = dim(pov2006)[1]
-D1 = matrix(rep(pov2006$x,n), n,n)
-D2 = matrix(rep(pov2006$y,n), n,n)
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)
-w = bisquare(D, bw=bw)
-
-
-
-
-
+#Set the matrix that we'll use for GWR
+#df = pov2[pov2$year==2006,]
+df = pov2
 
 
 #Define which variables we'll use as predictors of poverty:
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro', 'pind')
 f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))
 
 #Make a new variable with the name of each predictor:
@@ -92,12 +75,44 @@ for (col in predictors) {
     assign(col, vector())
 }
 
+model.data = pov2[,predictors]
+model.data[['logitindpov']] = pov2[['logitindpov']]
 
-model.data = df[,predictors]
-model.data[['logitindpov']] = df[['logitindpov']]
+#Put the locations into a more friendly format:
+loc = data.frame(x=df$x, y=df$y)
+loc.unique = unique(loc)
+counties = data.frame(x=df$x, y=df$y, county=as.character(df$COUNTY), state=as.character(df$STATE))
+
+#Select the bandwidth for a GWR model without selection:
+#k.nn = gwr.sel(f, data=df, coords=loc, longlat=TRUE, adapt=TRUE, gweight=gwr.bisquare)
+k.nn = 0.09446181
+#bw = gwr.sel(f, data=df, coords=loc, longlat=TRUE, adapt=FALSE, gweight=gwr.bisquare)
+bw = 295.9431  #bandwidth in kilometers
+
+#Use the spgwr package to produce a model without selection
+knn_model = gwr(f, data=df, coords=loc, adapt=k.nn, longlat=TRUE, gweight=gwr.bisquare, fit.points=unique(loc))
+bw_model = gwr(f, data=df, coords=loc, bandwidth=bw, longlat=TRUE, gweight=gwr.bisquare, fit.points=unique(loc))
+
+#Plot the full model on a map
+plot.coef.gwr(model=bw_model, var='pind')
 
 
 
+
+
+
+
+
+
+#Compute the matrix of distances (in kilometers)
+n = dim(loc)[1]
+D = as.matrix(earth.dist(loc),n,n)
+w = bisquare(D, bw=bw)
+
+#Do the same for just the unique locations
+n.unique = dim(loc.unique)[1]
+D.unique = as.matrix(earth.dist(loc.unique),n,n)
+w.unique = bisquare(D.unique, bw=bw)
 
 
 cv_error = data.frame()
@@ -106,89 +121,28 @@ coefs = list()
 ss = seq(0, 1, length.out=100)
 lambda = seq(0, 2, length.out=2000)
 l = vector()
+col.out = which(names(model.data)=='logitindpov')
+reps = dim(loc)[1]/dim(loc.unique)[1]
 
 
+for(i in 1:dim(loc.unique)[1]) {
+    colocated = which(loc$x==loc.unique$x[i] & loc$y==loc.unique$y[i])
+    loow = w.unique[i,-colocated]
 
-for(i in 1:dim(df)[1]) {
-    loow = w[i,-i]
-
-    model = lm(f, data=model.data[-i,], weights=loow)
+    #model = lm(f, data=model.data[-colocated,], weights=loow)
     
-    w.eig <- eigen(diag(loow))
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))
-    
-    for (col in predictors) {
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])
-    }
-    
-    l = c(l, which.min(abs(predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[i,11]))/1000)
+    w.sqrt <- diag(rep(sqrt(loow), reps))
+    #block.eig = list()
+    #block.eig[['vectors']] = matrix(0, length(loow)*reps, length(loow)*reps)
+    #block.eig[['vectors']][,1:length(loow)] = rbind(w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors)
+    #block.eig[['values']] = c(reps*w.eig$values, rep(0, (reps-1)*length(loow)))
+
+    #w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% t(w.eig$vectors)
+    #w.sqrt = block.eig[['vectors']] %*% diag(sqrt(block.eig[['values']])) %*% t(block.eig[['vectors']])
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-colocated,predictors]), y=w.sqrt %*% as.matrix(df$logitindpov[-colocated]))
+     
+    l = c(l, which.min(colSums(abs(predict(w.lasso.geo[[i]], newx=model.data[colocated,-col.out], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out])))/1000)
     print(i)
 }
 
-
-
-#Prepare something for plotting:
-output = vector()
-var = 'pserve'
-df.temp = df
-for (i in 1:dim(df.temp)[1]) {
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])
-}
-
-
-
-
-df.temp$output = output
-df.temp$lambda = l
-
-
-
-
-#define color buckets
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")
-
-bin = vector()
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)
-for (i in 1:dim(df.temp)[1]) {
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))
-}
-df.temp$color = colors[bin]
-
-
-
-df.temp$county = tolower(as.character(df.temp$COUNTY))
-for (i in 1:dim(df.temp)[1]) {
-    county = gsub("['-. ]", '', df.temp$county[i])
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')
-}
-
-
-#extract reference data
-mapcounties <- map_data("county")
-mapstates <- map_data("state")
-
-#limit our view to the midwest:
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]
-
-#merge data with ggplot county coordinates
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]
-
-#draw map
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))
-map <- map + scale_fill_gradient(low='white', high='red', limits=range(output)) + #scale_fill_brewer(palette="PuRd") +
-    coord_map(project="globular") +
-    opts(legend.position = "none")
-
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))
-
-#add state borders
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)
-
-#add county borders
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)
-map
 
