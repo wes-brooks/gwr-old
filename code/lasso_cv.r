@@ -79,22 +79,23 @@ model.data = pov2[,predictors]
 model.data[['logitindpov']] = pov2[['logitindpov']]
 
 #Put the locations into a more friendly format:
-loc = data.frame(x=df$x, y=df$y)
+loc = data.frame(x=df$x, y=df$y, county=as.character(df$COUNTY), state=as.character(df$STATE))
 loc.unique = unique(loc)
-counties = data.frame(x=df$x, y=df$y, county=as.character(df$COUNTY), state=as.character(df$STATE))
+model.locs = loc.unique[,c('county', 'state')]
+model.coords = loc.unique[,c('x', 'y')]
 
 #Select the bandwidth for a GWR model without selection:
-#k.nn = gwr.sel(f, data=df, coords=loc, longlat=TRUE, adapt=TRUE, gweight=gwr.bisquare)
+#k.nn = gwr.sel(f, data=df, coords=loc[,c('x','y')], longlat=TRUE, adapt=TRUE, gweight=gwr.bisquare)
 k.nn = 0.09446181
-#bw = gwr.sel(f, data=df, coords=loc, longlat=TRUE, adapt=FALSE, gweight=gwr.bisquare)
+#bw = gwr.sel(f, data=df, coords=loc[,c('x','y')], longlat=TRUE, adapt=FALSE, gweight=gwr.bisquare)
 bw = 295.9431  #bandwidth in kilometers
 
 #Use the spgwr package to produce a model without selection
-knn_model = gwr(f, data=df, coords=loc, adapt=k.nn, longlat=TRUE, gweight=gwr.bisquare, fit.points=unique(loc))
-bw_model = gwr(f, data=df, coords=loc, bandwidth=bw, longlat=TRUE, gweight=gwr.bisquare, fit.points=unique(loc))
+knn_model = gwr(f, data=df, coords=as.matrix(df[,c('x','y')]), adapt=k.nn, longlat=TRUE, gweight=gwr.bisquare, fit.points=as.matrix(model.coords))
+bw_model = gwr(f, data=df, coords=as.matrix(df[,c('x','y')]), bandwidth=bw, longlat=TRUE, gweight=gwr.bisquare, fit.points=as.matrix(model.coords))
 
 #Plot the full model on a map
-plot.coef.gwr(model=bw_model, var='pind')
+plot.coef.gwr(model=bw_model, var='pind', locs=loc)
 
 
 
@@ -106,12 +107,12 @@ plot.coef.gwr(model=bw_model, var='pind')
 
 #Compute the matrix of distances (in kilometers)
 n = dim(loc)[1]
-D = as.matrix(earth.dist(loc),n,n)
+D = as.matrix(earth.dist(loc[,c('x','y')]),n,n)
 w = bisquare(D, bw=bw)
 
 #Do the same for just the unique locations
-n.unique = dim(loc.unique)[1]
-D.unique = as.matrix(earth.dist(loc.unique),n,n)
+n.unique = dim(model.coords)[1]
+D.unique = as.matrix(earth.dist(model.coords),n,n)
 w.unique = bisquare(D.unique, bw=bw)
 
 
@@ -122,11 +123,11 @@ ss = seq(0, 1, length.out=100)
 lambda = seq(0, 2, length.out=2000)
 l = vector()
 col.out = which(names(model.data)=='logitindpov')
-reps = dim(loc)[1]/dim(loc.unique)[1]
+reps = dim(model.data)[1]/n.unique
 
 
-for(i in 1:dim(loc.unique)[1]) {
-    colocated = which(loc$x==loc.unique$x[i] & loc$y==loc.unique$y[i])
+for(i in 1:dim(model.coords)[1]) {
+    colocated = which(loc$x==model.coords$x[i] & loc$y==model.coords$y[i])
     loow = w.unique[i,-colocated]
 
     #model = lm(f, data=model.data[-colocated,], weights=loow)
@@ -139,10 +140,13 @@ for(i in 1:dim(loc.unique)[1]) {
 
     #w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% t(w.eig$vectors)
     #w.sqrt = block.eig[['vectors']] %*% diag(sqrt(block.eig[['values']])) %*% t(block.eig[['vectors']])
+    
     w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-colocated,predictors]), y=w.sqrt %*% as.matrix(df$logitindpov[-colocated]))
      
     l = c(l, which.min(colSums(abs(predict(w.lasso.geo[[i]], newx=model.data[colocated,-col.out], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out])))/1000)
     print(i)
 }
+
+
 
 

@@ -1,9 +1,9 @@
 #Import the plotting functions:
 library(plotrix)
 library(sp)
-setwd("~/git/gwr/code")
-source("matplot.r")
-#source("legend.r")
+setwd('~/git/gwr/code')
+source('matplot.r')
+#source('legend.r')
 
 #Define the bisquare weight function:
 bisquare = function(x, z, bw) {
@@ -19,7 +19,7 @@ r = function(x, z) {
     sqrt((x[1]-z[1])**2 + (x[2]-z[2])**2)
 }
 
-#Fix an x.i and get the distance to all other x's:
+#Fix an x.i and get the distance to all other x’s:
 R = function(x.i, xy.mat) {
     R = sapply(1:dim(xy.mat)[1], FUN=function(i) {r(x.i, xy.mat[i,])} )
     return(R)
@@ -45,7 +45,7 @@ gwr.heatmap <- function(model, variable) {
     
     #Put the coefficients into a lat-long matrix
     for(row in 1:dim(coef.surface)[1]) {
-        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = 
+        mat[as.character(coef.surface[row,'y']), as.character(coef.surface[row,'x'])] = 
             ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)
     }
 
@@ -67,7 +67,7 @@ gwr.heatmap.homebrew <- function(model, variable) {
     
     #Put the coefficients into a lat-long matrix
     for(row in 1:dim(coef.surface)[1]) {
-        mat[as.character(coef.surface[row,"y"]), as.character(coef.surface[row,"x"])] = 
+        mat[as.character(coef.surface[row,'y']), as.character(coef.surface[row,'x'])] = 
             ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)
     }
 
@@ -80,15 +80,15 @@ gwr.heatmap.homebrew <- function(model, variable) {
 
 plot.coef.gwr = function(model, var, locs, breaks=NULL) {
     #Prepare something for plotting:
-    locs = merge(unique(locs), full_model$SDF@coords)
+    locs = merge(unique(locs), model$SDF@coords)
     name.var = var
-    var = model$SDF@data[,var]
+    var = model$SDF@data[,name.var]
    
     df.plot = data.frame(output=var)
               
     #Put each cell into a color bucket    
     if (is.null(breaks)) {
-        breaks = as.vector(quantile(output, (1:6)/6))
+        breaks = as.vector(quantile(df.plot$output, (1:6)/6))
     }
     
     bin = vector()
@@ -96,7 +96,7 @@ plot.coef.gwr = function(model, var, locs, breaks=NULL) {
         bin = c(bin, min(which(breaks >= df.plot$output[i])))
     }
 
-    colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")
+    colors = c('#980043', '#C994C7', '#D4B9DA', '#DD1C77', '#DF65B0', '#F1EEF6')
     df.plot$color = colors[bin]
      
 
@@ -110,30 +110,29 @@ plot.coef.gwr = function(model, var, locs, breaks=NULL) {
     
     
     #extract reference data
-    mapcounties <- map_data("county")
-    mapstates <- map_data("state")
+    mapcounties <- map_data('county')
+    mapstates <- map_data('state')
     
     #limit our view to the midwest:
     midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]
     midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.plot$state),]
     
     #merge data with ggplot county coordinates
-    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=","))
-    mergedata <- merge(midwestcounties, df.plot, by.x = "county", by.y = "county")
+    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=','))
+    mergedata <- merge(midwestcounties, df.plot, by.x='county', by.y='county')
     mergedata <- mergedata[order(mergedata$group, mergedata$order),]
     
     #draw map
     map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))
-    map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name="coef") + #scale_fill_brewer(palette="PuRd") +
-        coord_map(project="globular")
+    map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
     
     map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))
     
     #add state borders
-    map <- map + geom_path(data=midweststates, colour="white", size=0.75)
+    map <- map + geom_path(data=midweststates, colour='white', size=0.75)
     
     #add county borders
-    map <- map + geom_path(data=midwestcounties, colour="white", size=0.5, alpha=0.1)
+    map <- map + geom_path(data=midwestcounties, colour='white', size=0.5, alpha=0.1)
     map + opts(title=paste("Coefficient of '", name.var, "' in a model for logitindpov", sep='')) #+ guides(fill=guide_legend(reverse=TRUE))
 }
     
@@ -148,7 +147,7 @@ plot.coef.gwlars = function(model, var, locs, l, data, breaks=NULL) {
     col.out = which(names(data)=='logitindpov')
     
     for (i in 1:length(model)) {
-        var = c(var, coef.lars(model[[i]], newx=data[i,-col.out], mode='lambda', s=1000*l[i])[[name.var]])
+        var = c(var, coef.lars(model[[i]], newx=data[i,-col.out], mode='lambda', s=l[i])[[name.var]])
     }
    
     df.plot = data.frame(output=var)
@@ -162,8 +161,8 @@ plot.coef.gwlars = function(model, var, locs, l, data, breaks=NULL) {
     }    
     
     #extract reference data
-    mapcounties <- map_data("county")
-    mapstates <- map_data("state")
+    mapcounties <- map_data('county')
+    mapstates <- map_data('state')
     
     #limit our view to the midwest:
     midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]
@@ -176,16 +175,20 @@ plot.coef.gwlars = function(model, var, locs, l, data, breaks=NULL) {
     
     #draw map
     map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))
-    map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name="coef") + #scale_fill_brewer(palette="PuRd") +
-        coord_map(project="globular")
+    if (mean(df.plot$output<=0))      
+        map <- map + scale_fill_gradient(low='red', high='white', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
     
+    else
+        map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
+    
+
     map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))
     
     #add state borders
-    map <- map + geom_path(data=midweststates, colour="white", size=0.75)
+    map <- map + geom_path(data=midweststates, colour='white', size=0.75)
     
     #add county borders
-    map <- map + geom_path(data=midwestcounties, colour="white", size=0.5, alpha=0.1)
+    map <- map + geom_path(data=midwestcounties, colour='white', size=0.5, alpha=0.1)
     map + opts(title=paste("Coefficient of '", name.var, "' in a model for logitindpov", sep='')) #+ guides(fill=guide_legend(reverse=TRUE))
 }
     
@@ -197,7 +200,7 @@ plot.effect.gwlars = function(model, var, locs, l, data, breaks=NULL) {
     col.out = which(names(data)=='logitindpov')
     
     for (i in 1:length(model)) {
-        var = c(var, data[[name.var]][i]*coef.lars(model[[i]], newx=data[i,-col.out], mode='lambda', s=1000*l[i])[[name.var]])
+        var = c(var, data[[name.var]][i]*coef.lars(model[[i]], newx=data[i,-col.out], mode='lambda', s=l[i])[[name.var]])
     }
 
     df.plot = data.frame(output=var)
@@ -211,30 +214,29 @@ plot.effect.gwlars = function(model, var, locs, l, data, breaks=NULL) {
     }
     
     #extract reference data
-    mapcounties <- map_data("county")
-    mapstates <- map_data("state")
+    mapcounties <- map_data('county')
+    mapstates <- map_data('state')
     
     #limit our view to the midwest:
     midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]
     midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.plot$state),]
     
     #merge data with ggplot county coordinates
-    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=","))
-    mergedata <- merge(midwestcounties, df.plot, by.x = "county", by.y = "county")
+    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=','))
+    mergedata <- merge(midwestcounties, df.plot, by.x = 'county', by.y = 'county')
     mergedata <- mergedata[order(mergedata$group, mergedata$order),]
     
     #draw map
     map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))
-    map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name="coef") + #scale_fill_brewer(palette="PuRd") +
-        coord_map(project="globular")
+    map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='effect') + coord_map(project=”globular”)
     
     map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))
     
     #add state borders
-    map <- map + geom_path(data=midweststates, colour="white", size=0.75)
+    map <- map + geom_path(data=midweststates, colour='white', size=0.75)
     
     #add county borders
-    map <- map + geom_path(data=midwestcounties, colour="white", size=0.5, alpha=0.1)
+    map <- map + geom_path(data=midwestcounties, colour=,'white', size=0.5, alpha=0.1)
     map + opts(title=paste("Coefficient of '", name.var, "' in a model for logitindpov", sep='')) #+ guides(fill=guide_legend(reverse=TRUE))
 }
     
