@@ -120,7 +120,7 @@ cv_error = data.frame()
 w.lasso.geo = list()
 coefs = list()
 ss = seq(0, 1, length.out=100)
-lambda = seq(0, 2, length.out=2000)
+lambda = seq(0, 5, length.out=5000)
 l = vector()
 col.out = which(names(model.data)=='logitindpov')
 reps = dim(model.data)[1]/n.unique
