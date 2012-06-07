@@ -88,7 +88,8 @@ model.coords = loc.unique[,c('x', 'y')]
 #k.nn = gwr.sel(f, data=df, coords=loc[,c('x','y')], longlat=TRUE, adapt=TRUE, gweight=gwr.bisquare)
 k.nn = 0.09446181
 #bw = gwr.sel(f, data=df, coords=loc[,c('x','y')], longlat=TRUE, adapt=FALSE, gweight=gwr.bisquare)
-bw = 295.9431  #bandwidth in kilometers
+#bw = 295.9431  #bandwidth in kilometers
+bw = 125.314 #from gwlars.sel
 
 #Use the spgwr package to produce a model without selection
 knn_model = gwr(f, data=df, coords=as.matrix(df[,c('x','y')]), adapt=k.nn, longlat=TRUE, gweight=gwr.bisquare, fit.points=as.matrix(model.coords))
@@ -118,6 +119,7 @@ w.unique = bisquare(D.unique, bw=bw)
 
 cv_error = data.frame()
 w.lasso.geo = list()
+#glmnet.geo = list()
 coefs = list()
 ss = seq(0, 1, length.out=100)
 lambda = seq(0, 5, length.out=5000)
@@ -142,8 +144,10 @@ for(i in 1:dim(model.coords)[1]) {
     #w.sqrt = block.eig[['vectors']] %*% diag(sqrt(block.eig[['values']])) %*% t(block.eig[['vectors']])
     
     w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-colocated,predictors]), y=w.sqrt %*% as.matrix(df$logitindpov[-colocated]))
-     
+    #glmnet.geo[[i]] = glmnet(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pfampov[-colocated], 1-df$pfampov[-colocated])), weights=rep(loow, reps), family='binomial')
+ 
     l = c(l, which.min(colSums(abs(predict(w.lasso.geo[[i]], newx=model.data[colocated,-col.out], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out])))/1000)
+    #l = c(l, glmnet.geo[[i]][['lambda']][which.min(colSums(abs(predict(glmnet.geo[[i]], newx=as.matrix(model.data[colocated,-col.out]), type='response') - model.data[colocated,col.out])))])
     print(i)
 }
 
