@@ -1,903 +1,577 @@
-unemp = read.csv("../data/unemployment09.csv", header=FALSE)#
-abbrevs = list('alabama'='al', 'alaska'='ak', 'arizona'='az', 'arkansas'='ar', 'california'='ca', 'colorado'='co', 'connecticut'='ct', 'delaware'='de', 'florida'='fl', 'georgia'='ga', 'hawaii'='hi', 'idaho'='id', 'illinois'='il', 'indiana'='in', 'iowa'='ia', 'kansas'='ks', 'kentucky'='ky', 'louisiana'='la', 'maine'='me', 'maryland'='md', 'massacusetts'='ma', 'michigan'='mi', 'minnesota'='mn', 'mississippi'='ms', 'missouri'='mo', 'montana'='mt', 'nebraska'='ne', 'nevada'='nv', 'new hampshire'='nh', 'new jersey'='nj', 'new mexico'='nm', 'new york'='ny', 'north carolina'='nc', 'north dakota'='nd', 'ohio'='oh', 'oklahoma'='ok', 'oregon'='or', 'pennsylvania'='pa', 'rhode island'='ri', 'south carolina'='sc', 'south dakota'='sd', 'tennessee'='tn', 'texas'='tx', 'utah'='ut', 'vermont'='vt', 'virginia'='va', 'washington'='wa', 'west virginia'='wv', 'wisconsin'='wi', 'wyoming'='wy', 'puerto rico'='pr', 'columbia'='dc')#
-states = as.vector(names(abbrevs), mode='list')#
-names(states) = as.vector(unlist(abbrevs))#
-descriptors = c('county', 'parish', 'precinct', 'ward', 'borough', 'county/city', 'county/town', 'city', 'municipio', 'census area', 'borough/municipality', 'borough/city')#
+names(tps[['smooth']][[1]])
+tps[['smooth']][[1]][['xt']]
+tps[['smooth']][[1]]$xt
+tps[['smooth']][[1]][['fixed']]
+tps[['smooth']][[1]][['vn']]
+tps[['smooth']][[1]][['S']]
+names(tps[['smooth']][[1]])
+names(tps)
+names(tps[['smooth']][[1]])
+tps[['smooth']][[1]][['Xu']]
+cbind(rep(1,49),tps[['smooth']][[1]][['Xu']])
+tps2 = gam(income ~ s(x, y, k-48))
+tps2 = gam(income ~ s(x, y, k=48))
+tps2 = gam(income ~ s(x, y, k=48, fixed=TRUE))
+tps2 = gam(income ~ s(x, y, k=48))
+tps2
+tps
+?lanczos
+E = matrix(0, 49, 49)
+for( i in 1:49){}
+for( i in 1:49){
+for(j in 1:49){
+E[i,j]=eta(x[i], y[i], c(x[j],y[j]))
+}}
+E
+eigen(E)
+str(eigen(E))
+T
+T = cbind(1, x, y)#
+U = eigen(E)[["vectors"]][,1:48]#
+TU = t(T) %*% U
+TU
+dim(tps[['smooth']][[1]][['UZ']])
+dim(tps[['smooth']][[1]][['S']])
+tps[['smooth']][[1]][['S']]
+S=tps[['smooth']][[1]][['S']]
+t(S) %*% S
+type(S)
+typeof(S)
+S = as.matrix(S)
+t(S) %*% S
+typeof(S)
+str(S)
+S = matrix(S)
+str(S)
+typeof(S)
+s[,1\]
+s[,1]
+S[,1]
+t(S[1])
+t(S[,1])
+t(S[[1]])
+t(S[[1]]) %*% S[[1]]
+?survfit
+library(survival)
+?survfit
+?survreg
+data(kidney)
+names(kidney)
+kidney
+data(kidrecur)
+data(kidrecurr)
+library(KMsurv)
+data(kidney)
+names(kidney)
+Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
 #
-pop1 = vector()#
-pop2 = vector()#
-pop3 = vector()#
-for (i in 1:dim(unemp)[1]) {#
-    pop1 = c(pop1, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V6[i])), ',')[[1]], collapse='')))#
-    pop2 = c(pop2, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V7[i])), ',')[[1]], collapse='')))#
-    pop3 = c(pop3, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V8[i])), ',')[[1]], collapse='')))#
-}#
-unemp$V6 = pop1#
-unemp$V7 = pop2#
-unemp$V8 = pop3#
+#Create a Weibull survival regression model#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')
+kidney.model
+summary(kidney.weibull)
+summary(kidney.model)
+kidney$type
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')
+perc.model
+summary9perc.model
+summary(perc.model)
+dim(kidney)
+perc.model$var
+solve(perc.model$var)
+sqrt(perc.model$var)
+perc.model$var**(0.5)
+?rmvnorm
+perc.model$coef
+perc.model$scale
+log(perc.model$scale)
+perc.model$coef[["(Intercept)"]]
+Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')#
 #
-names(unemp) = c("LAUS", 'stateid', 'countyid', 'county', 'year', '2009 population', '2000 population', 'population change', 'unemployment')#
-unemp$year = as.numeric(unemp$year) #
-unemp$county = as.character(unemp$county)#
-locality =  strsplit(tolower(unemp$county), ', ')#
-for (i in 1:length(locality)) {#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(paste(' ', descriptors[j], sep=''), '', locality[[i]][1])#
-    }#
-    unemp$county[i] = paste(locality[[i]][1], states[[locality[[i]][2]]], sep=',')#
-}#
-unemp$stateid = as.factor(unemp$stateid)#
-unemp$countyid = as.factor(unemp$countyid)#
+#Apply the formula (p396 of Klein and Moeschberger) for the variance of the transformed params:#
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 1, 2)
+grad.lambda
+var.lambda = grad.lambda %*% perc.model$var %*% grad.lambda
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda
+var.lambda
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha
+var.alpha
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+lambda = exp(-mu * exp(-lsigma))#
+alpha = 1 / exp(lsigma)#
 #
-unemp$colorBins = colors[ceiling(length(colors)*rank(-unemp$unemployment)/dim(unemp)[1])]
-extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda#
 #
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(subregion, region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha
+alpha
+lambda
+sqrt#Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
 #
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=colorBins))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')#
 #
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
+#Extract the parameters as lambda and alpha:#
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+lambda = exp(-mu * exp(-lsigma))#
+alpha = 1 / exp(lsigma)#
 #
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-unemp$county
-mapcounties$county
-unique(mapcounties$county)
-unemp = read.csv("../data/unemployment09.csv", header=FALSE)#
-abbrevs = list('alabama'='al', 'alaska'='ak', 'arizona'='az', 'arkansas'='ar', 'california'='ca', 'colorado'='co', 'connecticut'='ct', 'delaware'='de', 'florida'='fl', 'georgia'='ga', 'hawaii'='hi', 'idaho'='id', 'illinois'='il', 'indiana'='in', 'iowa'='ia', 'kansas'='ks', 'kentucky'='ky', 'louisiana'='la', 'maine'='me', 'maryland'='md', 'massacusetts'='ma', 'michigan'='mi', 'minnesota'='mn', 'mississippi'='ms', 'missouri'='mo', 'montana'='mt', 'nebraska'='ne', 'nevada'='nv', 'new hampshire'='nh', 'new jersey'='nj', 'new mexico'='nm', 'new york'='ny', 'north carolina'='nc', 'north dakota'='nd', 'ohio'='oh', 'oklahoma'='ok', 'oregon'='or', 'pennsylvania'='pa', 'rhode island'='ri', 'south carolina'='sc', 'south dakota'='sd', 'tennessee'='tn', 'texas'='tx', 'utah'='ut', 'vermont'='vt', 'virginia'='va', 'washington'='wa', 'west virginia'='wv', 'wisconsin'='wi', 'wyoming'='wy', 'puerto rico'='pr', 'columbia'='dc')#
-states = as.vector(names(abbrevs), mode='list')#
-names(states) = as.vector(unlist(abbrevs))#
-descriptors = c('county', 'parish', 'precinct', 'ward', 'borough', 'county/city', 'county/town', 'city', 'municipio', 'census area', 'borough/municipality', 'borough/city')#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda#
+se.lambda = sqrt(var.lambda)#
 #
-pop1 = vector()#
-pop2 = vector()#
-pop3 = vector()#
-for (i in 1:dim(unemp)[1]) {#
-    pop1 = c(pop1, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V6[i])), ',')[[1]], collapse='')))#
-    pop2 = c(pop2, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V7[i])), ',')[[1]], collapse='')))#
-    pop3 = c(pop3, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V8[i])), ',')[[1]], collapse='')))#
-}#
-unemp$V6 = pop1#
-unemp$V7 = pop2#
-unemp$V8 = pop3#
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha#
+se.alpha = sqrt(var.alpha)
+Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
 #
-names(unemp) = c("LAUS", 'stateid', 'countyid', 'county', 'year', '2009 population', '2000 population', 'population change', 'unemployment')#
-unemp$year = as.numeric(unemp$year) #
-unemp$county = as.character(unemp$county)#
-locality =  strsplit(tolower(unemp$county), ', ')#
-for (i in 1:length(locality)) {#
-    locality[[i]][1] = sub("['.]", '', locality[[i]][1])#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(paste(' ', descriptors[j], sep=''), '', locality[[i]][1])#
-    }#
-    unemp$county[i] = paste(locality[[i]][1], states[[locality[[i]][2]]], sep=',')#
-}#
-unemp$stateid = as.factor(unemp$stateid)#
-unemp$countyid = as.factor(unemp$countyid)#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')#
 #
-unemp$colorBins = colors[ceiling(length(colors)*rank(-unemp$unemployment)/dim(unemp)[1])]
-unemp$county
-unemp = read.csv("../data/unemployment09.csv", header=FALSE)#
-abbrevs = list('alabama'='al', 'alaska'='ak', 'arizona'='az', 'arkansas'='ar', 'california'='ca', 'colorado'='co', 'connecticut'='ct', 'delaware'='de', 'florida'='fl', 'georgia'='ga', 'hawaii'='hi', 'idaho'='id', 'illinois'='il', 'indiana'='in', 'iowa'='ia', 'kansas'='ks', 'kentucky'='ky', 'louisiana'='la', 'maine'='me', 'maryland'='md', 'massacusetts'='ma', 'michigan'='mi', 'minnesota'='mn', 'mississippi'='ms', 'missouri'='mo', 'montana'='mt', 'nebraska'='ne', 'nevada'='nv', 'new hampshire'='nh', 'new jersey'='nj', 'new mexico'='nm', 'new york'='ny', 'north carolina'='nc', 'north dakota'='nd', 'ohio'='oh', 'oklahoma'='ok', 'oregon'='or', 'pennsylvania'='pa', 'rhode island'='ri', 'south carolina'='sc', 'south dakota'='sd', 'tennessee'='tn', 'texas'='tx', 'utah'='ut', 'vermont'='vt', 'virginia'='va', 'washington'='wa', 'west virginia'='wv', 'wisconsin'='wi', 'wyoming'='wy', 'puerto rico'='pr', 'columbia'='dc')#
-states = as.vector(names(abbrevs), mode='list')#
-names(states) = as.vector(unlist(abbrevs))#
-descriptors = c('county', 'parish', 'precinct', 'ward', 'borough', 'county/city', 'county/town', 'city', 'municipio', 'census area', 'borough/municipality', 'borough/city')
-locality
-names(unemp) = c("LAUS", 'stateid', 'countyid', 'county', 'year', '2009 population', '2000 population', 'population change', 'unemployment')#
-unemp$year = as.numeric(unemp$year) #
-unemp$county = as.character(unemp$county)#
-locality =  strsplit(tolower(unemp$county), ', ')
-locality
-unemp = read.csv("../data/unemployment09.csv", header=FALSE)#
-abbrevs = list('alabama'='al', 'alaska'='ak', 'arizona'='az', 'arkansas'='ar', 'california'='ca', 'colorado'='co', 'connecticut'='ct', 'delaware'='de', 'florida'='fl', 'georgia'='ga', 'hawaii'='hi', 'idaho'='id', 'illinois'='il', 'indiana'='in', 'iowa'='ia', 'kansas'='ks', 'kentucky'='ky', 'louisiana'='la', 'maine'='me', 'maryland'='md', 'massacusetts'='ma', 'michigan'='mi', 'minnesota'='mn', 'mississippi'='ms', 'missouri'='mo', 'montana'='mt', 'nebraska'='ne', 'nevada'='nv', 'new hampshire'='nh', 'new jersey'='nj', 'new mexico'='nm', 'new york'='ny', 'north carolina'='nc', 'north dakota'='nd', 'ohio'='oh', 'oklahoma'='ok', 'oregon'='or', 'pennsylvania'='pa', 'rhode island'='ri', 'south carolina'='sc', 'south dakota'='sd', 'tennessee'='tn', 'texas'='tx', 'utah'='ut', 'vermont'='vt', 'virginia'='va', 'washington'='wa', 'west virginia'='wv', 'wisconsin'='wi', 'wyoming'='wy', 'puerto rico'='pr', 'columbia'='dc')#
-states = as.vector(names(abbrevs), mode='list')#
-names(states) = as.vector(unlist(abbrevs))#
-descriptors = c( 'county/city', 'county/town', 'borough/municipality', 'borough/city', 'county', 'parish', 'precinct', 'ward', 'borough', 'city', 'municipio', 'census area')#
+#Extract the parameters as lambda and alpha:#
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+lambda = exp(-mu * exp(-lsigma))#
+alpha = 1 / exp(lsigma)#
 #
-pop1 = vector()#
-pop2 = vector()#
-pop3 = vector()#
-for (i in 1:dim(unemp)[1]) {#
-    pop1 = c(pop1, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V6[i])), ',')[[1]], collapse='')))#
-    pop2 = c(pop2, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V7[i])), ',')[[1]], collapse='')))#
-    pop3 = c(pop3, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V8[i])), ',')[[1]], collapse='')))#
-}#
-unemp$V6 = pop1#
-unemp$V7 = pop2#
-unemp$V8 = pop3#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda#
+se.lambda = sqrt(var.lambda)#
 #
-names(unemp) = c("LAUS", 'stateid', 'countyid', 'county', 'year', '2009 population', '2000 population', 'population change', 'unemployment')#
-unemp$year = as.numeric(unemp$year) #
-unemp$county = as.character(unemp$county)#
-locality =  strsplit(tolower(unemp$county), ', ')#
-for (i in 1:length(locality)) {#
-    locality[[i]][1] = sub("['.]", '', locality[[i]][1])#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(paste(' ', descriptors[j], sep=''), '', locality[[i]][1])#
-    }#
-    unemp$county[i] = paste(locality[[i]][1], states[[locality[[i]][2]]], sep=',')#
-}#
-unemp$stateid = as.factor(unemp$stateid)#
-unemp$countyid = as.factor(unemp$countyid)#
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha#
+se.alpha = sqrt(var.alpha)
+se.aplha
+Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+surg.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull')#
+#Percutaneous implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.p = perc.model$coef[["(Intercept)"]]#
+lsigma.p = perc.model$scale#
+lambda.p = exp(-mu.p * exp(-lsigma.p))#
+alpha.p = 1 / exp(lsigma.p)#
 #
-unemp$colorBins = colors[ceiling(length(colors)*rank(-unemp$unemployment)/dim(unemp)[1])]#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.p = matrix(c(exp(-lsigma.p - mu.p*exp(-lsigma.p)), mu.p * #
+                            exp(-lsigma.p - mu.p*exp(-lsigma.p))), 2, 1)#
+var.lambda.p = t(grad.lambda.p) %*% perc.model$var %*% grad.lambda.p#
+se.lambda.p = sqrt(var.lambda.p)#
 #
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(subregion, region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+grad.alpha.p = matrix(c(0, -exp(-lsigma.p)), 2, 1)#
+var.alpha.p = t(grad.alpha.p) %*% perc.model$var %*% grad.alpha.p#
+se.alpha.p = sqrt(var.alpha.p)#
+#Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = perc.model$coef[["(Intercept)"]]#
+lsigma.s = perc.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
 #
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=colorBins))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.s = matrix(c(exp(-lsigma.s - mu.s*exp(-lsigma.s)), mu.s *#
+                            exp(-lsigma.s - mu.s*exp(-lsigma.s))), 2, 1)#
+var.lambda.s = t(grad.lambda.s) %*% perc.model$var %*% grad.lambda.s#
+se.lambda.s = sqrt(var.lambda.s)#
 #
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
+grad.alpha.s = matrix(c(0, -exp(-lsigma.s)), 2, 1)#
+var.alpha.s = t(grad.alpha.s) %*% perc.model$var %*% grad.alpha.s#
+se.alpha.s = sqrt(var.alpha.s)
+se.alpha.p
+se.alpha.s
+Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = surg.model$coef[["(Intercept)"]]#
+lsigma.s = surg.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
 #
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.s = matrix(c(exp(-lsigma.s - mu.s*exp(-lsigma.s)), mu.s *#
+                            exp(-lsigma.s - mu.s*exp(-lsigma.s))), 2, 1)#
+var.lambda.s = t(grad.lambda.s) %*% surg.model$var %*% grad.lambda.s#
+se.lambda.s = sqrt(var.lambda.s)#
 #
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(subregion, region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+grad.alpha.s = matrix(c(0, -exp(-lsigma.s)), 2, 1)#
+var.alpha.s = t(grad.alpha.s) %*% surg.model$var %*% grad.alpha.s#
+se.alpha.s = sqrt(var.alpha.s)
+se.aplha.s
+se.alpha.s
+salpha.s
+alpha.s
+alpha.p
+se.lambda.s
+lambda.p
+se.lambda.p
+alpha.p
+se.alpha.p
+lmbda.s
+lambda.s
+se.lambda.s
+alpha.s
+se.alpha.s
+names(perc.model)
+perc.model$var
+(alpha.p-1)/se.alpha.p
+alpha.p
+se.alpha.p
+(alpha.s-1)/se.alpha.s
+pnorm(-20.25456)
+pnorm(-4.3053)
+W.s = (alpha.s-1)/se.alpha.s
+W.s
+perc.model[['loglik']]
+perc.model[['loglik']][1]
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+perc.model[['loglik']][1] - perc.model.0[['loglik']][1]
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])
+L.p = 2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])
+L.p
+p.W.p = pchisq(W.p**2, df=1)
+W.p = (alpha.p-1)/se.alpha.p #
+p.W.p = pchisq(W.p**2, df=1)
+p.W.p
+p.W.p = 1 - pchisq(W.p**2, df=1)
+pW.p
+p.W.p
+W.s = (alpha.s-1)/se.alpha.s #
+p.W.s = 1 - pchisq(W.s**2, df=1)
+p.W.s
+W.s
+pnorm(W.s)
+pchisq(1.96**2, df=1)
+p.L.p = 1-pchisq(L.p, df=1)
+p.L.p
+surg.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull', scale=1)#
+L.s = 2*(surg.model[['loglik']][1] - surg.model.0[['loglik']][1])#
+p.L.s = 1-pchisq(L.s, df=1)#
+#L.s = 7.18 => 0.008
+L.s
+p.L.s
+predict(perc.model, newdata=data.frame(time=5))
+?survreg.predict
+?predict.survreg
+predict(perc.model, newdata=data.frame(time=5), type='quantile')
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), mu * exp(-mu * exp(-lsigma) - lsigma), 0, -exp(-lsigma)), 2, 2)
+grad
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), 0, mu * exp(-mu * exp(-lsigma) - lsigma), -exp(-lsigma)), 2, 2)
+grad
+t(grad) %*% perc.model$var %*% grad
+var.p
+se.lambda.p
+se.lambda.p**2
+grad.p = matrix(c(-exp(-lsigma.p - mu.p*exp(-lsigma.p)), 0, mu * exp(-mu.p * exp(-lsigma.p) - lsigma.p), -exp(-lsigma.p)), 2, 2)
+t(grad.p) %*% perc.model$var %*% grad.p
+t(grad.p) %*% perc.model$var %*% grad.p[1,1]
+sqrt((t(grad.p) %*% perc.model$var %*% grad.p)[1,1])
+grad.alpha.p
+grad
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma)), 0, -exp(-lsigma)), 2, 2)
+t(grad) %*% perc.model$var %*% grad
+grad
+grad.p
+grad.lambda.p
+grad = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma)), 0, -exp(-lsigma)), 2, 2)
+t(grad) %*% perc.model$var %*% grad
+se.alpha.p**2
+Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
 #
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=colorBins))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+surg.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull')#
+#Percutaneous implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.p = perc.model$coef[["(Intercept)"]]#
+lsigma.p = perc.model$scale#
+lambda.p = exp(-mu.p * exp(-lsigma.p))#
+alpha.p = 1 / exp(lsigma.p)#
 #
-map + opts(panel.background = theme_rect(fill='green', colour='red'))#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.p = matrix(c(-exp(-lsigma.p - mu.p*exp(-lsigma.p)), #
+                            mu.p * exp(-lsigma.p - mu.p*exp(-lsigma.p))), 2, 1)#
+var.lambda.p = t(grad.lambda.p) %*% perc.model$var %*% grad.lambda.p#
+se.lambda.p = sqrt(var.lambda.p)#
+#lambda=0.428, se.lambda=0.158#
 #
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
+grad.alpha.p = matrix(c(0, -exp(-lsigma.p)), 2, 1)#
+var.alpha.p = t(grad.alpha.p) %*% perc.model$var %*% grad.alpha.p#
+se.alpha.p = sqrt(var.alpha.p)#
+#alpha=0.157, se.alpha=0.042#
+#Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = surg.model$coef[["(Intercept)"]]#
+lsigma.s = surg.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
 #
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.s = matrix(c(-exp(-lsigma.s - mu.s*exp(-lsigma.s)),#
+                            mu.s * exp(-lsigma.s - mu.s*exp(-lsigma.s))), 2, 1)#
+var.lambda.s = t(grad.lambda.s) %*% surg.model$var %*% grad.lambda.s#
+se.lambda.s = sqrt(var.lambda.s)#
+#lambda=0.182, se.lambda=0.072#
 #
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(subregion, region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+grad.alpha.s = matrix(c(0, -exp(-lsigma.s)), 2, 1)#
+var.alpha.s = t(grad.alpha.s) %*% surg.model$var %*% grad.alpha.s#
+se.alpha.s = sqrt(var.alpha.s)#
+#alpha=0.534, se.alpha=0.108#
+#Tests for alpha=1:#
+#Percutaneous implantation:#
+#Wald test:#
+W.p = (alpha.p-1)/se.alpha.p #
+p.W.p = 1 - pchisq(W.p**2, df=1)#
+#W.p=-20.2 => p<10**(-16)#
 #
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=colorBins))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+L.p = 2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])#
+p.L.p = 1-pchisq(L.p, df=1)#
+#L.p=7.18 => p=0.008#
+#Surgical implantation:#
+#Wald test:#
+W.s = (alpha.s-1)/se.alpha.s #
+p.W.s = 1 - pchisq(W.s**2, df=1)#
+#W.s=-4.31 => p<10**(-4)#
 #
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+surg.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull', scale=1)#
+L.s = 2*(surg.model[['loglik']][1] - surg.model.0[['loglik']][1])#
+p.L.s = 1-pchisq(L.s, df=1)#
+#L.s=4.28 => p=0.039#
+#Value of survival function at five months:#
+#Percutaneous implantation:#
+S.p = exp(-lambda.p * 5**alpha.p)#
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma)), 0, -exp(-lsigma)), 2, 2)
+p.W.s
+W.s
+p.W.p
+W.p
+lambda.p
+se.lambda.p
+se.lambda.s
+lambda.s
+Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
 #
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+surg.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull')#
+#Percutaneous implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.p = perc.model$coef[["(Intercept)"]]#
+lsigma.p = perc.model$scale#
+lambda.p = exp(-mu.p * exp(-lsigma.p))#
+alpha.p = 1 / exp(lsigma.p)#
 #
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-states[['ma']]
-unemp$county
-which(unemp$unemployment<=breaks)
-breaks = c(2, 4, 6, 8, 10)
-which(unemp$unemployment<=breaks)
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
+#Apply the delta method to get the variance of the transformed params:#
+grad.p = matrix(c(-exp(-lsigma.p - mu.p*exp(-lsigma.p)), #
+                    mu.p * exp(-lsigma.p - mu.p*exp(-lsigma.p)), 0, -exp(-lsigma.p)), 2, 2)#
+var.p = t(grad.p) %*% perc.model$var %*% grad.p#
+#
+se.p = sqrt(var.p[1,1])#
+#lambda=0.428, se.lambda=0.054#
+#
+se.alpha.p = sqrt(var.p[2,2])#
+#alpha=0.157, se.alpha=0.042#
+#Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = surg.model$coef[["(Intercept)"]]#
+lsigma.s = surg.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.s = matrix(c(-exp(-lsigma.s - mu.s*exp(-lsigma.s)),#
+                    mu.s * exp(-lsigma.s - mu.s*exp(-lsigma.s)), 0, -exp(-lsigma.s)), 2, 2)#
+var.s = t(grad.s) %*% surg.model$var %*% grad.s#
+#
+se.lambda.s = sqrt(var.s[1,1])#
+#lambda=0.182, se.lambda=0.057#
+#
+se.alpha.s = sqrt(var.s[2,2])#
+#alpha=0.534, se.alpha=0.108#
+#Tests for alpha=1:#
+#Percutaneous implantation:#
+#Wald test:#
+W.p = (alpha.p-1)/se.alpha.p #
+p.W.p = 1 - pchisq(W.p**2, df=1)#
+#W.p=-20.2 => p<10**(-16)#
+#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+L.p = 2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])#
+p.L.p = 1-pchisq(L.p, df=1)#
+#L.p=7.18 => p=0.008#
+#Surgical implantation:#
+#Wald test:#
+W.s = (alpha.s-1)/se.alpha.s #
+p.W.s = 1 - pchisq(W.s**2, df=1)#
+#W.s=-4.31 => p<10**(-4)#
+#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+surg.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull', scale=1)#
+L.s = 2*(surg.model[['loglik']][1] - surg.model.0[['loglik']][1])#
+p.L.s = 1-pchisq(L.s, df=1)#
+#L.s=4.28 => p=0.039#
+#Value of survival function at five months:#
+#Percutaneous implantation:#
+S.p = exp(-lambda.p * 5**alpha.p)
+W.p
+se.lambda.s
+lambda.s
+se.lambda.p
+se.alpha.p
+se.alpha.s
+se.lambda.s
+S.p
+grad.surv <- function(t, a, l) {#
+    return( matrix(c(-t**a * exp(-l * t**a), -l * t**a * log(t) * exp(-l * t**a)), 2, 1) )#
 }
-bin
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}
-bin
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}#
-unemp$colorBins = bin
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}#
-unemp$colorBins = bin
-extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(subregion, region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=colorBins))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-unemp$colorBins = colors[bin]
-unemp$color = colors[bin]
-extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(subregion, region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-unemp = read.csv("../data/unemployment09.csv", header=FALSE)#
-abbrevs = list('alabama'='al', 'alaska'='ak', 'arizona'='az', 'arkansas'='ar', 'california'='ca', 'colorado'='co', 'connecticut'='ct', 'delaware'='de', 'florida'='fl', 'georgia'='ga', 'hawaii'='hi', 'idaho'='id', 'illinois'='il', 'indiana'='in', 'iowa'='ia', 'kansas'='ks', 'kentucky'='ky', 'louisiana'='la', 'maine'='me', 'maryland'='md', 'massachusetts'='ma', 'michigan'='mi', 'minnesota'='mn', 'mississippi'='ms', 'missouri'='mo', 'montana'='mt', 'nebraska'='ne', 'nevada'='nv', 'new hampshire'='nh', 'new jersey'='nj', 'new mexico'='nm', 'new york'='ny', 'north carolina'='nc', 'north dakota'='nd', 'ohio'='oh', 'oklahoma'='ok', 'oregon'='or', 'pennsylvania'='pa', 'rhode island'='ri', 'south carolina'='sc', 'south dakota'='sd', 'tennessee'='tn', 'texas'='tx', 'utah'='ut', 'vermont'='vt', 'virginia'='va', 'washington'='wa', 'west virginia'='wv', 'wisconsin'='wi', 'wyoming'='wy', 'puerto rico'='pr', 'columbia'='dc')#
-states = as.vector(names(abbrevs), mode='list')#
-names(states) = as.vector(unlist(abbrevs))#
-descriptors = c( 'county/city', 'county/town', 'borough/municipality', 'borough/city', 'county', 'parish', 'precinct', 'ward', 'borough', 'city', 'municipio', 'census area')#
-#
-pop1 = vector()#
-pop2 = vector()#
-pop3 = vector()#
-for (i in 1:dim(unemp)[1]) {#
-    pop1 = c(pop1, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V6[i])), ',')[[1]], collapse='')))#
-    pop2 = c(pop2, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V7[i])), ',')[[1]], collapse='')))#
-    pop3 = c(pop3, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V8[i])), ',')[[1]], collapse='')))#
-}#
-unemp$V6 = pop1#
-unemp$V7 = pop2#
-unemp$V8 = pop3#
-#
-names(unemp) = c("LAUS", 'stateid', 'countyid', 'county', 'year', '2009 population', '2000 population', 'population change', 'unemployment')#
-unemp$year = as.numeric(unemp$year) #
-unemp$county = as.character(unemp$county)#
-locality =  strsplit(tolower(unemp$county), ', ')#
-for (i in 1:length(locality)) {#
-    locality[[i]][1] = sub("['.]", '', locality[[i]][1])#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(paste(' ', descriptors[j], sep=''), '', locality[[i]][1])#
-    }#
-    unemp$county[i] = paste(locality[[i]][1], states[[locality[[i]][2]]], sep=',')#
-}#
-unemp$stateid = as.factor(unemp$stateid)#
-unemp$countyid = as.factor(unemp$countyid)#
-#define color buckets#
-colors = c("#980043", "#DD1C77", "#DF65B0", "#C994C7", "#D4B9DA", "#F1EEF6")#
-#
-#unemp$colorBins = colors[ceiling(length(colors)*rank(-unemp$unemployment)/dim(unemp)[1])]#
-#
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}#
-unemp$color = colors[bin]#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(subregion, region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-bin
-sum(bin==1)
-sum(bin==2)
-sum(bin==3)
-sum(bin==4)
-sum(bin==5)
-sum(bin==6)
-sum(bin==7)
-sum(unemp$unemployment<=2)
-sum(unemp$unemployment<=4)
-sum(unemp$unemployment<=6)
-sum(unemp$unemployment<=8)
-sum(unemp$unemployment<=10)
-sum(unemp$unemployment<=100)
-which(breaks >= unemp$unemployment[i])
-which(breaks >= unemp$unemployment[10])
-which(breaks >= unemp$unemployment[100])
-which(breaks >= unemp$unemployment[200])
-which(breaks >= unemp$unemployment[250])
-unemp$unemployment$200
-unemp$unemployment[200[]
-unemp$unemployment[200]
-unemp$unemployment[200]
-unemp$unemployment[250]
-unemp = read.csv("../data/unemployment09.csv", header=FALSE)#
-abbrevs = list('alabama'='al', 'alaska'='ak', 'arizona'='az', 'arkansas'='ar', 'california'='ca', 'colorado'='co', 'connecticut'='ct', 'delaware'='de', 'florida'='fl', 'georgia'='ga', 'hawaii'='hi', 'idaho'='id', 'illinois'='il', 'indiana'='in', 'iowa'='ia', 'kansas'='ks', 'kentucky'='ky', 'louisiana'='la', 'maine'='me', 'maryland'='md', 'massachusetts'='ma', 'michigan'='mi', 'minnesota'='mn', 'mississippi'='ms', 'missouri'='mo', 'montana'='mt', 'nebraska'='ne', 'nevada'='nv', 'new hampshire'='nh', 'new jersey'='nj', 'new mexico'='nm', 'new york'='ny', 'north carolina'='nc', 'north dakota'='nd', 'ohio'='oh', 'oklahoma'='ok', 'oregon'='or', 'pennsylvania'='pa', 'rhode island'='ri', 'south carolina'='sc', 'south dakota'='sd', 'tennessee'='tn', 'texas'='tx', 'utah'='ut', 'vermont'='vt', 'virginia'='va', 'washington'='wa', 'west virginia'='wv', 'wisconsin'='wi', 'wyoming'='wy', 'puerto rico'='pr', 'columbia'='dc')#
-states = as.vector(names(abbrevs), mode='list')#
-names(states) = as.vector(unlist(abbrevs))#
-descriptors = c( 'county/city', 'county/town', 'borough/municipality', 'borough/city', 'county', 'parish', 'precinct', 'ward', 'borough', 'city', 'municipio', 'census area')#
-#
-pop1 = vector()#
-pop2 = vector()#
-pop3 = vector()#
-for (i in 1:dim(unemp)[1]) {#
-    pop1 = c(pop1, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V6[i])), ',')[[1]], collapse='')))#
-    pop2 = c(pop2, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V7[i])), ',')[[1]], collapse='')))#
-    pop3 = c(pop3, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V8[i])), ',')[[1]], collapse='')))#
-}#
-unemp$V6 = pop1#
-unemp$V7 = pop2#
-unemp$V8 = pop3#
-#
-names(unemp) = c("LAUS", 'stateid', 'countyid', 'county', 'year', '2009 population', '2000 population', 'population change', 'unemployment')#
-unemp$year = as.numeric(unemp$year) #
-unemp$county = as.character(unemp$county)#
-locality =  strsplit(tolower(unemp$county), ', ')#
-for (i in 1:length(locality)) {#
-    locality[[i]][1] = sub("['.]", '', locality[[i]][1])#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(paste(' ', descriptors[j], sep=''), '', locality[[i]][1])#
-    }#
-    unemp$county[i] = paste(locality[[i]][1], states[[locality[[i]][2]]], sep=',')#
-}#
-unemp$stateid = as.factor(unemp$stateid)#
-unemp$countyid = as.factor(unemp$countyid)#
-#
-#unemp$colorBins = colors[ceiling(length(colors)*rank(-unemp$unemployment)/dim(unemp)[1])]#
-#define color buckets#
-colors = c("#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043")#
-#
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}#
-unemp$color = colors[bin]#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(subregion, region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-unemp$unemployment[1]
-unemp$unemployment[2]
-unemp$color[1]
-unemp$county[1]
-unique(mapcounties$county)
-?gsub
-unemp = read.csv("../data/unemployment09.csv", header=FALSE)#
-abbrevs = list('alabama'='al', 'alaska'='ak', 'arizona'='az', 'arkansas'='ar', 'california'='ca', 'colorado'='co', 'connecticut'='ct', 'delaware'='de', 'florida'='fl', 'georgia'='ga', 'hawaii'='hi', 'idaho'='id', 'illinois'='il', 'indiana'='in', 'iowa'='ia', 'kansas'='ks', 'kentucky'='ky', 'louisiana'='la', 'maine'='me', 'maryland'='md', 'massachusetts'='ma', 'michigan'='mi', 'minnesota'='mn', 'mississippi'='ms', 'missouri'='mo', 'montana'='mt', 'nebraska'='ne', 'nevada'='nv', 'new hampshire'='nh', 'new jersey'='nj', 'new mexico'='nm', 'new york'='ny', 'north carolina'='nc', 'north dakota'='nd', 'ohio'='oh', 'oklahoma'='ok', 'oregon'='or', 'pennsylvania'='pa', 'rhode island'='ri', 'south carolina'='sc', 'south dakota'='sd', 'tennessee'='tn', 'texas'='tx', 'utah'='ut', 'vermont'='vt', 'virginia'='va', 'washington'='wa', 'west virginia'='wv', 'wisconsin'='wi', 'wyoming'='wy', 'puerto rico'='pr', 'columbia'='dc')#
-states = as.vector(names(abbrevs), mode='list')#
-names(states) = as.vector(unlist(abbrevs))#
-descriptors = c( 'county/city', 'county/town', 'borough/municipality', 'borough/city', 'county', 'parish', 'precinct', 'ward', 'borough', 'city', 'municipio', 'census area')#
-#
-pop1 = vector()#
-pop2 = vector()#
-pop3 = vector()#
-for (i in 1:dim(unemp)[1]) {#
-    pop1 = c(pop1, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V6[i])), ',')[[1]], collapse='')))#
-    pop2 = c(pop2, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V7[i])), ',')[[1]], collapse='')))#
-    pop3 = c(pop3, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V8[i])), ',')[[1]], collapse='')))#
-}#
-unemp$V6 = pop1#
-unemp$V7 = pop2#
-unemp$V8 = pop3#
-#
-names(unemp) = c("LAUS", 'stateid', 'countyid', 'county', 'year', '2009 population', '2000 population', 'population change', 'unemployment')#
-unemp$year = as.numeric(unemp$year) #
-unemp$county = as.character(unemp$county)#
-locality =  strsplit(tolower(unemp$county), ', ')#
-for (i in 1:length(locality)) {#
-    locality[[i]][1] = gsub("(miami-)['. ]", '', locality[[i]][1])#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(paste(' ', descriptors[j], sep=''), '', locality[[i]][1])#
-    }#
-    unemp$county[i] = paste(locality[[i]][1], states[[locality[[i]][2]]], sep=',')#
-}#
-unemp$stateid = as.factor(unemp$stateid)#
-unemp$countyid = as.factor(unemp$countyid)#
-#
-#unemp$colorBins = colors[ceiling(length(colors)*rank(-unemp$unemployment)/dim(unemp)[1])]#
-#define color buckets#
-colors = c("#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043")#
-#
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}#
-unemp$color = colors[bin]#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(gsub("(miami-)['. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-unemp$county
-unemp = read.csv("../data/unemployment09.csv", header=FALSE)#
-abbrevs = list('alabama'='al', 'alaska'='ak', 'arizona'='az', 'arkansas'='ar', 'california'='ca', 'colorado'='co', 'connecticut'='ct', 'delaware'='de', 'florida'='fl', 'georgia'='ga', 'hawaii'='hi', 'idaho'='id', 'illinois'='il', 'indiana'='in', 'iowa'='ia', 'kansas'='ks', 'kentucky'='ky', 'louisiana'='la', 'maine'='me', 'maryland'='md', 'massachusetts'='ma', 'michigan'='mi', 'minnesota'='mn', 'mississippi'='ms', 'missouri'='mo', 'montana'='mt', 'nebraska'='ne', 'nevada'='nv', 'new hampshire'='nh', 'new jersey'='nj', 'new mexico'='nm', 'new york'='ny', 'north carolina'='nc', 'north dakota'='nd', 'ohio'='oh', 'oklahoma'='ok', 'oregon'='or', 'pennsylvania'='pa', 'rhode island'='ri', 'south carolina'='sc', 'south dakota'='sd', 'tennessee'='tn', 'texas'='tx', 'utah'='ut', 'vermont'='vt', 'virginia'='va', 'washington'='wa', 'west virginia'='wv', 'wisconsin'='wi', 'wyoming'='wy', 'puerto rico'='pr', 'columbia'='dc')#
-states = as.vector(names(abbrevs), mode='list')#
-names(states) = as.vector(unlist(abbrevs))#
-descriptors = c( 'county/city', 'county/town', 'borough/municipality', 'borough/city', 'county', 'parish', 'precinct', 'ward', 'borough', 'city', 'municipio', 'census area')#
-#
-pop1 = vector()#
-pop2 = vector()#
-pop3 = vector()#
-for (i in 1:dim(unemp)[1]) {#
-    pop1 = c(pop1, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V6[i])), ',')[[1]], collapse='')))#
-    pop2 = c(pop2, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V7[i])), ',')[[1]], collapse='')))#
-    pop3 = c(pop3, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V8[i])), ',')[[1]], collapse='')))#
-}#
-unemp$V6 = pop1#
-unemp$V7 = pop2#
-unemp$V8 = pop3#
-#
-names(unemp) = c("LAUS", 'stateid', 'countyid', 'county', 'year', '2009 population', '2000 population', 'population change', 'unemployment')#
-unemp$year = as.numeric(unemp$year) #
-unemp$county = as.character(unemp$county)#
-locality =  strsplit(tolower(unemp$county), ', ')#
-for (i in 1:length(locality)) {#
-    locality[[i]][1] = gsub("(miami)?['-. ]", '', locality[[i]][1])#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(paste(' ', descriptors[j], sep=''), '', locality[[i]][1])#
-    }#
-    unemp$county[i] = paste(locality[[i]][1], states[[locality[[i]][2]]], sep=',')#
-}#
-unemp$stateid = as.factor(unemp$stateid)#
-unemp$countyid = as.factor(unemp$countyid)#
-#
-#unemp$colorBins = colors[ceiling(length(colors)*rank(-unemp$unemployment)/dim(unemp)[1])]#
-#define color buckets#
-colors = c("#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043")#
-#
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}#
-unemp$color = colors[bin]#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(gsub("(miami)?['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-unique(mapcounties$county)
-unique(unemp$county)
-unemp = read.csv("../data/unemployment09.csv", header=FALSE)#
-abbrevs = list('alabama'='al', 'alaska'='ak', 'arizona'='az', 'arkansas'='ar', 'california'='ca', 'colorado'='co', 'connecticut'='ct', 'delaware'='de', 'florida'='fl', 'georgia'='ga', 'hawaii'='hi', 'idaho'='id', 'illinois'='il', 'indiana'='in', 'iowa'='ia', 'kansas'='ks', 'kentucky'='ky', 'louisiana'='la', 'maine'='me', 'maryland'='md', 'massachusetts'='ma', 'michigan'='mi', 'minnesota'='mn', 'mississippi'='ms', 'missouri'='mo', 'montana'='mt', 'nebraska'='ne', 'nevada'='nv', 'new hampshire'='nh', 'new jersey'='nj', 'new mexico'='nm', 'new york'='ny', 'north carolina'='nc', 'north dakota'='nd', 'ohio'='oh', 'oklahoma'='ok', 'oregon'='or', 'pennsylvania'='pa', 'rhode island'='ri', 'south carolina'='sc', 'south dakota'='sd', 'tennessee'='tn', 'texas'='tx', 'utah'='ut', 'vermont'='vt', 'virginia'='va', 'washington'='wa', 'west virginia'='wv', 'wisconsin'='wi', 'wyoming'='wy', 'puerto rico'='pr', 'columbia'='dc')#
-states = as.vector(names(abbrevs), mode='list')#
-names(states) = as.vector(unlist(abbrevs))#
-descriptors = c( 'county/city', 'county/town', 'borough/municipality', 'borough/city', 'county', 'parish', 'precinct', 'ward', 'borough', 'city', 'municipio', 'census area')#
-#
-pop1 = vector()#
-pop2 = vector()#
-pop3 = vector()#
-for (i in 1:dim(unemp)[1]) {#
-    pop1 = c(pop1, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V6[i])), ',')[[1]], collapse='')))#
-    pop2 = c(pop2, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V7[i])), ',')[[1]], collapse='')))#
-    pop3 = c(pop3, as.numeric(paste(strsplit(sub("[[:blank:]]+$", "", as.character(unemp$V8[i])), ',')[[1]], collapse='')))#
-}#
-unemp$V6 = pop1#
-unemp$V7 = pop2#
-unemp$V8 = pop3#
-#
-names(unemp) = c("LAUS", 'stateid', 'countyid', 'county', 'year', '2009 population', '2000 population', 'population change', 'unemployment')#
-unemp$year = as.numeric(unemp$year) #
-unemp$county = as.character(unemp$county)#
-locality =  strsplit(tolower(unemp$county), ', ')#
-for (i in 1:length(locality)) {#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(descriptors[j], '', locality[[i]][1])#
-    }#
-    locality[[i]][1] = gsub("(miami)?['-. ]", '', locality[[i]][1])#
-    unemp$county[i] = paste(locality[[i]][1], states[[locality[[i]][2]]], sep=',')#
-}#
-unemp$stateid = as.factor(unemp$stateid)#
-unemp$countyid = as.factor(unemp$countyid)#
-#
-#unemp$colorBins = colors[ceiling(length(colors)*rank(-unemp$unemployment)/dim(unemp)[1])]#
-#define color buckets#
-colors = c("#F1EEF6", "#D4B9DA", "#C994C7", "#DF65B0", "#DD1C77", "#980043")#
-#
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}#
-unemp$color = colors[bin]#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(gsub("(miami)?['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-sum(unemp$color=="#F1EEF6")
-ggplot2like(n = 4, h.start = 0, l = 65)$superpose.line#
-> $col
-ggplot2like(n = 4, h.start = 0, l = 65)$superpose.line$col
-ggplot2like(n = 4, h.start = 0, l = 65)$superpose.line
-define color buckets#
-colors = c("#980043", "#DD1C77", "#DF65B0", "#C994C7", "#D4B9DA", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}#
-unemp$color = colors[bin]#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(gsub("(miami)?['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-define color buckets#
-colors = c("#980043", "#DD1C77", "#DF65B0", "#C994C7", "#D4B9DA", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}#
-unemp$color = colors[bin]#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(gsub("(miami)?['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(2, 4, 6, 8, 10, 100)#
-for (i in 1:dim(unemp)[1]) {#
-    bin = c(bin, min(which(breaks >= unemp$unemployment[i])))#
-}#
-unemp$color = colors[bin]#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#merge data with ggplot county coordinates#
-mapcounties$county <- with(mapcounties , paste(gsub("(miami)?['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(mapcounties, unemp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = mapstates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = mapcounties, colour = "white", size = .5, alpha = .1)#
-map
-library(maptools)#
-## map data from http://www.census.gov/geo/www/cob/co2000.html#
-state.map <- readShapeSpatial("maps/st99_d00_shp/st99_d00.shp")#
-county.map <- readShapeSpatial("maps/co99_d00_shp/co99_d00.shp")
-install.pacakages('maptools')
-install.packages('maptools')
-library(maptools)#
-## map data from http://www.census.gov/geo/www/cob/co2000.html#
-state.map <- readShapeSpatial("maps/st99_d00_shp/st99_d00.shp")#
-county.map <- readShapeSpatial("maps/co99_d00_shp/co99_d00.shp")
-library(spgwr)#
-library(lars)#
-#
-#Import the plotting functions:#
-setwd("~/git/gwr/code")#
+grad.surv(5, alpha.p, lambda.p)
+g = grad.surv(5, alpha.p, lambda.p)
+t(g) %*% var.p %*% g
+sqrt(t(g) %*% var.p %*% g)
+S.p
+S.p = exp(-lambda.p * 5**alpha.p)#
+g.p = grad.surv(5, alpha.p, lambda.p)#
+se.S.p = sqrt(t(g.p) %*% var.p %*% g.p)
+se.S.p
+S.p=2*se.S.p
+S.p = exp(-lambda.p * 5**alpha.p)
+S.p-2*se.S.p
+S.p+2*se.S.p
+S.s = exp(-lambda.s * 5**alpha.s)#
+g.s = grad.surv(5, alpha.s, lambda.s)#
+se.S.s = sqrt(t(g.s) %*% var.s %*% g.s)#
+#S.p=0.577, se.S.p=0.029 => 95% CI = (0.519, 0.634)
+S.s
+se.S.s
+S.s-2*se.S.s
+S.s+2*se.S.s
+Simulate data for testing a GWR model:#
 source("utils.r")#
-#
-#Import poverty data#
-pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
-years = c('60', '70', '80', '90', '00', '06')#
-column.map = list(pindpov='proportion individuals in poverty', #
-    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
-    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
-    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
-    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
-#
-#Process the poverty data so that each column appears only once and the year is added as a column.#
-pov2 = list()#
-for (column.name in names(column.map)) {#
-    col = vector()#
-    for (year in years) {#
-        if (paste(column.name, year, sep="") %in% names(pov)) {#
-            indx = which(names(pov)==paste(column.name, year, sep=""))#
-            col = c(col, pov[,indx])#
-        }#
-        else { col = c(col, rep(NA, dim(pov)[1])) }#
-    }#
-    pov2[[column.name]] = col#
-}#
-#
-#Find the columns we haven't yet matched:#
-"%w/o%" <- function(x, y) x[!x %in% y]#
-missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
-#
-for (column.name in missed) {#
-    col = rep(pov[,column.name], length(years))#
-    pov2[[column.name]] = col#
-}#
-#
-#Add the year column to the pov2 data list.#
-pov2[['year']] = vector()#
-for (year in years) {#
-    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
-}#
-#
-#Convert pov2 from a list to a data frame:#
-pov2 = data.frame(pov2)#
-#
-#Correct the Y2K bug#
-pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
-pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
-install.pacakages('spgwr')
-install.packages('spgwr')
-library('spgwr')
-str(pov2)
-pov2[1:100,]
-pov2[1:100,16:22]
-pov2[1:80,16:22]
-pov2[1:60,16:22]
-pov2[1:55,16:22]
-pov2[100:155,16:22]
-library(spgwr)#
 library(lars)#
+library(spgwr)#
 #
-#Import the plotting functions:#
-setwd("~/git/gwr/code")#
-source("utils.r")#
+#Set up the location grid:#
+N = 20#
+x = rep(0:N - N/2, each=N+1)#
+y = rep(0:N - N/2, times=N+1)#
 #
-#Import poverty data#
-pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
-years = c('60', '70', '80', '90', '00', '06')#
-column.map = list(pindpov='proportion individuals in poverty', #
-    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
-    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
-    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
-    logitfampov='logit( proportion families in poverty)', pfire='pfire')#
+#Simulate the predictors independently of location:#
+mu.A = 0#
+sig.A = 1#
+A = rnorm((N+1)**2, mu.A, sig.A)#
 #
-#Process the poverty data so that each column appears only once and the year is added as a column.#
-pov2 = list()#
-for (column.name in names(column.map)) {#
-    col = vector()#
-    for (year in years) {#
-        if (paste(column.name, year, sep="") %in% names(pov)) {#
-            indx = which(names(pov)==paste(column.name, year, sep=""))#
-            col = c(col, pov[,indx])#
-        }#
-        else { col = c(col, rep(NA, dim(pov)[1])) }#
+mu.B = 1#
+sig.B = 2#
+B = rnorm((N+1)**2, mu.B, sig.B)#
+#
+mu.C = -1#
+sig.C = 3#
+C = rnorm((N+1)**2, mu.C, sig.C)#
+#
+#Simulate the output variable:#
+sig.err = 0.5#
+out = y + A*x + B + rnorm((N+1)**2, 0, sig.err)#
+#
+simulated = data.frame(x, y, A, B, C, out)#
+#
+#Use the methods of spgwr to select a bandwidth and fit a GWR model for poverty:#
+bw = gwr.sel(out~A+B+C, data=simulated, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
+gwr.sim = gwr(out~A+B+C, data=simulated, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare)#
+#Homebrew GWR:#
+df = simulated#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('A', 'B', 'C')#
+output = 'out'#
+f = as.formula(paste("out ~ 1 + ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(df)[1]#
+D1 = matrix(rep(df$x,n), n,n)#
+D2 = matrix(rep(df$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+#
+#Use the lasso for GWR model selection:#
+w.lasso.geo = list()#
+coefs = list()#
+diagnostics = list()#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=bw)#
+#
+    model = lm(f, data=df, weights=w)#
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
     }#
-    pov2[[column.name]] = col#
+    coefs[['(Intercept)']] = c(coefs[['(Intercept)']], model$coef[['(Intercept)']])#
+#
+    diagnostics[['R2']] = c(diagnostics[['R2']], summary(model)[['r.squared']])#
+    diagnostics[['sigma']] = c(diagnostics[['sigma']], summary(model)[['sigma']])#
+    diagnostics[['total weight']] = c(diagnostics[['total weight']], sum(w))#
+    print(i)#
 }#
 #
-#Find the columns we haven't yet matched:#
-"%w/o%" <- function(x, y) x[!x %in% y]#
-missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
-#
-for (column.name in missed) {#
-    col = rep(pov[,column.name], length(years))#
-    pov2[[column.name]] = col#
-}#
-#
-#Add the year column to the pov2 data list.#
-pov2[['year']] = vector()#
-for (year in years) {#
-    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
-}#
-#
-#Convert pov2 from a list to a data frame:#
-pov2 = data.frame(pov2)#
-#
-#Correct the Y2K bug#
-pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
-pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
-#Limit the data to just 100 points for now for computational reasons#
-pov2006 = pov2[pov2$year==2006,]#
-df = pov2006
-pov2006
-library(maps)
-?maops
-?maps
-unique(pov2006$state)
-unique(levels(pov2006$state))
-unique(labels(pov2006$state))
-unique(as.character(pov2006$state))
-unique(pov2006$STATe)
-unique(pov2006$STATE)
-unique(as.character(pov2006$STATE))
-unique(tolower(as.character(pov2006$STATE)))
-midweststates = mapstates[tolower(mapstates$state) %in% unique(tolower(as.character(pov2006$STATE))),]
-midweststates
-str(mapstates)
-midweststates = mapstates[tolower(mapstates$region) %in% unique(tolower(as.character(pov2006$STATE))),]
-str(mapstates)
-midweststates
-midwestcounties = mapstates[tolower(mapcounties$region) %in% unique(tolower(as.character(pov2006$STATE))),]
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% unique(tolower(as.character(pov2006$STATE))),]
-str(midwestcounties)
-str(pov2006)
-locality =  strsplit(tolower(pov2006$COUNTY), ', ')#
-for (i in 1:length(locality)) {#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(descriptors[j], '', locality[[i]][1])#
-    }#
-    locality[[i]][1] = gsub("(miami)?['-. ]", '', locality[[i]][1])#
-    pov2006$COUNTY[i] = paste(locality[[i]][1], states[[locality[[i]][2]]], sep=',')#
-}
-str(pov2006)
+model = list(coords=df[,c('x','y')], coefs=coefs, diags=diagnostics, lasso=w.lasso.geo)
+y=seq(1,100)
+sum(1/factorial(y))
+y=seq(0,100)
+sum(1/factorial(y))
+e
+exp(1)
+exp(1)/(exp(1)-1)
+y=seq(1,100)
+sum(y/factorial(y))
+sum(y/factorial(y) / (exp(1)-1))
+sum(exp(y)/factorial(y) / (exp(1)-1))
+sum(exp(2*y)/factorial(y) / (exp(1)-1))
+sum(exp(3*y)/factorial(y) / (exp(1)-1))
+install.packages("knitr")
+setwd("git/gwr/code")
+dir()
 library(spgwr)#
 library(lars)#
 library(maps)#
+library(ggplot2)#
+library(fossil)#
 #extract reference data#
 mapcounties <- map_data("county")#
 mapstates <- map_data("state")#
@@ -949,1350 +623,169 @@ pov2 = data.frame(pov2)#
 #Correct the Y2K bug#
 pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
 pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
-#Limit the data to just 100 points for now for computational reasons#
-pov2006 = pov2[pov2$year==2006,]#
-df = pov2006
-cty = vector()
-locality =  strsplit(tolower(pov2006$COUNTY), ', ')#
-for (i in 1:length(locality)) {#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(descriptors[j], '', locality[[i]][1])#
-    }#
-    locality[[i]][1] = gsub("(miami)?['-. ]", '', locality[[i]][1])#
-    cty = c(cty, paste(locality[[i]][1], states[[locality[[i]][2]]], sep=','))#
-}
-cty
-locality
-df
-tolower(df$STATE)
-locality =  strsplit(tolower(pov2006$COUNTY), ', ')#
-for (i in 1:length(locality)) {#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(descriptors[j], '', locality[[i]][1])#
-    }#
-    locality[[i]][1] = gsub("(miami)?['-. ]", '', locality[[i]][1])#
-    cty = c(cty, paste(locality[[i]][1], tolower(df$STATE[i]), sep=','))#
-}
-cty
-cty=vector()
-locality =  strsplit(tolower(pov2006$COUNTY), ', ')#
-for (i in 1:length(locality)) {#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(descriptors[j], '', locality[[i]][1])#
-    }#
-    locality[[i]][1] = gsub("(miami)?['-. ]", '', locality[[i]][1])#
-    cty = c(cty, paste(locality[[i]][1], tolower(df$STATE[i]), sep=','))#
-}
-df$county = cty
-merge(midwestcounties, df, by.x='county', by.y='county')
-midwestmerge = merge(midwestcounties, df, by.x='county', by.y='county')
-str(midwestmerge)
-df$color = colors[ceiling(length(colors)*rank(-df$logitindpov)/dim(df)[1])]
-midwestmerge = merge(midwestcounties, df, by.x='county', by.y='county')
-draw map#
-map <- ggplot(midwestmerge, aes(long,lat,group=county)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-draw map#
-map <- ggplot(midwestmerge, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-midwestmerge <- midwestmerge[order(midwestmerge$group, midwestmerge$order),]
-draw map#
-map <- ggplot(midwestmerge, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-unique(cty)
-df[1:55,]
-Limit the data to just 100 points for now for computational reasons#
-pov2006 = pov2[pov2$year==2006,]#
-df = pov2006#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.05, 0.10, 0.15, 0.20, 0.25, 1.00)#
-for (i in 1:dim(df)[1]) {#
-    bin = c(bin, min(which(breaks >= df$pindpov[i])))#
-}#
-df$color = colors[bin]
-extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df$STATE),]#
-midwestcounties = mapcounties[tolower(mapstates$region) %in% tolower(df$STATE),]
-midweststates
-define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.05, 0.10, 0.15, 0.20, 0.25, 1.00)#
-for (i in 1:dim(df)[1]) {#
-    bin = c(bin, min(which(breaks >= df$pindpov[i])))#
-}#
-df$color = colors[bin]#
-df$county = tolower(as.character(df$COUNTY))#
-for (i in 1:dim(df)[1]) {#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(descriptors[j], '', locality[[i]][1])#
-    }#
-    county = gsub("['-. ]", '', df$county[i])#
-    df$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df$STATE),]#
-midwestcounties = mapcounties[tolower(mapstates$region) %in% tolower(df$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(mapcounties, df, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-Limit the data to just 100 points for now for computational reasons#
-pov2006 = pov2[pov2$year==2006,]#
-df = pov2006#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.05, 0.10, 0.15, 0.20, 0.25, 1.00)#
-for (i in 1:dim(df)[1]) {#
-    bin = c(bin, min(which(breaks >= df$pindpov[i])))#
-}#
-df$color = colors[bin]#
-df$county = tolower(as.character(df$COUNTY))#
-for (i in 1:dim(df)[1]) {#
-    for (j in 1:length(descriptors)) {#
-        locality[[i]][1] = sub(descriptors[j], '', locality[[i]][1])#
-    }#
-    county = gsub("['-. ]", '', df$county[i])#
-    df$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df$STATE),]#
-midwestcounties = mapcounties[tolower(mapstates$region) %in% tolower(df$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-df
-mergedata
-str(mergedata)
-mergedata$county7
-mergedata$county
-unique(mergedata$county)
-df$county
-unique(midwestcounties$county)
-mapstates$region
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df$STATE),]
-define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.05, 0.10, 0.15, 0.20, 0.25, 1.00)#
-for (i in 1:dim(df)[1]) {#
-    bin = c(bin, min(which(breaks >= df$pindpov[i])))#
-}#
-df$color = colors[bin]#
-df$county = tolower(as.character(df$COUNTY))#
-for (i in 1:dim(df)[1]) {#
-    county = gsub("['-. ]", '', df$county[i])#
-    df$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-Define a grid of locations where we'll fit a GWR model:#
-n=20#
-xx = as.vector(quantile(df$x, 1:n/(n+1)))#
-yy = as.vector(quantile(df$y, 1:n/(n+1)))#
-locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
-#
-#Use this trick to compute the matrix of distances very quickly#
-n = dim(pov3)[1]#
-D1 = matrix(rep(pov3$x,n), n,n)#
-D2 = matrix(rep(pov3$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-w = bisquare(D, bw=3)#
+#Set the matrix that we'll use for GWR#
+#df = pov2[pov2$year==2006,]#
+df = pov2#
 #Define which variables we'll use as predictors of poverty:#
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro', 'pind')#
 f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
+f2 = as.formula(paste("pindpov ~ ", paste(predictors, collapse="+"), sep=""))#
 #
 #Make a new variable with the name of each predictor:#
 for (col in predictors) {#
     assign(col, vector())#
 }#
 #
-cv_error = data.frame()#
-w.lasso.geo = list()#
-coefs = list()#
-w.lasso.geo = list()#
-coefs = list()#
-ss = seq(0, 1, length.out=100)#
-lambda = seq(0, 2, length.out=2000)#
+model.data = pov2[,predictors]#
+model.data[['logitindpov']] = pov2[['logitindpov']]#
 #
-for(i in 1:dim(df)[1]) {#
-    w = D[i,-i]#
+#Put the locations into a more friendly format:#
+loc = data.frame(x=df$x, y=df$y, county=as.character(df$COUNTY), state=as.character(df$STATE))#
+loc.unique = unique(loc)#
+model.locs = loc.unique[,c('county', 'state')]#
+model.coords = loc.unique[,c('x', 'y')]
+source("gwglmnet.sel.r")
+gwglmnet.sel(formula=f2, data=df, coords=model.coords, adapt=FALSE, gweight=gwr.bisquare, longlat=TRUE)
+source("utils.r")
+source("utils.r")
+name.var='pindpov'
+paste(c("Coefficient of '", name.var, "' in a model for logitindpov"), sep='')
+paste(c("Coefficient of '", name.var, "' in a model for logitindpov"), collapse='')
+source("utils.r")
+source("utils.r")
+source("utils.r")
+source("utils.r")
+Import the plotting functions:#
+library(plotrix)#
+library(sp)#
+setwd('~/git/gwr/code')#
+source('matplot.r')#
+#source('legend.r')#
 #
-    model = lm(f, data=df[-i,], weights=w)#
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    cv_error = rbind(cv_error, df$logitindpov[i] - predict(w.lasso.geo[[i]], newx=df[i,predictors], type='fit', mode='lambda', s=lambda)$fit)#
-#
-    print(i)#
+#Define the bisquare weight function:#
+bisquare = function(x, z, bw) {#
+    ifelse( r(x=x, z=c(z[1], z[2])) < bw, (1 - (r(x=x, z=c(z[1],z[2]))/ bw)**2)**2, 0)#
 }#
 #
-names(cv_error) = lambda#
-#
-er = vector()#
-for (k in 1:dim(cv_error)[2]) {#
-    er = c(er, sum((cv_error**2)[k]))#
-    cat(paste(names(cv_error)[k], ": ", sum((cv_error**2)[k]), "\n", sep=""))#
-}
-Define a grid of locations where we'll fit a GWR model:#
-n=20#
-xx = as.vector(quantile(df$x, 1:n/(n+1)))#
-yy = as.vector(quantile(df$y, 1:n/(n+1)))#
-locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
-#
-#Use this trick to compute the matrix of distances very quickly#
-n = dim(pov3)[1]#
-D1 = matrix(rep(pov2006$x,n), n,n)#
-D2 = matrix(rep(pov2006$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-w = bisquare(D, bw=3)#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
-f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
-#
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
+bisquare = function(R, bw) {#
+    ifelse( R < bw, (1 - (R/bw)**2)**2, 0)#
 }#
 #
-cv_error = data.frame()#
-w.lasso.geo = list()#
-coefs = list()#
-ss = seq(0, 1, length.out=100)#
-lambda = seq(0, 2, length.out=2000)
-for (j in 1:dim(df)[1]) {#
-    loodf = df[-j,]#
-    looD = D[-j,-j]#
-#
-    ss = seq(0, 1, length.out=100)#
-    w.lasso.geo[[j]] = list()#
-    coefs[[j]] = list()#
-    affected = which(w[j,] > 0)#
-#
-    for(i in affected) {    #
-        model = lm(f, data=loodf, weights=w)#
-        w.eig <- eigen(diag(w))#
-        w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-        w.lasso.geo[[j]][[i]] = lars(x=w.sqrt %*% as.matrix(loodf[,predictors]), y=as.matrix(loodf$logitindpov))#
-        for (col in predictors) {#
-            coefs[[j]][[col]] = c(coefs[[j]][[col]], model$coef[[col]])#
-        }        #
-        print(i)#
-    }    #
-    print(j)#
-}
-bw=3
-j=2
-loodf = df[-j,]#
-    looD = D[-j,-j]#
-    w = bisquare(looD, bw=bw)
-dim(w)
-dim(D)
-?predict.lars
-Define a grid of locations where we'll fit a GWR model:#
-n=20#
-xx = as.vector(quantile(df$x, 1:n/(n+1)))#
-yy = as.vector(quantile(df$y, 1:n/(n+1)))#
-locs = cbind(x=rep(xx,each=n), y=rep(yy,times=n))#
-#
-#Use this trick to compute the matrix of distances very quickly#
-n = dim(pov3)[1]#
-D1 = matrix(rep(pov2006$x,n), n,n)#
-D2 = matrix(rep(pov2006$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-w = bisquare(D, bw=3)#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
-f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
-#
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
+#Define the distance function#
+r = function(x, z) { #
+    sqrt((x[1]-z[1])**2 + (x[2]-z[2])**2)#
 }#
-cv_error = data.frame()#
-w.lasso.geo = list()#
-coefs = list()#
-ss = seq(0, 1, length.out=100)#
-lambda = seq(0, 2, length.out=2000)#
-l = vector()#
-for(i in 1:dim(df)[1]) {#
-    w = D[i,-i]#
 #
-    model = lm(f, data=df[-i,], weights=w)#
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    l = c(l, which.min(predict(model, newx=df[i,], mode='lambda', s=lambda, type='fit'))#
-    print(i)#
-}
-Use this trick to compute the matrix of distances very quickly#
-n = dim(pov3)[1]#
-D1 = matrix(rep(pov2006$x,n), n,n)#
-D2 = matrix(rep(pov2006$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-w = bisquare(D, bw=3)#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
-f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
-#
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
+#Fix an x.i and get the distance to all other x’s:#
+R = function(x.i, xy.mat) {#
+    R = sapply(1:dim(xy.mat)[1], FUN=function(i) {r(x.i, xy.mat[i,])} )#
+    return(R)#
 }#
-cv_error = data.frame()#
-w.lasso.geo = list()#
-coefs = list()#
-ss = seq(0, 1, length.out=100)#
-lambda = seq(0, 2, length.out=2000)#
-l = vector()#
-for(i in 1:dim(df)[1]) {#
-    w = D[i,-i]#
 #
-    model = lm(f, data=df[-i,], weights=w)#
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    l = c(l, which.min(predict(model, newx=df[i,], mode='lambda', s=lambda, type='fit')))#
-    print(i)#
+W = function(x.i, xy.mat, bw) {#
+    distance = R(x.i, xy.mat)#
+    W = bisquare(distance, bw)#
+    return(W)#
 }
-Use this trick to compute the matrix of distances very quickly#
-n = dim(pov2006)[1]#
-D1 = matrix(rep(pov2006$x,n), n,n)#
-D2 = matrix(rep(pov2006$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-w = bisquare(D, bw=3)#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
-f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
-#
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
-}#
-cv_error = data.frame()#
-w.lasso.geo = list()#
-coefs = list()#
-ss = seq(0, 1, length.out=100)#
-lambda = seq(0, 2, length.out=2000)#
-l = vector()#
-for(i in 1:dim(df)[1]) {#
-    w = D[i,-i]#
-#
-    model = lm(f, data=df[-i,], weights=w)#
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    l = c(l, which.min(predict(model, newx=df[i,], mode='lambda', s=lambda, type='fit')))#
-    print(i)#
-}
-for(i in 1:dim(df)[1]) {#
-    w = D[i,-i]#
-#
-    model = lm(f, data=df[-i,], weights=w)#
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    l = c(l, which.min(predict(model, newx=df[i,], type='fit', mode='lambda', s=lambda)))#
-    print(i)#
-}
-i
-w
-bw=3#
-for(i in 1:dim(df)[1]) {#
-    w = bisquare(D[i,-i], bw=bw)#
-#
-    model = lm(f, data=df[-i,], weights=w)#
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    l = c(l, which.min(predict(model, newx=df[i,], type='fit', mode='lambda', s=lambda)))#
-    print(i)#
-}
-w
-?predict.lars
-lambda
-predict(model, newx=df[i,], s=lambda, type='fit', mode='lambda')
-ll = lambda
-predict(model, newx=df[i,], s=ll, type='fit', mode='lambda')
-predict(model, df[i,], ll, type='fit', mode='lambda')
-model
-Use this trick to compute the matrix of distances very quickly#
-bw=3#
-n = dim(pov2006)[1]#
-D1 = matrix(rep(pov2006$x,n), n,n)#
-D2 = matrix(rep(pov2006$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+gwglmnet.sel(formula=f2, data=df, coords=model.coords, adapt=FALSE, gweight=gwr.bisquare, longlat=TRUE)
+col.out = which(names(model.data)=='logitindpov')
+reps = dim(model.data)[1]/n.unique
+Compute the matrix of distances (in kilometers)#
+n = dim(loc)[1]#
+D = as.matrix(earth.dist(loc[,c('x','y')]),n,n)#
 w = bisquare(D, bw=bw)#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
-f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
 #
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
-}#
+#Do the same for just the unique locations#
+n.unique = dim(model.coords)[1]#
+D.unique = as.matrix(earth.dist(model.coords),n,n)#
+w.unique = bisquare(D.unique, bw=bw)#
 cv_error = data.frame()#
 w.lasso.geo = list()#
+#glmnet.geo = list()#
 coefs = list()#
 ss = seq(0, 1, length.out=100)#
-lambda = seq(0, 2, length.out=2000)#
+lambda = seq(0, 5, length.out=5000)#
 l = vector()#
-for(i in 1:dim(df)[1]) {#
-    w = w[i,-i]#
-#
-    model = lm(f, data=df[-i,], weights=w)#
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    l = c(l, which.min(predict(w.lasso.geo[[i]], newx=df[i,], s=lambda, type='fit', mode='lambda')))#
-    print(i)#
-}
-i
-dfi[i]
-df[i,]
-model.data = df[,predictors]#
-model.data[['logitindpov']] = df[['logitindpov']]
-model.dta[1:10,]
-model.data[1:10,]
-predict(w.lasso.geo[[i]], newx=model.data[i,], s=lambda, type='fit', mode='lambda')
-model.data[i,]
-w.lasso.geo[[i]]
-summary(model)
-model.data[i,-11]
-predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')
-predict(w.lasso.geo[[i]], newx=model.data[i,-'logitindpov'], s=lambda, type='fit', mode='lambda')
-Use this trick to compute the matrix of distances very quickly#
-bw=3#
-n = dim(pov2006)[1]#
-D1 = matrix(rep(pov2006$x,n), n,n)#
-D2 = matrix(rep(pov2006$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+col.out = which(names(model.data)=='logitindpov')#
+reps = dim(model.data)[1]/n.unique
+gwglmnet.sel(formula=f2, data=df, coords=model.coords, adapt=FALSE, gweight=gwr.bisquare, longlat=TRUE)
+source("gwglmnet.sel.r")
+gwglmnet.sel(formula=f2, data=df, coords=model.coords, adapt=FALSE, gweight=gwr.bisquare, longlat=TRUE)
+gwglmnet.sel(formula=f2, data=df, coords=model.coords, adapt=FALSE, gweight=gwr.bisquare, longlat=TRUE)
+source("gwglmnet.sel.r")
+gwglmnet.sel(formula=f2, data=df, coords=df[,c('x','y')], adapt=FALSE, gweight=gwr.bisquare, longlat=TRUE)
+Compute the matrix of distances (in kilometers)#
+n = dim(loc)[1]#
+D = as.matrix(earth.dist(loc[,c('x','y')]),n,n)#
 w = bisquare(D, bw=bw)#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
-f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
 #
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
-}#
-model.data = df[,predictors]#
-model.data[['logitindpov']] = df[['logitindpov']]#
+#Do the same for just the unique locations#
+n.unique = dim(model.coords)[1]#
+D.unique = as.matrix(earth.dist(model.coords),n,n)#
+w.unique = bisquare(D.unique, bw=bw)#
 cv_error = data.frame()#
 w.lasso.geo = list()#
+glmnet.geo = list()#
 coefs = list()#
 ss = seq(0, 1, length.out=100)#
-lambda = seq(0, 2, length.out=2000)#
+lambda = seq(0, 5, length.out=5000)#
 l = vector()#
-for(i in 1:dim(df)[1]) {#
-    w = w[i,-i]#
+col.out = which(names(model.data)=='logitindpov')#
+reps = dim(model.data)[1]/n.unique#
+for(i in 1:dim(model.coords)[1]) {#
+    colocated = which(loc$x==model.coords$x[i] & loc$y==model.coords$y[i])#
+    loow = w.unique[i,-colocated]#
 #
-    model = lm(f, data=model.data[-i,], weights=w)#
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    l = c(l, which.min(predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')))#
+    #model = lm(f, data=model.data[-colocated,], weights=loow)#
+    w.sqrt <- diag(rep(sqrt(loow), reps))#
+    #block.eig = list()#
+    #block.eig[['vectors']] = matrix(0, length(loow)*reps, length(loow)*reps)#
+    #block.eig[['vectors']][,1:length(loow)] = rbind(w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors)#
+    #block.eig[['values']] = c(reps*w.eig$values, rep(0, (reps-1)*length(loow)))#
+#
+    #w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% t(w.eig$vectors)#
+    #w.sqrt = block.eig[['vectors']] %*% diag(sqrt(block.eig[['values']])) %*% t(block.eig[['vectors']])#
+    #w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-colocated,predictors]), y=w.sqrt %*% as.matrix(df$logitindpov[-colocated]))#
+    glmnet.geo[[i]] = glmnet(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pfampov[-colocated], 1-df$pfampov[-colocated])), weights=rep(loow, reps), family='binomial')#
+    #l = c(l, which.min(colSums(abs(predict(w.lasso.geo[[i]], newx=model.data[colocated,-col.out], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out])))/1000)#
+    l = c(l, glmnet.geo[[i]][['lambda']][which.min(colSums(abs(predict(glmnet.geo[[i]], newx=as.matrix(model.data[colocated,-col.out]), type='response') - model.data[colocated,col.out])))])#
     print(i)#
 }
-which.min(predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda'))
-predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')
-predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')[['fit']]
-predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[i,11]
-predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[i,'logitingdpov']
-which.min(predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[i,'logitingdpov'])
-which.min(abs(predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[i,'logitingdpov']))
-which.min(abs(predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[i,11]))
-Use this trick to compute the matrix of distances very quickly#
-bw=3#
-n = dim(pov2006)[1]#
-D1 = matrix(rep(pov2006$x,n), n,n)#
-D2 = matrix(rep(pov2006$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+bw = 125.314 #from gwlars.sel
+Compute the matrix of distances (in kilometers)#
+n = dim(loc)[1]#
+D = as.matrix(earth.dist(loc[,c('x','y')]),n,n)#
 w = bisquare(D, bw=bw)#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
-f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
 #
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
-}#
-model.data = df[,predictors]#
-model.data[['logitindpov']] = df[['logitindpov']]#
+#Do the same for just the unique locations#
+n.unique = dim(model.coords)[1]#
+D.unique = as.matrix(earth.dist(model.coords),n,n)#
+w.unique = bisquare(D.unique, bw=bw)#
 cv_error = data.frame()#
 w.lasso.geo = list()#
+glmnet.geo = list()#
 coefs = list()#
 ss = seq(0, 1, length.out=100)#
-lambda = seq(0, 2, length.out=2000)#
+lambda = seq(0, 5, length.out=5000)#
 l = vector()#
-for(i in 1:dim(df)[1]) {#
-    w = w[i,-i]#
+col.out = which(names(model.data)=='logitindpov')#
+reps = dim(model.data)[1]/n.unique#
+for(i in 1:dim(model.coords)[1]) {#
+    colocated = which(loc$x==model.coords$x[i] & loc$y==model.coords$y[i])#
+    loow = w.unique[i,-colocated]#
 #
-    model = lm(f, data=model.data[-i,], weights=w)#
-    w.eig <- eigen(diag(w))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    l = c(l, which.min(abs(predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[i,11]))/1000)#
+    #model = lm(f, data=model.data[-colocated,], weights=loow)#
+    w.sqrt <- diag(rep(sqrt(loow), reps))#
+    #block.eig = list()#
+    #block.eig[['vectors']] = matrix(0, length(loow)*reps, length(loow)*reps)#
+    #block.eig[['vectors']][,1:length(loow)] = rbind(w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors)#
+    #block.eig[['values']] = c(reps*w.eig$values, rep(0, (reps-1)*length(loow)))#
+#
+    #w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% t(w.eig$vectors)#
+    #w.sqrt = block.eig[['vectors']] %*% diag(sqrt(block.eig[['values']])) %*% t(block.eig[['vectors']])#
+    #w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-colocated,predictors]), y=w.sqrt %*% as.matrix(df$logitindpov[-colocated]))#
+    glmnet.geo[[i]] = glmnet(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pfampov[-colocated], 1-df$pfampov[-colocated])), weights=rep(loow, reps), family='binomial')#
+    #l = c(l, which.min(colSums(abs(predict(w.lasso.geo[[i]], newx=model.data[colocated,-col.out], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out])))/1000)#
+    l = c(l, glmnet.geo[[i]][['lambda']][which.min(colSums(abs(predict(glmnet.geo[[i]], newx=as.matrix(model.data[colocated,-col.out]), type='response') - model.data[colocated,col.out])))])#
     print(i)#
 }
-w
-i
-Use this trick to compute the matrix of distances very quickly#
-bw=3#
-n = dim(pov2006)[1]#
-D1 = matrix(rep(pov2006$x,n), n,n)#
-D2 = matrix(rep(pov2006$y,n), n,n)#
-D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
-w = bisquare(D, bw=bw)#
-#Define which variables we'll use as predictors of poverty:#
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')#
-f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))#
-#
-#Make a new variable with the name of each predictor:#
-for (col in predictors) {#
-    assign(col, vector())#
-}#
-model.data = df[,predictors]#
-model.data[['logitindpov']] = df[['logitindpov']]#
-cv_error = data.frame()#
-w.lasso.geo = list()#
-coefs = list()#
-ss = seq(0, 1, length.out=100)#
-lambda = seq(0, 2, length.out=2000)#
-l = vector()#
-for(i in 1:dim(df)[1]) {#
-    loow = w[i,-i]#
-#
-    model = lm(f, data=model.data[-i,], weights=loow)#
-    w.eig <- eigen(diag(loow))#
-    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
-    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-i,predictors]), y=as.matrix(df$logitindpov[-i]))#
-    for (col in predictors) {#
-        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
-    }#
-    l = c(l, which.min(abs(predict(w.lasso.geo[[i]], newx=model.data[i,-11], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[i,11]))/1000)#
-    print(i)#
-}
-dim(model.data)
-model.data$lambda=l
-df$lambda = l
-df$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df)[1]) {#
-    bin = c(bin, min(which(breaks >= df$lambda[i])))#
-}#
-df$color = colors[bin]#
-df$county = tolower(as.character(df$COUNTY))#
-for (i in 1:dim(df)[1]) {#
-    county = gsub("['-. ]", '', df$county[i])#
-    df$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=color))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-w.lasso.geo[[4]]
-?lars
-str(df)
-str(model.data)
-model.data=model.data[,1:11]
-str(model.data)
-str(pov)
-str(pov2)
-Prepare something for plotting:#
-output = vector()#
-df.temp = df#
-for (i in 1:dim(df)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,11], mode='lambda', s=1000*l[i])[['pblk']])#
-}
-output
-summary(output)
-Prepare something for plotting:#
-output = vector()#
-var = 'pblk'#
-df.temp = df#
-for (i in 1:dim(df)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]
-draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=gradient(low='white', high='red', limits=c(0,2.5))))#
-map <- map + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=c(0,2.5)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-names(df)
-Prepare something for plotting:#
-output = vector()#
-var = 'pind'#
-df.temp = df#
-for (i in 1:dim(df)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=c(0,2.5)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-dim(model.data)
-names(model.data)
-Prepare something for plotting:#
-output = vector()#
-var = 'pind'#
-df.temp = df#
-for (i in 1:dim(df)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=c(0,2.5)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-df.temp[['output']]
-names(df.temp)
-names(df)
-output
-Prepare something for plotting:#
-output = vector()#
-var = 'pind'#
-df.temp = df#
-for (i in 1:dim(df.temp)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])#
-}
-i
-model.data[i,-11]
-w.lasso.geo[[i]]
-coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])
-coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[['pind']]
-coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[['pag']]
-Prepare something for plotting:#
-output = vector()#
-var = 'pag'#
-df.temp = df#
-for (i in 1:dim(df.temp)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=c(0,2.5)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-output
-Prepare something for plotting:#
-output = vector()#
-var = 'pag'#
-df.temp = df#
-for (i in 1:dim(df.temp)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=range(output)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-Prepare something for plotting:#
-output = vector()#
-var = 'pman'#
-df.temp = df#
-for (i in 1:dim(df.temp)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=range(output)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-output
-Prepare something for plotting:#
-output = vector()#
-var = 'metro'#
-df.temp = df#
-for (i in 1:dim(df.temp)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=range(output)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-Prepare something for plotting:#
-output = vector()#
-var = 'pserve'#
-df.temp = df#
-for (i in 1:dim(df.temp)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=range(output)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-Prepare something for plotting:#
-output = vector()#
-var = 'potprof'#
-df.temp = df#
-for (i in 1:dim(df.temp)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=range(output)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-Prepare something for plotting:#
-output = vector()#
-var = 'phisp'#
-df.temp = df#
-for (i in 1:dim(df.temp)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=range(output)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map
-Prepare something for plotting:#
-output = vector()#
-var = 'pfire'#
-df.temp = df#
-for (i in 1:dim(df.temp)[1]) {#
-    output = c(output, coef.lars(w.lasso.geo[[i]], newx=model.data[i,-11], mode='lambda', s=1000*l[i])[[var]])#
-}#
-df.temp$output = output#
-df.temp$lambda = l#
-#define color buckets#
-colors = c("#980043", "#C994C7", "#D4B9DA", "#DD1C77", "#DF65B0", "#F1EEF6")#
-#
-bin = vector()#
-breaks = c(0.1, 0.20, 0.3, 0.4, 0.5, 2.00)#
-for (i in 1:dim(df.temp)[1]) {#
-    bin = c(bin, min(which(breaks >= df.temp$lambda[i])))#
-}#
-df.temp$color = colors[bin]#
-df.temp$county = tolower(as.character(df.temp$COUNTY))#
-for (i in 1:dim(df.temp)[1]) {#
-    county = gsub("['-. ]", '', df.temp$county[i])#
-    df.temp$county[i] = paste(county, tolower(df$STATE[i]), sep=',')#
-}#
-#extract reference data#
-mapcounties <- map_data("county")#
-mapstates <- map_data("state")#
-#
-#limit our view to the midwest:#
-midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.temp$STATE),]#
-midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.temp$STATE),]#
-#
-#merge data with ggplot county coordinates#
-midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep = ","))#
-mergedata <- merge(midwestcounties, df.temp, by.x = "county", by.y = "county")#
-mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
-#
-#draw map#
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
-map <- map + scale_fill_gradient(low='white', high='red', limits=range(output)) + #scale_fill_brewer(palette="PuRd") +#
-    coord_map(project="globular") +#
-    opts(legend.position = "none")#
-#
-map <- map + opts(panel.background = theme_rect(fill='green', colour='red'))#
-#
-#add state borders#
-map <- map + geom_path(data = midweststates, colour = "white", size = .75)#
-#
-#add county borders#
-map <- map + geom_path(data = midwestcounties, colour = "white", size = .5, alpha = .1)#
-map

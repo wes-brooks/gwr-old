@@ -1,5 +1,6 @@
 library(spgwr)
 library(lars)
+library(glmnet)
 library(maps)
 library(ggplot2)
 library(fossil)
@@ -69,6 +70,7 @@ df = pov2
 #Define which variables we'll use as predictors of poverty:
 predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro', 'pind')
 f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))
+f2 = as.formula(paste("pindpov ~ ", paste(predictors, collapse="+"), sep=""))
 
 #Make a new variable with the name of each predictor:
 for (col in predictors) {
@@ -119,11 +121,12 @@ w.unique = bisquare(D.unique, bw=bw)
 
 cv_error = data.frame()
 w.lasso.geo = list()
-#glmnet.geo = list()
+glmnet.geo = list()
 coefs = list()
 ss = seq(0, 1, length.out=100)
 lambda = seq(0, 5, length.out=5000)
-l = vector()
+l.lars = vector()
+l.glmnet = vector()
 col.out = which(names(model.data)=='logitindpov')
 reps = dim(model.data)[1]/n.unique
 
@@ -144,10 +147,10 @@ for(i in 1:dim(model.coords)[1]) {
     #w.sqrt = block.eig[['vectors']] %*% diag(sqrt(block.eig[['values']])) %*% t(block.eig[['vectors']])
     
     w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-colocated,predictors]), y=w.sqrt %*% as.matrix(df$logitindpov[-colocated]))
-    #glmnet.geo[[i]] = glmnet(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pfampov[-colocated], 1-df$pfampov[-colocated])), weights=rep(loow, reps), family='binomial')
+    glmnet.geo[[i]] = glmnet(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pindpov[-colocated], 1-df$pindpov[-colocated])), weights=rep(loow, reps), family='binomial')
  
-    l = c(l, which.min(colSums(abs(predict(w.lasso.geo[[i]], newx=model.data[colocated,-col.out], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out])))/1000)
-    #l = c(l, glmnet.geo[[i]][['lambda']][which.min(colSums(abs(predict(glmnet.geo[[i]], newx=as.matrix(model.data[colocated,-col.out]), type='response') - model.data[colocated,col.out])))])
+    l.lars = c(l.lars, which.min(colSums(abs(predict(w.lasso.geo[[i]], newx=model.data[colocated,-col.out], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out])))/1000)
+    l.glmnet = c(l.glmnet, glmnet.geo[[i]][['lambda']][which.min(colSums(abs(predict(glmnet.geo[[i]], newx=as.matrix(model.data[colocated,-col.out]), type='response') - model.data[colocated,col.out])))])
     print(i)
 }
 
