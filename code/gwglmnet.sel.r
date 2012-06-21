@@ -44,7 +44,7 @@ gwglmnet.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.G
         if (any(!is.finite(difmin))) 
             difmin[which(!is.finite(difmin))] <- 0
         beta1 <- difmin/1000
-        beta2 <- difmin/2
+        beta2 <- difmin
         if (method == "cv") {
             opt <- optimize(gwglmnet.cv.f, lower = beta1, upper = beta2, 
                 maximum = FALSE, y = y, x = x, coords = coords, 

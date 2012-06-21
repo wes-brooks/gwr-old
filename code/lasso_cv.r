@@ -4,6 +4,7 @@ library(glmnet)
 library(maps)
 library(ggplot2)
 library(fossil)
+library(lqa)
 
 
 #extract reference data
@@ -122,11 +123,15 @@ w.unique = bisquare(D.unique, bw=bw)
 cv_error = data.frame()
 w.lasso.geo = list()
 glmnet.geo = list()
+lqa.geo = list()
+adalars.geo = list()
 coefs = list()
 ss = seq(0, 1, length.out=100)
 lambda = seq(0, 5, length.out=5000)
 l.lars = vector()
 l.glmnet = vector()
+l.lqa = vector()
+l.adalars = vector()
 col.out = which(names(model.data)=='logitindpov')
 reps = dim(model.data)[1]/n.unique
 
@@ -148,9 +153,52 @@ for(i in 1:dim(model.coords)[1]) {
     
     w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-colocated,predictors]), y=w.sqrt %*% as.matrix(df$logitindpov[-colocated]))
     glmnet.geo[[i]] = glmnet(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pindpov[-colocated], 1-df$pindpov[-colocated])), weights=rep(loow, reps), family='binomial')
- 
+    #lqa.geo[[i]] = lqa(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pindpov[-colocated], 1-df$pindpov[-colocated])), weights=rep(loow, reps), family='binomial', penalty=adaptive.lasso)
+    
+    #Compute the adaptive lasso estimates
+    #Generate the adaptive lasso weights
+    x.weighted = w.sqrt %*% as.matrix(model.data[-colocated,predictors])
+    y.weighted = w.sqrt %*% as.matrix(model.data$logitindpov[-colocated])
+    m<-ncol(x.weighted)
+    n<-nrow(x.weighted)
+    one <- rep(1, n)
+    meanx <- drop(one %*% x.weighted)/n
+    x.centered <- scale(x.weighted, meanx, FALSE)         # first subtracts mean
+    normx <- sqrt(drop(one %*% (x.centered^2)))
+    names(normx) <- NULL
+    xs = x.centered
+    for (k in 1:dim(x.centered)[2]) {
+        if (normx[k]!=0) {
+            xs[,k] = xs[,k] / normx[k]
+        } else {
+            xs[,k] = rep(0, dim(xs)[1])
+            normx[k] = Inf #This should allow the lambda-finding step to work.
+        }
+    }
+
+    #xs <- scale(x.centered, FALSE, normx)        # now rescales with norm (not sd)
+    
+    out.ls = lm(y.weighted~xs)                      # ols fit on standardized
+    beta.ols = out.ls$coeff[2:(m+1)]       # ols except for intercept
+    ada.weight = abs(beta.ols)                      # weights for adaptive lasso
+    for (k in 1:dim(x.centered)[2]) {
+        if (!is.na(ada.weight[k])) {
+            xs[,k] = xs[,k] * ada.weight[k]
+        } else {
+            xs[,k] = rep(0, dim(xs)[1])
+            ada.weight[k] = 0 #This should allow the lambda-finding step to work.
+            print(paste("hmmm... i=", i, ", k=", k, sep=''))
+        }
+    }
+    
+    #Use the lars algorithm to fit the model
+    adalars.geo[[i]] = lars(x=xs, y=y.weighted, normalize=FALSE)
+
     l.lars = c(l.lars, which.min(colSums(abs(predict(w.lasso.geo[[i]], newx=model.data[colocated,-col.out], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out])))/1000)
     l.glmnet = c(l.glmnet, glmnet.geo[[i]][['lambda']][which.min(colSums(abs(predict(glmnet.geo[[i]], newx=as.matrix(model.data[colocated,-col.out]), type='response') - model.data[colocated,col.out])))])
+    l.adalars = c(l.adalars, which.min(colSums(abs(predict(adalars.geo[[i]], newx=scale(model.data[colocated,-col.out], center=meanx, scale=normx/ada.weight), s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out])))/1000)
+    print(which.min(colSums(abs(predict(adalars.geo[[i]], newx=scale(model.data[colocated,-col.out], center=meanx, scale=normx/ada.weight), s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out]))))
+    #l.lqa = c(l.lqa, 
     print(i)
 }
 

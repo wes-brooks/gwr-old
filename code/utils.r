@@ -386,8 +386,8 @@ plot.coef.gwglmnet = function(model, var, locs, l, data, breaks=NULL) {
     for (i in 1:length(model)) {
         m = predict(model[[i]], s=l[[i]], newx=data[,-col.out], type='coefficients')
         test = abs(m@x[which(m@i==(which(m@Dimnames[[1]]==name.var)-1))])
-        if(test>0) {
-            var = c(var, test)
+        if(name.var %in% m@Dimnames[[1]][m@i+1]) {
+            var = c(var, abs(m@x[which(m@i==(which(m@Dimnames[[1]]==name.var)-1))]))
         } else {
             var = c(var, 0)
         }
