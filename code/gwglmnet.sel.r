@@ -61,10 +61,14 @@ gwglmnet.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.G
         res <- bdwt
     }
     else {
-        beta1 <- 0
-        beta2 <- 1
+        bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
+        difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
+        if (any(!is.finite(difmin))) 
+            difmin[which(!is.finite(difmin))] <- 0
+        beta1 <- difmin/1000
+        beta2 <- difmin
         if (method == "cv") {
-            opt <- optimize(gwr.cv.adapt.f, lower = beta1, upper = beta2, 
+            opt <- optimize(gwglmnet.adapt.cv.f, lower = beta1, upper = beta2, 
                 maximum = FALSE, y = y, x = x, coords = coords, 
                 gweight = gweight, verbose = verbose, longlat = longlat, 
                 RMSE = RMSE, weights = weights, tol = tol)
@@ -81,12 +85,16 @@ gwglmnet.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.G
     res
 }
 
-gwglmnet.cv.f = function(bw, y, x, coords, gweight, verbose, longlat, tol, ...) {    
+gwglmnet.cv.f = function(bw, y, x, coords, gweight, verbose, longlat, tol, weights=NULL, ...) {    
     cat(paste('Entering gwglmnet.cv.f with bandwidth ', bw, '\n', sep=''))
     #Compute the matrix of distances (in kilometers)
     n = dim(coords)[1]
     D = as.matrix(earth.dist(coords),n,n)
     w = bisquare(D, bw=bw)
+
+    if (!is.null(weights)) {
+        w = w*weights
+    }
     
     #Do the same for just the unique locations
     coords.unique = unique(coords)
@@ -102,6 +110,86 @@ gwglmnet.cv.f = function(bw, y, x, coords, gweight, verbose, longlat, tol, ...) 
     
         w.sqrt <- diag(sqrt(loow))
         gwglmnet[[i]] = glmnet(x=as.matrix(x[-colocated,]), y=as.matrix(cbind(y[-colocated], 1-y[-colocated])), weights=loow, family='binomial')
+        
+        errs = colSums(abs(predict(gwglmnet[[i]], newx=x[colocated,], type='response') - y[colocated]))
+        error.cv = error.cv + min(errs)
+        l = c(l, gwglmnet[[i]][['lambda']][which.min(errs)])
+        cat(paste(i, '\n', sep=''))
+    }
+
+    cat(paste('Bandwidth: ', bw, '. CV error: ', error.cv, '\n', sep=''))
+    return(error.cv)
+}
+
+
+gwglmnet.adapt.cv.f = function(bw, y, x, coords, gweight, verbose, longlat, tol, weights=NULL, ...) {    
+    cat(paste('Entering gwglmnet.adapt.cv.f with bandwidth ', bw, '\n', sep=''))
+    #Compute the matrix of distances (in kilometers)
+    n = dim(coords)[1]
+    D = as.matrix(earth.dist(coords),n,n)
+    w = bisquare(D, bw=bw)
+   
+    #Do the same for just the unique locations
+    coords.unique = unique(coords)
+
+    gwglmnet = list()
+    lambda = seq(0, 10, length.out=10000)
+    l = vector()
+    error.cv = 0
+
+    for(i in 1:dim(coords.unique)[1]) {
+        colocated = which(coords[,1]==coords.unique[i,1] & coords[,2]==coords.unique[i,2])
+        loow = w[i,-colocated]
+       
+            
+        #Compute the adaptive lasso estimates
+        #Generate the adaptive lasso weights
+        m<-ncol(x)
+        n<-nrow(x)
+        one <- rep(1, n)
+        meanx <- drop(one %*% x)/n
+        x.centered <- scale(x, meanx, FALSE)         # first subtracts mean
+        normx <- sqrt(drop(one %*% (x.centered^2)))
+        names(normx) <- NULL
+        xs = x.centered
+        for (k in 1:dim(x.centered)[2]) {
+            if (normx[k]!=0) {
+                xs[,k] = xs[,k] / normx[k]
+            } else {
+                xs[,k] = rep(0, dim(xs)[1])
+                normx[k] = Inf #This should allow the lambda-finding step to work.
+            }
+        }
+    
+        df = data.frame(y=y,xs)
+        
+        if (!is.null(weights)) {
+            rawglm = glm(y~., data=df[-colocated,], family='binomial', weights=loow*weights[-colocated])
+        } else {
+            rawglm = glm(y~., data=df[-colocated,], family='binomial')
+        }
+        beta.glm = rawglm$coeff[2:(m+1)]       # ols except for intercept
+        ada.weight = abs(beta.glm)                      # weights for adaptive lasso
+        for (k in 1:dim(x.centered)[2]) {
+            if (!is.na(ada.weight[k])) {
+                xs[,k] = xs[,k] * ada.weight[k]
+            } else {
+                xs[,k] = rep(0, dim(xs)[1])
+                ada.weight[k] = 0 #This should allow the lambda-finding step to work.
+            }
+        }
+    
+        df = data.frame(y=y,xs)
+    
+
+
+    
+        if (!is.null(weights)) {
+            gwglmnet[[i]] = glmnet(x=as.matrix(xs[-colocated,]), y=as.matrix(cbind(y[-colocated], 1-y[-colocated])), weights=loow*weights[-colocated], family='binomial')
+        } else {
+            gwglmnet[[i]] = glmnet(x=as.matrix(xs[-colocated,]), y=as.matrix(cbind(y[-colocated], 1-y[-colocated])), weights=loow, family='binomial')
+        }
+        
         
         errs = colSums(abs(predict(gwglmnet[[i]], newx=x[colocated,], type='response') - y[colocated]))
         error.cv = error.cv + min(errs)

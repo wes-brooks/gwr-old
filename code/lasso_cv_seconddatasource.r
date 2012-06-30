@@ -17,27 +17,22 @@ setwd("~/git/gwr/code")
 source("utils.r")
 
 #Import poverty data
-pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)
-#pov = read.csv("~/git/gwr/data/dropbox/data.csv", header=TRUE)
-years = c('60', '70', '80', '90', '00', '06')
+#pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)
+pov = read.csv("~/git/gwr/data/dropbox/data.csv", header=TRUE)
+pov$y1960 = 1 - pov$y1970 - pov$y1980 - pov$y1990 - pov$y2000 - pov$y2006
+years = c('y1960', 'y1970', 'y1980', 'y1990', 'y2000', 'y2006')
 column.map = list(pindpov='proportion individuals in poverty', 
     logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', 
     pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',
     phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty', pov_denom='population', poor='number of poor',
     logitfampov='logit( proportion families in poverty)', pfire='pfire')
 
+
+
 #Process the poverty data so that each column appears only once and the year is added as a column.
 pov2 = list()
 for (column.name in names(column.map)) {
-    col = vector()
-    for (year in years) {
-        if (paste(column.name, year, sep="") %in% names(pov)) {
-            indx = which(names(pov)==paste(column.name, year, sep=""))
-            col = c(col, pov[,indx])
-        }
-        else { col = c(col, rep(NA, dim(pov)[1])) }
-    }
-    pov2[[column.name]] = col
+    pov2[[column.name]] = pov[[column.name]]
 }
 
 #Find the columns we haven't yet matched:
@@ -45,24 +40,31 @@ for (column.name in names(column.map)) {
 missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})
 
 for (column.name in missed) {
-    col = rep(pov[,column.name], length(years))
+    col = pov[,column.name]
     pov2[[column.name]] = col
 }
 
 #Add the year column to the pov2 data list.
 pov2[['year']] = vector()
-for (year in years) {
-    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))
+for (i in 1:dim(pov)[1]) {
+    if (pov$y1960[i]) {
+        y = 1960
+    } else if (pov$y1970[i]) {
+        y=1970
+    } else if (pov$y1980[i]) {
+        y=1980
+    } else if (pov$y1990[i]) {
+        y=1990
+    } else if (pov$y2000[i]) {
+        y=2000
+    } else if (pov$y2006[i]) {
+        y=2006
+    } 
+    pov2[['year']] = c(pov2[['year']], y)
 }
 
 #Convert pov2 from a list to a data frame:
 pov2 = data.frame(pov2)
-
-#Correct the Y2K bug
-pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)
-pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
-
-
 
 #Set the matrix that we'll use for GWR
 #df = pov2[pov2$year==2006,]
@@ -81,9 +83,10 @@ for (col in predictors) {
 
 model.data = pov2[,predictors]
 model.data[['logitindpov']] = pov2[['logitindpov']]
+#model.data[['population']] = pov2[['pov_denom']]
 
 #Put the locations into a more friendly format:
-loc = data.frame(x=df$x, y=df$y, county=as.character(df$county), state=as.character(df$county))
+loc = data.frame(x=df$x, y=df$y, county=as.character(df$county), state=as.character(df$state))
 loc.unique = unique(loc)
 model.locs = loc.unique[,c('county', 'state')]
 model.coords = loc.unique[,c('x', 'y')]
@@ -95,8 +98,6 @@ k.nn = 0.09446181
 #bw = 295.9431  #bandwidth in kilometers
 #bw = 125.314 #from gwlars.sel
 bw = 127 #-ish, from gw.adalars
-#bw.glmnet.adapt = gwglmnet.sel(y~., data=df, coords=loc[,c('x','y')], longlat=TRUE, adapt=TRUE, gweight=gwr.bisquare, weights=df$pov_denom)
-bw.glmnet.adapt = 1635.349
 
 #Use the spgwr package to produce a model without selection
 knn_model = gwr(f, data=df, coords=as.matrix(df[,c('x','y')]), adapt=k.nn, longlat=TRUE, gweight=gwr.bisquare, fit.points=as.matrix(model.coords))
@@ -127,6 +128,7 @@ w.unique = bisquare(D.unique, bw=bw)
 cv_error = data.frame()
 w.lasso.geo = list()
 glmnet.geo = list()
+adaglmnet.geo = list()
 lqa.geo = list()
 adalars.geo = list()
 coefs = list()
@@ -134,13 +136,11 @@ ss = seq(0, 1, length.out=100)
 lambda = seq(0, 5, length.out=5000)
 l.lars = vector()
 l.glmnet = vector()
+l.adaglmnet = vector()
 l.lqa = vector()
 l.adalars = vector()
 col.out = which(names(model.data)=='logitindpov')
 reps = dim(model.data)[1]/n.unique
-
-adalars.scale = list()
-adalars.normx = list()
 
 
 for(i in 1:dim(model.coords)[1]) {
@@ -149,7 +149,8 @@ for(i in 1:dim(model.coords)[1]) {
 
     #model = lm(f, data=model.data[-colocated,], weights=loow)
     
-    w.sqrt <- diag(rep(sqrt(loow), reps))
+    #Weight is based on the combination of the distances and the county populations.
+    w.sqrt <- diag(rep(sqrt(loow), reps) * sqrt(df$pov_denom[-colocated]))
     #block.eig = list()
     #block.eig[['vectors']] = matrix(0, length(loow)*reps, length(loow)*reps)
     #block.eig[['vectors']][,1:length(loow)] = rbind(w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors, w.eig$vectors)
@@ -159,7 +160,7 @@ for(i in 1:dim(model.coords)[1]) {
     #w.sqrt = block.eig[['vectors']] %*% diag(sqrt(block.eig[['values']])) %*% t(block.eig[['vectors']])
     
     w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[-colocated,predictors]), y=w.sqrt %*% as.matrix(df$logitindpov[-colocated]))
-    glmnet.geo[[i]] = glmnet(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pindpov[-colocated], 1-df$pindpov[-colocated])), weights=rep(loow, reps), family='binomial')
+    glmnet.geo[[i]] = glmnet(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pindpov[-colocated], 1-df$pindpov[-colocated])), weights=rep(loow, reps) * df$pov_denom[-colocated], family='binomial')
     #lqa.geo[[i]] = lqa(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pindpov[-colocated], 1-df$pindpov[-colocated])), weights=rep(loow, reps), family='binomial', penalty=adaptive.lasso)
     
     #Compute the adaptive lasso estimates
@@ -172,7 +173,6 @@ for(i in 1:dim(model.coords)[1]) {
     meanx <- drop(one %*% x.weighted)/n
     x.centered <- scale(x.weighted, meanx, FALSE)         # first subtracts mean
     normx <- sqrt(drop(one %*% (x.centered^2)))
-    adalars.normx[[i]] = normx
     names(normx) <- NULL
     xs = x.centered
     for (k in 1:dim(x.centered)[2]) {
@@ -189,7 +189,16 @@ for(i in 1:dim(model.coords)[1]) {
     out.ls = lm(y.weighted~xs)                      # ols fit on standardized
     beta.ols = out.ls$coeff[2:(m+1)]       # ols except for intercept
     ada.weight = abs(beta.ols)                      # weights for adaptive lasso
-    adalars.scale[[i]] = ada.weight
+
+    for (k in 1:dim(x.centered)[2]) {
+        if (!is.na(ada.weight[k])) {
+            xs[,k] = xs[,k] * ada.weight[k]
+        } else {
+            xs[,k] = rep(0, dim(xs)[1])
+            ada.weight[k] = 0 #This should allow the lambda-finding step to work.
+        }
+    }
+
     for (k in 1:dim(x.centered)[2]) {
         if (!is.na(ada.weight[k])) {
             xs[,k] = xs[,k] * ada.weight[k]
@@ -202,9 +211,57 @@ for(i in 1:dim(model.coords)[1]) {
     #Use the lars algorithm to fit the model
     adalars.geo[[i]] = lars(x=xs, y=y.weighted, normalize=FALSE)
 
-    l.lars = c(l.lars, which.min(colSums(abs(matrix(predict(w.lasso.geo[[i]], newx=as.matrix(model.data[colocated,-col.out]), s=lambda, type='fit', mode='lambda')[['fit']] - matrix(model.data[colocated,col.out]), nrow=reps, ncol=length(lambda)))))/1000)
+
+    ############################
+    #Adaptive lasso for glmnet:
+    #############################
+    #Compute the adaptive lasso estimates
+    #Generate the adaptive lasso weights
+    m<-ncol(x)
+    n<-nrow(x)
+    one <- rep(1, n)
+    meanx <- drop(one %*% x)/n
+    x.centered <- scale(x, meanx, FALSE)         # first subtracts mean
+    normx <- sqrt(drop(one %*% (x.centered^2)))
+    names(normx) <- NULL
+    xs.adaglmnet = x.centered
+    for (k in 1:dim(x.centered)[2]) {
+        if (normx[k]!=0) {
+            xs.adaglmnet[,k] = xs.adaglmnet[,k] / normx[k]
+        } else {
+            xs.adaglmnet[,k] = rep(0, dim(xs.adaglmnet)[1])
+            normx[k] = Inf #This should allow the lambda-finding step to work.
+        }
+    }
+
+    df.adaglmnet = data.frame(y=y,xs.adaglmnet)
+    
+    if (!is.null(weights)) {
+        rawglm = glm(y~., data=df.adaglmnet[-colocated,], family='binomial', weights=loow*weights[-colocated])
+    } else {
+        rawglm = glm(y~., data=df.adaglmnet[-colocated,], family='binomial')
+    }
+    beta.glm = rawglm$coeff[2:(m+1)]       # ols except for intercept
+    adaglmnet.weight = abs(beta.glm)                      # weights for adaptive lasso
+    # weights for adaptive lasso
+    for (k in 1:dim(x.centered)[2]) {
+        if (!is.na(adaglmnet.weight[k])) {
+            xs.adaglmnet[,k] = xs.adaglmnet[,k] * adaglmnet.weight[k]
+        } else {
+            xs.adaglmnet[,k] = rep(0, dim(xs.adaglmnet)[1])
+            adaglmnet.weight[k] = 0 #This should allow the lambda-finding step to work.
+        }
+    }
+
+    df = data.frame(y=y,xs.adaglmnet)
+
+
+    adaglmnet.geo[[i]] = glmnet(x=as.matrix(df[-colocated, predictors]), y=as.matrix(cbind(df$pindpov[-colocated], 1-df$pindpov[-colocated])), weights=rep(loow, reps) * df$pov_denom[-colocated], family='binomial')
+
+    l.lars = c(l.lars, which.min(colSums(abs(predict(w.lasso.geo[[i]], newx=model.data[colocated,-col.out], s=lambda, type='fit', mode='lambda')[['fit']] - model.data[colocated,col.out])))/1000)
     l.glmnet = c(l.glmnet, glmnet.geo[[i]][['lambda']][which.min(colSums(abs(predict(glmnet.geo[[i]], newx=as.matrix(model.data[colocated,-col.out]), type='response') - model.data[colocated,col.out])))])
-    l.adalars = c(l.adalars, lambda[which.min(colSums(abs(matrix(predict(adalars.geo[[i]], newx=scale(as.matrix(model.data[colocated,-col.out], nrow=reps, ncol=dim(model.data[,-col.out])[2]), center=meanx, scale=normx/ada.weight), type='fit', mode='lambda', s=lambda)[['fit']] - model.data[colocated,col.out], nrow=reps, ncol=length(lambda)))))])
+    l.adaglmnet = c(l.adaglmnet, adaglmnet.geo[[i]][['lambda']][which.min(colSums(abs(predict(glmnet.geo[[i]], newx=as.matrix(model.data[colocated,-col.out]), type='response') - model.data[colocated,col.out])))])
+    l.adalars = c(l.adalars, which.min(colSums(abs(predict(adalars.geo[[i]], newx=scale(model.data[colocated,-col.out], center=meanx, scale=normx/ada.weight), type='fit', mode='step')[['fit']] - model.data[colocated,col.out]))))
 
     #l.lqa = c(l.lqa, 
     print(i)

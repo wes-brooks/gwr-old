@@ -32,21 +32,32 @@ W = function(x.i, xy.mat, bw) {
 }
 
 gwr.heatmap <- function(model, variable) { 
+    #Prepare something for plotting:
+    name.var = variable
+    var = vector()
+    
+    for (i in 1:length(model[['model']])) {
+        var = c(var, model[['coef.scale']][i][[1]][[name.var]] * coef.lars(model[['model']][[i]], mode=model[['mode']], s=model[['s']][i])[[name.var]])
+    }
+   
+    df.plot = data.frame(output=var)
+
+
     #Isolate the variable to plot:
-    locations = model$SDF@coords
-    coef.surface = as.data.frame(cbind(locations, model$SDF@data[[variable]]))
-    names(coef.surface)[3] = variable
+    locations = model[['coords']]
+    coef.surface = as.data.frame(cbind(locations, var))
+    names(coef.surface)[3] = name.var
     
     #Heatmap of the data
-    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))
+    locations = list(lat=unique(locations[,2]), long=unique(locations[,1]))
     mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))
-    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)
-    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         
+    rownames(mat) <- sort(unique(coef.surface[,2]), decreasing=F)
+    colnames(mat) <- sort(unique(coef.surface[,1]), decreasing=F)         
     
     #Put the coefficients into a lat-long matrix
     for(row in 1:dim(coef.surface)[1]) {
-        mat[as.character(coef.surface[row,'y']), as.character(coef.surface[row,'x'])] = 
-            ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)
+        mat[as.character(coef.surface[row,2]), as.character(coef.surface[row,1])] = 
+            ifelse(!is.na(coef.surface[row,name.var]), coef.surface[row,name.var], NA)
     }
 
     #par(bty='n')
@@ -125,14 +136,13 @@ plot.coef.gwr = function(model, var, locs, breaks=NULL) {
 
 
 
-plot.coef.gwlars = function(model, var, locs, l, data, breaks=NULL) {
+plot.coef.gwlars = function(model, var, locs, data, s=NULL, breaks=NULL) {
     #Prepare something for plotting:
     name.var = var
     var = vector()
-    col.out = which(names(data)=='logitindpov')
     
     for (i in 1:length(model)) {
-        var = c(var, coef.lars(model[[i]], newx=data[i,-col.out], mode='lambda', s=l[i])[[name.var]])
+        var = c(var, coef.lars(model[['model']][[i]], mode=model[['mode']], s=model[['s']][i])[[name.var]])
     }
    
     df.plot = data.frame(output=var)
@@ -160,11 +170,11 @@ plot.coef.gwlars = function(model, var, locs, l, data, breaks=NULL) {
     
     #draw map
     map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))
-    if (mean(df.plot$output, na.rm=TRUE)<=0)        
+    if (mean(df.plot$output, na.rm=TRUE)<=0) {       
         map <- map + scale_fill_gradient(low='red', high='white', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
-    else
+    } else {
         map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
-    
+    }
 
     map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))
     
@@ -212,7 +222,7 @@ plot.effect.gwlars = function(model, var, locs, l, data, breaks=NULL) {
     
     #draw map
     map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))
-    map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='effect') + coord_map(project="globular”)
+    map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='effect') + coord_map(project="globular")
     
     map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))
     
@@ -220,7 +230,7 @@ plot.effect.gwlars = function(model, var, locs, l, data, breaks=NULL) {
     map <- map + geom_path(data=midweststates, colour='white', size=0.75)
     
     #add county borders
-    map <- map + geom_path(data=midwestcounties, colour=,'white', size=0.5, alpha=0.1)
+    map <- map + geom_path(data=midwestcounties, colour='white', size=0.5, alpha=0.1)
     map + opts(title=paste(c('Coefficient of ', name.var, ' in a model for logitindpov'), collapse='')) #+ guides(fill=guide_legend(reverse=TRUE))
 }
     
