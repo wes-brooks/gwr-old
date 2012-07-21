@@ -1,0 +1,282 @@
+library(lars)
+
+func.onestep.mple = function(beta.ini,eta.ini,tau.ini, X, z, A, s.beta, centered, S){
+
+ if(centered==F & S==0){
+ 	n=length(z)			# number of locations observed
+  	nbeta<-length(X[1,])-1		# number of coefficients (excluding intercept)
+  	n.beta = length(s.beta)		# an internal argument for the LARS function
+  	
+	
+	# Obtaining the MPLE (maximum pseudolikelihood estimate as an initial value)
+	
+	par.ini<-optim(c(beta.ini,eta.ini), func.pseudolike.s, X=X, z=z, A=A,
+centered=centered, control=list(fnscale=-1), method='L-BFGS-B', lower=c(rep(-Inf,nbeta+1),0))$par
+
+ 	beta0.hat<-par.ini[1]
+	beta.ini<-par.ini[2:(nbeta+1)]
+	eta.hat<-par.ini[length(par.ini)]
+
+	# The following objects are used to approximate the adaptive lasso 		# problem (see the 2010 JRSSB paper by Zhu, et al)
+
+	mat.Hbeta<-t(X[,2:(nbeta+1)])%*%(X[,2:(nbeta+1)]*c(exp(X%*%as.vector(c	(beta0.hat,beta.ini))+eta.hat*A%*%z)/(1+exp(X%*%as.vector(c(beta0.hat,beta.ini))+eta.hat*A%*%z))^2))
+
+	mat.A<-chol(mat.Hbeta)
+
+	mat.a<-diag(n*abs(beta.ini)/log(n))
+
+	mat.X.beta = mat.A%*%mat.a;
+
+	beta.d1<-t(X[,2:(nbeta+1)])%*%c(z-(exp(X%*%as.vector(c(beta0.hat,beta.ini))+eta.hat*A%*%z)/(1+exp(X%*%as.vector(c(beta0.hat,beta.ini))+eta.hat*A%*%z))))
+
+	vec.y.beta = t(solve(mat.A))%*%as.vector(beta.d1)+mat.A%*%beta.ini
+
+	# Here, the LARS estimates are obtained (i.e. the shrinkage estimates)
+
+	lars.beta = lars(mat.X.beta, vec.y.beta, normalize=FALSE, intercept=FALSE);
+	pred.beta = predict.lars(lars.beta, type="coefficients", 		mode="fraction", s=s.beta);
+	coef.beta = pred.beta$coef%*%mat.a; # coef back to original scale
+
+	# Here, we try to choose the estimate with lowest BIC
+
+	mat.bic = rep(0, n.beta)
+        optim.bic = 1e30
+        optim.beta = NULL
+        for (i in 1:n.beta){
+        	beta.cur = coef.beta[i,]
+            	loglike = func.pseudolike.s(c(beta0.hat,beta.cur,eta.hat), X, z, A, centered)
+              	bic = -2*loglike+(sum(beta.cur!=0))*log(n)
+            	if (bic < optim.bic){
+                	optim.beta = i
+                	optim.bic = bic
+            	}
+        }
+        
+	beta.cur = coef.beta[optim.beta,]
+        
+ return(list(beta0=beta0.hat, beta=beta.cur, eta=eta.hat, bic=optim.bic))
+ }
+
+ if(centered==T & S==0){
+	  n=length(z)
+	  nbeta<-length(X[1,])-1
+	  n.beta = length(s.beta)
+  
+	  par.ini<-optim(c(beta.ini,eta.ini),func.pseudolike.s,X=X,z=z,A=A, centered=centered,control=list(fnscale=-1),method='L-BFGS-B',lower=c(rep(-Inf,nbeta+1),0))$par
+	  beta0.hat<-par.ini[1]
+	  beta.ini<-par.ini[2:(nbeta+1)]
+	  eta.hat<-par.ini[length(par.ini)]
+
+	  # The extra chunk of code here is used to fit the centered model
+
+	  u<-exp(X%*%as.vector(c(beta0.hat,beta.ini)))
+	  mu<-u/(1+u)
+	  dmu.dbeta<-X[,2:(nbeta+1)]*as.vector(u/(1+u)^2)
+	  mu.c<-(exp(X%*%as.vector(c(beta0.hat,beta.ini))+eta.hat*A%*%(z-mu))/(1+exp(X%*%as.vector(c(beta0.hat,beta.ini))+eta.hat*A%*%(z-mu))))
+	  X.c<-t(X[,2:(nbeta+1)])-eta.hat*t(dmu.dbeta)%*%A
+	  v<-(z-mu.c)  
+
+	  d2mu.dbeta2<-array(0,dim=c(nbeta,nbeta,n))
+	  for(i in 1:n){
+		  d2mu.dbeta2[,,i]<-((u[i]-(u[i]^2))/(1+u[i])^3)*t(X[i,2:(nbeta+1)])%*%X[i,2:(nbeta+1)]
+  	  }
+	
+	  mat.Hbeta<-matrix(0,nbeta,nbeta)
+	  for(i in 1:n){
+		  mat.Hbeta<-mat.Hbeta+eta.hat*matrix.comb(d2mu.dbeta2,A[i,])*v[i]+(mu.c[i]-(mu.c[i])^2)*X.c[,i]%*%t(X.c[,i])
+	  }
+
+	  mat.A<-chol(mat.Hbeta,pivot=T)
+	  mat.a<-diag(n*abs(beta.ini)/log(n))
+	  mat.X.beta = mat.A%*%mat.a;
+	  beta.d1<-X.c%*%c(v)
+  
+	  vec.y.beta = t(solve(mat.A))%*%as.vector(beta.d1)+mat.A%*%beta.ini
+
+	  lars.beta = lars(mat.X.beta, vec.y.beta, normalize=FALSE, intercept=FALSE);
+	  pred.beta = predict.lars(lars.beta, type="coefficients", mode="fraction", s=s.beta);
+	  coef.beta = pred.beta$coef%*%mat.a; # coef back to original scale
+
+
+	  mat.bic = rep(0, n.beta)
+          optim.bic = 1e30
+          optim.beta = NULL
+          for (i in 1:n.beta){
+      		  beta.cur = coef.beta[i,]
+	          loglike = func.pseudolike.s(c(beta0.hat,beta.cur,eta.hat), X, z, A, centered)
+        	  bic = -2*loglike+(sum(beta.cur!=0))*log(n)
+	          if (bic < optim.bic){
+        		  optim.beta = i
+	                  optim.bic = bic
+           	  }
+          }
+	  beta.cur = coef.beta[optim.beta,]
+    
+ return(list(beta0=beta0.hat, beta=beta.cur, eta=eta.hat, bic=optim.bic))
+ }
+
+ if(centered==F & S>0){
+
+ 	n=length(z[,1]) 
+	T=length(z[1,])			# number of time periods of data
+	nbeta<-length(X[1,,1])-1
+	n.beta = length(s.beta)
+
+	# This next bit of code is used to set up an object containing the time 	# lagged values of the response 
+
+	lag.array<-array(0,dim=c(n,S,T-S))
+ 
+	for(t in 1:(T-S)){
+		lag.array[,,t]<-z[,(t+S-1):t]
+	}
+  
+	par.ini<-optim(c(beta.ini,eta.ini,tau.ini), func.pseudolike.st, X=X, z=z, A=A, centered=centered, S=S, T=T, lag.array=lag.array, control=list(fnscale=-1), method='L-BFGS-B',lower=c(rep(-Inf,nbeta+1),0,rep(-Inf,S)))$par
+	p<-nbeta+1
+	beta0.hat<-par.ini[1]
+	beta.ini<-par.ini[2:p]
+	eta.hat<-par.ini[p+1]
+	
+	# These are the coefficients for the temporal autoregression
+
+	tau.hat<-par.ini[(p+2):(p+S+1)]
+
+	mat.Hbeta<-matrix(0,nbeta,nbeta)
+	for(t in (S+1):T){
+		mat.Hbeta<-mat.Hbeta<-t(X[,2:(nbeta+1),t])%*%(X[,2:(nbeta+1),t]*c(exp(X[,,t]%*%as.vector(c(beta0.hat,beta.ini))+eta.hat*A%*%z[,t]+lag.array[,,t-S]%*%as.matrix(tau.hat))/(1+exp(X[,,t]%*%as.vector(c(beta0.hat,beta.ini))+eta.hat*A%*%z[,t]+lag.array[,,t-S]%*%as.matrix(tau.hat)))^2))
+	}
+	mat.A<-chol(mat.Hbeta)
+	mat.a<-diag(n*T*abs(beta.ini)/log(n*T))
+	mat.X.beta = mat.A%*%mat.a;
+	for(t in (S+1):T){
+		beta.d1<-t(X[,2:(nbeta+1),t])%*%c(z[,t]-(exp(X[,,t]%*%as.vector(c(beta0.hat,beta.ini))+eta.hat*A%*%z[,t]+lag.array[,,t-S]%*%as.matrix(tau.hat))/(1+exp(X[,,t]%*%as.vector(c(beta0.hat,beta.ini))+eta.hat*A%*%z[,t]+lag.array[,,t-S]%*%as.matrix(tau.hat)))))
+	}
+
+	vec.y.beta = t(solve(mat.A))%*%as.vector(beta.d1)+mat.A%*%beta.ini
+
+	lars.beta = lars(mat.X.beta, vec.y.beta, normalize=FALSE, intercept=FALSE);
+	pred.beta = predict.lars(lars.beta, type="coefficients", mode="fraction", s=s.beta);
+	coef.beta = pred.beta$coef%*%mat.a; # coef back to original scale
+
+
+	mat.bic = rep(0, n.beta)
+        optim.bic = 1e30
+        optim.beta = NULL
+        for (i in 1:n.beta){
+        	beta.cur = coef.beta[i,]
+	        loglike = func.pseudolike.st(c(beta0.hat,beta.cur,eta.hat,tau.hat), X, z, A, centered,S,T,lag.array)
+        	bic = -2*loglike+(sum(beta.cur!=0))*log(n*T)
+ 	        if (bic < optim.bic){
+         	        optim.beta = i
+                	optim.bic = bic
+	        }
+        }
+        beta.cur = coef.beta[optim.beta,]
+        
+ return(list(beta0=beta0.hat, beta=beta.cur, eta=eta.hat, tau=tau.hat, bic=optim.bic))
+ }
+
+}
+
+#####################################################
+
+# Notice that I had to include an odd conditional 
+# statement in case the pseudolikelihood was infinite.
+# I think it was occurring because exp(large)=Inf
+# according to R.
+
+# Internal function to compute the pseudolikelihood if there are no 
+# temporal components
+ 
+func.pseudolike.s<-function(theta,X,z,A,centered){
+	pseudolike<-0
+	if(centered==F){
+		beta<-theta[1:length(X[1,])]
+		eta<-theta[(length(X[1,])+1)]
+		pseudolike<-sum(z*(X%*%beta+eta*A%*%z)-log(1+exp(X%*%beta+eta*A%*%z)))
+		if(pseudolike==-Inf){
+			pseudolike=-1e30
+			print('Encountering -Inf')
+		}
+	}
+	if(centered==T){
+		beta<-theta[1:length(X[1,])]
+		eta<-theta[(length(X[1,])+1)]
+		mu<-exp(X%*%beta)/(1+exp(X%*%beta))
+		pseudolike<-sum(z*(X%*%beta+eta*A%*%(z-mu))-log(1+exp(X%*%beta+eta*A%*%(z-mu))))
+		if(pseudolike==-Inf){
+			pseudolike=-1e30
+			print('Encountering -Inf')
+		}
+	}
+	return(pseudolike)
+}
+
+##################################################
+
+# Internal function to compute the pseudolikelihood if there are
+# temporal components
+
+func.pseudolike.st<-function(theta,X,z,A,centered,S,T,lag.array){
+	pseudolike<-0
+	if(centered==F){
+		p<-length(X[1,,1])
+		beta<-theta[1:p]
+		eta<-theta[p+1]
+		tau<-theta[(p+2):(p+S+1)]
+		for(t in (S+1):T){
+			pseudolike<-pseudolike+sum(z[,t]*(X[,,t]%*%beta+eta*A%*%z[,t]+as.matrix(lag.array[,,t-S])%*%c(tau))-log(1+exp(X[,,t]%*%beta+eta*A%*%z[,t]+as.matrix(lag.array[,,t-S])%*%c(tau))))
+		}
+		if(pseudolike==-Inf){
+			pseudolike=-1e30
+			print('Encountering -Inf')
+		}
+	}
+	return(pseudolike)
+}
+
+############################################
+
+# This function gets the adjacency matrix for the
+# four nearest neighbors
+
+func.adjmat<-function(nrows,ncols){
+	adjmat<-matrix(0,nrows*ncols,nrows*ncols)
+
+	for(i in 1:(nrows*ncols-1)){
+		if(i%%ncols==0){
+		}
+		if(i%%ncols!=0){
+			adjmat[i,i+1]<-1
+		}
+	}
+
+	for(i in 1:ncols){
+		for(j in seq(i,(nrows-1)*ncols,ncols)){
+			adjmat[j,(j+ncols)]<-1
+		}
+	}
+
+	for(i in 1:(nrows*ncols-1)){
+		for(j in seq((i+1),nrows*ncols,1)){
+			adjmat[j,i]<-adjmat[i,j]
+		}
+	}
+
+	return(adjmat)
+}
+
+##############################
+
+# This function obtains a linear combination of matrices
+
+matrix.comb<-function(arr,v){
+	lincomb<-matrix(0,length(arr[,1,1]),length(arr[1,,1]))
+	for(i in 1:length(arr[1,1,])){
+		lincomb<-lincomb+v[i]*arr[,,i]
+	}
+	return(lincomb)
+}
+
+
+##############################################################################
+

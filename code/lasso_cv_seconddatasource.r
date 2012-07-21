@@ -241,7 +241,7 @@ for(i in 1:dim(model.coords)[1]) {
     } else {
         rawglm = glm(y~., data=df.adaglmnet[-colocated,], family='binomial')
     }
-    beta.glm = rawglm$coeff[2:(m+1)]       # ols except for intercept
+    beta.glm = rawglm$coeff[2:(m+1)]                      # ols except for intercept
     adaglmnet.weight = abs(beta.glm)                      # weights for adaptive lasso
     # weights for adaptive lasso
     for (k in 1:dim(x.centered)[2]) {

@@ -17,14 +17,15 @@ gwlars <- function(formula, data, coords, gweight, bw, verbose=FALSE, longlat, t
     if (missing(coords)) 
         stop("Observation coordinates have to be given")
     mf <- match.call(expand.dots = FALSE)
-    m <- match(c("formula", "data", "weights"), names(mf), 0)
+    #m <- match(c("formula", "data", "weights"), names(mf), 0)
+    m <- match(c("formula", "data"), names(mf), 0)
     mf <- mf[c(1, m)]
     mf$drop.unused.levels <- TRUE
     mf[[1]] <- as.name("model.frame")
     mf <- eval(mf, parent.frame())
     mt <- attr(mf, "terms")
     dp.n <- length(model.extract(mf, "response"))
-    weights <- as.vector(model.extract(mf, "weights"))
+    #weights <- as.vector(model.extract(mf, "weights"))
     if (!is.null(weights) && !is.numeric(weights)) 
         stop("'weights' must be a numeric vector")
     if (is.null(weights)) 
@@ -53,6 +54,8 @@ gwlars <- function(formula, data, coords, gweight, bw, verbose=FALSE, longlat, t
     else {
         res = gwlars.adaptive.fit(x, y, coords, weight.matrix, s, mode, verbose)
     }
+    res[['data']] = data
+    res[['response']] = as.character(formula[[2]])
     res
 }
 
@@ -64,7 +67,6 @@ gwlars.fit = function(x, y, coords, weight.matrix, s, mode, verbose) {
     s.optimal = vector()
     gwlars.object = list()
     cv.error = list()
-    coef.scale = list()
     
     for(i in 1:dim(coords.unique)[1]) {
         colocated = which(coords$x==coords.unique$x[i] & coords$y==coords.unique$y[i])
@@ -73,7 +75,6 @@ gwlars.fit = function(x, y, coords, weight.matrix, s, mode, verbose) {
         reps = length(colocated)        
         w.sqrt <- diag(rep(sqrt(loow), reps))
         
-        coef.scale[[i]] = rep(1, dim(x)[2])
         model[[i]] = lars(x=w.sqrt %*% as.matrix(x[-colocated,]), y=w.sqrt %*% as.matrix(y[-colocated]))
         predictions = predict(model[[i]], newx=matrix(x[colocated,], nrow=reps, ncol=dim(x)[2]), s=s, type='fit', mode=mode)[['fit']]
         cv.error[[i]] = colSums(abs(matrix(predictions - as.matrix(y[colocated]), nrow=reps, ncol=length(s))))
@@ -82,12 +83,13 @@ gwlars.fit = function(x, y, coords, weight.matrix, s, mode, verbose) {
 
         if (verbose) { cat(paste(i, "\n", sep='')) }
     }
-    gwlars.object[['coef.scale']] = coef.scale
+    gwlars.object[['coef.scale']] = NULL
     gwlars.object[['model']] = model
     gwlars.object[['s']] = s.optimal
     gwlars.object[['mode']] = mode
     gwlars.object[['coords']] = coords
     gwlars.object[['cv.error']] = cv.error
+    gwlars.object[['s.range']] = s
     class(gwlars.object) = 'gwlars.object'
     return(gwlars.object)
 }
@@ -160,6 +162,7 @@ gwlars.adaptive.fit = function(x, y, coords, weight.matrix, s, mode, verbose) {
     gwlars.object[['mode']] = mode
     gwlars.object[['coords']] = coords
     gwlars.object[['cv.error']] = cv.error
+    gwlars.object[['s.range']] = s
     class(gwlars.object) = 'gwlars.object'
     return(gwlars.object)
 }
