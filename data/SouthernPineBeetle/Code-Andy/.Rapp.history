@@ -1,0 +1,1717 @@
+paste(I30, as.character(quote(~cm^3)))
+paste("I30", as.character(quote(~cm^3)))
+paste("I30", as.character(quote(cm^3)))
+paste("I30", paste(as.character(quote(cm^3)), collapse=""))
+paste("I30", paste(as.character(quote(~cm^3)), collapse=""))
+tps = gam(income ~ s(x, y, fixed=TRUE))
+tps[["smooth"]][[1]]$p.order
+tps[["smooth"]][[1]][["p.order"]]
+tps
+tps = gam(income ~ s(x, y, k=49))
+tps = gam(income ~ s(x, y))
+x
+y
+Integrating the product of two thin-plate spline basis functions:#
+library(spgwr)#
+library(lars)#
+library(mgcv)#
+library(spgwr)#
+data(columbus)#
+bisquare = function(zi, zj, bandwidth) {#
+    ifelse(r(zi[1], zi[2], zj) < bandwidth, (1 - (r(zi[1], zi[2], zj)/bandwidth)**2)**2, 0)#
+}#
+r = function(x, y, zk) { #
+    sqrt((x-zk[1])**2 + (y-zk[2])**2)#
+}#
+#
+#Hardcoded for two dimensions:#
+eta = function(x, y, zk) {#
+    ifelse(x==zk[1] & y==zk[2], 0, r(x, y, zk)**2 * log(r(x, y, zk)) / (8 * pi) )#
+}#
+f = function(y, x, zi, zj) {#
+    eta(x, y, zi) * eta(x, y, zj)#
+}#
+fvec = function(y, x, zi, zj) {#
+    sapply(y, f, x=x, zi=zi, zj=zj) #
+}  #
+g = function(x, zi, zj, ylim) {#
+    integrate(fvec, lower=ylim[1], upper=ylim[2], x=x, zi=zi, zj=zj)$val#
+}#
+gvec = function(x, zi, zj, ylim) {#
+    sapply(x, g, zi=zi, zj=zj, ylim=ylim)#
+} #
+#
+zi = c(0.2, 0.2)#
+zj = c(0.5, 0.5)#
+#
+xlim = range(columbus$x)#
+ylim = range(columbus$y)#
+#
+#integrate(gvec, lower=xlim[1], upper=xlim[2], zi=zi, zj=zj, ylim=ylim) #
+#
+#m1 = lm(housing ~ income + crime, data=columbus)#
+#columbus$resid = m1$residuals#
+#
+crime = vector()#
+income = vector()#
+intercept = vector()#
+#
+int.l = vector()#
+inc.l = vector()#
+cr.l = vector()#
+w.lasso = list()#
+#
+for(i in 1:dim(columbus)[1]) {#
+    w = vector()#
+    for(j in 1:dim(columbus)[1]) {#
+        w = c(w, bisquare(c(columbus$x[i], columbus$y[i]), c(columbus$x[j], columbus$y[j]), bandwidth=5)) }#
+#
+    model = lm(housing ~ income + crime, data=columbus, weights=w)#
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso[[i]] = lars(x=w.sqrt %*% as.matrix(columbus[,c("crime", "income")]), y=as.matrix(columbus[,"housing"]))#
+#
+    intercept = c(intercept, model$coef[["(Intercept)"]])#
+    income = c(income, model$coef[["income"]])#
+    crime = c(crime, model$coef[["crime"]])#
+}#
+#
+x = columbus$x#
+y = columbus$y#
+#
+#Create a thin plate spline that interpolates the GWR model's coefficients:#
+tps = gam(income ~ s(x, y, k=49))
+tps
+summary(tps)
+names(tps)
+names(tps[['smooth']][[1]])
+tps[['smooth']][[1]][['xt']]
+tps[['smooth']][[1]]$xt
+tps[['smooth']][[1]][['fixed']]
+tps[['smooth']][[1]][['vn']]
+tps[['smooth']][[1]][['S']]
+names(tps[['smooth']][[1]])
+names(tps)
+names(tps[['smooth']][[1]])
+tps[['smooth']][[1]][['Xu']]
+cbind(rep(1,49),tps[['smooth']][[1]][['Xu']])
+tps2 = gam(income ~ s(x, y, k-48))
+tps2 = gam(income ~ s(x, y, k=48))
+tps2 = gam(income ~ s(x, y, k=48, fixed=TRUE))
+tps2 = gam(income ~ s(x, y, k=48))
+tps2
+tps
+?lanczos
+E = matrix(0, 49, 49)
+for( i in 1:49){}
+for( i in 1:49){
+for(j in 1:49){
+E[i,j]=eta(x[i], y[i], c(x[j],y[j]))
+}}
+E
+eigen(E)
+str(eigen(E))
+T
+T = cbind(1, x, y)#
+U = eigen(E)[["vectors"]][,1:48]#
+TU = t(T) %*% U
+TU
+dim(tps[['smooth']][[1]][['UZ']])
+dim(tps[['smooth']][[1]][['S']])
+tps[['smooth']][[1]][['S']]
+S=tps[['smooth']][[1]][['S']]
+t(S) %*% S
+type(S)
+typeof(S)
+S = as.matrix(S)
+t(S) %*% S
+typeof(S)
+str(S)
+S = matrix(S)
+str(S)
+typeof(S)
+s[,1\]
+s[,1]
+S[,1]
+t(S[1])
+t(S[,1])
+t(S[[1]])
+t(S[[1]]) %*% S[[1]]
+?survfit
+library(survival)
+?survfit
+?survreg
+data(kidney)
+names(kidney)
+kidney
+data(kidrecur)
+data(kidrecurr)
+library(KMsurv)
+data(kidney)
+names(kidney)
+Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
+#
+#Create a Weibull survival regression model#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')
+kidney.model
+summary(kidney.weibull)
+summary(kidney.model)
+kidney$type
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')
+perc.model
+summary9perc.model
+summary(perc.model)
+dim(kidney)
+perc.model$var
+solve(perc.model$var)
+sqrt(perc.model$var)
+perc.model$var**(0.5)
+?rmvnorm
+perc.model$coef
+perc.model$scale
+log(perc.model$scale)
+perc.model$coef[["(Intercept)"]]
+Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')#
+#
+#Apply the formula (p396 of Klein and Moeschberger) for the variance of the transformed params:#
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 1, 2)
+grad.lambda
+var.lambda = grad.lambda %*% perc.model$var %*% grad.lambda
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda
+var.lambda
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha
+var.alpha
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+lambda = exp(-mu * exp(-lsigma))#
+alpha = 1 / exp(lsigma)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda#
+#
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha
+alpha
+lambda
+sqrt#Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
+#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')#
+#
+#Extract the parameters as lambda and alpha:#
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+lambda = exp(-mu * exp(-lsigma))#
+alpha = 1 / exp(lsigma)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda#
+se.lambda = sqrt(var.lambda)#
+#
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha#
+se.alpha = sqrt(var.alpha)
+Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
+#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+kidney.model = survreg(Surv(time, delta) ~ type, data=kidney, dist='weibull')#
+#
+#Extract the parameters as lambda and alpha:#
+mu = perc.model$coef[["(Intercept)"]]#
+lsigma = perc.model$scale#
+lambda = exp(-mu * exp(-lsigma))#
+alpha = 1 / exp(lsigma)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma))), 2, 1)#
+var.lambda = t(grad.lambda) %*% perc.model$var %*% grad.lambda#
+se.lambda = sqrt(var.lambda)#
+#
+grad.alpha = matrix(c(0, -exp(-lsigma)), 2, 1)#
+var.alpha = t(grad.alpha) %*% perc.model$var %*% grad.alpha#
+se.alpha = sqrt(var.alpha)
+se.aplha
+Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+surg.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull')#
+#Percutaneous implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.p = perc.model$coef[["(Intercept)"]]#
+lsigma.p = perc.model$scale#
+lambda.p = exp(-mu.p * exp(-lsigma.p))#
+alpha.p = 1 / exp(lsigma.p)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.p = matrix(c(exp(-lsigma.p - mu.p*exp(-lsigma.p)), mu.p * #
+                            exp(-lsigma.p - mu.p*exp(-lsigma.p))), 2, 1)#
+var.lambda.p = t(grad.lambda.p) %*% perc.model$var %*% grad.lambda.p#
+se.lambda.p = sqrt(var.lambda.p)#
+#
+grad.alpha.p = matrix(c(0, -exp(-lsigma.p)), 2, 1)#
+var.alpha.p = t(grad.alpha.p) %*% perc.model$var %*% grad.alpha.p#
+se.alpha.p = sqrt(var.alpha.p)#
+#Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = perc.model$coef[["(Intercept)"]]#
+lsigma.s = perc.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.s = matrix(c(exp(-lsigma.s - mu.s*exp(-lsigma.s)), mu.s *#
+                            exp(-lsigma.s - mu.s*exp(-lsigma.s))), 2, 1)#
+var.lambda.s = t(grad.lambda.s) %*% perc.model$var %*% grad.lambda.s#
+se.lambda.s = sqrt(var.lambda.s)#
+#
+grad.alpha.s = matrix(c(0, -exp(-lsigma.s)), 2, 1)#
+var.alpha.s = t(grad.alpha.s) %*% perc.model$var %*% grad.alpha.s#
+se.alpha.s = sqrt(var.alpha.s)
+se.alpha.p
+se.alpha.s
+Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = surg.model$coef[["(Intercept)"]]#
+lsigma.s = surg.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.s = matrix(c(exp(-lsigma.s - mu.s*exp(-lsigma.s)), mu.s *#
+                            exp(-lsigma.s - mu.s*exp(-lsigma.s))), 2, 1)#
+var.lambda.s = t(grad.lambda.s) %*% surg.model$var %*% grad.lambda.s#
+se.lambda.s = sqrt(var.lambda.s)#
+#
+grad.alpha.s = matrix(c(0, -exp(-lsigma.s)), 2, 1)#
+var.alpha.s = t(grad.alpha.s) %*% surg.model$var %*% grad.alpha.s#
+se.alpha.s = sqrt(var.alpha.s)
+se.aplha.s
+se.alpha.s
+salpha.s
+alpha.s
+alpha.p
+se.lambda.s
+lambda.p
+se.lambda.p
+alpha.p
+se.alpha.p
+lmbda.s
+lambda.s
+se.lambda.s
+alpha.s
+se.alpha.s
+names(perc.model)
+perc.model$var
+(alpha.p-1)/se.alpha.p
+alpha.p
+se.alpha.p
+(alpha.s-1)/se.alpha.s
+pnorm(-20.25456)
+pnorm(-4.3053)
+W.s = (alpha.s-1)/se.alpha.s
+W.s
+perc.model[['loglik']]
+perc.model[['loglik']][1]
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+perc.model[['loglik']][1] - perc.model.0[['loglik']][1]
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])
+L.p = 2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])
+L.p
+p.W.p = pchisq(W.p**2, df=1)
+W.p = (alpha.p-1)/se.alpha.p #
+p.W.p = pchisq(W.p**2, df=1)
+p.W.p
+p.W.p = 1 - pchisq(W.p**2, df=1)
+pW.p
+p.W.p
+W.s = (alpha.s-1)/se.alpha.s #
+p.W.s = 1 - pchisq(W.s**2, df=1)
+p.W.s
+W.s
+pnorm(W.s)
+pchisq(1.96**2, df=1)
+p.L.p = 1-pchisq(L.p, df=1)
+p.L.p
+surg.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull', scale=1)#
+L.s = 2*(surg.model[['loglik']][1] - surg.model.0[['loglik']][1])#
+p.L.s = 1-pchisq(L.s, df=1)#
+#L.s = 7.18 => 0.008
+L.s
+p.L.s
+predict(perc.model, newdata=data.frame(time=5))
+?survreg.predict
+?predict.survreg
+predict(perc.model, newdata=data.frame(time=5), type='quantile')
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), mu * exp(-mu * exp(-lsigma) - lsigma), 0, -exp(-lsigma)), 2, 2)
+grad
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), 0, mu * exp(-mu * exp(-lsigma) - lsigma), -exp(-lsigma)), 2, 2)
+grad
+t(grad) %*% perc.model$var %*% grad
+var.p
+se.lambda.p
+se.lambda.p**2
+grad.p = matrix(c(-exp(-lsigma.p - mu.p*exp(-lsigma.p)), 0, mu * exp(-mu.p * exp(-lsigma.p) - lsigma.p), -exp(-lsigma.p)), 2, 2)
+t(grad.p) %*% perc.model$var %*% grad.p
+t(grad.p) %*% perc.model$var %*% grad.p[1,1]
+sqrt((t(grad.p) %*% perc.model$var %*% grad.p)[1,1])
+grad.alpha.p
+grad
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma)), 0, -exp(-lsigma)), 2, 2)
+t(grad) %*% perc.model$var %*% grad
+grad
+grad.p
+grad.lambda.p
+grad = matrix(c(exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma)), 0, -exp(-lsigma)), 2, 2)
+t(grad) %*% perc.model$var %*% grad
+se.alpha.p**2
+Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
+#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+surg.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull')#
+#Percutaneous implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.p = perc.model$coef[["(Intercept)"]]#
+lsigma.p = perc.model$scale#
+lambda.p = exp(-mu.p * exp(-lsigma.p))#
+alpha.p = 1 / exp(lsigma.p)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.p = matrix(c(-exp(-lsigma.p - mu.p*exp(-lsigma.p)), #
+                            mu.p * exp(-lsigma.p - mu.p*exp(-lsigma.p))), 2, 1)#
+var.lambda.p = t(grad.lambda.p) %*% perc.model$var %*% grad.lambda.p#
+se.lambda.p = sqrt(var.lambda.p)#
+#lambda=0.428, se.lambda=0.158#
+#
+grad.alpha.p = matrix(c(0, -exp(-lsigma.p)), 2, 1)#
+var.alpha.p = t(grad.alpha.p) %*% perc.model$var %*% grad.alpha.p#
+se.alpha.p = sqrt(var.alpha.p)#
+#alpha=0.157, se.alpha=0.042#
+#Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = surg.model$coef[["(Intercept)"]]#
+lsigma.s = surg.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.lambda.s = matrix(c(-exp(-lsigma.s - mu.s*exp(-lsigma.s)),#
+                            mu.s * exp(-lsigma.s - mu.s*exp(-lsigma.s))), 2, 1)#
+var.lambda.s = t(grad.lambda.s) %*% surg.model$var %*% grad.lambda.s#
+se.lambda.s = sqrt(var.lambda.s)#
+#lambda=0.182, se.lambda=0.072#
+#
+grad.alpha.s = matrix(c(0, -exp(-lsigma.s)), 2, 1)#
+var.alpha.s = t(grad.alpha.s) %*% surg.model$var %*% grad.alpha.s#
+se.alpha.s = sqrt(var.alpha.s)#
+#alpha=0.534, se.alpha=0.108#
+#Tests for alpha=1:#
+#Percutaneous implantation:#
+#Wald test:#
+W.p = (alpha.p-1)/se.alpha.p #
+p.W.p = 1 - pchisq(W.p**2, df=1)#
+#W.p=-20.2 => p<10**(-16)#
+#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+L.p = 2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])#
+p.L.p = 1-pchisq(L.p, df=1)#
+#L.p=7.18 => p=0.008#
+#Surgical implantation:#
+#Wald test:#
+W.s = (alpha.s-1)/se.alpha.s #
+p.W.s = 1 - pchisq(W.s**2, df=1)#
+#W.s=-4.31 => p<10**(-4)#
+#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+surg.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull', scale=1)#
+L.s = 2*(surg.model[['loglik']][1] - surg.model.0[['loglik']][1])#
+p.L.s = 1-pchisq(L.s, df=1)#
+#L.s=4.28 => p=0.039#
+#Value of survival function at five months:#
+#Percutaneous implantation:#
+S.p = exp(-lambda.p * 5**alpha.p)#
+grad = matrix(c(-exp(-lsigma - mu*exp(-lsigma)), mu * exp(-lsigma - mu*exp(-lsigma)), 0, -exp(-lsigma)), 2, 2)
+p.W.s
+W.s
+p.W.p
+W.p
+lambda.p
+se.lambda.p
+se.lambda.s
+lambda.s
+Load the data and the survival library#
+library(survival)#
+library(KMsurv)#
+data(kidney)#
+#
+#Create a Weibull survival regression model#
+perc.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull')#
+surg.model = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull')#
+#Percutaneous implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.p = perc.model$coef[["(Intercept)"]]#
+lsigma.p = perc.model$scale#
+lambda.p = exp(-mu.p * exp(-lsigma.p))#
+alpha.p = 1 / exp(lsigma.p)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.p = matrix(c(-exp(-lsigma.p - mu.p*exp(-lsigma.p)), #
+                    mu.p * exp(-lsigma.p - mu.p*exp(-lsigma.p)), 0, -exp(-lsigma.p)), 2, 2)#
+var.p = t(grad.p) %*% perc.model$var %*% grad.p#
+#
+se.p = sqrt(var.p[1,1])#
+#lambda=0.428, se.lambda=0.054#
+#
+se.alpha.p = sqrt(var.p[2,2])#
+#alpha=0.157, se.alpha=0.042#
+#Surgical implantation:#
+#Extract the parameters as lambda and alpha:#
+mu.s = surg.model$coef[["(Intercept)"]]#
+lsigma.s = surg.model$scale#
+lambda.s = exp(-mu.s * exp(-lsigma.s))#
+alpha.s = 1 / exp(lsigma.s)#
+#
+#Apply the delta method to get the variance of the transformed params:#
+grad.s = matrix(c(-exp(-lsigma.s - mu.s*exp(-lsigma.s)),#
+                    mu.s * exp(-lsigma.s - mu.s*exp(-lsigma.s)), 0, -exp(-lsigma.s)), 2, 2)#
+var.s = t(grad.s) %*% surg.model$var %*% grad.s#
+#
+se.lambda.s = sqrt(var.s[1,1])#
+#lambda=0.182, se.lambda=0.057#
+#
+se.alpha.s = sqrt(var.s[2,2])#
+#alpha=0.534, se.alpha=0.108#
+#Tests for alpha=1:#
+#Percutaneous implantation:#
+#Wald test:#
+W.p = (alpha.p-1)/se.alpha.p #
+p.W.p = 1 - pchisq(W.p**2, df=1)#
+#W.p=-20.2 => p<10**(-16)#
+#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+perc.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==2,], dist='weibull', scale=1)#
+L.p = 2*(perc.model[['loglik']][1] - perc.model.0[['loglik']][1])#
+p.L.p = 1-pchisq(L.p, df=1)#
+#L.p=7.18 => p=0.008#
+#Surgical implantation:#
+#Wald test:#
+W.s = (alpha.s-1)/se.alpha.s #
+p.W.s = 1 - pchisq(W.s**2, df=1)#
+#W.s=-4.31 => p<10**(-4)#
+#
+#Log-likelihood test: generate a null-hypothesis model with the scale fixed at 1#
+surg.model.0 = survreg(Surv(time, delta)~1, data=kidney[kidney$type==1,], dist='weibull', scale=1)#
+L.s = 2*(surg.model[['loglik']][1] - surg.model.0[['loglik']][1])#
+p.L.s = 1-pchisq(L.s, df=1)#
+#L.s=4.28 => p=0.039#
+#Value of survival function at five months:#
+#Percutaneous implantation:#
+S.p = exp(-lambda.p * 5**alpha.p)
+W.p
+se.lambda.s
+lambda.s
+se.lambda.p
+se.alpha.p
+se.alpha.s
+se.lambda.s
+S.p
+grad.surv <- function(t, a, l) {#
+    return( matrix(c(-t**a * exp(-l * t**a), -l * t**a * log(t) * exp(-l * t**a)), 2, 1) )#
+}
+grad.surv(5, alpha.p, lambda.p)
+g = grad.surv(5, alpha.p, lambda.p)
+t(g) %*% var.p %*% g
+sqrt(t(g) %*% var.p %*% g)
+S.p
+S.p = exp(-lambda.p * 5**alpha.p)#
+g.p = grad.surv(5, alpha.p, lambda.p)#
+se.S.p = sqrt(t(g.p) %*% var.p %*% g.p)
+se.S.p
+S.p=2*se.S.p
+S.p = exp(-lambda.p * 5**alpha.p)
+S.p-2*se.S.p
+S.p+2*se.S.p
+S.s = exp(-lambda.s * 5**alpha.s)#
+g.s = grad.surv(5, alpha.s, lambda.s)#
+se.S.s = sqrt(t(g.s) %*% var.s %*% g.s)#
+#S.p=0.577, se.S.p=0.029 => 95% CI = (0.519, 0.634)
+S.s
+se.S.s
+S.s-2*se.S.s
+S.s+2*se.S.s
+Simulate data for testing a GWR model:#
+source("utils.r")#
+library(lars)#
+library(spgwr)#
+#
+#Set up the location grid:#
+N = 20#
+x = rep(0:N - N/2, each=N+1)#
+y = rep(0:N - N/2, times=N+1)#
+#
+#Simulate the predictors independently of location:#
+mu.A = 0#
+sig.A = 1#
+A = rnorm((N+1)**2, mu.A, sig.A)#
+#
+mu.B = 1#
+sig.B = 2#
+B = rnorm((N+1)**2, mu.B, sig.B)#
+#
+mu.C = -1#
+sig.C = 3#
+C = rnorm((N+1)**2, mu.C, sig.C)#
+#
+#Simulate the output variable:#
+sig.err = 0.5#
+out = y + A*x + B + rnorm((N+1)**2, 0, sig.err)#
+#
+simulated = data.frame(x, y, A, B, C, out)#
+#
+#Use the methods of spgwr to select a bandwidth and fit a GWR model for poverty:#
+bw = gwr.sel(out~A+B+C, data=simulated, coords=cbind(x,y), adapt=FALSE, gweight=gwr.bisquare)#
+gwr.sim = gwr(out~A+B+C, data=simulated, coords=cbind(x,y), bandwidth=bw, gweight=gwr.bisquare)#
+#Homebrew GWR:#
+df = simulated#
+#
+#Define which variables we'll use as predictors of poverty:#
+predictors = c('A', 'B', 'C')#
+output = 'out'#
+f = as.formula(paste("out ~ 1 + ", paste(predictors, collapse="+"), sep=""))#
+#
+#Make a new variable with the name of each predictor:#
+for (col in predictors) {#
+    assign(col, vector())#
+}#
+#
+#Use this trick to compute the matrix of distances very quickly#
+n = dim(df)[1]#
+D1 = matrix(rep(df$x,n), n,n)#
+D2 = matrix(rep(df$y,n), n,n)#
+D = sqrt((D1-t(D1))**2 + (D2-t(D2))**2)#
+#
+#Use the lasso for GWR model selection:#
+w.lasso.geo = list()#
+coefs = list()#
+diagnostics = list()#
+#
+for(i in 1:dim(df)[1]) {#
+    w = bisquare(D[,i], bw=bw)#
+#
+    model = lm(f, data=df, weights=w)#
+    w.eig <- eigen(diag(w))#
+    w.sqrt <- w.eig$vectors %*% diag(sqrt(w.eig$values)) %*% solve(w.eig$vectors)#
+    w.lasso.geo[[i]] = lars(x=w.sqrt %*% as.matrix(df[,predictors]), y=as.matrix(df[[output]]))#
+    for (col in predictors) {#
+        coefs[[col]] = c(coefs[[col]], model$coef[[col]])#
+    }#
+    coefs[['(Intercept)']] = c(coefs[['(Intercept)']], model$coef[['(Intercept)']])#
+#
+    diagnostics[['R2']] = c(diagnostics[['R2']], summary(model)[['r.squared']])#
+    diagnostics[['sigma']] = c(diagnostics[['sigma']], summary(model)[['sigma']])#
+    diagnostics[['total weight']] = c(diagnostics[['total weight']], sum(w))#
+    print(i)#
+}#
+#
+model = list(coords=df[,c('x','y')], coefs=coefs, diags=diagnostics, lasso=w.lasso.geo)
+y=seq(1,100)
+sum(1/factorial(y))
+y=seq(0,100)
+sum(1/factorial(y))
+e
+exp(1)
+exp(1)/(exp(1)-1)
+y=seq(1,100)
+sum(y/factorial(y))
+sum(y/factorial(y) / (exp(1)-1))
+sum(exp(y)/factorial(y) / (exp(1)-1))
+sum(exp(2*y)/factorial(y) / (exp(1)-1))
+sum(exp(3*y)/factorial(y) / (exp(1)-1))
+install.packages("knitr")
+gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, s, method="cv", verbose=FALSE, longlat=FALSE, family, weights, tol=.Machine$double.eps^0.25, type) {#
+    if (!is.logical(adapt)) #
+        stop("adapt must be logical")#
+    if (is(data, "Spatial")) {#
+        if (!missing(coords)) #
+            warning("data is Spatial* object, ignoring coords argument")#
+        coords <- coordinates(data)#
+        if ((is.null(longlat) || !is.logical(longlat)) && !is.na(is.projected(data)) && #
+            !is.projected(data)) {#
+            longlat <- TRUE#
+        }#
+        else longlat <- FALSE#
+        data <- as(data, "data.frame")#
+    }#
+    if (is.null(longlat) || !is.logical(longlat)) #
+        longlat <- FALSE#
+    if (missing(coords)) #
+        stop("Observation coordinates have to be given")#
+    mf <- match.call(expand.dots = FALSE)#
+    m <- match(c("formula", "data", "weights"), names(mf), 0)#
+    mf <- mf[c(1, m)]#
+    mf$drop.unused.levels <- TRUE#
+    mf[[1]] <- as.name("model.frame")#
+    mf <- eval(mf, parent.frame())#
+    mt <- attr(mf, "terms")#
+    dp.n <- length(model.extract(mf, "response"))#
+    weights <- as.vector(model.extract(mf, "weights"))#
+    if (!is.null(weights) && !is.numeric(weights)) #
+        stop("'weights' must be a numeric vector")#
+    if (is.null(weights)) #
+        weights <- rep(as.numeric(1), dp.n)#
+    if (any(is.na(weights))) #
+        stop("NAs in weights")#
+    if (any(weights < 0)) #
+        stop("negative weights")#
+    y <- model.extract(mf, "response")#
+    x <- model.matrix(mt, mf)#
+#
+    #Get the matrix of distances#
+    n = dim(coords)[1]#
+    if (longlat) {#
+        D = as.matrix(earth.dist(coords),n,n)#
+    } else {#
+        Xmat = matrix(rep(coords[,1], times=n), n, n)#
+        Ymat = matrix(rep(coords[,2], times=n), n, n)#
+        D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)#
+    }#
+#
+    model = glm(formula=formula, data=data, family=family, weights=weights)#
+    difmin = sum(residuals(model, type=type)**2)#
+#
+    bbox <- cbind(range(coords[, 1]), range(coords[, 2]))#
+    difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]#
+    if (any(!is.finite(difmin))) #
+        difmin[which(!is.finite(difmin))] <- 0#
+    beta1 <- difmin/1000#
+    beta2 <- difmin     #
+#
+    opt <- optimize(gwglmnet.nen.cv.f, lower=beta1, upper=beta2, #
+        maximum=FALSE, tol=tol, formula=formula, coords=coords, s=s,#
+        gweight=gweight, verbose=verbose, longlat=longlat, data=data, D=D,#
+        weights=weights, adapt=adapt, family=family, type=type)#
+    bdwt <- opt$minimum#
+    res <- bdwt#
+#
+    res#
+}#
+gwglmnet.nen.cv.f = function(formula, data, bw, coords, gweight, verbose, adapt, longlat, s, family, weights, D=NULL, tol=.Machine$double.eps^0.25, type='pearson', ...) {    #
+    #Generate the model with the given bandwidth:#
+    cat(paste('Beginning with bandwidth: ', bw, '\n', sep=''))#
+    gwglmnet.model = gwglmnet.nen(formula=formula, data=data, coords=coords, gweight=gweight, bw=bw, verbose=verbose, longlat=longlat, adapt=adapt, s=s, family=family, weights=weights, D=D, tol=.Machine$double.eps^0.25, type)#
+    cv.error = sum(sapply(gwglmnet.model[['cv.error']], min))#
+#
+    cat(paste('Bandwidth: ', bw, '. CV error: ', cv.error, '\n', sep=''))#
+    return(cv.error)#
+}#
+gwglmnet.nen <- function(formula, data, coords, gweight, bw, D=NULL, verbose=FALSE, longlat=FALSE, adapt=FALSE, s, family, weights=NULL, tol=.Machine$double.eps^0.25, type) {#
+    if (!is.logical(adapt)) #
+        stop("adapt must be logical")#
+    if (is(data, "Spatial")) {#
+        if (!missing(coords)) #
+            warning("data is Spatial* object, ignoring coords argument")#
+        coords <- coordinates(data)#
+        if ((is.null(longlat) || !is.logical(longlat)) && !is.na(is.projected(data)) && #
+            !is.projected(data)) {#
+            longlat <- TRUE#
+        }#
+        else longlat <- FALSE#
+        data <- as(data, "data.frame")#
+    }#
+    if (is.null(longlat) || !is.logical(longlat)) #
+        longlat <- FALSE#
+    if (missing(coords)) #
+        stop("Observation coordinates have to be given")#
+    mf <- match.call(expand.dots = FALSE)    #
+    #m <- match(c("formula", "data", "weights"), names(mf), 0)#
+    m <- match(c("formula", "data"), names(mf), 0)#
+    mf <- mf[c(1, m)]#
+    mf$drop.unused.levels <- TRUE#
+    mf[[1]] <- as.name("model.frame")#
+    mf <- eval(mf, parent.frame())#
+    mt <- attr(mf, "terms")#
+    dp.n <- length(model.extract(mf, "response"))      #
+    #weights <- as.vector(model.extract(mf, "weights"))    #
+    if (!is.null(weights) && !is.numeric(weights)) #
+        stop("'weights' must be a numeric vector")#
+    if (is.null(weights)) #
+        weights <- rep(as.numeric(1), dp.n)#
+    if (any(is.na(weights))) #
+        stop("NAs in weights")#
+    if (any(weights < 0)) #
+        stop("negative weights")#
+    y <- model.extract(mf, "response")#
+    x <- model.matrix(mt, mf)#
+#
+    if (is.null(D)) {#
+        #Get the matrix of distances#
+        n = dim(coords)[1]#
+        if (longlat) {#
+            D = as.matrix(earth.dist(coords),n,n)#
+        } else {#
+            Xmat = matrix(rep(coords[,1], times=n), n, n)#
+            Ymat = matrix(rep(coords[,2], times=n), n, n)#
+            D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)#
+        }#
+    }    #
+#
+    #Get the weight matrix#
+    n = dim(D)[1]#
+    bbox <- cbind(range(coords[, 1]), range(coords[, 2]))#
+    difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]#
+    if (any(!is.finite(difmin))) #
+        difmin[which(!is.finite(difmin))] <- 0#
+    beta1 <- difmin/1000#
+    beta2 <- 2 * difmin        #
+    if (!adapt) {#
+        res = gwglmnet.nen.fit(x, y, coords, D, s, verbose, family, weights, gweight, bw, beta1, beta2, type=type, tol=tol, longlat=longlat)#
+    }#
+    else {#
+        res = gwglmnet.nen.adaptive.fit(x, y, coords, bw, s, verbose, family, weights, beta1, beta2)#
+    }#
+    res[['data']] = data#
+    res[['response']] = as.character(formula[[2]])#
+    res#
+}#
+gwglmnet.nen.fit = function(x, y, coords, D, s, verbose, family, prior.weights, gweight, bw, beta1, beta2, type='pearson', tol=1e-25, longlat=FALSE) {#
+    print("Entering nen.fit")#
+    #Fit the gwglmnet model (non-adaptive algorithm)#
+    coords.unique = unique(coords)#
+    model = list()#
+    s.optimal = vector()#
+    gwglmnet.object = list()#
+    cv.error = list()#
+    for(i in 1:dim(coords.unique)[1]) {#
+        colocated = which(coords[,1]==coords.unique[i,1] & coords[,2]==coords.unique[i,2])#
+        dist = D[i,]#
+#
+        print("about to enter bandwidth selection")#
+#
+        bandwidth = optimize(gwglmnet.ssr, lower=beta1, upper=beta2, #
+            maximum=FALSE, tol=tol, x=x, y=y, colocated=colocated, s=s,#
+            gweight=gweight, verbose=verbose, dist=dist,#
+            prior.weights=prior.weights, family=family, target=bw, type=type)$minimum#
+#
+        weight.matrix = gweight(D, bandwidth)#
+        loow = weight.matrix[i,-colocated]#
+        prior.loow = prior.weights[-colocated]#
+        reps = length(colocated)        #
+        w <- prior.loow * loow#
+        if (sum(loow)==0) { return(list(cv.error = Inf)) }   #
+        reps = length(colocated)        #
+        xx = as.matrix(x[-colocated,])#
+        yy = as.matrix(y[-colocated])#
+        if (family=='binomial' && (abs(sum(yy*w)-sum(w))<1e-4 || sum(yy*w)<1e-4)) {#
+            cat(paste("Abort. i=", i, ", weighted sum=", sum(yy*w), ", sum of weights=", sum(w), "\n", sep=''))#
+            model[[i]] = NULL#
+            cv.error[[i]] = 0#
+            s.optimal = c(s.optimal, max(s))#
+        } else if (family=='binomial') {#
+            model[[i]] = glmnet(x=xx, y=cbind(1-yy, yy), weights=w, family=family, lambda=s)#
+            predictions = predict(model[[i]], newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=s, type='response')#
+            cv.error[[i]] = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))#
+            s.optimal = c(s.optimal, s[which.min(cv.error[[i]])])#
+        } else {#
+            model[[i]] = glmnet(x=xx, y=yy, weights=w, family=family, lambda=s)#
+            predictions = predict(model[[i]], newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=s, type='response')#
+            cv.error[[i]] = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))#
+            s.optimal = c(s.optimal, s[which.min(cv.error[[i]])])#
+        }#
+        if (verbose) { cat(paste(i, "\n", sep='')) }#
+    }#
+    gwglmnet.object[['coef.scale']] = NULL#
+    gwglmnet.object[['model']] = model#
+    gwglmnet.object[['s']] = s.optimal#
+    gwglmnet.object[['mode']] = mode#
+    gwglmnet.object[['coords']] = coords.unique#
+    gwglmnet.object[['cv.error']] = cv.error#
+    gwglmnet.object[['s.range']] = s#
+    class(gwglmnet.object) = 'gwglmnet.object'#
+    return(gwglmnet.object)#
+}#
+gwglmnet.ssr <- function(bw, x, y, colocated, dist, s, verbose, family, prior.weights, gweight, type, target) {#
+    print(paste("entering ssr with bw= ", bw, sep=''))#
+#
+    #Get the weights#
+    reps = length(colocated)#
+    loow = gweight(dist, bw)[-colocated]#
+    w <- prior.weights[-colocated] * loow#
+    #Build the model#
+    xx = as.matrix(x[-colocated,])#
+    yy = as.matrix(y[-colocated])#
+    print("preparing to make a model")#
+    if (family=='binomial') {model = glmnet(x=xx, y=cbind(1-yy,yy), weights=w, family=family, lambda=s)}#
+    else {model = glmnet(x=xx, y=yy, weights=w, family=family, lambda=s)}#
+#
+    #Find lambda to minimize CV error#
+    predictions = predict(model, newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=s, type='response')#
+    cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))#
+    s.optimal = s[which.min(cv.error)]#
+    #Get the residuals at this choice of s (Poisson-specific for now):#
+    fitted = predict(model, newx=xx, s=s.optimal, type='response')#
+    pearson.resid = sum((yy - fitted)**2/fitted)#
+    print(pearson.resid)#
+    abs(pearson.resid-target)#
+}#
+gwglmnet.nen.adaptive.fit = function(x, y, coords, weight.matrix, s, verbose, family, prior.weights, bw, beta1, beta2) {#
+#Fit the gwglmnet model (adaptive algorithm)#
+    gwglmnet.object = list()#
+    coords.unique = unique(coords)#
+    model = list()#
+    s.optimal = vector()#
+    adapt.normx = list()#
+    adapt.scale = list()#
+    cv.error = list()#
+    coef.scale = list()#
+    glm.step = list()#
+    for(i in 1:dim(coords.unique)[1]) {#
+        colocated = which(coords[,1]==coords.unique[i,1] & coords[,2]==coords.unique[i,2])#
+        loow = weight.matrix[i,-colocated]#
+        if (sum(loow)==0) { return(list(cv.error = Inf)) }      #
+#
+        prior.loow = prior.weights[-colocated] #
+        reps = length(colocated)        #
+        w <- prior.loow * loow#
+        xx = as.matrix(x[-colocated,])#
+        yy = as.matrix(y[-colocated])#
+#
+        if (family=='binomial' && (abs(sum(yy*w)-sum(w))<1e-4 || sum(yy*w)<1e-4)) {            #
+            cat(paste("Abort. i=", i, ", weighted sum=", sum(yy*w), ", sum of weights=", sum(w), "\n", sep=''))#
+            model[[i]] = NULL#
+            cv.error[[i]] = 0#
+            s.optimal = c(s.optimal, max(s))#
+        } else {#
+            m <- ncol(xx)#
+            n <- nrow(xx)#
+            one <- rep(1, n)#
+            meanx <- drop(one %*% xx)/n#
+            x.centered <- scale(xx, meanx, FALSE)         # first subtracts mean#
+            normx <- sqrt(drop(one %*% (x.centered^2)))#
+            adapt.normx[[i]] = normx#
+            names(normx) <- NULL#
+            xs = x.centered#
+            for (k in 1:dim(x.centered)[2]) {#
+                if (normx[k]!=0) {#
+                    xs[,k] = xs[,k] / normx[k]#
+                } else {#
+                    xs[,k] = rep(0, dim(xs)[1])#
+                    normx[k] = Inf #This should allow the lambda-finding step to work.#
+                }#
+            }#
+            out.glm = try(glm(yy~xs, family=family, weights=w))  # mle fit on standardized#
+#
+            if(class(out.glm) == "try-error") { #
+                cat(paste("Had to use the last glm for location ", i, "\n", sep=""))#
+                glm.step[[i]] = out.glm = glm.step[[i-1]]#
+            }#
+            else { glm.step[[i]] = out.glm }#
+#
+            beta.glm = out.glm$coeff[2:(m+1)]                    # mle except for intercept#
+            adapt.weight = abs(beta.glm)                        # weights for adaptive lasso#
+            adapt.scale[[i]] = adapt.weight#
+            for (k in 1:dim(x.centered)[2]) {#
+                if (!is.na(adapt.weight[k])) {#
+                    xs[,k] = xs[,k] * adapt.weight[k]#
+                } else {#
+                    xs[,k] = rep(0, dim(xs)[1])#
+                    adapt.weight[k] = 0 #This should allow the lambda-finding step to work.#
+                }#
+            }#
+            #Use the lars algorithm to fit the model#
+            coef.scale[[i]] = adapt.weight/normx#
+            names(coef.scale[[i]]) = sapply(strsplit(names(coef.scale[[i]]), 'xs'), function(x) {x[2]})#
+            if (sum(coef.scale[[i]]) <1e-10) {#
+                if (verbose) {cat(paste("opted for the intercept-only model at location: ", i, "\n", sep=""))}#
+                model[[i]] = NULL#
+                predictions = rep(coef(out.glm)[["(Intercept)"]], length(colocated))#
+                cv.error[[i]] = abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s))))#
+                s.optimal = c(s.optimal, max(s))#
+            } else {#
+                if (family=='binomial') {model[[i]] = glmnet(x=xs, y=cbind(1-yy, yy), lambda=s, family=family, weights=w)}#
+                else {model[[i]] = glmnet(x=xs, y=yy, lambda=s, family=family, weights=w)}#
+                predictions = predict(model[[i]], newx=scale(matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), center=meanx, scale=normx/adapt.weight), type='response', s=s)#
+                cv.error[[i]] = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))#
+                s.optimal = c(s.optimal, s[which.min(cv.error[[i]])])#
+            }#
+        }#
+#
+        if (verbose) { cat(paste(i, "\n", sep='')) }#
+    }#
+    gwglmnet.object[['coef.scale']] = coef.scale#
+    gwglmnet.object[['model']] = model#
+    gwglmnet.object[['s']] = s.optimal#
+    gwglmnet.object[['mode']] = mode#
+    gwglmnet.object[['coords']] = coords.unique#
+    gwglmnet.object[['cv.error']] = cv.error#
+    gwglmnet.object[['s.range']] = s#
+    class(gwglmnet.object) = 'gwglmnet.object'#
+    return(gwglmnet.object)#
+}
+Import the plotting functions:#
+library(plotrix)#
+library(sp)#
+library(fossil)#
+setwd('~/git/gwr/code')#
+source('matplot.r')#
+#source('legend.r')#
+#Define the bisquare weight function:#
+bisquare = function(x, z, bw) {#
+    ifelse( r(x=x, z=c(z[1], z[2])) < bw, (1 - (r(x=x, z=c(z[1],z[2]))/ bw)**2)**2, 0)#
+}#
+bisquare = function(R, bw) {#
+    ifelse( R < bw, (1 - (R/bw)**2)**2, 0)#
+}#
+#Define the distance function#
+r = function(x, z) { #
+    sqrt((x[1]-z[1])**2 + (x[2]-z[2])**2)#
+}#
+#Fix an x.i and get the distance to all other x’s:#
+R = function(x.i, xy.mat) {#
+    R = sapply(1:dim(xy.mat)[1], FUN=function(i) {r(x.i, xy.mat[i,])} )#
+    return(R)#
+}#
+W = function(x.i, xy.mat, bw) {#
+    distance = R(x.i, xy.mat)#
+    W = bisquare(distance, bw)#
+    return(W)#
+}#
+neighbor.weight = function(q, D=NULL, this.coords=NULL, obs.coords=NULL, longlat=FALSE, weight.function, verbose=FALSE, tol=.Machine$double.eps^0.25) {#
+    if (is.null(D)) {#
+        bbox <- cbind(range(obs.coords[, 1]), range(obs.coords[, 2]))#
+        difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]#
+        if (any(!is.finite(difmin))) #
+            difmin[which(!is.finite(difmin))] <- 0#
+#
+        this.coords = as.numeric(this.coords)#
+        if (!longlat) {#
+            nrow = dim(obs.coords)[1]#
+            D2 = (matrix(as.numeric(this.coords), nrow, 2, byrow=TRUE) - obs.coords)**2#
+            D2 = apply(D2, 1, sum)#
+            D = sqrt(D2)#
+        } else {#
+            n = dim(obs.coords)[1]#
+            D = sapply(1:dim(obs.coords)[1], function(x) {deg.dist(this.coords[1], this.coords[2], obs.coords[x,1], obs.coords[x,2])})#
+        }#
+    }#
+#
+    beta1 <- min(D)#
+    beta2 <- 10*max(D)#
+#
+    optimize(neighbor.diff, lower=beta1, upper=beta2, maximum=FALSE, tol=tol, #
+                D=D, weight.function=weight.function, q.target=q, verbose=verbose)#
+}#
+#
+neighbor.diff = function(bw, D, q.target, weight.function, verbose) {#
+    if (verbose) {cat(paste("bandwidth: ", bw, '\n', sep=''))}#
+#
+    nobs = length(D)#
+    W = weight.function(D, bw)#
+    q.this = sum(W)/nobs#
+#
+    if (verbose) {cat(paste("total weight: ", q.this, '\n', sep=''))}#
+#
+    return(abs(q.target - q.this))#
+}#
+gwr.heatmap <- function(model, variable=NULL, type='coef', cs1=c(0,1), cs2=c(0,1), cs3=c(0,1)) { #
+    #Prepare something for plotting:#
+    if (type=='coef') {#
+        name.var = variable#
+        out = vector()#
+        if (is.null(model[['coef.scale']])) {#
+            coefs=sapply(1:length(model[['s']]), function(k) {coef(sim.model[['model']][[k]])[,which(sim.model[['s.range']]==sim.model[['s']][k])]})#
+            out = c(out, coefs[name.var,])#
+        } else {#
+            coefs=sapply(1:length(model[['s']]), function(k) {model[['coef.scale']][[i]][[name.var]] * coef(sim.model[['model']][[k]])[,which(sim.model[['s.range']]==sim.model[['s']][k])]})#
+            out = c(out, coefs[name.var,])#
+        }#
+#
+    } else if (type=='errors') {#
+        out = sapply(1:length(model[['s']]), function(k) {t(as.matrix(as.numeric(model[['model']][[k]]$beta[,which(model[['model']][[k]]$lambda==model[['s']][k])]))) %*% as.matrix(as.numeric(c(1, model[['data']][k,c('X1', 'X2', 'Z')]),nrow=4,ncol=1)) + model[['model']][[k]][['a0']][which(model[['model']][[k]]$lambda==model[['s']][k])]}) - eta#
+    } else if (type=='residuals') {#
+        out = model[['data']][,model[['response']]] - sapply(1:length(model[['s']]), function(k) {t(as.matrix(as.numeric(model[['model']][[k]]$beta[,which(model[['model']][[k]]$lambda==model[['s']][k])]))) %*% as.matrix(as.numeric(c(1, model[['data']][k,c('X1', 'X2', 'Z')]),nrow=4,ncol=1)) + model[['model']][[k]][['a0']][which(model[['model']][[k]]$lambda==model[['s']][k])]})#
+    } else if (type=='fit') {#
+        out = sapply(1:length(model[['s']]), function(k) {t(as.matrix(as.numeric(model[['model']][[k]]$beta[,which(model[['model']][[k]]$lambda==model[['s']][k])]))) %*% as.matrix(as.numeric(c(1, model[['data']][k,c('X1', 'X2', 'Z')]),nrow=4,ncol=1)) + model[['model']][[k]][['a0']][which(model[['model']][[k]]$lambda==model[['s']][k])]})#
+    } else if (type=='data') {#
+        out = model[['data']][,model[['response']]]#
+    }#
+    df.plot = data.frame(output=out)#
+#
+    #return(df.plot)#
+#
+    #Isolate the variable to plot:#
+    locations = model[['coords']]#
+    coef.surface = as.data.frame(cbind(locations, out))#
+    names(coef.surface)[3] = name.var#
+    #Heatmap of the data#
+    locations = list(lat=unique(locations[,2]), long=unique(locations[,1]))#
+    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+    rownames(mat) <- sort(unique(coef.surface[,2]), decreasing=F)#
+    colnames(mat) <- sort(unique(coef.surface[,1]), decreasing=F)         #
+    #Put the coefficients into a lat-long matrix#
+    for(row in 1:dim(coef.surface)[1]) {#
+        mat[as.character(coef.surface[row,2]), as.character(coef.surface[row,1])] = #
+            ifelse(!is.na(coef.surface[row,name.var]), coef.surface[row,name.var], NA)#
+    }#
+#
+    gwr.matplot(mat, cs1, cs2, cs3, border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+}#
+gwr.heatmap.homebrew <- function(model, variable) {   #
+    #Isolate the variable to plot:#
+    locations = model[['coords']]#
+    coef.surface = as.data.frame(cbind(locations, model[['coefs']][[variable]]))#
+    names(coef.surface)[3] = variable#
+    #Heatmap of the data#
+    locations = with(coef.surface, list(lat=unique(y), long=unique(x)))#
+    mat = matrix(NA, nrow=length(locations[['lat']]), ncol=length(locations[['long']]))#
+    rownames(mat) <- sort(unique(coef.surface$y), decreasing=F)#
+    colnames(mat) <- sort(unique(coef.surface$x), decreasing=F)         #
+    #Put the coefficients into a lat-long matrix#
+    for(row in 1:dim(coef.surface)[1]) {#
+        mat[as.character(coef.surface[row,'y']), as.character(coef.surface[row,'x'])] = #
+            ifelse(!is.na(coef.surface[row,variable]), coef.surface[row,variable], NA)#
+    }#
+#
+    #par(bty='n')#
+    gwr.matplot(mat, c(1,1), c(1,0), c(1,0), border=NA, show.legend=TRUE, yrev=FALSE, axes=TRUE, ann=TRUE)#
+}#
+plot.coef.gwr = function(model, var, locs, breaks=NULL) {#
+    #Prepare something for plotting:#
+    locs = merge(unique(locs), model$SDF@coords)#
+    name.var = var#
+    var = model$SDF@data[,name.var]#
+    df.plot = data.frame(output=var)#
+    #Put the county names into a form that can be matched.#
+    df.plot$county = tolower(as.character(locs$county))#
+    df.plot$state = tolower(as.character(locs$state))#
+    for (i in 1:dim(df.plot)[1]) {#
+        county = gsub("['-. ]", '', df.plot$county[i])#
+        df.plot$county[i] = paste(county, tolower(df.plot$state[i]), sep=',')#
+    }    #
+    #extract reference data#
+    mapcounties <- map_data('county')#
+    mapstates <- map_data('state')#
+    #limit our view to the midwest:#
+    midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]#
+    midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.plot$state),]#
+    #merge data with ggplot county coordinates#
+    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=','))#
+    mergedata <- merge(midwestcounties, df.plot, by.x='county', by.y='county')#
+    mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+    #draw map#
+    map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
+    map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')#
+    map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))#
+    #add state borders#
+    map <- map + geom_path(data=midweststates, colour='white', size=0.75)#
+    #add county borders#
+    map <- map + geom_path(data=midwestcounties, colour='white', size=0.5, alpha=0.1)#
+    map + opts(title=paste("Coefficient of '", name.var, "' in a model for logitindpov without LARS", sep='')) #+ guides(fill=guide_legend(reverse=TRUE))#
+}#
+plot.coef.gwlars = function(model, var, locs, data, s=NULL, breaks=NULL) {#
+    #Prepare something for plotting:#
+    name.var = var#
+    var = vector()#
+    for (i in 1:length(model)) {#
+        var = c(var, coef.lars(model[['model']][[i]], mode=model[['mode']], s=model[['s']][i])[[name.var]])#
+    }#
+    df.plot = data.frame(output=var)#
+    #Put the county names into a form that can be matched.#
+    df.plot$county = tolower(as.character(locs$county))#
+    df.plot$state = tolower(as.character(locs$state))#
+    for (i in 1:dim(df.plot)[1]) {#
+        county = gsub("['-. ]", '', df.plot$county[i])#
+        df.plot$county[i] = paste(county, tolower(df.plot$state[i]), sep=',')#
+    }    #
+    #extract reference data#
+    mapcounties <- map_data('county')#
+    mapstates <- map_data('state')#
+    #limit our view to the midwest:#
+    midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]#
+    midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.plot$state),]#
+    #merge data with ggplot county coordinates#
+    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=","))#
+    mergedata <- merge(midwestcounties, df.plot, by.x = "county", by.y = "county")#
+    mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+    #draw map#
+    map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
+    if (mean(df.plot$output, na.rm=TRUE)<=0) {       #
+        map <- map + scale_fill_gradient(low='red', high='white', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')#
+    } else {#
+        map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')#
+    }#
+#
+    map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))#
+    #add state borders#
+    map <- map + geom_path(data=midweststates, colour='white', size=0.75)#
+    #add county borders#
+    map <- map + geom_path(data=midwestcounties, colour='white', size=0.5, alpha=0.1)#
+    map + opts(title=paste("Coefficient of '", name.var, "' in a model for logitindpov", sep='')) #+ guides(fill=guide_legend(reverse=TRUE))#
+}#
+plot.effect.gwlars = function(model, var, locs, l, data, breaks=NULL) {#
+    #Prepare something for plotting:#
+    name.var = var#
+    var = vector()#
+    col.out = which(names(data)=='logitindpov')#
+    for (i in 1:length(model)) {#
+        var = c(var, data[[name.var]][i]*coef.lars(model[[i]], newx=data[i,-col.out], mode='lambda', s=l[i])[[name.var]])#
+    }#
+#
+    df.plot = data.frame(output=var)#
+#
+    #Put the county names into a form that can be matched.#
+    df.plot$county = tolower(as.character(locs$county))#
+    df.plot$state = tolower(as.character(locs$state))#
+    for (i in 1:dim(df.plot)[1]) {#
+        county = gsub("['-. ]", '', df.plot$county[i])#
+        df.plot$county[i] = paste(county, tolower(df.plot$state[i]), sep=',')#
+    }#
+    #extract reference data#
+    mapcounties <- map_data('county')#
+    mapstates <- map_data('state')#
+    #limit our view to the midwest:#
+    midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]#
+    midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.plot$state),]#
+    #merge data with ggplot county coordinates#
+    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=','))#
+    mergedata <- merge(midwestcounties, df.plot, by.x = 'county', by.y = 'county')#
+    mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+    #draw map#
+    map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
+    map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='effect') + coord_map(project="globular")#
+    map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))#
+    #add state borders#
+    map <- map + geom_path(data=midweststates, colour='white', size=0.75)#
+    #add county borders#
+    map <- map + geom_path(data=midwestcounties, colour='white', size=0.5, alpha=0.1)#
+    map + opts(title=paste(c('Coefficient of ', name.var, ' in a model for logitindpov'), collapse='')) #+ guides(fill=guide_legend(reverse=TRUE))#
+}#
+plot.residuals.gwlars = function(model, locs, l, data, breaks=NULL) {#
+    #Prepare something for plotting:#
+    err = vector()#
+    col.out = which(names(data)=='logitindpov')#
+    for (i in 1:length(model)) {#
+        err = c(err, predict.lars(model[[i]], newx=data[i,-col.out], mode='lambda', s=l[i])[['fit']] - data[i,col.out])#
+    }#
+    df.plot = data.frame(output=err)#
+    #Put the county names into a form that can be matched.#
+    df.plot$county = tolower(as.character(locs$county))#
+    df.plot$state = tolower(as.character(locs$state))#
+    for (i in 1:dim(df.plot)[1]) {#
+        county = gsub("['-. ]", '', df.plot$county[i])#
+        df.plot$county[i] = paste(c(county, tolower(df.plot$state[i])), collapse=',')#
+    }    #
+    #extract reference data#
+    mapcounties <- map_data('county')#
+    mapstates <- map_data('state')#
+    #limit our view to the midwest:#
+    midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]#
+    midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.plot$state),]#
+    #merge data with ggplot county coordinates#
+    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=","))#
+    mergedata <- merge(midwestcounties, df.plot, by.x = "county", by.y = "county")#
+    mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+    #draw map#
+    map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
+    if (mean(df.plot$output, na.rm=TRUE)<=0)       #
+        map <- map + scale_fill_gradient(low='red', high='white', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')#
+    else#
+        map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')#
+    map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))#
+    #add state borders#
+    map <- map + geom_path(data=midweststates, colour='white', size=0.75)#
+    #add county borders#
+    map <- map + geom_path(data=midwestcounties, colour='white', size=0.5, alpha=0.1)#
+    map + opts(title=paste("Residuals in a GW-LARS model for logitindpov", sep='')) #+ guides(fill=guide_legend(reverse=TRUE))#
+}#
+plot.sign.resid.gwlars = function(model, locs, l, data, breaks=NULL) {#
+    #Prepare something for plotting:#
+    err = vector()#
+    col.out = which(names(data)=='logitindpov')#
+    for (i in 1:length(model)) {#
+        err = c(err, predict.lars(model[[i]], newx=data[i,-col.out], mode='lambda', s=l[i])[['fit']] - data[i,col.out])#
+    }#
+    df.plot = data.frame(output=sign(err))#
+    #Put the county names into a form that can be matched.#
+    df.plot$county = tolower(as.character(locs$county))#
+    df.plot$state = tolower(as.character(locs$state))#
+    for (i in 1:dim(df.plot)[1]) {#
+        county = gsub("['-. ]", '', df.plot$county[i])#
+        df.plot$county[i] = paste(county, tolower(df.plot$state[i]), sep=',')#
+    }    #
+    #extract reference data#
+    mapcounties <- map_data('county')#
+    mapstates <- map_data('state')#
+    #limit our view to the midwest:#
+    midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]#
+    midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.plot$state),]#
+    #merge data with ggplot county coordinates#
+    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=","))#
+    mergedata <- merge(midwestcounties, df.plot, by.x = "county", by.y = "county")#
+    mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+    #draw map#
+    #map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
+    map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
+    map <- map + scale_fill_gradient(low='red', high='white', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')#
+    map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))#
+    #add state borders#
+    map <- map + geom_path(data=midweststates, colour='white', size=0.75)#
+    #add county borders#
+    map <- map + geom_path(data=midwestcounties, colour='white', size=0.5, alpha=0.1)#
+    map + opts(title=paste("Residuals in a GW-LARS model for logitindpov", sep='')) #+ guides(fill=guide_legend(reverse=TRUE))#
+}#
+plot.residuals.gwr = function(model, locs, l, data, breaks=NULL) {#
+    #Prepare something for plotting:#
+    err = vector()#
+    col.out = which(names(data)=='logitindpov')#
+    for (i in 1:length(model)) {#
+        err = c(err, predict.gwr(model[[i]], newx=data[i,-col.out], mode='lambda', s=l[i])[['fit']] - data[i,col.out])#
+    }#
+    df.plot = data.frame(output=err)#
+    #Put the county names into a form that can be matched.#
+    df.plot$county = tolower(as.character(locs$county))#
+    df.plot$state = tolower(as.character(locs$state))#
+    for (i in 1:dim(df.plot)[1]) {#
+        county = gsub("['-. ]", '', df.plot$county[i])#
+        df.plot$county[i] = paste(county, tolower(df.plot$state[i]), sep=',')#
+    }    #
+    #extract reference data#
+    mapcounties <- map_data('county')#
+    mapstates <- map_data('state')#
+    #limit our view to the midwest:#
+    midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]#
+    midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.plot$state),]#
+    #merge data with ggplot county coordinates#
+    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=","))#
+    mergedata <- merge(midwestcounties, df.plot, by.x = "county", by.y = "county")#
+    mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+    #draw map#
+    map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
+    if (mean(df.plot$output, na.rm=TRUE)<=0)      #
+        map <- map + scale_fill_gradient(low='red', high='white', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')#
+    else#
+        map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')#
+    map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))#
+    #add state borders#
+    map <- map + geom_path(data=midweststates, colour='white', size=0.75)#
+    #add county borders#
+    map <- map + geom_path(data=midwestcounties, colour='white', size=0.5, alpha=0.1)#
+    map + opts(title=paste("Residuals in a GW-LARS model for logitindpov", sep='')) #+ guides(fill=guide_legend(reverse=TRUE))#
+}#
+plot.coef.gwglmnet = function(model, var, breaks=NULL) {#
+    #Prepare something for plotting:#
+    name.var = var#
+    var = vector()#
+    col.out = which(names(data)==model[['response']])#
+    for (i in 1:length(model[['model']])) {#
+        m = predict(model[['model']][[i]], s=model[['s']][[i]], newx=data[,-col.out], type='coefficients')#
+        test = abs(m@x[which(m@i==(which(m@Dimnames[[1]]==name.var)-1))])#
+        if(name.var %in% m@Dimnames[[1]][m@i+1]) {#
+            var = c(var, m@x[which(m@i==(which(m@Dimnames[[1]]==name.var)-1))])#
+        } else {#
+            var = c(var, 0)#
+        }#
+    }#
+    df.plot = data.frame(output=var)#
+    #Put the county names into a form that can be matched.#
+    locs = unique(merge(model[['data']][,c('x','y','county','state')], model[['coords']]))#
+#
+    df.plot$county = tolower(as.character(locs$county))#
+    df.plot$state = tolower(as.character(locs$state))#
+    for (i in 1:dim(df.plot)[1]) {#
+        county = gsub("['-. ]", '', df.plot$county[i])#
+        df.plot$county[i] = paste(county, tolower(df.plot$state[i]), sep=',')#
+    }    #
+    #extract reference data#
+    mapcounties <- map_data('county')#
+    mapstates <- map_data('state')#
+    #limit our view to the midwest:#
+    midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]#
+    midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.plot$state),]#
+    #merge data with ggplot county coordinates#
+    midwestcounties$county <- with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=","))#
+    mergedata <- merge(midwestcounties, df.plot, by.x = "county", by.y = "county")#
+    mergedata <- mergedata[order(mergedata$group, mergedata$order),]#
+    #draw map#
+    map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))#
+    if (mean(df.plot$output, na.rm=TRUE)<=0)        #
+        map <- map + scale_fill_gradient(low='red', high='white', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')#
+    else#
+        map <- map + scale_fill_gradient(low='white', high='red', limits=range(df.plot$output, na.rm=TRUE), name='coef') + coord_map(project='globular')#
+    map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))#
+    #add state borders#
+    map <- map + geom_path(data=midweststates, colour='white', size=0.75)#
+    #add county borders#
+    map <- map + geom_path(data=midwestcounties, colour='white', size=0.5, alpha=0.1)#
+    map + opts(title=paste("Coefficient of '", name.var, "' in a model for logitindpov", sep='')) #+ guides(fill=guide_legend(reverse=TRUE))#
+}
+setwd("~/git/gwr/data/SouthernPineBeetle/Code-Andy")#
+mpb = read.csv("mpb.csv", head=TRUE)
+gwglmnet.nen(nifestations~meanelevation+warm, data=mpb, coords=mpb[,c('X','Y')], gweight=bisquare, s=seq(0,5,0.001), tol=10, type='pearson', bw=200000)
+gwglmnet.nen(nifestations~meanelevation+warm, data=mpb, coords=mpb[,c('X','Y')], gweight=bisquare, s=seq(0,5,0.001), tol=10, type='pearson', bw=200000, family='poisson')
+library(glmnet)
+gwglmnet.nen(nifestations~meanelevation+warm, data=mpb, coords=mpb[,c('X','Y')], gweight=bisquare, s=seq(0,5,0.001), tol=10, type='pearson', bw=200000, family='poisson')
+gwglmnet.ssr <- function(bw, x, y, colocated, dist, s, verbose, family, prior.weights, gweight, type, target) {#
+    print(paste("entering ssr with bw= ", bw, sep=''))#
+#
+    #Get the weights#
+    reps = length(colocated)#
+    loow = gweight(dist, bw)[-colocated]#
+    w <- prior.weights[-colocated] * loow#
+    #Build the model#
+    xx = as.matrix(x[-colocated,])#
+    yy = as.matrix(y[-colocated])#
+    print("preparing to make a model")#
+    if (family=='binomial') {model = glmnet(x=xx, y=cbind(1-yy,yy), weights=w, family=family, lambda=s)}#
+    else {model = glmnet(x=xx, y=yy, weights=w, family=family, lambda=s)}#
+#
+    #Find lambda to minimize CV error#
+    predictions = predict(model, newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=s, type='response', )#
+    cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))#
+    s.optimal = s[which.min(cv.error)]#
+    #Get the residuals at this choice of s (Poisson-specific for now):#
+    fitted = predict(model, newx=xx, s=s.optimal, type='response')#
+    pearson.resid = sum(w * (yy - fitted)**2/fitted)#
+    print(pearson.resid)#
+    abs(pearson.resid-target)#
+}
+gwglmnet.nen(nifestations~meanelevation+warm, data=mpb, coords=mpb[,c('X','Y')], gweight=bisquare, s=seq(0,5,0.001), tol=10, type='pearson', bw=200000, family='poisson')
+gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, s, method="cv", verbose=FALSE, longlat=FALSE, family, weights, tol=.Machine$double.eps^0.25, type) {#
+    if (!is.logical(adapt)) #
+        stop("adapt must be logical")#
+    if (is(data, "Spatial")) {#
+        if (!missing(coords)) #
+            warning("data is Spatial* object, ignoring coords argument")#
+        coords <- coordinates(data)#
+        if ((is.null(longlat) || !is.logical(longlat)) && !is.na(is.projected(data)) && #
+            !is.projected(data)) {#
+            longlat <- TRUE#
+        }#
+        else longlat <- FALSE#
+        data <- as(data, "data.frame")#
+    }#
+    if (is.null(longlat) || !is.logical(longlat)) #
+        longlat <- FALSE#
+    if (missing(coords)) #
+        stop("Observation coordinates have to be given")#
+    mf <- match.call(expand.dots = FALSE)#
+    m <- match(c("formula", "data", "weights"), names(mf), 0)#
+    mf <- mf[c(1, m)]#
+    mf$drop.unused.levels <- TRUE#
+    mf[[1]] <- as.name("model.frame")#
+    mf <- eval(mf, parent.frame())#
+    mt <- attr(mf, "terms")#
+    dp.n <- length(model.extract(mf, "response"))#
+    weights <- as.vector(model.extract(mf, "weights"))#
+    if (!is.null(weights) && !is.numeric(weights)) #
+        stop("'weights' must be a numeric vector")#
+    if (is.null(weights)) #
+        weights <- rep(as.numeric(1), dp.n)#
+    if (any(is.na(weights))) #
+        stop("NAs in weights")#
+    if (any(weights < 0)) #
+        stop("negative weights")#
+    y <- model.extract(mf, "response")#
+    x <- model.matrix(mt, mf)#
+#
+    #Get the matrix of distances#
+    n = dim(coords)[1]#
+    if (longlat) {#
+        D = as.matrix(earth.dist(coords),n,n)#
+    } else {#
+        Xmat = matrix(rep(coords[,1], times=n), n, n)#
+        Ymat = matrix(rep(coords[,2], times=n), n, n)#
+        D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)#
+    }#
+#
+    model = glm(formula=formula, data=data, family=family, weights=weights)#
+    difmin = sum(residuals(model, type=type)**2)#
+#
+    bbox <- cbind(range(coords[, 1]), range(coords[, 2]))#
+    difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]#
+    if (any(!is.finite(difmin))) #
+        difmin[which(!is.finite(difmin))] <- 0#
+    beta1 <- difmin/1000#
+    beta2 <- difmin     #
+#
+    opt <- optimize(gwglmnet.nen.cv.f, lower=beta1, upper=beta2, #
+        maximum=FALSE, tol=tol, formula=formula, coords=coords, s=s,#
+        gweight=gweight, verbose=verbose, longlat=longlat, data=data, D=D,#
+        weights=weights, adapt=adapt, family=family, type=type)#
+    bdwt <- opt$minimum#
+    res <- bdwt#
+#
+    res#
+}#
+gwglmnet.nen.cv.f = function(formula, data, bw, coords, gweight, verbose, adapt, longlat, s, family, weights, D=NULL, tol=.Machine$double.eps^0.25, type='pearson', ...) {    #
+    #Generate the model with the given bandwidth:#
+    cat(paste('Beginning with bandwidth: ', bw, '\n', sep=''))#
+    gwglmnet.model = gwglmnet.nen(formula=formula, data=data, coords=coords, gweight=gweight, bw=bw, verbose=verbose, longlat=longlat, adapt=adapt, s=s, family=family, weights=weights, D=D, tol=.Machine$double.eps^0.25, type)#
+    cv.error = sum(sapply(gwglmnet.model[['cv.error']], min))#
+#
+    cat(paste('Bandwidth: ', bw, '. CV error: ', cv.error, '\n', sep=''))#
+    return(cv.error)#
+}#
+gwglmnet.nen <- function(formula, data, coords, gweight, bw, D=NULL, verbose=FALSE, longlat=FALSE, adapt=FALSE, s, family, weights=NULL, tol=.Machine$double.eps^0.25, type) {#
+    if (!is.logical(adapt)) #
+        stop("adapt must be logical")#
+    if (is(data, "Spatial")) {#
+        if (!missing(coords)) #
+            warning("data is Spatial* object, ignoring coords argument")#
+        coords <- coordinates(data)#
+        if ((is.null(longlat) || !is.logical(longlat)) && !is.na(is.projected(data)) && #
+            !is.projected(data)) {#
+            longlat <- TRUE#
+        }#
+        else longlat <- FALSE#
+        data <- as(data, "data.frame")#
+    }#
+    if (is.null(longlat) || !is.logical(longlat)) #
+        longlat <- FALSE#
+    if (missing(coords)) #
+        stop("Observation coordinates have to be given")#
+    mf <- match.call(expand.dots = FALSE)    #
+    #m <- match(c("formula", "data", "weights"), names(mf), 0)#
+    m <- match(c("formula", "data"), names(mf), 0)#
+    mf <- mf[c(1, m)]#
+    mf$drop.unused.levels <- TRUE#
+    mf[[1]] <- as.name("model.frame")#
+    mf <- eval(mf, parent.frame())#
+    mt <- attr(mf, "terms")#
+    dp.n <- length(model.extract(mf, "response"))      #
+    #weights <- as.vector(model.extract(mf, "weights"))    #
+    if (!is.null(weights) && !is.numeric(weights)) #
+        stop("'weights' must be a numeric vector")#
+    if (is.null(weights)) #
+        weights <- rep(as.numeric(1), dp.n)#
+    if (any(is.na(weights))) #
+        stop("NAs in weights")#
+    if (any(weights < 0)) #
+        stop("negative weights")#
+    y <- model.extract(mf, "response")#
+    x <- model.matrix(mt, mf)#
+#
+    if (is.null(D)) {#
+        #Get the matrix of distances#
+        n = dim(coords)[1]#
+        if (longlat) {#
+            D = as.matrix(earth.dist(coords),n,n)#
+        } else {#
+            Xmat = matrix(rep(coords[,1], times=n), n, n)#
+            Ymat = matrix(rep(coords[,2], times=n), n, n)#
+            D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)#
+        }#
+    }    #
+#
+    #Get the weight matrix#
+    n = dim(D)[1]#
+    bbox <- cbind(range(coords[, 1]), range(coords[, 2]))#
+    difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]#
+    if (any(!is.finite(difmin))) #
+        difmin[which(!is.finite(difmin))] <- 0#
+    beta1 <- difmin/1000#
+    beta2 <- 2 * difmin        #
+    if (!adapt) {#
+        res = gwglmnet.nen.fit(x, y, coords, D, s, verbose, family, weights, gweight, bw, beta1, beta2, type=type, tol=tol, longlat=longlat)#
+    }#
+    else {#
+        res = gwglmnet.nen.adaptive.fit(x, y, coords, bw, s, verbose, family, weights, beta1, beta2)#
+    }#
+    res[['data']] = data#
+    res[['response']] = as.character(formula[[2]])#
+    res#
+}#
+gwglmnet.nen.fit = function(x, y, coords, D, s, verbose, family, prior.weights, gweight, bw, beta1, beta2, type='pearson', tol=1e-25, longlat=FALSE) {#
+    #Fit the gwglmnet model (non-adaptive algorithm)#
+    coords.unique = unique(coords)#
+    model = list()#
+    s.optimal = vector()#
+    gwglmnet.object = list()#
+    cv.error = list()#
+    for(i in 1:dim(coords.unique)[1]) {#
+        colocated = which(coords[,1]==coords.unique[i,1] & coords[,2]==coords.unique[i,2])#
+        dist = D[i,]#
+#
+        bandwidth = optimize(gwglmnet.ssr, lower=beta1, upper=beta2, #
+            maximum=FALSE, tol=bw/10, x=x, y=y, colocated=colocated, s=s,#
+            gweight=gweight, verbose=verbose, dist=dist,#
+            prior.weights=prior.weights, family=family, target=bw, type=type)$minimum#
+#
+        cat(paste("For i=", i, ", selected bw=", bandwidth, ".\n", sep=''))#
+#
+        weight.matrix = gweight(D, bandwidth)#
+        loow = weight.matrix[i,-colocated]#
+        prior.loow = prior.weights[-colocated]#
+        reps = length(colocated)        #
+        w <- prior.loow * loow#
+        if (sum(loow)==0) { return(list(cv.error = Inf)) }   #
+        reps = length(colocated)        #
+        xx = as.matrix(x[-colocated,])#
+        yy = as.matrix(y[-colocated])#
+        if (family=='binomial' && (abs(sum(yy*w)-sum(w))<1e-4 || sum(yy*w)<1e-4)) {#
+            cat(paste("Abort. i=", i, ", weighted sum=", sum(yy*w), ", sum of weights=", sum(w), "\n", sep=''))#
+            model[[i]] = NULL#
+            cv.error[[i]] = 0#
+            s.optimal = c(s.optimal, max(s))#
+        } else if (family=='binomial') {#
+            model[[i]] = glmnet(x=xx, y=cbind(1-yy, yy), weights=w, family=family, lambda=s)#
+            predictions = predict(model[[i]], newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=s, type='response')#
+            cv.error[[i]] = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))#
+            s.optimal = c(s.optimal, s[which.min(cv.error[[i]])])#
+        } else {#
+            model[[i]] = glmnet(x=xx, y=yy, weights=w, family=family, lambda=s)#
+            predictions = predict(model[[i]], newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=s, type='response')#
+            cv.error[[i]] = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))#
+            s.optimal = c(s.optimal, s[which.min(cv.error[[i]])])#
+        }#
+        if (verbose) { cat(paste(i, "\n", sep='')) }#
+    }#
+    gwglmnet.object[['coef.scale']] = NULL#
+    gwglmnet.object[['model']] = model#
+    gwglmnet.object[['s']] = s.optimal#
+    gwglmnet.object[['mode']] = mode#
+    gwglmnet.object[['coords']] = coords.unique#
+    gwglmnet.object[['cv.error']] = cv.error#
+    gwglmnet.object[['s.range']] = s#
+    class(gwglmnet.object) = 'gwglmnet.object'#
+    return(gwglmnet.object)#
+}#
+gwglmnet.ssr <- function(bw, x, y, colocated, dist, s, verbose, family, prior.weights, gweight, type, target) {#
+    #Get the weights#
+    reps = length(colocated)#
+    loow = gweight(dist, bw)[-colocated]#
+    w <- prior.weights[-colocated] * loow#
+    #Build the model#
+    xx = as.matrix(x[-colocated,])#
+    yy = as.matrix(y[-colocated])#
+    print("preparing to make a model")#
+    if (family=='binomial') {model = glmnet(x=xx, y=cbind(1-yy,yy), weights=w, family=family, lambda=s)}#
+    else {model = glmnet(x=xx, y=yy, weights=w, family=family, lambda=s)}#
+#
+    #Find lambda to minimize CV error#
+    predictions = predict(model, newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=s, type='response', )#
+    cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))#
+    s.optimal = s[which.min(cv.error)]#
+    #Get the residuals at this choice of s (Poisson-specific for now):#
+    fitted = predict(model, newx=xx, s=s.optimal, type='response')#
+    pearson.resid = sum(w * (yy - fitted)**2/fitted)#
+#
+    abs(pearson.resid-target)#
+}#
+gwglmnet.nen.adaptive.fit = function(x, y, coords, weight.matrix, s, verbose, family, prior.weights, bw, beta1, beta2) {#
+#Fit the gwglmnet model (adaptive algorithm)#
+    gwglmnet.object = list()#
+    coords.unique = unique(coords)#
+    model = list()#
+    s.optimal = vector()#
+    adapt.normx = list()#
+    adapt.scale = list()#
+    cv.error = list()#
+    coef.scale = list()#
+    glm.step = list()#
+    for(i in 1:dim(coords.unique)[1]) {#
+        colocated = which(coords[,1]==coords.unique[i,1] & coords[,2]==coords.unique[i,2])#
+        loow = weight.matrix[i,-colocated]#
+        if (sum(loow)==0) { return(list(cv.error = Inf)) }      #
+#
+        prior.loow = prior.weights[-colocated] #
+        reps = length(colocated)        #
+        w <- prior.loow * loow#
+        xx = as.matrix(x[-colocated,])#
+        yy = as.matrix(y[-colocated])#
+#
+        if (family=='binomial' && (abs(sum(yy*w)-sum(w))<1e-4 || sum(yy*w)<1e-4)) {            #
+            cat(paste("Abort. i=", i, ", weighted sum=", sum(yy*w), ", sum of weights=", sum(w), "\n", sep=''))#
+            model[[i]] = NULL#
+            cv.error[[i]] = 0#
+            s.optimal = c(s.optimal, max(s))#
+        } else {#
+            m <- ncol(xx)#
+            n <- nrow(xx)#
+            one <- rep(1, n)#
+            meanx <- drop(one %*% xx)/n#
+            x.centered <- scale(xx, meanx, FALSE)         # first subtracts mean#
+            normx <- sqrt(drop(one %*% (x.centered^2)))#
+            adapt.normx[[i]] = normx#
+            names(normx) <- NULL#
+            xs = x.centered#
+            for (k in 1:dim(x.centered)[2]) {#
+                if (normx[k]!=0) {#
+                    xs[,k] = xs[,k] / normx[k]#
+                } else {#
+                    xs[,k] = rep(0, dim(xs)[1])#
+                    normx[k] = Inf #This should allow the lambda-finding step to work.#
+                }#
+            }#
+            out.glm = try(glm(yy~xs, family=family, weights=w))  # mle fit on standardized#
+#
+            if(class(out.glm) == "try-error") { #
+                cat(paste("Had to use the last glm for location ", i, "\n", sep=""))#
+                glm.step[[i]] = out.glm = glm.step[[i-1]]#
+            }#
+            else { glm.step[[i]] = out.glm }#
+#
+            beta.glm = out.glm$coeff[2:(m+1)]                    # mle except for intercept#
+            adapt.weight = abs(beta.glm)                        # weights for adaptive lasso#
+            adapt.scale[[i]] = adapt.weight#
+            for (k in 1:dim(x.centered)[2]) {#
+                if (!is.na(adapt.weight[k])) {#
+                    xs[,k] = xs[,k] * adapt.weight[k]#
+                } else {#
+                    xs[,k] = rep(0, dim(xs)[1])#
+                    adapt.weight[k] = 0 #This should allow the lambda-finding step to work.#
+                }#
+            }#
+            #Use the lars algorithm to fit the model#
+            coef.scale[[i]] = adapt.weight/normx#
+            names(coef.scale[[i]]) = sapply(strsplit(names(coef.scale[[i]]), 'xs'), function(x) {x[2]})#
+            if (sum(coef.scale[[i]]) <1e-10) {#
+                if (verbose) {cat(paste("opted for the intercept-only model at location: ", i, "\n", sep=""))}#
+                model[[i]] = NULL#
+                predictions = rep(coef(out.glm)[["(Intercept)"]], length(colocated))#
+                cv.error[[i]] = abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s))))#
+                s.optimal = c(s.optimal, max(s))#
+            } else {#
+                if (family=='binomial') {model[[i]] = glmnet(x=xs, y=cbind(1-yy, yy), lambda=s, family=family, weights=w)}#
+                else {model[[i]] = glmnet(x=xs, y=yy, lambda=s, family=family, weights=w)}#
+                predictions = predict(model[[i]], newx=scale(matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), center=meanx, scale=normx/adapt.weight), type='response', s=s)#
+                cv.error[[i]] = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))#
+                s.optimal = c(s.optimal, s[which.min(cv.error[[i]])])#
+            }#
+        }#
+#
+        if (verbose) { cat(paste(i, "\n", sep='')) }#
+    }#
+    gwglmnet.object[['coef.scale']] = coef.scale#
+    gwglmnet.object[['model']] = model#
+    gwglmnet.object[['s']] = s.optimal#
+    gwglmnet.object[['mode']] = mode#
+    gwglmnet.object[['coords']] = coords.unique#
+    gwglmnet.object[['cv.error']] = cv.error#
+    gwglmnet.object[['s.range']] = s#
+    class(gwglmnet.object) = 'gwglmnet.object'#
+    return(gwglmnet.object)#
+}
+gwglmnet.nen(nifestations~meanelevation+warm, data=mpb, coords=mpb[,c('X','Y')], gweight=bisquare, s=seq(0,5,0.001), tol=10, type='pearson', bw=200000, family='poisson')

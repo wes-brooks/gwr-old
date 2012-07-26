@@ -92,12 +92,13 @@ model.locs = loc.unique[,c('county', 'state')]
 model.coords = loc.unique[,c('x', 'y')]
 
 #Select the bandwidth for a GWR model without selection:
-#k.nn = gwr.sel(f, data=df, coords=loc[,c('x','y')], longlat=TRUE, adapt=TRUE, gweight=gwr.bisquare)
+#k.nn = gwr.sel(f, data=df, coords=loc[,c('x'0,'y')], longlat=TRUE, adapt=TRUE, gweight=gwr.bisquare)
 k.nn = 0.09446181
 #bw = gwr.sel(f, data=df, coords=loc[,c('x','y')], longlat=TRUE, adapt=FALSE, gweight=gwr.bisquare)
 #bw = 295.9431  #bandwidth in kilometers
 #bw = 125.314 #from gwlars.sel
 bw = 127 #-ish, from gw.adalars
+
 
 #Use the spgwr package to produce a model without selection
 knn_model = gwr(f, data=df, coords=as.matrix(df[,c('x','y')]), adapt=k.nn, longlat=TRUE, gweight=gwr.bisquare, fit.points=as.matrix(model.coords))
