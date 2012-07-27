@@ -2,7 +2,9 @@ library(glmnet)
 library(doMC)
 registerDoMC(cores=7)
 
-gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, s, method="cv", verbose=FALSE, longlat=FALSE, family, weights, tol=.Machine$double.eps^0.25, type, parallel=FALSE) {
+library(sp)
+
+gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, s=NULL, method="cv", verbose=FALSE, longlat=FALSE, family, weights=NULL, tol=.Machine$double.eps^0.25, type, parallel=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -28,11 +30,11 @@ gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=g
     mf <- eval(mf, parent.frame())
     mt <- attr(mf, "terms")
     dp.n <- length(model.extract(mf, "response"))
-    weights <- as.vector(model.extract(mf, "weights"))
+    #weights <- as.vector(model.extract(mf, "weights"))
     if (!is.null(weights) && !is.numeric(weights)) 
         stop("'weights' must be a numeric vector")
     if (is.null(weights)) 
-        weights <- rep(as.numeric(1), dp.n)
+        weights <- rep(1, dp.n)
     if (any(is.na(weights))) 
         stop("NAs in weights")
     if (any(weights < 0)) 
@@ -51,17 +53,26 @@ gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=g
     }
 
     model = glm(formula=formula, data=data, family=family, weights=weights)
-    difmin = sum(residuals(model, type=type)**2)
+    SSR = sum((weights * residuals(model, type=type)/predict(model, newx=x))**2)
+
+    cat(paste("The SSR from the global model is: ", SSR, "\n", sep=""))
+
+    nloc = unique(coords)
+    lowerSSR <- SSR/5000
+    upperSSR <- SSR     
 
     bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
     difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
+ 
     if (any(!is.finite(difmin))) 
         difmin[which(!is.finite(difmin))] <- 0
     beta1 <- difmin/1000
-    beta2 <- difmin     
+    beta2 <- difmin   
 
-    opt <- optimize(gwglmnet.nen.cv.f, lower=beta1, upper=beta2, 
-        maximum=FALSE, tol=tol, formula=formula, coords=coords, s=s,
+    cat(paste("Maximum distance: ", difmin, "\n", sep=""))  
+
+    opt <- optimize(gwglmnet.nen.cv.f, lower=lowerSSR, upper=upperSSR, 
+        maximum=FALSE, tol=tol, tolerance=tol, formula=formula, coords=coords, s=s, beta1=beta1, beta2=beta2,
         gweight=gweight, verbose=verbose, longlat=longlat, data=data, D=D,
         weights=weights, adapt=adapt, family=family, type=type, parallel=parallel)
     bdwt <- opt$minimum
@@ -73,18 +84,20 @@ gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=g
 
 
 
-gwglmnet.nen.cv.f = function(formula, data, bw, coords, gweight, verbose, adapt, longlat, s, family, weights, D=NULL, tol=.Machine$double.eps^0.25, type='pearson', parallel=FALSE, ...) {    
+gwglmnet.nen.cv.f = function(formula, data, bw, coords, gweight, verbose, adapt, longlat, s=NULL, beta1, beta2, family, weights=NULL, D=NULL, tolerance=.Machine$double.eps^0.25, type='pearson', parallel=FALSE, ...) {    
     #Generate the model with the given bandwidth:
-    cat(paste('Beginning with bandwidth: ', bw, '\n', sep=''))
-    gwglmnet.model = gwglmnet.nen(formula=formula, data=data, coords=coords, gweight=gweight, bw=bw, verbose=verbose, longlat=longlat, adapt=adapt, s=s, family=family, weights=weights, D=D, tol=.Machine$double.eps^0.25, type, parallel=parallel)
-    cv.error = sum(sapply(gwglmnet.model[['cv.error']], min))
+    cat(paste('Beginning with target SSR: ', bw, ', tolerance: ', tolerance, '\n', sep=''))
+    gwglmnet.model = gwglmnet.nen(formula=formula, data=data, coords=coords, gweight=gweight, bw=bw, verbose=verbose, longlat=longlat, adapt=adapt, s=s, family=family, weights=weights, D=D, tol=tolerance, beta1=beta1, beta2=beta2, type, parallel=parallel)
+    print(names(gwglmnet.model))
+
+    cv.error = sum(sapply(gwglmnet.model[['model']], function(x) min(x[['cv.error']])))
 
     cat(paste('Bandwidth: ', bw, '. CV error: ', cv.error, '\n', sep=''))
     return(cv.error)
 }
 
 
-gwglmnet.nen <- function(formula, data, coords, gweight, bw, D=NULL, verbose=FALSE, longlat=FALSE, adapt=FALSE, s, family, weights=NULL, tol=.Machine$double.eps^0.25, type, parallel=FALSE) {
+gwglmnet.nen <- function(formula, data, coords, gweight, bw, D=NULL, verbose=FALSE, longlat=FALSE, adapt=FALSE, s=NULL, family, weights=NULL, tolerance=.Machine$double.eps^0.25, beta1=NULL, beta2=NULL, type, parallel=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -138,24 +151,25 @@ gwglmnet.nen <- function(formula, data, coords, gweight, bw, D=NULL, verbose=FAL
     #Get the weight matrix
     n = dim(D)[1]
 
-    
-    bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
-    difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
-    if (any(!is.finite(difmin))) 
-        difmin[which(!is.finite(difmin))] <- 0
-    beta1 <- difmin/1000
-    beta2 <- 2 * difmin        
+    if (is.null(beta1) || is.null(beta2)) {
+        bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
+        difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
+        if (any(!is.finite(difmin))) 
+            difmin[which(!is.finite(difmin))] <- 0
+        beta1 <- difmin/1000
+        beta2 <- 2 * difmin        
+    }
 
+    res=list()
 
-    if (!adapt) {
-        
+    if (!adapt) {        
         if (!parallel) {
-            res = gwglmnet.nen.fit(x, y, coords, D, s, verbose, family, weights, gweight, bw, beta1, beta2, type=type, tol=tol, longlat=longlat)
+            res[['model']] = gwglmnet.nen.fit(x, y, coords, D, s, verbose, family, weights, gweight, bw, beta1, beta2, type=type, tol=tolerance, longlat=longlat)
         } else {
-            res = gwglmnet.nen.fit.parallel(x, y, coords, D, s, verbose, family, weights, gweight, bw, beta1, beta2, type=type, tol=tol, longlat=longlat)
+            res[['model']] = gwglmnet.nen.fit.parallel(x, y, coords, D, s, verbose, family, weights, gweight, bw, beta1, beta2, type=type, tol=tolerance, longlat=longlat)
         }
     } else {
-        res = gwglmnet.nen.adaptive.fit(x, y, coords, bw, s, verbose, family, weights, beta1, beta2, parallel=parallel)
+        res[['model']] = gwglmnet.nen.adaptive.fit(x, y, coords, bw, s, verbose, family, weights, beta1, beta2, parallel=parallel)
     }
     res[['data']] = data
     res[['response']] = as.character(formula[[2]])
@@ -163,7 +177,7 @@ gwglmnet.nen <- function(formula, data, coords, gweight, bw, D=NULL, verbose=FAL
 }
 
 
-gwglmnet.nen.fit = function(x, y, coords, D, s, verbose, family, prior.weights, gweight, bw, beta1, beta2, type='pearson', tol=1e-25, longlat=FALSE) {
+gwglmnet.nen.fit = function(x, y, coords, D, s=NULL, verbose, family, prior.weights, gweight, bw, beta1, beta2, type='pearson', tol=1e-25, longlat=FALSE) {
     #Fit the gwglmnet model (non-adaptive algorithm)
     coords.unique = unique(coords)
     model = list()
@@ -181,7 +195,7 @@ gwglmnet.nen.fit = function(x, y, coords, D, s, verbose, family, prior.weights, 
             gweight=gweight, verbose=verbose, dist=dist,
             prior.weights=prior.weights, family=family, target=bw, type=type)$minimum
 
-        cat(paste("For i=", i, ", selected bw=", bandwidth, ".\n", sep=''))
+        cat(paste("For i=", i, ", bw=", bandwidth, ".\n", sep=''))
 
         weight.matrix = gweight(D, bandwidth)
         loow = weight.matrix[i,-colocated]
@@ -226,21 +240,23 @@ gwglmnet.nen.fit = function(x, y, coords, D, s, verbose, family, prior.weights, 
 }
 
 
-gwglmnet.nen.fit.parallel = function(x, y, coords, D, s, verbose, family, prior.weights, gweight, bw, beta1, beta2, type='pearson', tol=1e-25, longlat=FALSE) {
+gwglmnet.nen.fit.parallel = function(x, y, coords, D, s, verbose, family, prior.weights, gweight, target, beta1, beta2, type='pearson', tol=1e-25, longlat=FALSE) {
     #Fit the gwglmnet model (non-adaptive algorithm)
     coords.unique = unique(coords)
     n = dim(coords.unique)[1]
-    
-    gwglmnet.object = foreach(i=1:n, .packages='glmnet') %dopar% {
+
+
+    gwglmnet.object = foreach(i=1:n, .packages='glmnet', .errorhandling='remove') %dopar% {
         colocated = which(coords[,1]==coords.unique[i,1] & coords[,2]==coords.unique[i,2])
         dist = D[i,]
 
-        bandwidth = optimize(gwglmnet.ssr, lower=beta1, upper=beta2, 
-            maximum=FALSE, tol=bw/10, x=x, y=y, colocated=colocated, s=s,
+        opt = optimize(gwglmnet.ssr, lower=beta1, upper=beta2, 
+            maximum=FALSE, tol=target/1000, x=x, y=y, colocated=colocated, s=s,
             gweight=gweight, verbose=verbose, dist=dist,
-            prior.weights=prior.weights, family=family, target=bw, type=type)$minimum
-
-        cat(paste("For i=", i, ", selected bw=", bandwidth, ".\n", sep=''))
+            prior.weights=prior.weights, family=family, target=target, type=type)
+        bandwidth = opt$minimum
+        
+        cat(paste("For i=", i, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", sqrt(opt$objective), ".\n", sep=''))
 
         loow = gweight(D[i,-colocated], bandwidth)        
         prior.loow = prior.weights[-colocated]
@@ -270,23 +286,19 @@ gwglmnet.nen.fit.parallel = function(x, y, coords, D, s, verbose, family, prior.
             s.optimal = s[which.min(cv.error)]
         } else {
             model = glmnet(x=xx, y=yy, weights=w, family=family, lambda=s)
-            predictions = predict(model, newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=s, type='response')
-            cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))
-            s.optimal = s[which.min(cv.error)]
+            ll = model$lambda
+            predictions = predict(model, newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=ll, type='response')
+            cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(ll)), nrow=reps, ncol=length(ll))))
+            s.optimal = ll[which.min(cv.error)]
         }
         
-        if (verbose) { cat(paste(i, "\n", sep='')) }
-        
-        list(model=model, cv.error=cv.error, s=s.optimal)
+        if (verbose) { cat(paste(i, "\n", sep='')) }         
+
+        list(model=model, cv.error=cv.error, s=s.optimal, index=i)
     }
 
-    #gwglmnet.object[['coef.scale']] = NULL
-    #gwglmnet.object[['model']] = model
-    #gwglmnet.object[['s']] = s.optimal
-    #gwglmnet.object[['mode']] = mode
-    #gwglmnet.object[['coords']] = coords.unique
-    #gwglmnet.object[['cv.error']] = cv.error
-    #gwglmnet.object[['s.range']] = s
+    print("returning from gwglmnet.nen.fit.parallel")
+
     class(gwglmnet.object) = 'gwglmnet.object'
     return(gwglmnet.object)
 }
@@ -304,17 +316,19 @@ gwglmnet.ssr <- function(bw, x, y, colocated, dist, s, verbose, family, prior.we
 
     if (family=='binomial') {model = glmnet(x=xx, y=cbind(1-yy,yy), weights=w, family=family, lambda=s)}
     else {model = glmnet(x=xx, y=yy, weights=w, family=family, lambda=s)}
+    ll = model$lambda
 
     #Find lambda to minimize CV error
-    predictions = predict(model, newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=s, type='response', )
-    cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(s)), nrow=reps, ncol=length(s))))
-    s.optimal = s[which.min(cv.error)]
+    predictions = predict(model, newx=matrix(x[colocated,], nrow=reps, ncol=dim(xx)[2]), s=ll, type='response', )
+    cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(ll)), nrow=reps, ncol=length(ll))))
+    s.optimal = ll[which.min(cv.error)]
     
     #Get the residuals at this choice of s (Poisson-specific for now):
-    fitted = predict(model, newx=xx, s=s.optimal, type='response')
-    pearson.resid = sum(w * (yy - fitted)**2/fitted)
+    fitted = predict(model, newx=xx, s=s.optimal, type='response')    
+    if (family=='poisson') pearson.resid = sum(w * (yy - fitted)**2/fitted)
+    if (family=='binomial') pearson.resid = sum(w * (yy - fitted)**2 / (fitted*(1-fitted)))
 
-    abs(pearson.resid-target)
+    (abs(pearson.resid-target))**2
 }
 
 

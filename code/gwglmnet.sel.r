@@ -60,6 +60,7 @@ gwglmnet.sel = function(formula, data=list(), coords, adapt=FALSE, nearest.neigh
         beta2 <- 2 * difmin        
     }
 
+
     opt <- optimize(gwglmnet.cv.f, lower=beta1, upper=beta2, 
         maximum=FALSE, tol=tol, formula=formula, coords=coords, s=s,
         gweight=gweight, verbose=verbose, longlat=longlat, data=data, D=D,
