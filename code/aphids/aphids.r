@@ -1,7 +1,6 @@
-aphids = read.csv("~/git/gwr/data/SoybeanAphids/data_8 covariates.csv", head=TRUE)
+library(gwselect)
 
-source("~/git/gwr/code/utils.r")
-source("~/git/gwr/code/PineBeetle/nearest_effective_neighbors.r")
+aphids = read.csv("~/git/gwr/data/SoybeanAphids/data_8 covariates.csv", head=TRUE)
 
 #Remove rows with NAs:
 n = nrow(aphids)

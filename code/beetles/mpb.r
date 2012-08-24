@@ -1,7 +1,6 @@
-mpb = read.csv("~/git/gwr/data/SouthernPineBeetle/Code-Andy/mpb.csv", head=TRUE)
+library(gwselect)
 
-source("~/git/gwr/code/utils.r")
-source("~/git/gwr/code/PineBeetle/nearest_effective_neighbors.r")
+mpb = read.csv("~/git/gwr/data/SouthernPineBeetle/Code-Andy/mpb.csv", head=TRUE)
 
 #Remove rows with NAs:
 n = nrow(mpb)

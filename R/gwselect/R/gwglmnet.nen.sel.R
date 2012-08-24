@@ -1,18 +1,5 @@
-library(glmnet)
-library(doMC)
-registerDoMC(cores=7)
-library(sp)
-
-source("gwglmnet.nen.adaptive.fit.parallel.r")
-source("gwglmnet.nen.adaptive.fit.r")
-source("gwglmnet.adaptive.ssr.r")
-source("gwglmnet.nen.fit.parallel.r")
-source("gwglmnet.nen.fit.r")
-source("gwglmnet.nen.cv.f.r")
-source("gwglmnet.nen.r")
-
-
-gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, s=NULL, method="cv", verbose=FALSE, longlat=FALSE, family, weights=NULL, tol=.Machine$double.eps^0.25, type, parallel=FALSE) {
+gwglmnet.nen.sel <-
+function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, s=NULL, method="cv", verbose=FALSE, longlat=FALSE, family, weights=NULL, tol=.Machine$double.eps^0.25, type, parallel=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -88,13 +75,3 @@ gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=g
 
     res
 }
-
-
-
-
-
-
-
-
-
-

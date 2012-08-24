@@ -1,4 +1,5 @@
-gwglmnet.nen <- function(formula, data, coords, gweight, bw, D=NULL, verbose=FALSE, longlat=FALSE, adapt=FALSE, s=NULL, family, weights=NULL, tolerance=.Machine$double.eps^0.25, beta1=NULL, beta2=NULL, type, parallel=FALSE) {
+gwglmnet <-
+function(formula, data, coords, gweight, bw, D=NULL, verbose=FALSE, longlat=FALSE, adapt=FALSE, s, family, weights=NULL, nearest.neighbors=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -50,34 +51,20 @@ gwglmnet.nen <- function(formula, data, coords, gweight, bw, D=NULL, verbose=FAL
     }    
 
     #Get the weight matrix
-    n = dim(D)[1]
-
-    if (is.null(beta1) || is.null(beta2)) {
-        bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
-        difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
-        if (any(!is.finite(difmin))) 
-            difmin[which(!is.finite(difmin))] <- 0
-        beta1 <- difmin/1000
-        beta2 <- 2 * difmin        
+    if (!nearest.neighbors) {
+        weight.matrix = gweight(D, bw)
+    } else {
+        n = dim(D)[1]
+        bandwidths = sapply(1:n, function(x) {neighbor.weight(q=bw, D=D[x,], weight.function=gweight, verbose=verbose, tol=0.001)})
+        weight.matrix = as.matrix(rbind(sapply(1:n, function(k) {gweight(as.vector(D[k,]), as.numeric(bandwidths[1,k]))})),n,n)
     }
 
-    res=list()
-
-    if (adapt) {
-        if (parallel) {
-            res[['model']] = gwglmnet.nen.adaptive.fit.parallel(x, y, coords, D, s, verbose, family, weights, gweight, bw, beta1, beta2, type, tol=tolerance, longlat=longlat)
-        } else {
-            res[['model']] = gwglmnet.nen.adaptive.fit(x, y, coords, D, s, verbose, family, weights, gweight, bw, beta1, beta2, type, tol=tolerance, longlat=longlat)
-        }
+    if (!adapt) {
+        res = gwglmnet.fit(x, y, coords, weight.matrix, s, verbose, family, weights)
     }
-    if (!adapt) {        
-        if (!parallel) {
-            res[['model']] = gwglmnet.nen.fit(x, y, coords, D, s, verbose, family, weights, gweight, bw, beta1, beta2, type=type, tol=tolerance, longlat=longlat)
-        } else {
-            res[['model']] = gwglmnet.nen.fit.parallel(x, y, coords, D, s, verbose, family, weights, gweight, bw, beta1, beta2, type=type, tol=tolerance, longlat=longlat)
-        }
+    else {
+        res = gwglmnet.adaptive.fit(x, y, coords, weight.matrix, s, verbose, family, weights)
     }
-
     res[['data']] = data
     res[['response']] = as.character(formula[[2]])
     res

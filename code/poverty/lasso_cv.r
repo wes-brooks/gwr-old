@@ -1,16 +1,10 @@
-library(spgwr)
-library(lars)
-library(glmnet)
+library(gwselect)
 library(maps)
 library(ggplot2)
-library(fossil)
-library(lqa)
-
 
 #extract reference data
 mapcounties <- map_data("county")
 mapstates <- map_data("state")
-
 
 #Import the plotting functions:
 setwd("~/git/gwr/code")
@@ -99,8 +93,8 @@ bw = 127 #-ish, from gw.adalars
 bw.glmnet.adapt = 1635.349
 
 #Use the spgwr package to produce a model without selection
-knn_model = gwr(f, data=df, coords=as.matrix(df[,c('x','y')]), adapt=k.nn, longlat=TRUE, gweight=gwr.bisquare, fit.points=as.matrix(model.coords))
-bw_model = gwr(f, data=df, coords=as.matrix(df[,c('x','y')]), bandwidth=bw, longlat=TRUE, gweight=gwr.bisquare, fit.points=as.matrix(model.coords))
+#knn_model = gwr(f, data=df, coords=as.matrix(df[,c('x','y')]), adapt=k.nn, longlat=TRUE, gweight=gwr.bisquare, fit.points=as.matrix(model.coords))
+#bw_model = gwr(f, data=df, coords=as.matrix(df[,c('x','y')]), bandwidth=bw, longlat=TRUE, gweight=gwr.bisquare, fit.points=as.matrix(model.coords))
 
 #Plot the full model on a map
 plot.coef.gwr(model=bw_model, var='pind', locs=loc)

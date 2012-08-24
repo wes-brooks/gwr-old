@@ -1,18 +1,5 @@
-library(glmnet)
-library(doMC)
-registerDoMC(cores=7)
-library(sp)
-
-source("gwglmnet.nen.adaptive.fit.parallel.r")
-source("gwglmnet.nen.adaptive.fit.r")
-source("gwglmnet.adaptive.ssr.r")
-source("gwglmnet.nen.fit.parallel.r")
-source("gwglmnet.nen.fit.r")
-source("gwglmnet.nen.cv.f.r")
-source("gwglmnet.nen.r")
-
-
-gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, s=NULL, method="cv", verbose=FALSE, longlat=FALSE, family, weights=NULL, tol=.Machine$double.eps^0.25, type, parallel=FALSE) {
+gwglmnet.sel <-
+function(formula, data=list(), coords, adapt=FALSE, nearest.neighbors=FALSE, gweight=gwr.Gauss, s, method="cv", verbose=FALSE, longlat=FALSE, family, weights, tol=.Machine$double.eps^0.25) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -38,11 +25,11 @@ gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=g
     mf <- eval(mf, parent.frame())
     mt <- attr(mf, "terms")
     dp.n <- length(model.extract(mf, "response"))
-    #weights <- as.vector(model.extract(mf, "weights"))
+    weights <- as.vector(model.extract(mf, "weights"))
     if (!is.null(weights) && !is.numeric(weights)) 
         stop("'weights' must be a numeric vector")
     if (is.null(weights)) 
-        weights <- rep(1, dp.n)
+        weights <- rep(as.numeric(1), dp.n)
     if (any(is.na(weights))) 
         stop("NAs in weights")
     if (any(weights < 0)) 
@@ -60,41 +47,25 @@ gwglmnet.nen.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=g
         D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
     }
 
-    model = glm(formula=formula, data=data, family=family, weights=weights)
-    SSR = sum((weights * residuals(model, type=type))**2)
+    if (nearest.neighbors) {
+        beta1 <- 0
+        beta2 <- 1
+    } else {
+        bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
+        difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
+        if (any(!is.finite(difmin))) 
+            difmin[which(!is.finite(difmin))] <- 0
+        beta1 <- difmin/1000
+        beta2 <- 2 * difmin        
+    }
 
-    cat(paste("The SSR from the global model is: ", SSR, "\n", sep=""))
 
-    nloc = unique(coords)
-    lowerSSR <- SSR/5000
-    upperSSR <- SSR     
-
-    bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
-    difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
- 
-    if (any(!is.finite(difmin))) 
-        difmin[which(!is.finite(difmin))] <- 0
-    beta1 <- difmin/1000
-    beta2 <- difmin   
-
-    cat(paste("Maximum distance: ", difmin, "\n", sep=""))  
-
-    opt <- optimize(gwglmnet.nen.cv.f, lower=lowerSSR, upper=upperSSR, 
-        maximum=FALSE, tol=tol, tolerance=tol, formula=formula, coords=coords, s=s, beta1=beta1, beta2=beta2,
+    opt <- optimize(gwglmnet.cv.f, lower=beta1, upper=beta2, 
+        maximum=FALSE, tol=tol, formula=formula, coords=coords, s=s,
         gweight=gweight, verbose=verbose, longlat=longlat, data=data, D=D,
-        weights=weights, adapt=adapt, family=family, type=type, parallel=parallel)
+        weights=weights, adapt=adapt, nn=nearest.neighbors, family=family)
     bdwt <- opt$minimum
     res <- bdwt
 
     res
 }
-
-
-
-
-
-
-
-
-
-
