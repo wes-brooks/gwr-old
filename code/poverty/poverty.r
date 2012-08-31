@@ -1,5 +1,5 @@
 library(gwselect)
-registerCores(n=7)
+registerCores(n=3)
 
 #Import poverty data
 pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)
@@ -55,4 +55,4 @@ df = pov2[pov2$year==2006,]
 
 weights=rep(1, nrow(pov2))
 
-bw = gwlars.sel(formula=f, data=pov2, coords=pov2[,c('x','y')], adapt=TRUE, gweight=bisquare, mode='step', s=NULL, method="nen", longlat=TRUE, tol=1, weights=weights, parallel=TRUE)
+bw = gwlars.sel(formula=f, data=pov2, coords=pov2[,c('x','y')], adapt=TRUE, gweight=bisquare, mode='step', s=NULL, method="nen", longlat=TRUE, tol=1, weights=weights, parallel=TRUE, verbose=FALSE)

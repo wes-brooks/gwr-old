@@ -1,4 +1,4 @@
-gwlars.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, mode, s, method="cv", verbose=FALSE, longlat=FALSE, RMSE=FALSE, weights=NULL, tol=.Machine$double.eps^0.25, parallel=FALSE) {
+gwlars.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, mode, s, method="dist", verbose=FALSE, longlat=FALSE, RMSE=FALSE, weights=NULL, tol=.Machine$double.eps^0.25, parallel=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -37,33 +37,27 @@ gwlars.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gau
     x <- model.matrix(mt, mf)
 
         
-    if (method == "cv") {
+    if (method == "distance") {
         bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
         difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
         if (any(!is.finite(difmin))) 
             difmin[which(!is.finite(difmin))] <- 0
         beta1 <- difmin/1000
         beta2 <- difmin
-        opt <- optimize(gwlars.cv.f, lower=beta1, upper=beta2, 
-            maximum=FALSE, formula=formula, coords=coords, s=s, mode=mode,
-            gweight=gweight, verbose=verbose, longlat=longlat, data=data, 
-            RMSE=RMSE, weights=weights, tol=tol, adapt=adapt)
     } else if (method == 'knn') {
         beta1 <- 0
         beta2 <- 1
-        opt <- optimize(gwr.aic.f, lower=beta1, upper=beta2, 
-            maximum=FALSE, y=y, x=x, coords=coords, 
-            gweight=gweight, verbose=verbose, longlat=longlat, 
-            tol=tol)
     } else if (method == 'nen') {
         lm.step = lm(formula=formula, data=data, weights=weights)
         beta2 = sum(weights * lm.step$resid**2)
         beta1 = beta2/1000
-        opt <- optimize(gwlars.nen.cv.f, lower=beta1, upper=beta2, 
-            maximum=FALSE, formula=formula, coords=coords, s=s, mode=mode,
-            gweight=gweight, verbose=verbose, longlat=longlat, data=data, 
-            RMSE=RMSE, weights=weights, tol=tol, adapt=adapt, parallel=parallel)
+        print(sum(weights * lm.step$resid**2))
     }
+
+    opt <- optimize(gwlars.cv.f, lower=beta1, upper=beta2, 
+        maximum=FALSE, formula=formula, coords=coords, s=s, mode=mode,
+        gweight=gweight, verbose=verbose, longlat=longlat, data=data, method=method,
+        weights=weights, tol=tol, adapt=adapt, parallel=parallel)
 
     bdwt <- opt$minimum
     res <- bdwt

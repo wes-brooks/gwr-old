@@ -1,4 +1,4 @@
-gwlars <- function(formula, data, coords, gweight, bw=NULL, verbose=FALSE, longlat, tol, method, adapt=FALSE, s=NULL, mode='lambda') {
+gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, verbose=FALSE, longlat, tol, method, adapt=FALSE, s=NULL, mode='lambda', parallel=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -47,26 +47,31 @@ gwlars <- function(formula, data, coords, gweight, bw=NULL, verbose=FALSE, longl
         D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
     }
 
+    res = list()
+
     if (method=='nen') {
-        if (!adapt) {
-            res = gwlars.nen.fit(x, y, coords, D, s, mode, verbose)
+        bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
+        difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
+        if (any(!is.finite(difmin))) 
+            difmin[which(!is.finite(difmin))] <- 0
+        beta1 = difmin/1000
+        beta2 <- difmin/3   
+
+        if (parallel) {
+            print("going in parallel")
+            res[['models']] = gwlars.fit.nenparallel(x=x, y=y, prior.weights=weights, coords=coords, D=D, longlat=longlat, s=s, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol)
+        } else {
+            res[['models']] = gwlars.fit.nen(x=x, y=y, prior.weights=weights, coords=coords, D=D, longlat=longlat, s=s, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol)
         }
-        else {
-            res = gwlars.nen.adaptive.fit(x, y, coords, D, s, mode, verbose)
-        }
-    } else {
+    } else if (method=='distance') {
         weight.matrix = gweight(D, bw)
-        if (!adapt) {
-            res = gwlars.fit(x, y, coords, weight.matrix, s, mode, verbose)
-        }
-        else {
-            res = gwlars.adaptive.fit(x, y, coords, weight.matrix, s, mode, verbose)
-        }
+        res[['models']] = gwlars.fit.fixedbw(x=x, y=y, weights=weights, coords=coords, weight.matrix=weight.matrix, s=s, mode=mode, verbose=verbose, adapt=adapt)
+    } else if (method=='knn') {
+        res[['models']] = gwlars.fit.knn(x=x, y=y, weights=weights, coords=coords, weight.matrix=weight.matrix, s=s, mode=mode, verbose=verbose, adapt=adapt)
     }
+
 
     res[['data']] = data
     res[['response']] = as.character(formula[[2]])
     res
 }
-
-    
