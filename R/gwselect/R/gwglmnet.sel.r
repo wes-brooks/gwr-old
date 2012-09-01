@@ -1,5 +1,4 @@
-gwglmnet.sel <-
-function(formula, data=list(), coords, adapt=FALSE, nearest.neighbors=FALSE, gweight=gwr.Gauss, s, method="cv", verbose=FALSE, longlat=FALSE, family, weights, tol=.Machine$double.eps^0.25) {
+gwglmnet.sel = function(formula, data=list(), family, weights=NULL, coords, adapt=FALSE, gweight=gwr.Gauss, s, method="dist", verbose=FALSE, longlat=FALSE, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -37,35 +36,29 @@ function(formula, data=list(), coords, adapt=FALSE, nearest.neighbors=FALSE, gwe
     y <- model.extract(mf, "response")
     x <- model.matrix(mt, mf)
 
-    #Get the matrix of distances
-    n = dim(coords)[1]
-    if (longlat) {
-        D = as.matrix(earth.dist(coords),n,n)
-    } else {
-        Xmat = matrix(rep(coords[,1], times=n), n, n)
-        Ymat = matrix(rep(coords[,2], times=n), n, n)
-        D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
-    }
-
-    if (nearest.neighbors) {
-        beta1 <- 0
-        beta2 <- 1
-    } else {
+        
+    if (method == "distance") {
         bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
         difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
         if (any(!is.finite(difmin))) 
             difmin[which(!is.finite(difmin))] <- 0
         beta1 <- difmin/1000
-        beta2 <- 2 * difmin        
+        beta2 <- difmin
+    } else if (method == 'knn') {
+        beta1 <- 0
+        beta2 <- 1
+    } else if (method == 'nen') {
+        if (family=='binomial') {beta2 = sum(weights/(mean(y)*(1-mean(y))) * (y-mean(y))**2)}
+        if (family=='poisson') {beta2 = sum(weights/(mean(y)) * (y-mean(y))**2)}
+        beta1 = beta2/1000
     }
 
-
     opt <- optimize(gwglmnet.cv.f, lower=beta1, upper=beta2, 
-        maximum=FALSE, tol=tol, formula=formula, coords=coords, s=s,
-        gweight=gweight, verbose=verbose, longlat=longlat, data=data, D=D,
-        weights=weights, adapt=adapt, nn=nearest.neighbors, family=family)
+        maximum=FALSE, formula=formula, coords=coords, s=s, family=family,
+        gweight=gweight, verbose=verbose, longlat=longlat, data=data, method=method,
+        weights=weights, tol=tol, adapt=adapt, parallel=parallel, precondition=precondition)
+
     bdwt <- opt$minimum
     res <- bdwt
-
     res
 }

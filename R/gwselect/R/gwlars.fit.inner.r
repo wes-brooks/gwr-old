@@ -1,4 +1,4 @@
-gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode) {
+gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE) {
     colocated = which(coords[,1]==as.numeric(loc[1]) & coords[,2]==as.numeric(loc[2]))
 
     if (is.null(gwr.weights)) {
@@ -17,6 +17,13 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbo
     xx = as.matrix(x[-colocated,])
     yy = as.matrix(y[-colocated])
     
+    if (precondition==TRUE) {
+        s = svd(xx)
+        F = s$u  %*% diag(1/s$d)  %*%  t(s$u)
+        xx = F %*% xx
+        yy = F %*% yy
+    }
+
     m <- ncol(xx)
     n <- nrow(xx)
 
@@ -58,8 +65,8 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbo
         
     } else {
         meanx = rep(0, ncol(x))
-        adapt.weight[k] = rep(1, ncol(x))
-        normx[k] = rep(1, ncol(x))
+        adapt.weight = rep(1, ncol(x))
+        normx = rep(1, ncol(x))
 
         xs=xx
         predx = x[colocated,]
@@ -78,6 +85,5 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbo
     fitted = predict(model, newx=xfit, s=s.optimal, type='fit', mode='lambda')[['fit']]
     resid = yfit - fitted
     
-    if (verbose) { cat(paste(i, "\n", sep='')) }         
     return(list(model=model, cv.error=cv.error, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid))
 }

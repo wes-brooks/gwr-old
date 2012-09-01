@@ -1,13 +1,12 @@
-gwlars.fit.knn = function(x, y, coords, D, s, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE) {
+gwlars.fit.knnparallel = function(x, y, coords, D, s, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE) {
     coords.unique = unique(coords)
     n = dim(coords.unique)[1]
     gwlars.object = list()
-    models = list()
 
     max.weights = rep(1, n)
     total.weight = sum(max.weights * prior.weights)
 
-    for (i in 1:n) {
+    models = foreach(i=1:n, .packages=c('lars'), .errorhandling='remove') %dopar% {
         loc = coords.unique[i,]
         dist = D[i,]
 
@@ -17,8 +16,8 @@ gwlars.fit.knn = function(x, y, coords, D, s, verbose, prior.weights, gweight, t
             prior.weights=prior.weights, target=target, precondition=precondition)
         bandwidth = opt$minimum
 
-        models[[i]] = gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
+        return(gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition))
     }
 
     gwlars.object[['models']] = models

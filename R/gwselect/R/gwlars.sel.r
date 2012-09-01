@@ -1,4 +1,4 @@
-gwlars.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, mode, s, method="dist", verbose=FALSE, longlat=FALSE, RMSE=FALSE, weights=NULL, tol=.Machine$double.eps^0.25, parallel=FALSE) {
+gwlars.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gauss, mode, s, method="dist", verbose=FALSE, longlat=FALSE, RMSE=FALSE, weights=NULL, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -48,16 +48,14 @@ gwlars.sel = function(formula, data=list(), coords, adapt=FALSE, gweight=gwr.Gau
         beta1 <- 0
         beta2 <- 1
     } else if (method == 'nen') {
-        lm.step = lm(formula=formula, data=data, weights=weights)
-        beta2 = sum(weights * lm.step$resid**2)
+        beta2 = sum(weights * (y-mean(y))**2)
         beta1 = beta2/1000
-        print(sum(weights * lm.step$resid**2))
     }
 
     opt <- optimize(gwlars.cv.f, lower=beta1, upper=beta2, 
         maximum=FALSE, formula=formula, coords=coords, s=s, mode=mode,
         gweight=gweight, verbose=verbose, longlat=longlat, data=data, method=method,
-        weights=weights, tol=tol, adapt=adapt, parallel=parallel)
+        weights=weights, tol=tol, adapt=adapt, parallel=parallel, precondition=precondition)
 
     bdwt <- opt$minimum
     res <- bdwt

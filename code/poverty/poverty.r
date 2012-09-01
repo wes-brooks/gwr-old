@@ -46,13 +46,18 @@ pov2 = data.frame(pov2)
 pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)
 pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
 
-#Define which variables we'll use as predictors of poverty:
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
-f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))
-
 #Use the lasso for GWR models of poverty with 2006 data:
 df = pov2[pov2$year==2006,]
 
-weights=rep(1, nrow(pov2))
+#Define which variables we'll use as predictors of poverty:
+#weights=rep(1, nrow(pov2))
+#predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
+#f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))
+#bw = gwlars.sel(formula=f, data=pov2, coords=pov2[,c('x','y')], adapt=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", longlat=TRUE, tol=0.001, weights=weights, parallel=FALSE, verbose=FALSE, precondition=TRUE)
+#bw = 0.0102414680595446 #CV error: 5112.61388815266
 
-bw = gwlars.sel(formula=f, data=pov2, coords=pov2[,c('x','y')], adapt=TRUE, gweight=bisquare, mode='step', s=NULL, method="nen", longlat=TRUE, tol=1, weights=weights, parallel=TRUE, verbose=FALSE)
+#Define which variables we'll use as predictors of poverty:
+weights=rep(1, nrow(pov2))
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
+f = as.formula(paste("pindpov ~ ", paste(predictors, collapse="+"), sep=""))
+bw = gwglmnet.sel(formula=f, data=pov2, family='binomial', weights=weights, coords=pov2[,c('x','y')], adapt=FALSE, gweight=bisquare, s=NULL, method="knn", tol=0.001, longlat=TRUE, parallel=FALSE, verbose=FALSE, precondition=FALSE)
