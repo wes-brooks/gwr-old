@@ -57,7 +57,8 @@ df = pov2[pov2$year==2006,]
 #bw = 0.0102414680595446 #CV error: 5112.61388815266
 
 #Define which variables we'll use as predictors of poverty:
-weights=rep(1, nrow(pov2))
-predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
-f = as.formula(paste("pindpov ~ ", paste(predictors, collapse="+"), sep=""))
-bw = gwglmnet.sel(formula=f, data=pov2, family='binomial', weights=weights, coords=pov2[,c('x','y')], adapt=FALSE, gweight=bisquare, s=NULL, method="knn", tol=0.001, longlat=TRUE, parallel=FALSE, verbose=FALSE, precondition=FALSE)
+#weights=rep(1, nrow(pov2))
+#predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
+#f = as.formula(paste("pindpov ~ ", paste(predictors, collapse="+"), sep=""))
+#bw = gwglmnet.sel(formula=f, data=pov2, family='binomial', weights=weights, coords=pov2[,c('x','y')], adapt=FALSE, gweight=bisquare, s=NULL, method="knn", tol=0.001, longlat=TRUE, parallel=FALSE, verbose=FALSE, precondition=FALSE)
+#bw = 0.007443209
