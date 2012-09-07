@@ -50,7 +50,7 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbo
             return(Inf)
         }
     
-        beta.lm = lm.step$coeff[2:(m+1)]                    # mle except for intercept
+        beta.lm = lm.step$coeff[2:(m+1)]                   # mle except for intercept
         adapt.weight = abs(beta.lm)                        # weights for adaptive lasso
         for (k in 1:dim(x.centered)[2]) {
             if (!is.na(adapt.weight[k])) {
@@ -80,10 +80,13 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbo
     predictions = predict(model, newx=predx, s=ll, type='fit', mode='lambda')[['fit']]
     cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(ll)), nrow=reps, ncol=length(ll))))
     s.optimal = ll[which.min(cv.error)]
+    
+    #Get the coefficients:
+    coef = predict(model, type='coefficients', s=s.optimal, mode='lambda')
 
     #Get the residuals at this choice of s:
     fitted = predict(model, newx=xfit, s=s.optimal, type='fit', mode='lambda')[['fit']]
     resid = yfit - fitted
     
-    return(list(model=model, cv.error=cv.error, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid))
+    return(list(model=model, cv.error=cv.error, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid, coef=coef))
 }

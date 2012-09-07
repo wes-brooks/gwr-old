@@ -5,7 +5,7 @@ gwglmnet.fit.nenparallel = function(x, y, family, coords, D, s, verbose, prior.w
 
     if (verbose) {cat(paste('beta1:', beta1, ', beta2:', beta2, '\n', sep=''))}
 
-    models = foreach(i=1:n, .packages=c('lars'), .errorhandling='remove') %dopar% {
+    models = foreach(i=1:n, .packages=c('glmnet'), .errorhandling='remove') %dopar% {
         loc = coords.unique[i,]
         dist = D[i,]
 

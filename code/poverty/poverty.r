@@ -62,3 +62,20 @@ df = pov2[pov2$year==2006,]
 #f = as.formula(paste("pindpov ~ ", paste(predictors, collapse="+"), sep=""))
 #bw = gwglmnet.sel(formula=f, data=pov2, family='binomial', weights=weights, coords=pov2[,c('x','y')], adapt=FALSE, gweight=bisquare, s=NULL, method="knn", tol=0.001, longlat=TRUE, parallel=FALSE, verbose=FALSE, precondition=FALSE)
 #bw = 0.007443209
+
+#Define which variables we'll use as predictors of poverty:
+weights=rep(1, nrow(pov2))
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
+f = as.formula(paste("pindpov ~ -1 +", paste(predictors, collapse="+"), sep=""))
+bw = 0.007443209
+model = gwglmnet(formula=f, data=pov2, family='binomial', weights=weights, bw=bw, coords=pov2[,c('x','y')], adapt=TRUE, gweight=bisquare, s=NULL, method="knn", tol=0.001, longlat=TRUE, parallel=FALSE, verbose=FALSE, precondition=FALSE)
+
+
+
+#Make a map using polygons provided to the plot function.
+          
+#Put the county names into a form that can be matched.
+county = map_data('county')
+#state = map_data('state')
+
+plot.gwselect(model, var="pex", polygons=county)

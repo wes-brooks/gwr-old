@@ -18,6 +18,10 @@ if (length(na.rows)>0) landcover05 = landcover05[-na.rows,]
 n = nrow(landcover05)
 weights = rep(1, n)
 
-bw = gwglmnet.nen.sel(Cover1987~Own+Res+PolyNm+PolyPr+MxPolyPr+TotOwn+AvParcel, data=landcover05, coords=landcover05[,c('X','Y')], weights=weights, gweight=bisquare, s=NULL, tol=10, type='pearson', family='binomial', parallel=TRUE, adapt=TRUE)
+bw = gwglmnet.sel(Cover1987~Own+Res+PolyNm+PolyPr+MxPolyPr+TotOwn+AvParcel-1, data=landcover05, coords=landcover05[,c('X','Y')], weights=weights, gweight=bisquare, s=NULL, tol=1, method='nen', family='binomial', parallel=TRUE, adapt=TRUE, longlat=FALSE, precondition=FALSE)
 
-out=gwglmnet.nen(Cover1987~Own+Res+PolyNm+PolyPr+MxPolyPr+TotOwn+AvParcel, data=landcover05, coords=landcover05[,c('X','Y')], weights=weights, gweight=bisquare, bw=bw, s=NULL, tol=10, type='pearson', family='binomial', parallel=TRUE, adapt=TRUE)
+
+#bw = gwglmnet(formula=f, data=pov2, family='binomial', weights=weights, bw=bw, coords=pov2[,c('x','y')], adapt=FALSE, gweight=bisquare, s=NULL, method="knn", tol=0.001, longlat=TRUE, parallel=FALSE, verbose=FALSE, precondition=FALSE)
+
+#out=gwglmnet.nen(Cover1987~Own+Res+PolyNm+PolyPr+MxPolyPr+TotOwn+AvParcel, data=landcover05, coords=landcover05[,c('X','Y')], weights=weights, gweight=bisquare, bw=bw, s=NULL, tol=10, type='pearson', family='binomial', parallel=TRUE, adapt=TRUE)
+

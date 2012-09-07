@@ -78,5 +78,15 @@ gwglmnet <- function(formula, data, family, weights=NULL, coords, gweight, bw=NU
     res[['data']] = data
     res[['response']] = as.character(formula[[2]])
     res[['family']] = family
+    res[['weights']] = weights
+    res[['coords']] = coords
+    res[['longlat']] = longlat
+    res[['gweight']] = gweight
+    res[['bw']] = bw
+    res[['method']] = method
+    res[['adapt']] = adapt
+    res[['precondition']] = precondition
+    res[['s']] = s
+
     res
 }

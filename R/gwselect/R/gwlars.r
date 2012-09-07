@@ -37,6 +37,10 @@ gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, verbos
     y <- model.extract(mf, "response")
     x <- model.matrix(mt, mf)
 
+    #Pull out the relevant data
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]
+    predictor.names = attr(terms(formula, data=data), 'term.labels')
+
     #Get the matrices of distances and weights
     n = dim(coords)[1]
     if (longlat) {
@@ -77,5 +81,15 @@ gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, verbos
 
     res[['data']] = data
     res[['response']] = as.character(formula[[2]])
+    res[['coords']] = coords
+    res[['weights']] = weights
+    res[['longlat']] = longlat
+    res[['gweight']] = gweight
+    res[['bw']] = bw
+    res[['method']] = method
+    res[['adapt']] = adapt
+    res[['precondition']] = precondition
+    res[['s']] = s
+
     res
 }

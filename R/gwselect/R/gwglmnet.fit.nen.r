@@ -4,6 +4,8 @@ gwglmnet.fit.nen = function(x, y, family, coords, D, s, verbose, prior.weights, 
     gwglmnet.object = list()
     models = list()
 
+    if (verbose) {cat(paste('beta1:', beta1, ', beta2:', beta2, '\n', sep=''))}
+
     for (i in 1:n) {
         loc = coords.unique[i,]
         dist = D[i,]
@@ -14,9 +16,9 @@ gwglmnet.fit.nen = function(x, y, family, coords, D, s, verbose, prior.weights, 
             prior.weights=prior.weights, target=target, precondition=precondition)
         bandwidth = opt$minimum
 
-        models[[i]] = gwlars.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition)
+        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition)
 
-        cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
+        cat(paste("For i=", i, ", target:", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
     }
 
     gwglmnet.object[['models']] = models

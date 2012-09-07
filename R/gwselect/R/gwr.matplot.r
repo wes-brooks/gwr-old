@@ -57,8 +57,6 @@ gwr.matplot <- function (x, cs1 = c(0, 1), cs2 = c(0, 1), cs3 = c(0, 1), extreme
                   extremes <- c("black", "white")
                 cellcolors <- extremes[(x > 0) + 1]
             }
-
-
             else cellcolors <- color.scale(x, cs1, cs2, cs3, extremes=extremes, na.color=na.color, color.spec=color.spec, xrange=xrange)
         }
         if (is.na(vcol)) 

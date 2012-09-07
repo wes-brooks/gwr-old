@@ -35,7 +35,6 @@ gwglmnet.sel = function(formula, data=list(), family, weights=NULL, coords, adap
         stop("negative weights")
     y <- model.extract(mf, "response")
     x <- model.matrix(mt, mf)
-
         
     if (method == "distance") {
         bbox <- cbind(range(coords[, 1]), range(coords[, 2]))

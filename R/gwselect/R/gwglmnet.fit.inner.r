@@ -42,7 +42,7 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, dist=NULL, s=N
         
         glm.step = try(glm(yy~xs, weights=loow, family=family))  # mle fit on standardized
     
-        if(class(glm.step) == "try-error") { 
+        if("try-error" %in% class(glm.step)) { 
             cat(paste("Couldn't make a model for finding the SSR at location ", i, ", bandwidth ", bw, "\n", sep=""))
             return(Inf)
         }
@@ -57,29 +57,29 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, dist=NULL, s=N
                 adapt.weight[k] = 0 #This should allow the lambda-finding step to work.
             }
         }        
-        predx = (x[colocated,] - meanx) * adapt.weight / normx
+        predx = matrix((x[colocated,] - meanx) * adapt.weight / normx, nrow=reps, ncol=ncol(x))
     } else {
         meanx = rep(0, ncol(x))
         adapt.weight = rep(1, ncol(x))
         normx = rep(1, ncol(x))
 
         xs=xx
-        predx = x[colocated,]
+        predx = matrix(x[colocated,], nrow=reps, ncol=ncol(x)) 
     }
 
-    xfit = xs
-    yfit = yy
+    xfit = data.matrix(xs)
+    yfit = data.matrix(yy)
 
     if (family=='binomial' && (abs(sum(yfit*loow)-sum(w))<1e-4 || sum(yfit*loow)<1e-4)) {
         cat(paste("Abort. i=", i, ", weighted sum=", sum(yfit*loow), ", sum of weights=", sum(loow), "\n", sep=''))
         return(list(model=NULL, cv.error=0, s=Inf, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=Inf))
     } else if (family=='binomial') {
-        model = glmnet(x=xfit, y=cbind(1-yfit, yfit), family=family, weights=loow, lambda=s)
+        model = glmnet(x=xfit, y=cbind(1-yfit,yfit), family=family, weights=loow, lambda=s)
         predictions = predict(model, newx=predx, type='response')
         cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(model[['lambda']])), nrow=reps, ncol=length(model[['lambda']]))))
         s.optimal = model[['lambda']][which.min(cv.error)]
         V = function(mu) {mu*(1-mu)}
-    } else {
+    } else if (family=='poisson') {
         model = glmnet(x=xfit, y=yfit, family=family, weights=loow, lambda=s)
         predictions = predict(model, newx=predx, type='response')
         cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(model[['lambda']])), nrow=reps, ncol=length(model[['lambda']]))))
@@ -87,9 +87,15 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, dist=NULL, s=N
         V = function(mu) {mu}
     }
 
+    #Get the coefficients:
+    coef = predict(model, type='coefficients', s=s.optimal, mode='lambda')
+
+    coef[2:length(coef)] = coef[2:length(coef)] * adapt.weight/normx
+    coef[1] = coef[1] - sum(coef[2:length(coef)] * meanx)
+
     #Get the residuals at this choice of s:
     fitted = predict(model, newx=xfit, s=s.optimal, type='response')
-    resid = sqrt(w[colocated]) * (yfit - fitted) / sqrt(V(fitted))    
+    resid = sqrt(w[-colocated]) * (yfit - fitted) / sqrt(V(fitted))    
 
-    return(list(model=model, cv.error=cv.error, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid))
+    return(list(model=model, cv.error=cv.error, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid, coef=coef))
 }
