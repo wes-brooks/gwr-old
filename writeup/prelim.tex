@@ -1,0 +1,85 @@
+\documentclass[10pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage{natbib}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{GW-SELECT}
+\author{Wesley Brooks}
+\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+
+
+
+
+\section{Introduction}
+	Varying-coefficient models are a technique of local regression used in geostatistical analysis when one suspects that the effect of some covariate is not constant across the domain of a model. One method of fitting a varying-coefficient model is Geographically Weighted Regression (GWR) \cite{Fotheringham:2002}. In GWR, a local regression model is fit at each point of interest (often, the points of interest are the locations where the data was collected). The technique of fitting the local regression model is to give a weight between zero and one to each observation based on its geographical distance from the point of interest, then do a weighted regression analysis to get the local model.\\
+
+	This paper discusses ongoing work in the area of GWR, focusing on an effort to establish a method of variable selection for GWR models. Variable selection can mean several things:\\
+
+	\begin{itemize}
+		\item What are the predictor variables that have no effect on the measured output, anywhere in the model's domain?\\
+		\item Which coefficients are constant throughout the model's domain?\\
+		\item Which coefficients are zero in some regions but non-zero in others?\\
+	\end{itemize}
+
+	The goal of this project is to develop a method that can answer these questions and work out the conditions under which the answers are reliable.\\
+
+\section{Data}
+	\subsection{Observational data}
+		Observational data comes from four sources:\\
+		
+		\begin{itemize}
+			\item Poverty data: \\
+			\item Soybean aphid data: \\
+			\item Mountain Pine Beetle Data: \\
+			\item Land-cover data: \\
+		\end{itemize}
+  
+	\subsection{Simulated data}
+		Simulation studies are used to validate the method of analysis.\\
+	
+
+\section{Methods}
+	The basic operation of GWR is to build a regression model at each of a set of pre-specified locations. At each model location, all of the observations in the data set are weighted based on their distance from the model location (the weights are uniquely specified by the combination of a kernel function and a bandwidth). The weighted observations are then used to build a regression model that is only meaningful at that location. The regression model can be quite generic - for gaussian data something like \verb!R!'s \verb!lm! function is used, and for the binomial case, something like the \verb!glm! function is used. Prior weights can be specified in case over-dispersion (or heteroskedasticity) is expected. This came into play with the poverty data: each county's entry was weighted by its population.\\
+
+	\subsection{Kernels}
+		At this time there are two kernel functions working: the bisquare kernel:
+		\[
+			\text{W}(\text{dist, bw}) = (1-(\frac{\text{dist}}{\text{bw}})^2)^2
+		\]
+
+		...And the gaussian kernel:
+		\[
+			\text{W}(\text{dist, bw}) = \phi(\frac{\text{dist}}{\text{bw}})
+		\]
+
+
+	\subsection{Bandwidth selection}
+		The bandwidth is selected by minimizing the sum of absolute cross-validation (CV) errors from the model-fitting. Each of the unique observation locations is used as a model location, and the observations from that point are reserved as the test set. The model is built over the other data and used to predict the test set. The sum of the absolute errors from this prediction step are added to the total. The \verb!optimize! function in R uses a golden section search to find the minimum of the total absolute CV error.\\
+
+	\subsection{Gaussian case (linear model)}
+		test
+
+	\subsection{Generalized linear model}
+		test
+
+
+\section{Variable selection}
+
+
+\bibliographystyle{plain}
+\bibliography{../references/gwr}
+
+\end{document}  

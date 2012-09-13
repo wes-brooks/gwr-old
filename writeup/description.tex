@@ -6,9 +6,11 @@
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage{epstopdf}
+\usepackage{natbib}
+
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 
-\title{Describing the GWR-GLMNET process}
+\title{GW-SELECT}
 \author{Wesley Brooks}
 \date{}                                           % Activate to display a given date or no date
 
@@ -21,8 +23,8 @@
 
 
 
-\section{Preliminaries}
-This document describes the method that I've been using to produce Geographically Weighted Regression (GWR) models that use the LASSO for variable selection and shrinkage. It covers the cases of gaussian and binomial data.
+\section{Introduction}
+Varying-coefficient models are a technique in spatial statistics that can be useful when one suspects that the effect of some covariate is not constant across the domain of a model. One method if fitting a varying-coefficient model is Geographically Weighted Regression (GWR) \cite{Fotheringham:2002}. In GWR, the 
 
 \section{Data}
 Data should include the location of each observation in terms of an X (longitude) and Y (latitude) variable. If they correspond to actual longitude and latitude, then it is possible to call the functions with the option \verb!longlat=TRUE!, which will correct for the the Earth's curvature.\\
@@ -68,5 +70,7 @@ Remember, the tuning parameters are different between the gaussian and binomial 
 
 \subsection{Generalized linear model case}
 
+\bibliographystyle{plain}
+\bibliography{../references/gwr}
 
 \end{document}  
