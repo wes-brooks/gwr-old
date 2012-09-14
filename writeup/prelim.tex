@@ -5,10 +5,14 @@
 \usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}
 \usepackage{amssymb}
+\usepackage{amsmath}
 \usepackage{epstopdf}
 \usepackage{natbib}
 
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
 
 \title{GW-SELECT}
 \author{Wesley Brooks}
@@ -29,54 +33,91 @@
 	This paper discusses ongoing work in the area of GWR, focusing on an effort to establish a method of variable selection for GWR models. Variable selection can mean several things:\\
 
 	\begin{itemize}
-		\item What are the predictor variables that have no effect on the measured output, anywhere in the model's domain?\\
-		\item Which coefficients are constant throughout the model's domain?\\
-		\item Which coefficients are zero in some regions but non-zero in others?\\
+		\item What are the predictor variables that have no effect on the measured output, anywhere in the model's domain?
+		\item Which coefficients are constant throughout the model's domain?
+		\item Which coefficients are zero in some regions but non-zero in others?
 	\end{itemize}
 
-	The goal of this project is to develop a method that can answer these questions and work out the conditions under which the answers are reliable.\\
+	The goal of this project is to develop a method that can answer these questions and work out the conditions under which the answers are reliable. Variable selection is via the Adaptive-LASSO, applied independently to each local model. The LASSO for GWR models was introduced in \cite{Wheeler:2009}. That paper describes a process for model fitting that is similar to our process in the case of Gaussian data, but does not cover the Generalized Linear Model (GLM) case for non-Gaussian data that nevertheless follows an exponential-family distribution. Justification for the process in \cite{Wheeler:2009} is by simulation - the paper does not present theoretical proof of consistency of its estimators nor does it prove an oracle property for its variable selection.\\
 
 \section{Data}
 	\subsection{Observational data}
 		Observational data comes from four sources:\\
 		
-		\begin{itemize}
-			\item Poverty data: \\
-			\item Soybean aphid data: \\
-			\item Mountain Pine Beetle Data: \\
-			\item Land-cover data: \\
-		\end{itemize}
+		\begin{description}
+			\item[Poverty data] From the U.S. Census Bureau, this data lists the proportion of families and individuals living in poverty at the county level for the midwestern states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. County populations and other social-economic variables are tracked as well. The goal of analysis with this data set is to estimate the effect that socio-economic variables have on the poverty rate]
+			\item[Soybean aphid data] Counts of aphids on soybean plats from 2003-2011, including the location of each measurement and an estimate of the crops grown nearby.
+			\item[Mountain Pine Beetle Data] Collected in Canada's Cascade Mountains, this includes annual measurements from 1972-1986 of the intensity of Pine Beetle infestation at each location, along with other landscape and climatic covariates.
+			\item[Land-cover data] The land use (in 1905, 1915, and 1986) of a region in northern Wisconsin's Chequamegon-Nicolet National Forest is compiled at the level of quarter sections of the Public Land Survey System (PLSS). Some predictor variables, calculated from land use statistics, are to be used in a model that describes the primary vegetation of each quarter section.
+		\end{description}
   
 	\subsection{Simulated data}
 		Simulation studies are used to validate the method of analysis.\\
 	
 
 \section{Methods}
-	The basic operation of GWR is to build a regression model at each of a set of pre-specified locations. At each model location, all of the observations in the data set are weighted based on their distance from the model location (the weights are uniquely specified by the combination of a kernel function and a bandwidth). The weighted observations are then used to build a regression model that is only meaningful at that location. The regression model can be quite generic - for gaussian data something like \verb!R!'s \verb!lm! function is used, and for the binomial case, something like the \verb!glm! function is used. Prior weights can be specified in case over-dispersion (or heteroskedasticity) is expected. This came into play with the poverty data: each county's entry was weighted by its population.\\
-
+	The basic operation of GWR is to build a regression model at each of a set of pre-specified locations. At each model location, all of the observations in the data set are weighted based on their distance from the model location (the weights are uniquely specified by the combination of a kernel function and a bandwidth). The weighted observations are then used to build a regression model for that location.\\
+	
 	\subsection{Kernels}
-		At this time there are two kernel functions working: the bisquare kernel:
+		The kernel for geographic weighting could in principle be any function that applies a positive weight to each observation in the data set. This analysis uses the bisquare kernel throughout, with weights based on distance (without regard for North-South versus East-West distances):
 		\[
-			\text{W}(\text{dist, bw}) = (1-(\frac{\text{dist}}{\text{bw}})^2)^2
+			\text{W}(\text{dist, bw}) = \begin{cases} (1-(\frac{\text{dist}}{\text{bw}})^2)^2, & \mbox{if dist} < \mbox{bw} \\
+			0, & \mbox{if dist} \ge \mbox{bw} \end{cases}
 		\]
-
-		...And the gaussian kernel:
+		
+		The bisquare kernel has the benefit of giving zero weight to observations beyond the bandwidth, so that each local model depends only on the data from a local neighborhood and not at all on observations from outside that neighborhood.\\
+		
+		Picking the bandwidth of the kernel is one crucial part of GWR. We currently have three methods to choose the bandwidth:
+		\begin{description}
+			\item[Global] the bandwidth is the same distance for all local models.
+			\item[$k$-nearest-neighbors] for a given proportion $q$ and $n$ total observations, the bandwidth of each local model is set so that the sum of the geographic weights is $q \times n$.
+			\item[Effective nearest neighbors] an adaptive bandwidth selection method, in which the desired sum-of-squared-residuals is pre-specified, and the bandwidth of each local model is adjusted to meet this criterion. The goal is to broaden the bandwidth in areas where the model does not change much, and to narrow it in areas where there is a steep gradient to the coefficient surface. Pearson residuals are used to find the effective nearest neighbors bandwidth for a GW-GLM.
+		\end{description}
+		
+		Each method requires a tuning parameter: this is the sum-of-squared-residuals for effective nearest neighbors, $q$ for k-nearest neighbors, and the bandwidth itself in the case of a global bandwidth. The local tuning parameter is selected by minimizing the sum of absolute cross-validation error at the location of interest This is a sum (and therefor not quite the same as leave-one-out cross-validation) because we will sometimes have more than one observation per location (e.g., each of the six decennial censuses in the \verb~poverty~ dataset gives us an observation at each county.)
+		
+		
+	\subsection{Model fitting}
+		\subsubsection{Gaussian data}
+		Fitting a GWR model to Gaussian data is done by minimizing the cross-validation criterion:
 		\[
-			\text{W}(\text{dist, bw}) = \phi(\frac{\text{dist}}{\text{bw}})
+			\mbox{CV error} = \sum_{i = 1}^n \left( \sum_{k=1}^{m_i} |y_{i,k}-\tilde{y}_{i,k}(\hat{\lambda}_i)| \right)
+		\]		
+		\[
+			\hat{\lambda}_i = \argmin_{\lambda_i} \sum_{k=1}^{m_i} |y_{i,k}-\tilde{y}_{i,k}(\lambda_i)|
+		\]		
+
+		where $m_i$ is the number of observations made at location $i$, and $\tilde{y}_{i,k}(\lambda_i)$ is the predicted value of the $k$th observation at location $i$ from the local model that was fit by leaving out all observations from location $i$:
+		
+		\[
+			\tilde{y}_{i,k}(\lambda_i) = \sum_{j \ne i} w_{i,j}(\hat{bw})(y_j - x_j \hat{\beta}(\lambda))^2  +  \sum_{l=1}^p \lambda_{i,l} \hat{\beta}_l(\lambda_i)
 		\]
-
-
-	\subsection{Bandwidth selection}
-		The bandwidth is selected by minimizing the sum of absolute cross-validation (CV) errors from the model-fitting. Each of the unique observation locations is used as a model location, and the observations from that point are reserved as the test set. The model is built over the other data and used to predict the test set. The sum of the absolute errors from this prediction step are added to the total. The \verb!optimize! function in R uses a golden section search to find the minimum of the total absolute CV error.\\
-
-	\subsection{Gaussian case (linear model)}
-		test
-
-	\subsection{Generalized linear model}
-		test
-
-
-\section{Variable selection}
+		Variable selection uses the Adaptive-LASSO, where the adaptive weights are the Ordinary Least Squares (OLS) estimates of the model coefficients:
+		\[
+			\lambda_{i,l} = \frac{\lambda_i}{\beta_{OLS, l}}
+		\]
+		\[
+			\hat{\beta}(\lambda_i) = \argmin_\beta \left( \sum_{j \ne i} w_{i,j}(\hat{bw})(y_j - x_j \beta)^2  +  \sum_{l=1}^p \lambda_{i,l} \beta_l \right)
+		\]
+		and		
+		\[
+			w_{i,j}(bw) =  \begin{cases} (1-(\frac{D(x_i,x_j)}{bw})^2)^2, & \mbox{if } D(x_i,x_j) < bw \\
+			0, & \mbox{if }D(x_i,x_j) \ge bw \end{cases}
+		\]
+		The function D is a distance:
+		\[
+			D(x_i,x_j) = \mbox{Distance from location of observation} \: i \: \mbox{to location of observation} \: j
+		\]
+		
+		\subsubsection{Non-Gaussian data} A GWR model fit to non-Gaussian data from an exponential-family distribution is a geographically-weighted GLM (GW-GLM). Fitting a GW-GLM proceeds my maximum likelihood, rather than least squares. Again, the objective is to minimize a cross-validation criterion\footnote{I suspect that I am wrong here - minimizing each local model's CV error is probably overfitting because it is concerned only with the value at the model's central location. Instead, a BIC or GCV criterion that maximizes a regularized likelihood over the (weighted) data used in model-fitting will probably be a better choice. It would also allow selection of the Adaptive-LASSO tuning parameter to proceed at locations other than where the data was originally measured (which is not possible under the approach outlined here).} that is calculated by summing the CV error at the location of each observation. The example is for data following a binomial distribution\footnote{I've also used Poisson-distributed data (counts of aphids on the soybean plants), and the different distribution changes the likelihood function but not the schematic process of model-fitting.}.
+		\[
+			\ell(\beta) = \sum_i y_i x_i \beta - \log{(1+\exp{x_i \beta})} 
+		\]
+		
+		\[
+			\tilde{y}_{i,k}(\lambda_i) = \argmax \beta \left( \sum_{j \ne i} (y_j \beta^T x_j - \log(1+\exp{\beta^T x_j}))  -  \sum_{l=1}^p \lambda_{i,l} \beta_l \right)
+		\]
+	
 
 
 \bibliographystyle{plain}

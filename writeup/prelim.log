@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  13 SEP 2012 18:56
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  14 SEP 2012 18:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -236,23 +236,23 @@ LaTeX Info: Redefining \cite on input line 694.
 (./prelim.aux)
 \openout1 = `prelim.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Try loading font information for U+msa on input line 17.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
+LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Try loading font information for U+msa on input line 21.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 17.
+LaTeX Font Info:    Try loading font information for U+msb on input line 21.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
@@ -292,17 +292,7 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 27--28
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 29--30
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 32--33
+Underfull \hbox (badness 10000) in paragraph at lines 31--32
 
  []
 
@@ -312,22 +302,15 @@ Underfull \hbox (badness 10000) in paragraph at lines 33--34
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 34--35
+Package natbib Warning: Citation `Wheeler:2009' on page 1 undefined on input li
+ne 41.
 
- []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 37--38
-
- []
+Package natbib Warning: Citation `Wheeler:2009' on page 1 undefined on input li
+ne 41.
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 41--42
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 44--45
 
  []
 
@@ -336,39 +319,33 @@ Underfull \hbox (badness 10000) in paragraph at lines 45--46
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 46--47
-
- []
-
 [1]
-Underfull \hbox (badness 10000) in paragraph at lines 47--48
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 51--52
-
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 55--56
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 70--71
+Underfull \hbox (badness 10000) in paragraph at lines 59--60
 
  []
 
-(./prelim.bbl) [2] (./prelim.aux) ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 68--69
+
+ []
+
+[2] [3] (./prelim.bbl)
+
+Package natbib Warning: There were undefined citations.
+
+[4] (./prelim.aux) ) 
 Here is how much of TeX's memory you used:
- 3188 strings out of 494004
- 40993 string characters out of 3150890
- 101890 words of memory out of 3000000
- 6254 multiletter control sequences out of 15000+200000
+ 3194 strings out of 494004
+ 41037 string characters out of 3150890
+ 104925 words of memory out of 3000000
+ 6260 multiletter control sequences out of 15000+200000
  9562 words of font info for 38 fonts, out of 3000000 for 9000
  1305 hyphenation exceptions out of 8191
- 42i,5n,32p,841b,216s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,10n,32p,1206b,241s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on prelim.pdf (2 pages).
+Output written on prelim.pdf (4 pages).
