@@ -14,6 +14,7 @@
 \DeclareMathOperator*{\argmax}{\arg\!\max}
 \DeclareMathOperator*{\bw}{\mbox{bw}}
 \newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\E}{\mathop{\mathbb E}}
 
 
 \title{GW-SELECT}
@@ -65,10 +66,21 @@
 	
 	The data are compiled into matrices $X_{n \times p} = \left( \vect{X}(s_1), \dots, \vect{X}(s_n) \right)^T$ and $Y_{n \times 1} = \left(Y(s_1), \dots, Y(s_n) \right)^T$\\
 		
-	Assume that at each location $s$, the response $Y(s)$ is related to the predictor variables by a linear model with coefficients $\vect{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
+	Assume that at each location $s$, the response $Y(s)$ is related to the predictor variables by a model:\\
+	% model with coefficients $\vect{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
 	
 	\[
+		Y(s_i) = f \left(\vect{X}(s_i) \right) %
+	\]
+	
+	Two cases are considered here: first, $f(\cdot)$ may be a linear model model with coefficients $\vect{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
+	\[
 		Y(s_i) = \vect{X}(s_i)^T \vect{\beta}(s_i) + \epsilon(s_i) \text{, where } \epsilon_i \sim N\left( 0, \sigma_i^2 \right) \text{ for } i=1, \dots, n
+	\]
+	
+	Alternatively, $f(\cdot)$ may be a Generalized Linear Model, with ling function $g(\cdot)$ and again with coefficients $\vect{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
+	\[
+		\E \left( Y(s_i) \right) = g(\vect{X}(s_i)^T \vect{\beta}(s_i))
 	\]
 	
 	Since the response variable is univariate, observed values are denoted, e.g., $y(s_i)$, while the vector of observed predictors at location $s_i$ is denoted $\vect{x}(s_i)$. The $k^{\text{th}}$ element of $\vect{x}(s_i)$ is $x_k(s_i)$. The Adaptive-LASSO is used for variable selection with a different tuning parameter selected for each local model, so the Adaptive-LASSO tuning parameter at location $s_i$ is denoted $\lambda(s_i)$.\\ 
@@ -93,7 +105,7 @@
 			\item[Effective nearest neighbors] an adaptive bandwidth selection method, in which the desired sum-of-squared-residuals is pre-specified, and the bandwidth of each local model is adjusted to meet this criterion. The goal is to broaden the bandwidth in areas where the model does not change much, and to narrow it in areas where there is a steep gradient to the coefficient surface. Pearson residuals are used to find the effective nearest neighbors bandwidth for a GW-GLM.
 		\end{description}
 		
-		Each method requires a tuning parameter: this is the sum-of-squared-residuals for effective nearest neighbors, $q$ for k-nearest neighbors, and the bandwidth itself in the case of a global bandwidth. The local tuning parameter is selected by minimizing the sum of absolute cross-validation error at the location of interest This is a sum (and therefor not quite the same as leave-one-out cross-validation) because we will sometimes have more than one observation per location (e.g., each of the six decennial censuses in the \verb~poverty~ dataset gives us an observation at each county.)
+		Each method requires a tuning parameter: this is the sum-of-squared-residuals for effective nearest neighbors, $q$ for k-nearest neighbors, and the bandwidth itself in the case of a global bandwidth. The local tuning parameter is selected by minimizing the sum of absolute cross-validation error at the location of interest This is a sum (and therefor not quite the same as leave-one-out cross-validation) because we will sometimes have more than one observation per location (e.g., each of the six decennial censuses in the \verb~poverty~ dataset gives us an observation at each county.)\\
 		
 		
 	\subsection{Model fitting}
@@ -129,7 +141,7 @@
 		
 		Where $D(s_i,s_j)$ is the distance from location of observation $i$ to location of observation $j$\\
 		
-		\subsubsection{Non-Gaussian data} A GWR model fit to non-Gaussian data from an exponential-family distribution is a geographically-weighted GLM (GW-GLM). Fitting a GW-GLM proceeds my maximum likelihood, rather than least squares. Again, the objective is to minimize a cross-validation criterion\footnote{I suspect that I am wrong here - minimizing each local model's CV error is probably overfitting because it is concerned only with the value at the model's central location. Instead, a BIC or GCV criterion that maximizes a regularized likelihood over the (weighted) data used in model-fitting will probably be a better choice. It would also allow selection of the Adaptive-LASSO tuning parameter to proceed at locations other than where the data was originally measured (which is not possible under the approach outlined here).} that is calculated by summing the CV error at the location of each observation. Variable selection is again by the Adaptive-LASSO with the adaptive weights coming from the unpenalized GLM. The equations below are for data following a binomial distribution\footnote{I've also used Poisson-distributed data (counts of aphids on the soybean plants), and the different distribution changes the likelihood function but not the schematic process of model-fitting.}.	
+		\subsubsection{Non-Gaussian data} A GWR model fit to non-Gaussian data from an exponential-family distribution is a geographically-weighted GLM (GW-GLM). Fitting a GW-GLM proceeds my maximum likelihood, rather than least squares. Again, the objective is to minimize a cross-validation criterion\footnote{I suspect that I am wrong here - minimizing each local model's CV error is probably overfitting because it is concerned only with the value at the model's central location. Instead, a BIC or GCV criterion that maximizes a regularized likelihood over the (weighted) data used in model-fitting will probably be a better choice. It would also allow selection of the Adaptive-LASSO tuning parameter to proceed at locations other than where the data was originally measured (which is not possible under the approach outlined here).} that is calculated by summing the CV error at the location of each observation. Variable selection is again by the Adaptive-LASSO with the adaptive weights coming from the unpenalized GLM. The equations below are for data following a binomial distribution\footnote{I've also used Poisson-distributed data (counts of aphids on the soybean plants), and the different distribution changes the likelihood function but not the schematic process of model-fitting.}.\\
 		%\begin{gather*}
 		\[
 			%\{ \hat{\vect{\lambda}}, \: \hat{\bw} \} = \argmin_{\vect{\lambda}, \text{bw}} \left( \mbox{CV error} \right)  = \argmin_{\vect{\lambda}, \text{bw}} \left( \sum_{i = 1}^n \left( \sum_{k=1}^{m_i} |y_{ik}-\tilde{y}_{(i)k}(\lambda_i, \bw)| \right) \right)\\

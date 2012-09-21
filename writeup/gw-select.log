@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  20 SEP 2012 19:43
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  20 SEP 2012 20:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -236,24 +236,24 @@ LaTeX Info: Redefining \cite on input line 694.
 (./gw-select.aux)
 \openout1 = `gw-select.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
-LaTeX Font Info:    ... okay on input line 23.
-LaTeX Font Info:    Try loading font information for U+msa on input line 23.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
+LaTeX Font Info:    ... okay on input line 24.
+LaTeX Font Info:    Try loading font information for U+msa on input line 24.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 23.
+LaTeX Font Info:    Try loading font information for U+msb on input line 24.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
@@ -294,97 +294,114 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 
 
 Package natbib Warning: Citation `Fotheringham:2002' on page 1 undefined on inp
-ut line 33.
+ut line 34.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 33--34
+Underfull \hbox (badness 10000) in paragraph at lines 34--35
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 35--36
+Underfull \hbox (badness 10000) in paragraph at lines 36--37
 
  []
 
 
 Package natbib Warning: Citation `Wheeler:2009' on page 1 undefined on input li
-ne 43.
+ne 44.
 
 
 Package natbib Warning: Citation `Wheeler:2009' on page 1 undefined on input li
-ne 43.
+ne 44.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 43--44
+Underfull \hbox (badness 10000) in paragraph at lines 44--45
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 47--48
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
 
  []
 
 [1]
-Underfull \hbox (badness 10000) in paragraph at lines 57--58
+Underfull \hbox (badness 10000) in paragraph at lines 58--59
 
  []
 
 
-Overfull \hbox (14.57942pt too wide) in paragraph at lines 64--65
+Overfull \hbox (14.57942pt too wide) in paragraph at lines 65--66
 \OT1/cmr/m/n/10 (re-sponse vari-able) at $\OML/cmm/m/it/10 n$ \OT1/cmr/m/n/10 u
 nique lo-ca-tions $\OML/cmm/m/it/10 s[]; [] ; s[]$\OT1/cmr/m/n/10 . The ob-serv
 ed data are $[]$.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 64--65
+Underfull \hbox (badness 10000) in paragraph at lines 65--66
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 66--67
+Underfull \hbox (badness 10000) in paragraph at lines 67--68
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--69
+Underfull \hbox (badness 10000) in paragraph at lines 69--71
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 74--75
+Underfull \hbox (badness 10000) in paragraph at lines 76--77
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 78--79
+Underfull \hbox (badness 10000) in paragraph at lines 81--82
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--87
 
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 87--88
+Underfull \hbox (badness 10000) in paragraph at lines 90--91
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--100
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 130--131
+Underfull \hbox (badness 10000) in paragraph at lines 142--143
 
  []
 
 
-Overfull \hbox (37.55232pt too wide) in paragraph at lines 154--154
+Underfull \hbox (badness 10000) in paragraph at lines 144--146
+
+ []
+
+
+Overfull \hbox (37.55232pt too wide) in paragraph at lines 166--166
 [] 
  []
 
 
-Overfull \hbox (7.55232pt too wide) in alignment at lines 154--154
+Overfull \hbox (7.55232pt too wide) in alignment at lines 166--166
 [] [] 
  []
 
-
-Underfull \vbox (badness 1629) has occurred while \output is active []
-
- [4]
+[4]
 No file gw-select.bbl.
 
 Package natbib Warning: There were undefined citations.
@@ -393,10 +410,10 @@ Package natbib Warning: There were undefined citations.
 Here is how much of TeX's memory you used:
  3208 strings out of 494004
  41153 string characters out of 3150890
- 108928 words of memory out of 3000000
+ 109935 words of memory out of 3000000
  6268 multiletter control sequences out of 15000+200000
  12011 words of font info for 46 fonts, out of 3000000 for 9000
  1305 hyphenation exceptions out of 8191
- 42i,16n,31p,1327b,215s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,16n,31p,1329b,215s stack positions out of 5000i,500n,10000p,200000b,50000s
 
 Output written on gw-select.pdf (5 pages).
