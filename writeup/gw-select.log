@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  17 SEP 2012 20:34
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  20 SEP 2012 19:43
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -330,33 +330,73 @@ Underfull \hbox (badness 10000) in paragraph at lines 57--58
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 61--62
+Overfull \hbox (14.57942pt too wide) in paragraph at lines 64--65
+\OT1/cmr/m/n/10 (re-sponse vari-able) at $\OML/cmm/m/it/10 n$ \OT1/cmr/m/n/10 u
+nique lo-ca-tions $\OML/cmm/m/it/10 s[]; [] ; s[]$\OT1/cmr/m/n/10 . The ob-serv
+ed data are $[]$.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 64--65
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 70--71
+Underfull \hbox (badness 10000) in paragraph at lines 66--67
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 68--69
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 74--75
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 78--79
 
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 105--106
+Underfull \hbox (badness 10000) in paragraph at lines 87--88
 
  []
 
 [3]
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
+
+ []
+
+
+Overfull \hbox (37.55232pt too wide) in paragraph at lines 154--154
+[] 
+ []
+
+
+Overfull \hbox (7.55232pt too wide) in alignment at lines 154--154
+[] [] 
+ []
+
+
+Underfull \vbox (badness 1629) has occurred while \output is active []
+
+ [4]
 No file gw-select.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-[4] (./gw-select.aux) ) 
+[5] (./gw-select.aux) ) 
 Here is how much of TeX's memory you used:
  3208 strings out of 494004
  41153 string characters out of 3150890
- 106928 words of memory out of 3000000
+ 108928 words of memory out of 3000000
  6268 multiletter control sequences out of 15000+200000
  12011 words of font info for 46 fonts, out of 3000000 for 9000
  1305 hyphenation exceptions out of 8191
- 42i,16n,31p,1327b,241s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,16n,31p,1327b,215s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gw-select.pdf (4 pages).
+Output written on gw-select.pdf (5 pages).
