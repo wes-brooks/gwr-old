@@ -1,0 +1,2074 @@
+sapply(a, function(x) {min(x)})
+a = list(a=c(1,2,3,4,5),b=c(3,4,5,6,7))
+sapply(a, function(x) {min(x)})
+sapply(a, function(x) {print(min(x))})
+lapply(a, function(x) {print(min(x))})
+lapply(a, function(x) {min(x)})
+sum(sapply(a, function(x) {min(x)}))
+library(doMC)
+p  = foreach(i in 1:10) %dopar% {
+p  = foreach(i =1:10) %dopar% {
+list(root=sqrt(i))
+}
+p
+p[[1]]
+p[[1]][['root']]
+p[[2]][['root']]
+sapply(p, function(x) x[['root']])
+class(p)
+class(p)='test'
+p
+library(lars)
+predict.lars
+?predict.lars
+?lars
+data(iris)
+x=iris[,c(1,2,3)]
+y=iris[,4]
+lars(x=x, y=y)
+x=as.matrix(iris[,c(1,2,3)])
+y=as.matrix(iris[,4])
+lars(x=x, y=y)
+mm=lars(x=x, y=y)
+str(mm)
+m$lambda
+mm$lambda
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
+names(pov2)
+pov2$x
+pov2$y
+data(cars)
+lm(dist~speed, data=cars)
+lm(dist~speed, data=cars)$resid
+?lar
+?lars
+?predict.lars
+?lars
+lars(dist~speed, data=cars, lambda=c(1,2))
+lars(y=as.matrix(cars$dist), x=as.matrix(cars$speed), lambda=c(1,2))
+?paste
+?merger
+?merge
+library(map)
+library(maps)
+library(sp)
+map_data
+library(maps)
+map_data
+library(plotrix)
+map_data
+fossil
+library(fossil)
+map_data
+library(mapdata)
+install.packages(mapdata)
+install.packages('mapdata')
+map_data
+map_data('county')
+library(maps)
+map_data("county")
+map('county')
+county
+library(mapproj)
+map_data
+mapdata
+library(ggplot2)
+map_data
+map('county')
+map_data('county')
+mapcounties <- map_data('county')#
+mapstates <- map_data('state')
+library(gwselect)#
+registerCores(n=3)#
+#
+#Import poverty data#
+pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)#
+years = c('60', '70', '80', '90', '00', '06')#
+column.map = list(pindpov='proportion individuals in poverty', #
+    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', #
+    pserve='pserve', potprof='potprof', pwh='proportion white', pblk='proportion black', pind='pind',#
+    phisp='proportion hispanic', metro='metro', pfampov='proportion families in poverty',#
+    logitfampov='logit( proportion families in poverty)', pfire='proportion financial, insurance, real estate')#
+#
+#Process the poverty data so that each column appears only once and the year is added as a column.#
+pov2 = list()#
+for (column.name in names(column.map)) {#
+    col = vector()#
+    for (year in years) {#
+        if (paste(column.name, year, sep="") %in% names(pov)) {#
+            indx = which(names(pov)==paste(column.name, year, sep=""))#
+            col = c(col, pov[,indx])#
+        }#
+        else { col = c(col, rep(NA, dim(pov)[1])) }#
+    }#
+    pov2[[column.name]] = col#
+}#
+#
+#Find the columns we haven't yet matched:#
+"%w/o%" <- function(x, y) x[!x %in% y]#
+missed = names(pov) %w/o% outer(names(column.map), years, FUN=function(x, y) {paste(x, y, sep="")})#
+#
+for (column.name in missed) {#
+    col = rep(pov[,column.name], length(years))#
+    pov2[[column.name]] = col#
+}#
+#
+#Add the year column to the pov2 data list.#
+pov2[['year']] = vector()#
+for (year in years) {#
+    pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))#
+}#
+#
+#Convert pov2 from a list to a data frame:#
+pov2 = data.frame(pov2)#
+#
+#Correct the Y2K bug#
+pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)#
+pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))#
+#
+#Use the lasso for GWR models of poverty with 2006 data:#
+df = pov2[pov2$year==2006,]
+names(df)
+midweststates = mapstates[tolower(mapstates$region) %in% tolower(df.plot$state),]#
+midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df.plot$state),]
+midweststates = mapstates[tolower(mapstates$region) %in% tolower(df$STATE),]#
+midwestcounties = mapcounties[tolower(mapcounties$region) %in% tolower(df$STATE),]
+unique(midwestcounties$county)
+unique(midwestcounties$subregion)
+gsub("['-. ]", '', midwestcounties$subregion)
+with(midwestcounties, gsub("['-. ]", '', subregion))
+with(midwestcounties , paste(gsub("['-. ]", '', subregion), region, sep=","))
+midwestcounties[1:10,]
+midwestcounties[1:10,1:2]
+midwestcounties[midwestcounties$group==561,1:2]
+point.in.polygon(pol.x=midwestcounties[midwestcounties$group==561,2], pol.y=midwestcounties[midwestcounties$group==561,1], point.x=-91, point.y=40)
+point.in.polygon(pol.x=midwestcounties[midwestcounties$group==561,2], pol.y=midwestcounties[midwestcounties$group==561,1], point.x=40, point.y=-91)
+point.in.polygon(pol.x=midwestcounties[midwestcounties$group==561,2], pol.y=midwestcounties[midwestcounties$group==561,1], point.x=df$x, point.y=df.y)
+point.in.polygon(pol.x=midwestcounties[midwestcounties$group==561,2], pol.y=midwestcounties[midwestcounties$group==561,1], point.x=df$x, point.y=df$y)
+sum(point.in.polygon(pol.x=midwestcounties[midwestcounties$group==561,2], pol.y=midwestcounties[midwestcounties$group==561,1], point.x=df$x, point.y=df$y))
+k=561
+sum(point.in.polygon(pol.x=midwestcounties[midwestcounties$group==k,2], pol.y=midwestcounties[midwestcounties$group==k,1], point.x=df$x, point.y=df$y))
+unique(midwestcounties$subregion)
+midwestcounties$subregion=='dodge'
+midwestcounties[midwestcounties$subregion=='dodge','group']
+midwestcounties[midwestcounties$group==1300,]
+midwestcounties[midwestcounties$group==3001,]
+k=3001
+sum(point.in.polygon(pol.x=midwestcounties[midwestcounties$group==k,2], pol.y=midwestcounties[midwestcounties$group==k,1], point.x=df$x, point.y=df$y))
+point.in.polygon(pol.x=midwestcounties[midwestcounties$group==k,2], pol.y=midwestcounties[midwestcounties$group==k,1], point.x=df$x, point.y=df$y)
+df$x[1:10]
+midwestcounties[midwestcounties$group==561,1:2]
+point.in.polygon(pol.x=midwestcounties[midwestcounties$group==k,1], pol.y=midwestcounties[midwestcounties$group==k,2], point.x=df$x, point.y=df$y)
+sum(point.in.polygon(pol.x=midwestcounties[midwestcounties$group==k,1], pol.y=midwestcounties[midwestcounties$group==k,2], point.x=df$x, point.y=df$y))
+which(point.in.polygon(pol.x=midwestcounties[midwestcounties$group==k,1], pol.y=midwestcounties[midwestcounties$group==k,2], point.x=df$x, point.y=df$y))
+which(point.in.polygon(pol.x=midwestcounties[midwestcounties$group==k,1], pol.y=midwestcounties[midwestcounties$group==k,2], point.x=df$x, point.y=df$y)==1)
+midwestcounties[midwestcounties$group==561,1:2]
+cbind(midwestcounties[midwestcounties$group==561,1:2], 17)
+cbind(midwestcounties[midwestcounties$group==561,1:2], "out"=17)
+cbind(midwestcounties[midwestcounties$group==561,1:2], k)
+which(point.in.polygon(pol.x=midwestcounties[midwestcounties$group==k,1], pol.y=midwestcounties[midwestcounties$group==k,2], point.x=7, point.y=300)==1)
+length(which(point.in.polygon(pol.x=midwestcounties[midwestcounties$group==k,1], pol.y=midwestcounties[midwestcounties$group==k,2], point.x=7, point.y=300)==1))
+md = data.frame()
+cbind(midwestcounties[midwestcounties$group==561,1:2], k)
+shape=cbind(midwestcounties[midwestcounties$group==561,1:2], k)
+cbind(md, shape)
+rbind(md, shape)
+shape=cbind(midwestcounties[midwestcounties$group==561,], k)
+rbind(md, shape)
+?predict.glmnet
+?predict.lars
+?lars
+names(df)
+names(pov)
+dim(df)
+dim(pov2)
+?model.matrix
+?gwlars
+?glmnet
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+#
+    #s = svd(x)   #  if you don't know what svd is, you should!  It's great.#
+    #F = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+    #x = F%*%x#
+    #pY = F%*%z#
+    #fit = lars(pX, pY)   #  You could replace "lars" with your favorite sparse regression function.  I have tried #
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+            #print(fitted)#
+            #print(w)#
+            #z = as.matrix((y-fitted)/w + eta, nrow(x), 1)#
+            #b = solve(t(x) %*% diag(w) %*% x) %*% t(x) %*% diag(w) %*% z#
+            #print(b)#
+            for (k in 2:length(b)) {#
+                #print(w)#
+#
+                #Re-compute the preconditioning matrix at each iteration?#
+                #xw = x %*% diag(sqrt(w))#
+                #sw = svd(xw)   #  if you don't know what svd is, you should!  It's great.#
+                #Fw = sw$u  %*% diag(1/sw$d)  %*%  t(sw$u)#
+                #xw = Fw%*%xw#
+#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% %*% W %*% x#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=TRUE)$coef[2]#
+                #b[k] = sum(w*(z-mean(z))*x[,k]) / sum(w*x[,k]**2)#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                #print(eta)#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+                #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+                #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+                w = fitted*(1-fitted)#
+                W = diag(sqrt(w))#
+            }#
+            #print(fitted)#
+            #print(w)#
+            s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            #print(z)#
+            #print(b)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+            #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+            #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            #print(eta)            #
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+            if (abs(obj-obj.old)<tol || iter>=max.iter) {finished = TRUE}#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}#
+penalty = function(alpha, beta, lambda) {#
+    lambda * (alpha * sum(abs(beta)) + (1-alpha) * sum(beta**2) / 2)#
+}#
+S = function(z, gamma) {#
+    sign(z) * max(abs(z) - gamma, 0)#
+}
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+#
+    #s = svd(x)   #  if you don't know what svd is, you should!  It's great.#
+    #F = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+    #x = F%*%x#
+    #pY = F%*%z#
+    #fit = lars(pX, pY)   #  You could replace "lars" with your favorite sparse regression function.  I have tried #
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+            #print(fitted)#
+            #print(w)#
+            #z = as.matrix((y-fitted)/w + eta, nrow(x), 1)#
+            #b = solve(t(x) %*% diag(w) %*% x) %*% t(x) %*% diag(w) %*% z#
+            #print(b)#
+            for (k in 2:length(b)) {#
+                #print(w)#
+#
+                #Re-compute the preconditioning matrix at each iteration?#
+                #xw = x %*% diag(sqrt(w))#
+                #sw = svd(xw)   #  if you don't know what svd is, you should!  It's great.#
+                #Fw = sw$u  %*% diag(1/sw$d)  %*%  t(sw$u)#
+                #xw = Fw%*%xw#
+#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% W %*% x#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=TRUE)$coef[2]#
+                #b[k] = sum(w*(z-mean(z))*x[,k]) / sum(w*x[,k]**2)#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                #print(eta)#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+                #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+                #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+                w = fitted*(1-fitted)#
+                W = diag(sqrt(w))#
+            }#
+            #print(fitted)#
+            #print(w)#
+            s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            #print(z)#
+            #print(b)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+            #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+            #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            #print(eta)            #
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+            if (abs(obj-obj.old)<tol || iter>=max.iter) {finished = TRUE}#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}#
+penalty = function(alpha, beta, lambda) {#
+    lambda * (alpha * sum(abs(beta)) + (1-alpha) * sum(beta**2) / 2)#
+}#
+S = function(z, gamma) {#
+    sign(z) * max(abs(z) - gamma, 0)#
+}
+data(iris)
+iris
+iris$Species = ifelse(iris$Species=='setosa',1,0)
+iris
+glimp(Species~., data=iris, family='binomial', )
+glimp(Species~., data=iris, family='binomial')
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+#
+    #s = svd(x)   #  if you don't know what svd is, you should!  It's great.#
+    #F = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+    #x = F%*%x#
+    #pY = F%*%z#
+    #fit = lars(pX, pY)   #  You could replace "lars" with your favorite sparse regression function.  I have tried #
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+            #print(fitted)#
+            #print(w)#
+            #z = as.matrix((y-fitted)/w + eta, nrow(x), 1)#
+            #b = solve(t(x) %*% diag(w) %*% x) %*% t(x) %*% diag(w) %*% z#
+            #print(b)#
+            for (k in 2:length(b)) {#
+                #print(w)#
+#
+                #Re-compute the preconditioning matrix at each iteration?#
+                #xw = x %*% diag(sqrt(w))#
+                #sw = svd(xw)   #  if you don't know what svd is, you should!  It's great.#
+                #Fw = sw$u  %*% diag(1/sw$d)  %*%  t(sw$u)#
+                #xw = Fw%*%xw#
+#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% W %*% x#
+                print("A")#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=TRUE)$coef[2]#
+                #b[k] = sum(w*(z-mean(z))*x[,k]) / sum(w*x[,k]**2)#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                #print(eta)#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+                #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+                #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+                w = fitted*(1-fitted)#
+                W = diag(sqrt(w))#
+            }#
+            #print(fitted)#
+            #print(w)#
+            s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+            print("B")#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            #print(z)#
+            #print(b)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+            #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+            #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            #print(eta)            #
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+            if (abs(obj-obj.old)<tol || iter>=max.iter) {finished = TRUE}#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}
+glimp(Species~., data=iris, family='binomial')
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+#
+    #s = svd(x)   #  if you don't know what svd is, you should!  It's great.#
+    #F = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+    #x = F%*%x#
+    #pY = F%*%z#
+    #fit = lars(pX, pY)   #  You could replace "lars" with your favorite sparse regression function.  I have tried #
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+            #print(fitted)#
+            #print(w)#
+            #z = as.matrix((y-fitted)/w + eta, nrow(x), 1)#
+            #b = solve(t(x) %*% diag(w) %*% x) %*% t(x) %*% diag(w) %*% z#
+            #print(b)#
+            for (k in 2:length(b)) {#
+                #print(w)#
+#
+                #Re-compute the preconditioning matrix at each iteration?#
+                #xw = x %*% diag(sqrt(w))#
+                #sw = svd(xw)   #  if you don't know what svd is, you should!  It's great.#
+                #Fw = sw$u  %*% diag(1/sw$d)  %*%  t(sw$u)#
+                #xw = Fw%*%xw#
+#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% W %*% x#
+                print("A")#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=TRUE)$coef[2]#
+                #b[k] = sum(w*(z-mean(z))*x[,k]) / sum(w*x[,k]**2)#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                #print(eta)#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+                #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+                #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+                w = fitted*(1-fitted)#
+                W = diag(sqrt(w))#
+#
+                print(W)#
+            }#
+            #print(fitted)#
+            #print(w)#
+            s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+            print("B")#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            #print(z)#
+            #print(b)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+            #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+            #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            #print(eta)            #
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+            if (abs(obj-obj.old)<tol || iter>=max.iter) {finished = TRUE}#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}
+glimp(Species~., data=iris, family='binomial')
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+#
+    #s = svd(x)   #  if you don't know what svd is, you should!  It's great.#
+    #F = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+    #x = F%*%x#
+    #pY = F%*%z#
+    #fit = lars(pX, pY)   #  You could replace "lars" with your favorite sparse regression function.  I have tried #
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+            #print(fitted)#
+            #print(w)#
+            #z = as.matrix((y-fitted)/w + eta, nrow(x), 1)#
+            #b = solve(t(x) %*% diag(w) %*% x) %*% t(x) %*% diag(w) %*% z#
+            #print(b)#
+            for (k in 2:length(b)) {#
+                #print(w)#
+#
+                #Re-compute the preconditioning matrix at each iteration?#
+                #xw = x %*% diag(sqrt(w))#
+                #sw = svd(xw)   #  if you don't know what svd is, you should!  It's great.#
+                #Fw = sw$u  %*% diag(1/sw$d)  %*%  t(sw$u)#
+                #xw = Fw%*%xw#
+#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% W %*% x#
+                print("A")#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=TRUE)$coef[2]#
+                #b[k] = sum(w*(z-mean(z))*x[,k]) / sum(w*x[,k]**2)#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                #print(eta)#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+                #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+                #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+                w = fitted*(1-fitted)#
+                W = diag(sqrt(w))#
+#
+                print(w)#
+                print(W)#
+            }#
+            #print(fitted)#
+            #print(w)#
+            s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+            print("B")#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            #print(z)#
+            #print(b)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+            #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+            #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            #print(eta)            #
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+            if (abs(obj-obj.old)<tol || iter>=max.iter) {finished = TRUE}#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}
+glimp(Species~., data=iris, family='binomial')
+sqrt(0.2222)
+rep(2/9,150)
+diag(rep(2/9,150))
+diag(sqrt(rep(2/9,150)))
+diag(as.matrix(rep(2/9,150)))
+?diag
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+#
+    #s = svd(x)   #  if you don't know what svd is, you should!  It's great.#
+    #F = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+    #x = F%*%x#
+    #pY = F%*%z#
+    #fit = lars(pX, pY)   #  You could replace "lars" with your favorite sparse regression function.  I have tried #
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+            #print(fitted)#
+            #print(w)#
+            #z = as.matrix((y-fitted)/w + eta, nrow(x), 1)#
+            #b = solve(t(x) %*% diag(w) %*% x) %*% t(x) %*% diag(w) %*% z#
+            #print(b)#
+            for (k in 2:length(b)) {#
+                #print(w)#
+#
+                #Re-compute the preconditioning matrix at each iteration?#
+                #xw = x %*% diag(sqrt(w))#
+                #sw = svd(xw)   #  if you don't know what svd is, you should!  It's great.#
+                #Fw = sw$u  %*% diag(1/sw$d)  %*%  t(sw$u)#
+                #xw = Fw%*%xw#
+#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% W %*% x#
+                print("A")#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=TRUE)$coef[2]#
+                #b[k] = sum(w*(z-mean(z))*x[,k]) / sum(w*x[,k]**2)#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                #print(eta)#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+                #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+                #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+                w = as.vector(fitted*(1-fitted))        #
+                W = diag(sqrt(w))#
+#
+                print(w)#
+                print(W)#
+            }#
+            #print(fitted)#
+            #print(w)#
+            s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+            print("B")#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            #print(z)#
+            #print(b)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+            #fitted = as.vector(exp(eta) / (1+exp(eta)))#
+            #fitted = ifelse(fitted<eps, eps, ifelse(fitted>1-eps, 1-eps, fitted))#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            #print(eta)            #
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+            if (abs(obj-obj.old)<tol || iter>=max.iter) {finished = TRUE}#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}
+glimp(Species~., data=iris, family='binomial')
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+#
+            for (k in 2:length(b)) {#
+                #Re-compute the preconditioning matrix at each iteration?#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% W %*% x#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z                #
+#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=TRUE)$coef[2]#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+#
+                w = as.vector(fitted*(1-fitted))        #
+                W = diag(sqrt(w))#
+            }#
+#
+            s = svd(W%*%x)#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+            if (abs(obj-obj.old)<tol || iter>=max.iter) {finished = TRUE}#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}
+glimp(Species~., data=iris, family='binomial')
+warningS()
+warnings()
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+#
+            for (k in 2:length(b)) {#
+                #Re-compute the preconditioning matrix at each iteration?#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% W %*% x#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z #
+                z.W = z.W - mean(z.W)               #
+#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=FALSE)$coef[2]#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+#
+                w = as.vector(fitted*(1-fitted))        #
+                W = diag(sqrt(w))#
+            }#
+#
+            s = svd(W%*%x)#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+            if (abs(obj-obj.old)<tol || iter>=max.iter) {finished = TRUE}#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}
+test=glimp(Species~., data=iris, family='binomial')
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        print(j)#
+#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+#
+            for (k in 2:length(b)) {#
+                #Re-compute the preconditioning matrix at each iteration?#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% W %*% x#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z #
+                z.W = z.W - mean(z.W)               #
+#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=FALSE)$coef[2]#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+#
+                w = as.vector(fitted*(1-fitted))        #
+                W = diag(sqrt(w))#
+            }#
+#
+            s = svd(W%*%x)#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+#
+            convergence = try(abs(obj-obj.old))            #
+            if (class(convergence)=='try-error') {#
+                finished = TRUE#
+            } else if (convergence<tol || iter>=max.iter) {#
+                finished = TRUE#
+            }#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}
+test=glimp(Species~., data=iris, family='binomial')
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        print(j)#
+#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+#
+            for (k in 2:length(b)) {#
+                #Re-compute the preconditioning matrix at each iteration?#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% W %*% x#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z #
+                z.W = z.W - mean(z.W)               #
+#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=FALSE)$coef[2]#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+#
+                w = as.vector(fitted*(1-fitted))        #
+                W = diag(sqrt(w))#
+            }#
+#
+            s = svd(W%*%x)#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+#
+            convergence = try(if (convergence<tol || iter>=max.iter) {finished = TRUE})#
+            if (class(convergence)=='try-error') {finished=TRUE}#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}
+test=glimp(Species~., data=iris, family='binomial')
+glimp = function(formula, data, family, weights=NULL, tol=1e-10, max.iter=100, nlambda=100, lambda.min.ratio=100, lambda=NULL) {#
+    #Drop any rows with NA values#
+    data = data#
+    na.rows = (which(is.na(data))-1) %% dim(data)[1] + 1#
+    if (length(na.rows)>0)#
+        data = data[-na.rows,]#
+#
+    #Pull out the relevant data#
+    response.name = rownames(attr(terms(formula, data=data), 'factors'))[1]#
+    predictor.names = attr(terms(formula, data=data), 'term.labels')#
+    response.col = which(colnames(data)==response.name)#
+    y = as.matrix(data[,response.col])#
+    x = as.matrix(data[,predictor.names])#
+    n=nrow(x)#
+    meanx = vector()#
+    normx = vector()#
+#
+    for (k in 1:ncol(x)) {#
+        meanx = c(meanx, mean(x[,k]))#
+        normx = c(normx, sqrt(sum((x[,k]-meanx[k])**2)))#
+        x[,k] = (x[,k]-meanx[k])/normx[k]#
+    }#
+    #x = as.matrix(x)#
+    x = as.matrix(cbind(rep(1,nrow(x)), x))#
+    if (is.null(lambda)) {#
+        lmax = max(abs(cor(x[,-1],y))) * sqrt(mean((y-mean(y))**2))#
+        ll = seq(from=5*lmax, to=lmax/lambda.min.ratio, length.out=nlambda)#
+    } else {        #
+        ll = as.vector(lambda)#
+    }#
+#
+    eps = 1e-5#
+    eps.inv = log(eps) - log(1-eps)#
+    b = matrix(0, ncol(x), 1)#
+    b[1] = log(mean(y)) - log(1-mean(y))#
+#
+    beta = list()#
+#
+    for (j in 1:length(ll)) {#
+        print(j)#
+#
+        l = ll[j]#
+        if (j>1) {b=beta[[j-1]]}  #
+#
+        eta = x %*% b#
+        fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+        w = as.vector(fitted*(1-fitted))#
+        W = diag(sqrt(w))#
+#
+        obj.old = 0#
+        iter=0#
+        finished = FALSE#
+#
+        while (finished==FALSE) {#
+#
+            for (k in 2:length(b)) {#
+                #Re-compute the preconditioning matrix at each iteration?#
+                s = svd(W%*%x)   #  if you don't know what svd is, you should!  It's great.#
+                F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+                x.W = F.W %*% W %*% x#
+#
+                z = as.matrix((y-fitted)/w + x[,k]*b[k], nrow(x), 1)#
+                z.W = F.W %*% z #
+                z.W = z.W - mean(z.W)               #
+#
+                b[k] = lsfit(x=x.W, y=z.W, intercept=FALSE)$coef[2]#
+                b[k] = S(b[k], l*sqrt(n)) #
+                eta = x %*% b#
+                fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta) / (1+exp(eta))))#
+#
+                w = as.vector(fitted*(1-fitted))        #
+                W = diag(sqrt(w))#
+            }#
+#
+            s = svd(W%*%x)#
+            F.W = s$u  %*% diag(1/s$d)  %*%  t(s$u)#
+#
+            z = (y-fitted)/w + x[,1]*b[1]#
+            z.W = F.W %*% z#
+            b[1] = mean(z.W)#
+            eta = x %*% b#
+            fitted = ifelse(eta<eps.inv, eps, ifelse(eta>-eps.inv, 1-eps, exp(eta)/(1+exp(eta))))#
+#
+            w = as.vector(fitted*(1-fitted))#
+            W = diag(sqrt(w))#
+            obj = sum(w*(y*eta - (1+exp(eta)))) #+ l*sum(abs(b[-1]))#
+            iter = iter+1#
+            cat(paste("obj=", obj, ", obj.old=", obj.old, "\n", sep=""))#
+#
+            convergence = try(if (abs(obj-obj.old)<tol || iter>=max.iter) {finished = TRUE})#
+            if (class(convergence)=='try-error') {finished=TRUE}#
+            obj.old = obj#
+        }#
+        cat(paste("Iterations: ", iter, "\n", sep=""))#
+        beta[[j]] = b#
+    }#
+#
+    for (i in 1:length(beta)) {#
+        beta[[i]][-1] = beta[[i]][-1] / normx#
+        beta[[i]][1] = beta[[i]][1] - sum(beta[[i]][-1]*meanx)#
+#
+        rownames(beta[[i]]) = c("(Intercept)", predictor.names)#
+        beta[[i]] = Matrix(beta[[i]])#
+    }#
+#
+	return(list(beta=beta, meanx=meanx, normx=normx, x=x, lambda=ll))#
+}
+test=glimp(Species~., data=iris, family='binomial')
+test
+library(Matrix)
+test=glimp(Species~., data=iris, family='binomial')
+test
+size = c(20, 30, 40, 50)#
+size = c(40)#
+#
+for (N in size) {#
+    coord = seq(0, 1, length.out=N)#
+    grid = matrix(rnorm(N**2, mean=rep(ifelse(coord<=0.5, 0, 2), N), sd=0.5), N, N)#
+    rownames(grid) = seq(0, 1, length.out=N)#
+    colnames(grid) = seq(0, 1, length.out=N)#
+}#
+#
+#population for weights#
+pop = rpois(N**2, 400)#
+#
+##
+X1 = matrix(rnorm(N**2, mean=0, sd=1), N, N)#
+B1 = matrix(rep(ifelse(coord<=0.5, 0, 2), N), N, N)#
+#
+X2 = matrix(rnorm(N**2, mean=0, sd=1), N, N)#
+B2 = matrix(rep(1-coord, N), N, N)#
+#
+eta = X1*B1 + X2*B2 + rnorm(N**2, 0, 0.1)#
+Z = rnorm(N**2, 0, 1)#
+p = exp(eta) / (1+exp(eta))#
+Y = rbinom(N**2, pop, p) / pop#
+#
+##
+loc.x = rep(seq(0, 1, length.out=N), each=N)#
+loc.y = rep(seq(0, 1, length.out=N), times=N)#
+sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), Z, loc.x, loc.y)
+B1
+sim
+B2
+size = c(20, 30, 40, 50)#
+size = c(40)#
+#
+for (N in size) {#
+    coord = seq(0, 1, length.out=N)#
+    grid = matrix(rnorm(N**2, mean=rep(ifelse(coord<=0.5, 0, 2), N), sd=0.5), N, N)#
+    rownames(grid) = seq(0, 1, length.out=N)#
+    colnames(grid) = seq(0, 1, length.out=N)#
+}#
+#
+#population for weights#
+pop = rpois(N**2, 400)#
+#
+##
+X1 = matrix(rnorm(N**2, mean=0, sd=1), N, N)#
+B1 = matrix(rep(ifelse(coord<=0.5, 0, 2), N), N, N)#
+#
+X2 = matrix(rnorm(N**2, mean=0, sd=1), N, N)#
+B2 = matrix(rep(1-coord, N), N, N)#
+#
+eta = X1*B1 + X2*B2 + rnorm(N**2, 0, 0.1)#
+Z = rnorm(N**2, 0, 1)#
+p = exp(eta) / (1+exp(eta))#
+Y = rbinom(N**2, pop, p) / pop#
+#
+##
+loc.x = rep(seq(0, 1, length.out=N), each=N)#
+loc.y = rep(seq(0, 1, length.out=N), times=N)#
+sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), Z, loc.x, loc.y)#
+#
+#weights = pop#
+bw = gwglmnet.sel(Y~X1+X2+Z, data=sim, coords=mpb[,c('loc.x','loc.y')], weights=pop, gweight=bisquare, tol=0.5, s=NULL, method='knn', family='poisson', parallel=FALSE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
+library(gwselect)#
+#
+size = c(20, 30, 40, 50)#
+size = c(40)#
+#
+for (N in size) {#
+    coord = seq(0, 1, length.out=N)#
+    grid = matrix(rnorm(N**2, mean=rep(ifelse(coord<=0.5, 0, 2), N), sd=0.5), N, N)#
+    rownames(grid) = seq(0, 1, length.out=N)#
+    colnames(grid) = seq(0, 1, length.out=N)#
+}#
+#
+#population for weights#
+pop = rpois(N**2, 400)#
+#
+##
+X1 = matrix(rnorm(N**2, mean=0, sd=1), N, N)#
+B1 = matrix(rep(ifelse(coord<=0.5, 0, 2), N), N, N)#
+#
+X2 = matrix(rnorm(N**2, mean=0, sd=1), N, N)#
+B2 = matrix(rep(1-coord, N), N, N)#
+#
+eta = X1*B1 + X2*B2 + rnorm(N**2, 0, 0.1)#
+Z = rnorm(N**2, 0, 1)#
+p = exp(eta) / (1+exp(eta))#
+Y = rbinom(N**2, pop, p) / pop#
+#
+##
+loc.x = rep(seq(0, 1, length.out=N), each=N)#
+loc.y = rep(seq(0, 1, length.out=N), times=N)#
+sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), Z, loc.x, loc.y)#
+#
+#weights = pop#
+bw = gwglmnet.sel(Y~X1+X2+Z, data=sim, coords=mpb[,c('loc.x','loc.y')], weights=pop, gweight=bisquare, tol=0.5, s=NULL, method='knn', family='poisson', parallel=FALSE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
+bw = gwglmnet.sel(Y~X1+X2+Z, data=sim, coords=sim[,c('loc.x','loc.y')], weights=pop, gweight=bisquare, tol=0.5, s=NULL, method='knn', family='poisson', parallel=FALSE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
+warnings()
+bw = gwglmnet.sel(Y~X1+X2+Z, data=sim, coords=sim[,c('loc.x','loc.y')], weights=pop, gweight=bisquare, tol=0.01, s=NULL, method='knn', family='poisson', parallel=FALSE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
+a = rnorm(100,0,0.1)
+a
+b = rnorm(100, a, 0.1)
+cor(a,b)
+b = rnorm(100, a, 0.2)
+cor(a,b)
+b = rnorm(100, a, 1)
+cor(a,b)
+plot(a,b)
+b = rnorm(100, a, 0.1)
+plot(a,b)
+model = gwglmnet(Y~X1+X2+X3+X4+Z, data=sim, coords=sim[,c('loc.x','loc.y')], bw=bw, weights=pop, gweight=bisquare, tol=0.01, s=NULL, method='knn', family='poisson', parallel=FALSE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
+library(gwselect)
+model = gwglmnet(Y~X1+X2+X3+X4+Z, data=sim, coords=sim[,c('loc.x','loc.y')], bw=bw, weights=pop, gweight=bisquare, tol=0.01, s=NULL, method='knn', family='poisson', parallel=FALSE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
+size = c(20, 30, 40, 50)#
+size = c(40)#
+#
+for (N in size) {#
+    coord = seq(0, 1, length.out=N)#
+    grid = matrix(rnorm(N**2, mean=rep(ifelse(coord<=0.5, 0, 2), N), sd=0.5), N, N)#
+    rownames(grid) = seq(0, 1, length.out=N)#
+    colnames(grid) = seq(0, 1, length.out=N)#
+}#
+#
+#population for weights#
+pop = rpois(N**2, 400)#
+#
+##
+x1 = rnorm(N**2, mean=0, sd=1)#
+X1 = matrix(x1, N, N)#
+B1 = matrix(rep(ifelse(coord<=0.5, 0, 2), N), N, N)#
+#
+x2 = rnorm(N**2, mean=0, sd=1)#
+X2 = matrix(x2, N, N)#
+B2 = matrix(rep(1-coord, N), N, N)#
+#
+#Correlated with X1:#
+x3 = rnorm(N**2, mean=x1, sd=1)#
+X3 = matrix(x3, N, N)#
+#
+#Correlated with X2#
+x4 = rnorm(N**2, mean=x2, sd=1)#
+X4 = matrix(x4, N, N)#
+#
+eta = X1*B1 + X2*B2 + rnorm(N**2, 0, 0.1)#
+Z = rnorm(N**2, 0, 1)#
+p = exp(eta) / (1+exp(eta))#
+Y = rbinom(N**2, pop, p) / pop#
+#
+##
+loc.x = rep(seq(0, 1, length.out=N), each=N)#
+loc.y = rep(seq(0, 1, length.out=N), times=N)#
+sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), X3=as.vector(X3), X4=as.vector(X4), Z, loc.x, loc.y)
+model = gwglmnet(Y~X1+X2+X3+X4+Z, data=sim, coords=sim[,c('loc.x','loc.y')], bw=bw, weights=pop, gweight=bisquare, tol=0.01, s=NULL, method='knn', family='poisson', parallel=TRUE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
+bw=0.004797285
+model = gwglmnet(Y~X1+X2+X3+X4+Z, data=sim, coords=sim[,c('loc.x','loc.y')], bw=bw, weights=pop, gweight=bisquare, tol=0.01, s=NULL, method='knn', family='poisson', parallel=TRUE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
+getwd()
+setwd('git/gwr/code/simulation/')
+source('plot.r')
+heatdata
+image(x=heatdata[,1], y=heatdata[,2], z=heatdata[,3])
+matplot <- function (x, cs1 = c(0, 1), cs2 = c(0, 1), cs3 = c(0, 1), extremes = NA, #
+    cellcolors = NA, show.legend = FALSE, nslices = 10, xlab = "Column", #
+    ylab = "Row", do.hex = FALSE, axes = TRUE, show.values = FALSE, #
+    vcol = NA, vcex = 1, border = "black", na.color = NA, xrange = NULL, #
+    color.spec = "rgb", yrev = TRUE, xat = NULL, yat = NULL, #
+    Hinton = FALSE, ...) #
+{#
+    if (is.matrix(x) || is.data.frame(x))#
+    {#
+        xdim <- dim(x)#
+        if(is.vector(xrange))#
+        {  #
+            if(xrange[1] > min(x, na.rm=TRUE) || xrange[2] < max(x, na.rm=TRUE) || length(xrange) != 2)#
+            {#
+                xrange = vector()#
+                xrange[1] = min(x, na.rm=TRUE) - min(x, na.rm=TRUE) %% 0.1                #
+                xrange[2] = max(x, na.rm=TRUE) + 0.1 - (max(x, na.rm=TRUE) %% 0.1)#
+            }#
+        }#
+        else#
+        {#
+            xrange = vector()#
+            xrange[1] = min(x, na.rm=TRUE) - min(x, na.rm=TRUE) %% 0.1                #
+            xrange[2] = max(x, na.rm=TRUE) + 0.1 - (max(x, na.rm=TRUE) %% 0.1)   #
+        }#
+        if (is.data.frame(x)) #
+            x <- unlist(x)#
+        else x <- as.vector(x)#
+        oldpar <- par("xaxs", "yaxs", "xpd", "mar")#
+        par(xaxs="i", yaxs="i")#
+        if(do.hex) #
+            par(mar = c(5, 4, 4, 4))#
+        plot(c(0, xdim[2]), c(0, xdim[1]), xlab = xlab, ylab = ylab, #
+            type = "n", axes = FALSE, ...)#
+        oldpar$usr <- par("usr")#
+        if(!do.hex)#
+        {#
+            box()#
+            pos <- 0#
+        }#
+        else pos <- -0.3#
+        if(axes)#
+        {#
+            if (is.null(xat)) #
+                xat <- pretty(0:xdim[2])[-1]#
+            axis(1, at = xat - 0.5, labels = xat, pos = pos)#
+            if (is.null(yat)) #
+                yat <- pretty(0:xdim[1])[-1]#
+            axis(2, at = xdim[1] - yat + 0.5, labels = yat)#
+        }#
+        if (all(is.na(cellcolors)))#
+        {#
+            if (Hinton)#
+            {#
+                if (is.na(extremes[1])) #
+                  extremes <- c("black", "white")#
+                cellcolors <- extremes[(x > 0) + 1]#
+            }#
+            else cellcolors <- color.scale(x, cs1, cs2, cs3, extremes=extremes, na.color=na.color, color.spec=color.spec, xrange=xrange)#
+        }#
+        if (is.na(vcol)) #
+            vcol <- ifelse(colSums(col2rgb(cellcolors) * c(1, #
+                1.4, 0.6)) < 350, "white", "black")#
+        if (Hinton)#
+        {#
+            if (any(x < 0 | x > 1)) #
+                cellsize <- matrix(rescale(abs(x), c(0, 1)), #
+                  nrow = 10)#
+        }#
+        else cellsize <- matrix(1, nrow = xdim[1], ncol = xdim[2])#
+        if (do.hex)#
+        {#
+            par(xpd = TRUE)#
+            offset <- 0#
+            if (length(border) < xdim[1] * xdim[2]) #
+                border <- rep(border, length.out = xdim[1] * #
+                  xdim[2])#
+            for (row in 1:xdim[1])#
+            {#
+                for (column in 0:(xdim[2] - 1))#
+                {#
+                  hexagon(column+offset, xdim[1]-row, unitcell=cellsize[row, column+1], col=cellcolors[row + xdim[1]*column], border=border[row + xdim[1]*column])#
+                  if (show.values) #
+                    text(column+offset+0.5, xdim[1]-row+0.5, x[row+column*xdim[1]], col=vcol[row + xdim[1]*column], cex=vcex)#
+                }#
+                offset <- ifelse(offset, 0, 0.5)#
+            }#
+            par(xpd=FALSE)#
+        }#
+        else#
+        {#
+            if (Hinton) #
+                inset <- (1 - cellsize)/2#
+            else inset <- 0#
+            if (yrev)#
+            {#
+                y0 <- rep(seq(xdim[1] - 1, 0, by = -1), xdim[2]) + inset#
+                y1 <- rep(seq(xdim[1], 1, by = -1), xdim[2]) - inset#
+            }#
+            else#
+            {#
+                y0 <- rep(0:(xdim[1] - 1), xdim[2]) + inset#
+                y1 <- rep(1:xdim[1], xdim[2]) - inset#
+            }#
+            rect(sort(rep((1:xdim[2]) - 1, xdim[1])) + inset, #
+                y0, sort(rep(1:xdim[2], xdim[1])) - inset, y1, #
+                col = cellcolors, border = border)#
+            if (show.values)#
+            {#
+                if (yrev) texty <- rep(seq(xdim[1] - 0.5, 0, by = -1), xdim[2])#
+                else texty <- rep(seq(0.5, xdim[1] - 0.5, by = 1), xdim[2])#
+                text(sort(rep((1:xdim[2]) - 0.5, xdim[1])), texty, #
+                  round(x, show.values), col = vcol, cex = vcex)#
+            }#
+        }#
+        naxs <- which(is.na(x))#
+        xy <- par("usr")#
+        plot.din <- par("din")#
+        plot.pin <- par("pin")#
+        bottom.gap <- (xy[3] - xy[4]) * (plot.din[2] - plot.pin[2])/(2 * plot.pin[2])#
+        grx1 <- xy[1]#
+        gry1 <- bottom.gap * 0.95#
+        grx2 <- xy[1] + (xy[2] - xy[1])/4#
+        gry2 <- bottom.gap * 0.8#
+        if (length(cellcolors) > 1)#
+        {#
+            colmat <- col2rgb(c(cellcolors[which.min(x)], cellcolors[which.max(x)]))#
+            cs1 <- colmat[1, ]/255#
+            cs2 <- colmat[2, ]/255#
+            cs3 <- colmat[3, ]/255#
+            color.spec <- "rgb"#
+        }#
+        rect.col <- color.scale(1:nslices, cs1, cs2, cs3, color.spec = color.spec)#
+        if (show.legend) #
+            color.legend(grx1, gry1, grx2, gry2, round(xrange, show.legend), rect.col=rect.col)#
+        par(oldpar)#
+    }#
+    else cat("x must be a data frame or matrix\n")#
+}
+heatdata = matrix(NA, 40,40)
+heatdata[1]
+heatdata[2]
+heatdata[3]
+heatdata = matrix(NA, 40,40)#
+var = 'X1'#
+#
+for (j in 1:length(model[['model']][['models']])) {#
+    m = model[['model']][['models']][[j]]    #
+    heatdata[j] = m[['coef']][var,]#
+    #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+}
+heatdata
+matplot(heatdata, c(0,1), 0, c(1,0), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+matplot(heatdata, c(0,1), 0, c(1,0), border=NA, show.legend=T, yrev=T, axes=F, ann=F)
+matplot(heatdata, c(0,0), 0, c(1,0), border=NA, show.legend=T, yrev=T, axes=F, ann=F)
+matplot(heatdata, c(1,1), 0, c(1,0), border=NA, show.legend=T, yrev=T, axes=F, ann=F)
+matplot(heatdata, c(0,1), c(0,1), c(1,0), border=NA, show.legend=T, yrev=T, axes=F, ann=F)
+matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=T, axes=F, ann=F)
+heatdata = matrix(NA, 40,40)#
+var = 'X2'#
+#
+for (j in 1:length(model[['model']][['models']])) {#
+    m = model[['model']][['models']][[j]]    #
+    heatdata[j] = m[['coef']][var,]#
+    #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+}#
+#
+matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=T, axes=F, ann=F)
+heatdata = matrix(NA, 40,40)#
+var = 'X2'#
+#
+for (j in 1:length(model[['model']][['models']])) {#
+    m = model[['model']][['models']][[j]]    #
+    heatdata[j] = m[['coef']][var,]#
+    #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+}#
+#
+matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+heatdata = matrix(NA, 40,40)#
+var = 'X1'#
+#
+for (j in 1:length(model[['model']][['models']])) {#
+    m = model[['model']][['models']][[j]]    #
+    heatdata[j] = m[['coef']][var,]#
+    #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+}#
+#
+matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+heatdata = matrix(NA, 40,40)#
+var = 'X3'#
+#
+for (j in 1:length(model[['model']][['models']])) {#
+    m = model[['model']][['models']][[j]]    #
+    heatdata[j] = m[['coef']][var,]#
+    #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+}#
+#
+matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+heatdata = matrix(NA, 40,40)#
+var = 'X4'#
+#
+for (j in 1:length(model[['model']][['models']])) {#
+    m = model[['model']][['models']][[j]]    #
+    heatdata[j] = m[['coef']][var,]#
+    #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+}#
+#
+matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+heatdata = matrix(NA, 40,40)#
+var = 'Z'#
+#
+for (j in 1:length(model[['model']][['models']])) {#
+    m = model[['model']][['models']][[j]]    #
+    heatdata[j] = m[['coef']][var,]#
+    #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+}#
+#
+matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+heatdata = matrix(NA, 40,40)#
+var = '(Intercept)'#
+#
+for (j in 1:length(model[['model']][['models']])) {#
+    m = model[['model']][['models']][[j]]    #
+    heatdata[j] = m[['coef']][var,]#
+    #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+}#
+#
+matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+B1
+matplot(B1, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+matplot(B2, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+cor(x1, x2)
+cor(x1, x3)
+cor(x2, x4)
+matplot(X2, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+matplot(X4, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+matplot(X2, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+heatdata = matrix(NA, 40,40)#
+vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4')#
+pdf("../../figures/simulation/coefs.pdf", width=9, height=3)#
+layout(matrix(1:3, 1, 3))#
+#
+for (var in vars) {#
+    for (j in 1:length(model[['model']][['models']])) {#
+        m = model[['model']][['models']][[j]]    #
+        heatdata[j] = m[['coef']][var,]#
+        #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+    }#
+    matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)#
+}#
+dev.off()
+mvrnorm()
+library(MASS)
+mvrnorm(n=100, mu=c(0,0), Sigma=matrix(c(1,0.2,0.2,1),2,2))
+d=mvrnorm(n=100, mu=c(0,0), Sigma=matrix(c(1,0.2,0.2,1),2,2))
+plot(d[,1], d[,2])
+matplot(X2, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+title("X2")
+model = gwglmnet(Y~X1+X2+X3+X4+Z, data=sim, coords=sim[,c('loc.x','loc.y')], bw=bw, weights=pop, gweight=bisquare, tol=0.01, s=NULL, method='knn', family='binomial', parallel=FALSE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
+warnings()
+heatdata = matrix(NA, 40,40)#
+vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4')#
+pdf("../../figures/simulation/coefs.pdf", width=9, height=3)#
+layout(matrix(1:3, 1, 3))#
+#
+for (var in vars) {#
+    for (j in 1:length(model[['model']][['models']])) {#
+        m = model[['model']][['models']][[j]]    #
+        heatdata[j] = m[['coef']][var,]#
+        #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+    }#
+    matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)#
+    title(paste("Coef of ", var, sep=""))#
+}#
+dev.off()
+heatdata = matrix(NA, 40,40)#
+vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4')#
+pdf("../../figures/simulation/coefs.pdf", width=9, height=6)#
+layout(matrix(1:6, 2, 3))#
+#
+for (var in vars) {#
+    for (j in 1:length(model[['model']][['models']])) {#
+        m = model[['model']][['models']][[j]]    #
+        heatdata[j] = m[['coef']][var,]#
+        #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+    }#
+    matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)#
+    title(paste("Coef of ", var, sep=""))#
+}#
+dev.off()
+heatdata = matrix(NA, 40,40)#
+vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4')#
+pdf("../../figures/simulation/coefs.pdf", width=9, height=6)#
+layout(matrix(1:6, 3, 2))#
+#
+for (var in vars) {#
+    for (j in 1:length(model[['model']][['models']])) {#
+        m = model[['model']][['models']][[j]]    #
+        heatdata[j] = m[['coef']][var,]#
+        #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+    }#
+    matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)#
+    title(paste("Coef of ", var, sep=""))#
+}#
+dev.off()
+heatdata = matrix(NA, 40,40)#
+vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4')#
+pdf("../../figures/simulation/coefs.pdf", width=6, height=9)#
+layout(matrix(1:6, 3, 2))#
+#
+for (var in vars) {#
+    for (j in 1:length(model[['model']][['models']])) {#
+        m = model[['model']][['models']][[j]]    #
+        heatdata[j] = m[['coef']][var,]#
+        #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+    }#
+    matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)#
+    title(paste("Coef of ", var, sep=""))#
+}#
+dev.off()
+layout(matrix(1:6, 3, 2))#
+#
+for (var in vars) {#
+    for (j in 1:length(model[['model']][['models']])) {#
+        m = model[['model']][['models']][[j]]    #
+        heatdata[j] = m[['coef']][var,]#
+        #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+    }#
+    matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)#
+    title(paste("Coef of ", var, sep=""))#
+}
+layout(matrix(1:6, 3, 2))#
+#
+for (var in vars) {#
+    for (j in 1:length(model[['model']][['models']])) {#
+        m = model[['model']][['models']][[j]]    #
+        heatdata[j] = m[['coef']][var,]#
+        #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))#
+    }#
+    matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)#
+    title(paste("Coef of ", var, sep=""))#
+}

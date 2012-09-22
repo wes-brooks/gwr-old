@@ -49,7 +49,7 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbo
             cat(paste("Couldn't make a model for finding the SSR at location ", i, ", bandwidth ", bw, "\n", sep=""))
             return(Inf)
         }
-    
+        
         beta.lm = lm.step$coeff[2:(m+1)]                   # mle except for intercept
         adapt.weight = abs(beta.lm)                        # weights for adaptive lasso
         for (k in 1:dim(x.centered)[2]) {
@@ -60,7 +60,6 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbo
                 adapt.weight[k] = 0 #This should allow the lambda-finding step to work.
             }
         }
-        
         predx = (x[colocated,] - meanx) * adapt.weight / normx
         
     } else {
@@ -74,19 +73,24 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbo
 
     xfit = sqrt.w %*% xs
     yfit = sqrt.w %*% yy
-    model = lars(x=xfit, y=yfit, type='lar', normalize=FALSE)
+    model = lars(x=xfit, y=yfit, type='lar', normalize=FALSE, intercept=TRUE)
     ll = model$lambda
 
+    predx = matrix(predx, reps, dim(xs)[2])
     predictions = predict(model, newx=predx, s=ll, type='fit', mode='lambda')[['fit']]
     cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(ll)), nrow=reps, ncol=length(ll))))
     s.optimal = ll[which.min(cv.error)]
     
     #Get the coefficients:
-    coef = predict(model, type='coefficients', s=s.optimal, mode='lambda')
+    coef = predict(model, type='coefficients', s=s.optimal, mode='lambda')[['coefficients']]
+    coef = Matrix(coef, ncol=1)
+    rownames(coef) = colnames(x)
+
+    intercept = predict(model, type='fit', s=s.optimal, mode='lambda', newx=matrix(0,1,nrow(coef)))[['fit']]
 
     #Get the residuals at this choice of s:
     fitted = predict(model, newx=xfit, s=s.optimal, type='fit', mode='lambda')[['fit']]
     resid = yfit - fitted
     
-    return(list(model=model, cv.error=cv.error, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid, coef=coef))
+    return(list(model=model, cv.error=cv.error, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid, coef=coef, intercept=intercept))
 }

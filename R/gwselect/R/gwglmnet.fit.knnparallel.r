@@ -6,7 +6,7 @@ gwglmnet.fit.knnparallel = function(x, y, family, coords, D, s, verbose, prior.w
     max.weights = rep(1, n)
     total.weight = sum(max.weights * prior.weights)
 
-    models = foreach(i=1:n, .packages=c('lars'), .errorhandling='remove') %dopar% {
+    models = foreach(i=1:n, .packages=c('glmnet'), .errorhandling='remove') %dopar% {
         loc = coords.unique[i,]
         dist = D[i,]
 
@@ -17,7 +17,7 @@ gwglmnet.fit.knnparallel = function(x, y, family, coords, D, s, verbose, prior.w
         bandwidth = opt$minimum
 
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
-        return(gwlars.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition))
+        return(gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition))
     }
 
     gwglmnet.object[['models']] = models

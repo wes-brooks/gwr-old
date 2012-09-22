@@ -1,6 +1,5 @@
-\documentclass[10pt]{amsart}
-\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
-\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+\documentclass[authoryear ,review]{elsarticle}
+\usepackage{amsmath}
 %\geometry{landscape}                % Activate for for rotated page geometry
 \usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}
@@ -55,7 +54,7 @@
 		\end{description}
   
 	\subsection{Simulated data}
-		Simulation studies are used to validate the method of analysis.\\
+		A simulation study is used to validate the method of analysis.\\
 	
 \section{Model definitions}
 	%This gets confusing with time/location of sampling:
@@ -141,7 +140,8 @@
 		
 		Where $D(s_i,s_j)$ is the distance from location of observation $i$ to location of observation $j$\\
 		
-		\subsubsection{Non-Gaussian data} A GWR model fit to non-Gaussian data from an exponential-family distribution is a geographically-weighted GLM (GW-GLM). Fitting a GW-GLM proceeds my maximum likelihood, rather than least squares. Again, the objective is to minimize a cross-validation criterion\footnote{I suspect that I am wrong here - minimizing each local model's CV error is probably overfitting because it is concerned only with the value at the model's central location. Instead, a BIC or GCV criterion that maximizes a regularized likelihood over the (weighted) data used in model-fitting will probably be a better choice. It would also allow selection of the Adaptive-LASSO tuning parameter to proceed at locations other than where the data was originally measured (which is not possible under the approach outlined here).} that is calculated by summing the CV error at the location of each observation. Variable selection is again by the Adaptive-LASSO with the adaptive weights coming from the unpenalized GLM. The equations below are for data following a binomial distribution\footnote{I've also used Poisson-distributed data (counts of aphids on the soybean plants), and the different distribution changes the likelihood function but not the schematic process of model-fitting.}.\\
+		\subsubsection{Non-Gaussian data} 
+		A GWR model fit to non-Gaussian data from an exponential-family distribution is a geographically-weighted GLM (GW-GLM). Fitting a GW-GLM proceeds my maximum likelihood, rather than least squares. Again, the objective is to minimize a cross-validation criterion\footnote{I suspect that I am wrong here - minimizing each local model's CV error is probably overfitting because it is concerned only with the value at the model's central location. Instead, a BIC or GCV criterion that maximizes a regularized likelihood over the (weighted) data used in model-fitting will probably be a better choice. It would also allow selection of the Adaptive-LASSO tuning parameter to proceed at locations other than where the data was originally measured (which is not possible under the approach outlined here).} that is calculated by summing the CV error at the location of each observation. Variable selection is again by the Adaptive-LASSO with the adaptive weights coming from the unpenalized GLM. The equations below are for data following a binomial distribution\footnote{I've also used Poisson-distributed data (counts of aphids on the soybean plants), and the different distribution changes the likelihood function but not the schematic process of model-fitting.}.\\
 		%\begin{gather*}
 		\[
 			%\{ \hat{\vect{\lambda}}, \: \hat{\bw} \} = \argmin_{\vect{\lambda}, \text{bw}} \left( \mbox{CV error} \right)  = \argmin_{\vect{\lambda}, \text{bw}} \left( \sum_{i = 1}^n \left( \sum_{k=1}^{m_i} |y_{ik}-\tilde{y}_{(i)k}(\lambda_i, \bw)| \right) \right)\\
@@ -175,8 +175,39 @@
 		
 		Where $D(s_i,s_j)$ is the distance from location of observation $i$ to location of observation $j$
 
+	\section{Data analysis}
+		\subsection{Simulated data}
+			 A simulation study is used to validate the method of analysis. Data was simulated from the following binomial spatial process:\\
+			\begin{eqnarray*}
+				Y(s) &\sim& \text{ Binomial} \left(N(s), p(s) \right)\\
+				\eta(s) &=& \vect{X}(s)^T \vect{\beta}(s)\\
+				p(s) &=& \frac{e^{\eta(s)}}{1+\eta(s)}\\
+				N(s) &\sim& \text{ Poisson} \left( 400 \right)\\
+				\\
+				\left( X_1(s), X_2(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\
+				\left( X_3(s), X_4(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\
+				\\
+				\beta_0(s) &\equiv& 0\\				
+				\beta_1(s) &=& \begin{cases}  2 \text{  if } s_x < 0.5 \\ 0 \text{  otherwise}  \end{cases}\\
+				\beta_2(s) &=& s_y\\
+				\beta_3(s) &\equiv& 0\\
+				\beta_4(s) &\equiv& 0
+			\end{eqnarray*}
+			
+			Where $s=(s_x, s_y) \in [0,1] \times [0,1]$. The process is observed on a regular $40 \times 40$ grid.\\
+			
+			The analysis was carried out using the $k$-nearest-neighbors bandwidth selection method, which selected $k=0.00480$ for the optimal bandwidth. The calculated coefficients are plotted in Figure \ref{simulation-coefs}.\\
+			
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics{../figures/simulation/coefs}
+					\caption{Coefficients calculated by GWSELECT for the simulated data.\label{simulation-coefs}}
+				\end{center}
+			\end{figure}
+			
 		
-\bibliographystyle{plain}
+\bibliographystyle{plainnat}
 \bibliography{../references/gwr}
 
 \end{document}  

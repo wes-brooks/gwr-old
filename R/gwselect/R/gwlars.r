@@ -1,17 +1,6 @@
 gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, verbose=FALSE, longlat, tol, method, adapt=FALSE, s=NULL, mode='lambda', parallel=FALSE, precondition=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
-    if (is(data, "Spatial")) {
-        if (!missing(coords)) 
-            warning("data is Spatial* object, ignoring coords argument")
-        coords <- coordinates(data)
-        if ((is.null(longlat) || !is.logical(longlat)) && !is.na(is.projected(data)) && 
-            !is.projected(data)) {
-            longlat <- TRUE
-        }
-        else longlat <- FALSE
-        data <- as(data, "data.frame")
-    }
     if (is.null(longlat) || !is.logical(longlat)) 
         longlat <- FALSE
     if (missing(coords)) 
@@ -90,6 +79,7 @@ gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, verbos
     res[['adapt']] = adapt
     res[['precondition']] = precondition
     res[['s']] = s
-
+    class(res) = "gwselect"
+    
     res
 }

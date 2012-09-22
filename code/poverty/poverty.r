@@ -1,5 +1,5 @@
 library(gwselect)
-registerCores(n=3)
+registerCores(n=7)
 
 #Import poverty data
 pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)
@@ -51,10 +51,12 @@ df = pov2[pov2$year==2006,]
 
 #Define which variables we'll use as predictors of poverty:
 #weights=rep(1, nrow(pov2))
-#predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
-#f = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))
-#bw = gwlars.sel(formula=f, data=pov2, coords=pov2[,c('x','y')], adapt=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", longlat=TRUE, tol=0.001, weights=weights, parallel=FALSE, verbose=FALSE, precondition=TRUE)
-#bw = 0.0102414680595446 #CV error: 5112.61388815266
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
+f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+bw.pov = 0.9310163
+model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+
 
 #Define which variables we'll use as predictors of poverty:
 #weights=rep(1, nrow(pov2))

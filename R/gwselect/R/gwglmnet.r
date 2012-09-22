@@ -87,6 +87,7 @@ gwglmnet <- function(formula, data, family, weights=NULL, coords, gweight, bw=NU
     res[['adapt']] = adapt
     res[['precondition']] = precondition
     res[['s']] = s
+    class(res) = "gwselect"
 
     res
 }
