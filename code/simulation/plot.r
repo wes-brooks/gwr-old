@@ -1,6 +1,6 @@
 heatdata = matrix(NA, 40,40)
 vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4')
-pdf("../../figures/simulation/coefs.pdf", width=6, height=9)
+pdf("../../figures/simulation/adapt-coefs.pdf", width=6, height=9)
 layout(matrix(1:6, 3, 2))
 
 for (var in vars) {

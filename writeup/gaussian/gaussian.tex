@@ -1,0 +1,166 @@
+\documentclass[authoryear ,review]{elsarticle}
+\usepackage{amsmath}
+%\geometry{landscape}                % Activate for for rotated page geometry
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{epstopdf}
+\usepackage{natbib}
+
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\bw}{\mbox{bw}}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\E}{\mathop{\mathbb E}}
+
+
+\title{GW-SELECT}
+\author{Wesley Brooks}
+\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+%\section{}
+%\subsection{}
+
+
+
+
+
+\section{Introduction}
+	Varying-coefficient models are a technique of local regression used in geostatistical analysis when one suspects that the effect of some covariate is not constant across the domain of a model. One method of fitting a varying-coefficient model is Geographically Weighted Regression (GWR) \cite{Fotheringham:2002}. In GWR, a local regression model is fit at each point of interest (often, the points of interest are the locations where the data was collected). The technique of fitting the local regression model is to give a weight between zero and one to each observation based on its geographical distance from the point of interest, then do a weighted regression analysis to get the local model.\\
+
+	This paper discusses ongoing work in the area of GWR, focusing on an effort to establish a method of variable selection for GWR models. Variable selection can mean several things:\\
+
+	\begin{itemize}
+		\item What are the predictor variables that have no effect on the measured output, anywhere in the model's domain?
+		\item Which coefficients are constant throughout the model's domain?
+		\item Which coefficients are zero in some regions but non-zero in others?
+	\end{itemize}
+
+	The goal of this project is to develop a method that can answer these questions and work out the conditions under which the answers are reliable. Variable selection is via the Adaptive-LASSO, applied independently to each local model. The LASSO for GWR models was introduced in \cite{Wheeler:2009}. That paper describes a process for model fitting that is similar to our process in the case of Gaussian data, but does not cover the Generalized Linear Model (GLM) case for non-Gaussian data that nevertheless follows an exponential-family distribution. Justification for the process in \cite{Wheeler:2009} is by simulation - the paper does not present theoretical proof of consistency of its estimators nor does it prove an oracle property for its variable selection.\\
+	
+	The method in \cite{Wheeler:2009} requires cross-validation to select the model's tuning parameter and thus the model can be built only at locations where there are 
+
+\section{Data}
+	\subsection{Observational data}
+		Observational data comes from four sources:\\
+		
+		\begin{description}
+			\item[Poverty data] From the U.S. Census Bureau, this data lists the proportion of families and individuals living in poverty at the county level for the midwestern states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. County populations and other social-economic variables are tracked as well. The goal of analysis with this data set is to estimate the effect that socio-economic variables have on the poverty rate]
+			\item[Soybean aphid data] Counts of aphids on soybean plats from 2003-2011, including the location of each measurement and an estimate of the crops grown nearby.
+			\item[Mountain Pine Beetle Data] Collected in Canada's Cascade Mountains, this includes annual measurements from 1972-1986 of the intensity of Pine Beetle infestation at each location, along with other landscape and climatic covariates.
+			\item[Land-cover data] The land use (in 1905, 1915, and 1986) of a region in northern Wisconsin's Chequamegon-Nicolet National Forest is compiled at the level of quarter sections of the Public Land Survey System (PLSS). Some predictor variables, calculated from land use statistics, are to be used in a model that describes the primary vegetation of each quarter section.
+		\end{description}
+  
+	\subsection{Simulated data}
+		A simulation study is used to validate the method of analysis.\\
+	
+\section{Model definitions}
+	%This gets confusing with time/location of sampling:
+	%Data consists of $n$ observations, sampled from spatial processes $\vect{X}(s, t)$ (predictor variables) and $Y(s, t)$ (response variable) at $m$ unique locations $s_1, \dots, s_m$. Each location $s_k$ is sampled $m_k$ times. . The number of observations at location $s_k$ is $m_k$. The observed data are $\left\{ \vect{X}(s_i) , Y(s_i) : i \in 1, \dots, m \right\}$. The response $Y$ is univariate; $\vect{X}(s)$ is $p$-variate: $\vect{X}(s) = (X_0(s), X_1(s), \dots, X_p(s))^T$, where $X_0(s) \equiv 1 \: \forall s$ \\
+	
+	%Assume each sample is from a unique location:
+	Data consists of $n$ observations, sampled from spatial processes $\vect{X}(s)$ (predictor variables) and $Y(s)$ (response variable) at $n$ unique locations $s_1, \dots, s_n$. The observed data are $\left\{ \vect{X}(s_i) , Y(s_i) : i \in 1, \dots, n \right\}$. The response $Y$ is univariate; $\vect{X}(s)$ is $p$-variate: $\vect{X}(s) = (X_0(s), X_1(s), \dots, X_p(s))^T$, where $X_0(s) \equiv 1 \: \forall s$ \\
+	
+	The data are compiled into matrices $X_{n \times p} = \left( \vect{X}(s_1), \dots, \vect{X}(s_n) \right)^T$ and $Y_{n \times 1} = \left(Y(s_1), \dots, Y(s_n) \right)^T$\\
+		
+	Assume that at each location $s$, the response $Y(s)$ is related to the predictor variables by a model:\\
+	% model with coefficients $\vect{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
+	
+	\[
+		Y(s_i) = f \left(\vect{X}(s_i) \right) %
+	\]
+	
+	The focus here is on the case where $f(\cdot)$ is a linear model model with coefficients $\vect{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
+	\[
+		Y(s_i) = \vect{X}(s_i)^T \vect{\beta}(s_i) + \epsilon(s_i) \text{, where } \epsilon_i \sim N\left( 0, \sigma_i^2 \right) \text{ for } i=1, \dots, n
+	\]
+	
+	Since the response variable is univariate, observed values are denoted, e.g., $y(s_i)$, while the vector of observed predictors at location $s_i$ is denoted $\vect{x}(s_i)$. The $k^{\text{th}}$ element of $\vect{x}(s_i)$ is $x_k(s_i)$. The Adaptive-LASSO is used for variable selection with a different tuning parameter selected for each local model, so the Adaptive-LASSO tuning parameter at location $s_i$ is denoted $\lambda(s_i)$.\\ 
+	
+
+\section{Methods}
+	The basic operation of GWR is to build a regression model at each of a set of pre-specified locations. At each model location, all of the observations in the data set are weighted based on their distance from the model location (the weights are uniquely specified by the combination of kernel function and bandwidth). The weighted observations are then used to build a regression model for that location.\\
+	
+	\subsection{Kernels}
+		The kernel for geographic weighting could in principle be any function that applies a positive weight to each observation in the data set. This analysis uses the bisquare kernel throughout, with weights based on distance (without regard for North-South versus East-West distances):
+		\[
+			\text{W}(\text{dist, bw}) = \begin{cases} (1-(\frac{\text{dist}}{\text{bw}})^2)^2, & \mbox{if dist} < \mbox{bw} \\
+			0, & \mbox{if dist} \ge \mbox{bw} \end{cases}
+		\]
+		
+		The bisquare kernel has the benefit of giving zero weight to observations beyond the bandwidth, so that each local model depends only on the data from a local neighborhood and not at all on observations from outside that neighborhood.\\
+		
+		Picking the bandwidth of the kernel is one crucial part of GWR. We currently have three methods to choose the bandwidth:
+		\begin{description}
+			\item[Global] the bandwidth is the same distance for all local models.
+			\item[$k$-nearest-neighbors] for a given proportion $q$ and $n$ total observations, the bandwidth of each local model is set so that the sum of the geographic weights is $q \times n$.
+			\item[Effective nearest neighbors] an adaptive bandwidth selection method, in which the desired sum-of-squared-residuals is pre-specified, and the bandwidth of each local model is adjusted to meet this criterion. The goal is to broaden the bandwidth in areas where the model does not change much, and to narrow it in areas where there is a steep gradient to the coefficient surface. Pearson residuals are used to find the effective nearest neighbors bandwidth for a GW-GLM.
+		\end{description}
+		
+		Each method requires a tuning parameter: this is the sum-of-squared-residuals for effective nearest neighbors, $q$ for k-nearest neighbors, and the bandwidth itself in the case of a global bandwidth. The local tuning parameter is selected by minimizing the sum of absolute cross-validation error at the location of interest This is a sum (and therefor not quite the same as leave-one-out cross-validation) because we will sometimes have more than one observation per location (e.g., each of the six decennial censuses in the \verb~poverty~ dataset gives us an observation at each county.)\\
+		
+		
+	\subsection{Model fitting}
+		\subsubsection{Gaussian data}
+		Fitting a GWR model to Gaussian data is done by minimizing the cross-validation criterion, using the Adaptive-LASSO for variable selection, where the adaptive weights are the Ordinary Least Squares (OLS) estimates of the model coefficients:
+
+		 \[
+			\{ \hat{\vect{\lambda}}, \: \hat{\bw} \} = \argmin_{\vect{\lambda}, \text{bw}} \left( \mbox{CV error} \right)  = \argmin_{\vect{\lambda}, \text{bw}} \left( \sum_{i = 1}^n \left| y(s_i)-\tilde{y}\left(s_i, \lambda(s_i), \bw \right) \right| \right)\\	
+		\]
+		
+		Where $\tilde{y}\left(s_i, \lambda(s_i), \bw \right)$ is the predicted value of the observation at location $s_i$ from the local model that was fit by leaving out the observation at location $s_i$:
+		\begin{gather*}
+			\hat{\vect{\beta}}\left(s_i, \lambda(s_i), \bw \right) = \argmin_{\vect{\beta}} \left( \sum_{j \neq i} w_{ij}(\bw)\left(y(s_j) - \vect{x}(s_j)^T \vect{\beta}\right)^2  +  \sum_{l=1}^p \lambda_{l}(s_i) \beta_l \right)\\
+			\lambda_{l}(s_i) = \frac{\lambda(s_i)}{\beta_{OLS,l}(s_i, \bw)}\\
+			\hat{\vect{\beta}}_{OLS}(s_i, \bw) = \argmin_{\vect{\beta}} \left( \sum_{j=1}^{n} w_{ij}(\bw)\left(y(s_j) - \vect{x}(s_j)^T \vect{\beta}\right)^2\right)\\
+			\tilde{y}\left(s_i, \lambda(s_i), \bw \right) = \vect{x}(s_i)^T \hat{\vect{\beta}}\left(s_i, \lambda(s_i), \bw \right)
+		\end{gather*}
+		
+		Finally, the weights are given by:
+		\[
+			w_{ij}(\bw) =  \begin{cases} \left(1-\left(\frac{D(s_i,s_j)}{\bw}\right)^2\right)^2, & \mbox{if } D(s_i,s_j) < \bw \\
+			0, & \mbox{if }D(s_i,s_j) \ge \bw \end{cases}
+		\]
+		
+		Where $D(s_i,s_j)$ is the distance from location of observation $i$ to location of observation $j$\\
+		
+		
+	\section{Data analysis}
+		\subsection{Simulated data}
+			 A simulation study is used to validate the method of analysis. Data was simulated from the following binomial spatial process:\\
+			\begin{eqnarray*}
+				Y(s) &\sim& \text{ Binomial} \left(N(s), p(s) \right)\\
+				\eta(s) &=& \vect{X}(s)^T \vect{\beta}(s)\\
+				p(s) &=& \frac{e^{\eta(s)}}{1+\eta(s)}\\
+				N(s) &\sim& \text{ Poisson} \left( 400 \right)\\
+				\\
+				\left( X_1(s), X_2(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\
+				\left( X_3(s), X_4(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\
+				\\
+				\beta_0(s) &\equiv& 0\\				
+				\beta_1(s) &=& \begin{cases}  2 \text{  if } s_x < 0.5 \\ 0 \text{  otherwise}  \end{cases}\\
+				\beta_2(s) &=& s_y\\
+				\beta_3(s) &\equiv& 0\\
+				\beta_4(s) &\equiv& 0
+			\end{eqnarray*}
+			
+			Where $s=(s_x, s_y) \in [0,1] \times [0,1]$. The process is observed on a regular $40 \times 40$ grid.\\
+			
+			The analysis was carried out using the $k$-nearest-neighbors bandwidth selection method, which selected $k=0.00480$ for the optimal bandwidth. The calculated coefficients are plotted in Figure \ref{simulation-coefs}.\\			
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics{../../figures/simulation/coefs}
+					\caption{Coefficients calculated by GWSELECT for the simulated data.\label{simulation-coefs}}
+				\end{center}
+			\end{figure}
+			
+		
+\bibliographystyle{plainnat}
+\bibliography{../references/gwr}
+
+\end{document}  

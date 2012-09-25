@@ -1,4 +1,4 @@
-gwlars.fit.knn = function(x, y, coords, D, s, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE) {
+gwlars.fit.knn = function(x, y, coords, D, s, mode.select, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE) {
     coords.unique = unique(coords)
     n = dim(coords.unique)[1]
     gwlars.object = list()
@@ -17,7 +17,7 @@ gwlars.fit.knn = function(x, y, coords, D, s, verbose, prior.weights, gweight, t
             prior.weights=prior.weights, target=target, precondition=precondition)
         bandwidth = opt$minimum
 
-        models[[i]] = gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
+        models[[i]] = gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, mode.select=mode.select, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
     }
 

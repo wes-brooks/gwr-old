@@ -1,4 +1,4 @@
-gwglmnet.fit.knnparallel = function(x, y, family, coords, D, s, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE) {
+gwglmnet.fit.knnparallel = function(x, y, family, coords, D, s,mode.select=mode.select, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE) {
     coords.unique = unique(coords)
     n = dim(coords.unique)[1]
     gwglmnet.object = list()
@@ -11,13 +11,13 @@ gwglmnet.fit.knnparallel = function(x, y, family, coords, D, s, verbose, prior.w
         dist = D[i,]
 
         opt = optimize(gwglmnet.knn, lower=beta1, upper=beta2, 
-            maximum=FALSE, tol=target/1000, coords=coords, loc=loc,
+            maximum=FALSE, tol=target/1000, coords=coords, loc=loc, mode.select=mode.select,
             gweight=gweight, verbose=verbose, dist=dist, total.weight=total.weight,
             prior.weights=prior.weights, target=target)
         bandwidth = opt$minimum
 
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
-        return(gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition))
+        return(gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, mode.select=mode.select, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition))
     }
 
     gwglmnet.object[['models']] = models

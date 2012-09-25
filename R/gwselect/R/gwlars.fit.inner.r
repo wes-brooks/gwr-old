@@ -1,21 +1,26 @@
-gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE) {
+gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.select='', verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE) {
     colocated = which(coords[,1]==as.numeric(loc[1]) & coords[,2]==as.numeric(loc[2]))
+    reps = length(colocated)
 
     if (is.null(gwr.weights)) {
-        gwr.weights = gweight(dist[-colocated], bw)     
+        gwr.weights = gweight(dist, bw)     
     } else {
-        gwr.weights = gwr.weights[-colocated]
-    }
-    
-    prior.loow = prior.weights[-colocated]
-    w <- prior.loow * gwr.weights        
-    reps = length(colocated)
-    sqrt.w <- diag(sqrt(w))             
+        gwr.weights = gwr.weights
+    }      
 
     if (sum(gwr.weights)==0) { return(list(cv.error=Inf, resid=Inf)) }   
-       
-    xx = as.matrix(x[-colocated,])
-    yy = as.matrix(y[-colocated])
+      
+    if (mode.select=='CV') { 
+        xx = as.matrix(x[-colocated,])
+        yy = as.matrix(y[-colocated])
+        w <- prior.weights[-colocated] * gwr.weights[-colocated]   
+    } else {
+        xx = as.matrix(x)
+        yy = as.matrix(y)
+        w <- prior.weights * gwr.weights
+    }
+    
+    sqrt.w <- diag(sqrt(w))       
     
     if (precondition==TRUE) {
         s = svd(xx)
@@ -74,23 +79,45 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, verbo
     xfit = sqrt.w %*% xs
     yfit = sqrt.w %*% yy
     model = lars(x=xfit, y=yfit, type='lar', normalize=FALSE, intercept=TRUE)
-    ll = model$lambda
+    #ll = model$lambda
+    nsteps = length(model$lambda) + 1
 
-    predx = matrix(predx, reps, dim(xs)[2])
-    predictions = predict(model, newx=predx, s=ll, type='fit', mode='lambda')[['fit']]
-    cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(ll)), nrow=reps, ncol=length(ll))))
-    s.optimal = ll[which.min(cv.error)]
+    if (mode.select=='CV') {
+        predx = matrix(predx, reps, dim(xs)[2])
+        #predictions = predict(model, newx=predx, s=ll, type='fit', mode='lambda')[['fit']]
+        predictions = predict(model, newx=predx, type='fit')[['fit']]
+        #cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(ll)), nrow=reps, ncol=length(ll))))
+        loss = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=nsteps), nrow=reps, ncol=nsteps)))
+        #s.optimal = ll[which.min(cv.error)]
+    } else if (mode.select=='AIC') {
+        coef = predict(model, type='coefficients')[['coefficients']]
+        df = apply(predict(model, type='coef')[['coefficients']], 1, function(x) {sum(abs(x)>0)}) + 1
+        fitted = matrix(predict(model, newx=xfit, type='fit', mode='lambda')[['fit']], n, nsteps)
+        s2 = (fitted[,nsteps] - yfit)**2 / sum(w)
+        loss = as.vector(apply(fitted, 2, function(z) {sum((z - yfit)**2)})/(s2*sum(w)) + 2*df/sum(w))
+        #s.optimal = which.min(    
+    } else if (mode.select=='BIC') {
+        coef = predict(model, type='coefficients')[['coefficients']]
+        df = apply(predict(model, type='coef')[['coefficients']], 1, function(x) {sum(abs(x)>0)}) + 1
+        fitted = matrix(predict(model, newx=xfit, type='fit', mode='step')[['fit']], n, nsteps)
+        s2 = (fitted[,nsteps] - yfit)**2 / sum(w)
+        loss = as.vector(apply(fitted, 2, function(z) {sum((z - yfit)**2)})/(s2*sum(w)) + log(sum(w))*df/sum(w)) 
+    }
+
+    print(loss)
+    s.optimal = numeric(which.min(loss))
+    print(s.optimal)
     
     #Get the coefficients:
-    coef = predict(model, type='coefficients', s=s.optimal, mode='lambda')[['coefficients']]
+    coef = predict(model, type='coefficients', s=s.optimal, mode='step')[['coefficients']]
     coef = Matrix(coef, ncol=1)
     rownames(coef) = colnames(x)
 
-    intercept = predict(model, type='fit', s=s.optimal, mode='lambda', newx=matrix(0,1,nrow(coef)))[['fit']]
+    intercept = predict(model, type='fit', s=s.optimal, mode='step', newx=matrix(0,1,nrow(coef)))[['fit']]
 
     #Get the residuals at this choice of s:
-    fitted = predict(model, newx=xfit, s=s.optimal, type='fit', mode='lambda')[['fit']]
+    fitted = predict(model, newx=xfit, s=s.optimal, type='fit', mode='step')[['fit']]
     resid = yfit - fitted
     
-    return(list(model=model, cv.error=cv.error, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid, coef=coef, intercept=intercept))
+    return(list(model=model, cv.error=loss, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid, coef=coef, intercept=intercept))
 }

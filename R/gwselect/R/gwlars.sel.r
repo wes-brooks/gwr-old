@@ -1,4 +1,4 @@
-gwlars.sel = function(formula, data=list(), coords, range=NULL, adapt=FALSE, gweight=gwr.Gauss, mode, s, method="dist", verbose=FALSE, longlat=FALSE, RMSE=FALSE, weights=NULL, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE) {
+gwlars.sel = function(formula, data=list(), coords, range=NULL, adapt=FALSE, gweight=gwr.Gauss, mode, s, mode.select="CV", method="dist", verbose=FALSE, longlat=FALSE, RMSE=FALSE, weights=NULL, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is.null(longlat) || !is.logical(longlat)) 
@@ -10,7 +10,7 @@ gwlars.sel = function(formula, data=list(), coords, range=NULL, adapt=FALSE, gwe
         beta1 = min(range)
         beta2 = max(range)
     } else {
-        if (method == "distance") {
+        if (method == "dist") {
             bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
             difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
             if (any(!is.finite(difmin))) 
@@ -27,7 +27,7 @@ gwlars.sel = function(formula, data=list(), coords, range=NULL, adapt=FALSE, gwe
     }
 
     opt <- optimize(gwlars.cv.f, lower=beta1, upper=beta2, 
-        maximum=FALSE, formula=formula, coords=coords, s=s, mode=mode,
+        maximum=FALSE, formula=formula, coords=coords, s=s, mode=mode, mode.select=mode.select,
         gweight=gweight, verbose=verbose, longlat=longlat, data=data, method=method,
         weights=weights, tol=tol, adapt=adapt, parallel=parallel, precondition=precondition)
 

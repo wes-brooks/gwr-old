@@ -1,4 +1,4 @@
-gwlars.fit.fixedbw = function(x, y, coords, bw, D=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE) {
+gwlars.fit.fixedbw = function(x, y, coords, bw, D=NULL, s=NULL, mode.select, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE) {
     coords.unique = unique(coords)
     n = dim(coords.unique)[1]
     gwlars.object = list()
@@ -11,7 +11,7 @@ gwlars.fit.fixedbw = function(x, y, coords, bw, D=NULL, s=NULL, verbose=FALSE, g
     for (i in 1:n) {
         #Fit one location's model here
         loc = coords.unique[i,]
-        models[[i]] = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, dist=D[i,], s=s, verbose=verbose, gwr.weights=gwr.weights[i,], prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
+        models[[i]] = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, dist=D[i,], s=s, mode.select, verbose=verbose, gwr.weights=gwr.weights[i,], prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
     }
 
     gwlars.object[['models']] = models
