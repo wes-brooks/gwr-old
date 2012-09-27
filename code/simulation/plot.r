@@ -1,5 +1,5 @@
 heatdata = matrix(NA, 40,40)
-vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4')
+vars = c('X1', 'X2', 'X3', 'X4')
 pdf("../../figures/simulation/adapt-coefs.pdf", width=6, height=9)
 layout(matrix(1:6, 3, 2))
 
@@ -9,7 +9,7 @@ for (var in vars) {
         heatdata[j] = m[['coef']][var,]
         #heatdata = rbind(heatdata, c(m[['loc']], out=m[['coef']][var,]))
     }
-    matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
+    gwr.matplot(heatdata, c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F)
     title(paste("Coef of ", var, sep=""))
 }
 dev.off()

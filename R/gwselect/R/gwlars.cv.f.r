@@ -3,8 +3,8 @@ gwlars.cv.f = function(formula, data, weights, bw, coords, gweight, verbose, ada
     cat(paste("preparing for bw:", bw, '\n', sep=''))
     gwlars.model = gwlars(formula=formula, data=data, weights=weights, coords=coords, longlat=longlat, gweight=gweight, bw=bw, adapt=adapt, mode=mode, s=s, mode.select=mode.select, method=method, parallel=parallel, precondition=precondition, verbose=verbose)
 
-    cv.error = sum(sapply(gwlars.model[['model']][['models']], function(x) {min(x[['cv.error']])}))
+    loss = sum(sapply(gwlars.model[['model']][['models']], function(x) {min(x[['loss']])}))
 
-    cat(paste('Bandwidth: ', bw, '. CV error: ', cv.error, '\n', sep=''))
-    return(cv.error)
+    cat(paste('Bandwidth: ', bw, '. Loss: ', loss, '\n', sep=''))
+    return(loss)
 }

@@ -13,7 +13,7 @@ gwlars.fit.knnparallel = function(x, y, coords, D, s, mode.select, verbose, prio
         opt = optimize(gwlars.knn, lower=beta1, upper=beta2, 
             maximum=FALSE, tol=target/1000, x=x, y=y, coords=coords, loc=loc, s=s, 
             gweight=gweight, verbose=verbose, dist=dist, adapt=adapt, total.weight=total.weight,
-            prior.weights=prior.weights, target=target, precondition=precondition)
+            prior.weights=prior.weights, target=target)
         bandwidth = opt$minimum
 
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))

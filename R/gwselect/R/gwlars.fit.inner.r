@@ -29,6 +29,12 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
         yy = F %*% yy
     }
 
+    xx = sqrt.w %*% xx
+    yy = sqrt.w %*% yy
+    
+    #meany = mean(y)
+    #yy = yy - meany
+
     m <- ncol(xx)
     n <- nrow(xx)
 
@@ -76,8 +82,9 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
         predx = x[colocated,]
     }
 
-    xfit = sqrt.w %*% xs
-    yfit = sqrt.w %*% yy
+    xfit = xs #sqrt.w %*% xs
+    yfit = yy #sqrt.w %*% yy
+
     model = lars(x=xfit, y=yfit, type='lar', normalize=FALSE, intercept=TRUE)
     #ll = model$lambda
     nsteps = length(model$lambda) + 1
@@ -90,34 +97,39 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
         loss = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=nsteps), nrow=reps, ncol=nsteps)))
         #s.optimal = ll[which.min(cv.error)]
     } else if (mode.select=='AIC') {
+        predx = t(apply(x, 1, function(X) {(X-meanx) * adapt.weight / normx}))
         coef = predict(model, type='coefficients')[['coefficients']]
         df = apply(predict(model, type='coef')[['coefficients']], 1, function(x) {sum(abs(x)>0)}) + 1
-        fitted = matrix(predict(model, newx=xfit, type='fit', mode='lambda')[['fit']], n, nsteps)
-        s2 = (fitted[,nsteps] - yfit)**2 / sum(w)
-        loss = as.vector(apply(fitted, 2, function(z) {sum((z - yfit)**2)})/(s2*sum(w)) + 2*df/sum(w))
-        #s.optimal = which.min(    
+        #fitted = predict(model, newx=xfit, type='fit', mode='lambda')[['fit']]
+        #s2 = sum((fitted[,nsteps] - yy)**2) / sum(w)
+        #loss = as.vector(apply(fitted, 2, function(z) {sum((z - yy)**2)})/(s2*sum(w)) + 2*df/sum(w))
+        fitted = predict(model, newx=predx, type='fit', mode='lambda')[['fit']]
+        s2 = sum(w*(fitted[,nsteps] - as.matrix(y))**2) / sum(w)
+        loss = as.vector(apply(fitted, 2, function(z) {sum(w*(z - y)**2)})/(s2*sum(w)) + 2*df/sum(w)) 
     } else if (mode.select=='BIC') {
         coef = predict(model, type='coefficients')[['coefficients']]
         df = apply(predict(model, type='coef')[['coefficients']], 1, function(x) {sum(abs(x)>0)}) + 1
-        fitted = matrix(predict(model, newx=xfit, type='fit', mode='step')[['fit']], n, nsteps)
-        s2 = (fitted[,nsteps] - yfit)**2 / sum(w)
-        loss = as.vector(apply(fitted, 2, function(z) {sum((z - yfit)**2)})/(s2*sum(w)) + log(sum(w))*df/sum(w)) 
+        fitted = predict(model, newx=xfit, type='fit', mode='step')[['fit']]
+        #s2 = sum((fitted[,nsteps] - yfit)**2) / sum(w)
+        #loss = as.vector(apply(fitted, 2, function(z) {sum((z - yfit)**2)})/(s2*sum(w)) + log(sum(w))*df/sum(w)) 
+        s2 = sum((fitted[,nsteps] - yfit)**2) / n
+        loss = as.vector(apply(fitted, 2, function(z) {sum((z - yfit)**2)})/(s2*n) + log(n)*df/n) 
     }
 
-    print(loss)
-    s.optimal = numeric(which.min(loss))
-    print(s.optimal)
+    #Get the tuning parameter to minimize the loss:
+    s.optimal = which.min(loss)
     
     #Get the coefficients:
     coef = predict(model, type='coefficients', s=s.optimal, mode='step')[['coefficients']]
     coef = Matrix(coef, ncol=1)
     rownames(coef) = colnames(x)
 
-    intercept = predict(model, type='fit', s=s.optimal, mode='step', newx=matrix(0,1,nrow(coef)))[['fit']]
-
+    coef = coef * adapt.weight / normx
+    intercept = predict(model, type='fit', s=s.optimal, mode='step', newx=matrix(0,1,nrow(coef)))[['fit']] #- coef[2:length(coef)] * meanx[2:length(coef)]
+    
     #Get the residuals at this choice of s:
     fitted = predict(model, newx=xfit, s=s.optimal, type='fit', mode='step')[['fit']]
     resid = yfit - fitted
     
-    return(list(model=model, cv.error=loss, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid, coef=coef, intercept=intercept))
+    return(list(model=model, loss=loss, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=resid, coef=coef, intercept=intercept))
 }
