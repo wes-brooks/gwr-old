@@ -1,4 +1,4 @@
-gwlars.fit.knnparallel = function(x, y, coords, D, s, mode.select, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE) {
+gwlars.fit.knnparallel = function(x, y, coords, D, N=N, s, mode.select, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE) {
     coords.unique = unique(coords)
     n = dim(coords.unique)[1]
     gwlars.object = list()
@@ -17,7 +17,7 @@ gwlars.fit.knnparallel = function(x, y, coords, D, s, mode.select, verbose, prio
         bandwidth = opt$minimum
 
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
-        return(gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, mode.select=mode.select, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition))
+        return(gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, N=N, s=s, mode.select=mode.select, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition))
     }
 
     gwlars.object[['models']] = models

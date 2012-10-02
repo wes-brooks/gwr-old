@@ -3,6 +3,7 @@ registerCores(n=7)
 
 #Import poverty data
 pov = read.csv("~/git/gwr/data/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)
+pov$X09pop = as.numeric(gsub(",", "", as.character(pov$X09pop)))
 years = c('60', '70', '80', '90', '00', '06')
 column.map = list(pindpov='proportion individuals in poverty', 
     logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', 
@@ -53,9 +54,13 @@ df = pov2[pov2$year==2006,]
 #weights=rep(1, nrow(pov2))
 predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
 f = as.formula(paste("logitindpov ~ -1+ ", paste(predictors, collapse="+"), sep=""))
-#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
-bw.pov = 0.9310163
-model = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov, mode='step', s=NULL, method="knn", tol=0.001, weights=rep(1, nrow(df)), parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+#bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], weights=df$X09pop, longlat=TRUE, gweight=bisquare, mode='step', mode.select='AIC', s=NULL, method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+bw.pov.noweights = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', mode.select='BIC', s=NULL, method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+#bw.pov (pov2, CV, knn) = 0.189408989047768
+#bw.pov (pov2, AIC, knn) = 0.491
+#bw.pov (df, AIC, knn) Bandwidth: 0.866496634540107. Loss: 0.116838909368888
+model.pov = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.pov.noweights, mode='step', mode.select='BIC', s=NULL, method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+
 
 
 #Define which variables we'll use as predictors of poverty:
@@ -80,4 +85,4 @@ model = gwglmnet(formula=f, data=pov2, family='binomial', weights=weights, bw=bw
 county = map_data('county')
 #state = map_data('state')
 
-plot.gwselect(model, var="pex", polygons=county)
+plot.gwselect(model.pov, var="pfire", polygons=county)

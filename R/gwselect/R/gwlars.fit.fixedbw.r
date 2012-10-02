@@ -11,7 +11,8 @@ gwlars.fit.fixedbw = function(x, y, coords, bw, D=NULL, s=NULL, mode.select, ver
     for (i in 1:n) {
         #Fit one location's model here
         loc = coords.unique[i,]
-        models[[i]] = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, dist=D[i,], s=s, mode.select, verbose=verbose, gwr.weights=gwr.weights[i,], prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
+        models[[i]] = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, dist=D[i,], N=N, s=s, mode.select, verbose=verbose, gwr.weights=gwr.weights[i,], prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
+        cat(paste("For i=", i, ", bw=", bw, ", loss=", paste(models[[i]][['loss']], collapse=","), "(min=", models[[i]][['loss']][models[[i]][['s']]], ").\n", sep=''))
     }
 
     gwlars.object[['models']] = models
