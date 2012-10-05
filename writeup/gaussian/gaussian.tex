@@ -12,6 +12,7 @@
 \DeclareMathOperator*{\argmin}{\arg\!\min}
 \DeclareMathOperator*{\argmax}{\arg\!\max}
 \DeclareMathOperator*{\bw}{\mbox{bw}}
+\DeclareMathOperator*{\df}{\mbox{df}}
 \newcommand{\vect}[1]{\boldsymbol{#1}}
 \newcommand{\E}{\mathop{\mathbb E}}
 
@@ -108,17 +109,18 @@
 		\subsubsection{Gaussian data}
 		Fitting a GWR model to Gaussian data is done by minimizing the cross-validation criterion, using the Adaptive-LASSO for variable selection, where the adaptive weights are the Ordinary Least Squares (OLS) estimates of the model coefficients:
 
-		 \[
-			\{ \hat{\vect{\lambda}}, \: \hat{\bw} \} = \argmin_{\vect{\lambda}, \text{bw}} \left( \mbox{CV error} \right)  = \argmin_{\vect{\lambda}, \text{bw}} \left( \sum_{i = 1}^n \left| y(s_i)-\tilde{y}\left(s_i, \lambda(s_i), \bw \right) \right| \right)\\	
-		\]
+		 \begin{eqnarray*}
+			\hat{\bw} &=& \argmin_{\text{bw}} \left( \mbox{AIC} \right)  = \argmin_{\text{bw}} \left( \sum_{i = 1}^n \frac{ \left(y(s_i)-\hat{y}\left(s_i, \hat{\lambda}(s_i), \bw \right) \right)^2 }{\sigma_i^2} + \log{\sigma_i^2} + \frac{2 \times \df}{\log{ \left(\sum_{j=1}^n w_{ij} \right) }} \right)\\	
+			\hat{\vect{\lambda}} &=& \argmin_{\vect{\lambda}} \left( \mbox{AIC} \right)  = \argmin_{\vect{\lambda}} \left( \sum_{i = 1}^n \right) 
+		\end{eqnarray*}
 		
-		Where $\tilde{y}\left(s_i, \lambda(s_i), \bw \right)$ is the predicted value of the observation at location $s_i$ from the local model that was fit by leaving out the observation at location $s_i$:
-		\begin{gather*}
-			\hat{\vect{\beta}}\left(s_i, \lambda(s_i), \bw \right) = \argmin_{\vect{\beta}} \left( \sum_{j \neq i} w_{ij}(\bw)\left(y(s_j) - \vect{x}(s_j)^T \vect{\beta}\right)^2  +  \sum_{l=1}^p \lambda_{l}(s_i) \beta_l \right)\\
-			\lambda_{l}(s_i) = \frac{\lambda(s_i)}{\beta_{OLS,l}(s_i, \bw)}\\
-			\hat{\vect{\beta}}_{OLS}(s_i, \bw) = \argmin_{\vect{\beta}} \left( \sum_{j=1}^{n} w_{ij}(\bw)\left(y(s_j) - \vect{x}(s_j)^T \vect{\beta}\right)^2\right)\\
-			\tilde{y}\left(s_i, \lambda(s_i), \bw \right) = \vect{x}(s_i)^T \hat{\vect{\beta}}\left(s_i, \lambda(s_i), \bw \right)
-		\end{gather*}
+		Where $\hat{y}\left(s_i, \lambda(s_i), \bw \right)$ is the predicted value of the observation at location $s_i$:
+		\begin{eqnarray*}
+			\hat{\vect{\beta}}\left(s_i, \lambda(s_i), \bw \right) &=& \argmin_{\vect{\beta}} \left( \sum_{j = 1}^n w_{ij}(\bw)\left(y(s_j) - \vect{x}(s_j)^T \vect{\beta}\right)^2  +  \sum_{l=1}^p \lambda_{l}(s_i) \beta_l \right)\\
+			\lambda_{l}(s_i) &=& \frac{\lambda(s_i)}{\beta_{OLS,l}(s_i, \bw)}\\
+			\hat{\vect{\beta}}_{OLS}(s_i, \bw) &=& \argmin_{\vect{\beta}} \left( \sum_{j=1}^{n} w_{ij}(\bw)\left(y(s_j) - \vect{x}(s_j)^T \vect{\beta}\right)^2\right)\\
+			\hat{y}\left(s_i, \lambda(s_i), \bw \right) &=& \vect{x}(s_i)^T \hat{\vect{\beta}}\left(s_i, \lambda(s_i), \bw \right)
+		\end{eqnarray*}
 		
 		Finally, the weights are given by:
 		\[
@@ -133,22 +135,25 @@
 		\subsection{Simulated data}
 			 A simulation study is used to validate the method of analysis. Data was simulated from the following binomial spatial process:\\
 			\begin{eqnarray*}
-				Y(s) &\sim& \text{ Binomial} \left(N(s), p(s) \right)\\
-				\eta(s) &=& \vect{X}(s)^T \vect{\beta}(s)\\
-				p(s) &=& \frac{e^{\eta(s)}}{1+\eta(s)}\\
-				N(s) &\sim& \text{ Poisson} \left( 400 \right)\\
+				Y(s) &\sim& \text{ N } \left(\mu(s), \sigma^2 \right)\\
+				\mu(s) &=& \vect{X}(s)^T \vect{\beta}(s)\\
+				\sigma^2 &=& 1\\
 				\\
 				\left( X_1(s), X_2(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\
 				\left( X_3(s), X_4(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\
+				X_5 &\sim& N \left( 0, 1 \right)\\
+				Z &\sim& N \left( 0, 1 \right)\\
 				\\
 				\beta_0(s) &\equiv& 0\\				
 				\beta_1(s) &=& \begin{cases}  2 \text{  if } s_x < 0.5 \\ 0 \text{  otherwise}  \end{cases}\\
-				\beta_2(s) &=& s_y\\
-				\beta_3(s) &\equiv& 0\\
-				\beta_4(s) &\equiv& 0
+				\beta_2(s) &=& 0\\
+				\beta_3(s) &\equiv&  s_y\\\
+				\beta_4(s) &\equiv& 0\\
+				\beta_5(s) &\equiv& 0\\
+				\beta_Z(s) &\equiv& 0\\				
 			\end{eqnarray*}
 			
-			Where $s=(s_x, s_y) \in [0,1] \times [0,1]$. The process is observed on a regular $40 \times 40$ grid.\\
+			Where $s=(s_x, s_y) \in [0,1] \times [0,1]$. The process is observed on a regular $30 \times 30$ grid.\\
 			
 			The analysis was carried out using the $k$-nearest-neighbors bandwidth selection method, which selected $k=0.00480$ for the optimal bandwidth. The calculated coefficients are plotted in Figure \ref{simulation-coefs}.\\			
 			
