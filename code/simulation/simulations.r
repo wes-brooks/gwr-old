@@ -29,8 +29,8 @@ N = 30
 coord = seq(0, 1, length.out=N)
 
 args = commandArgs(trailingOnly=TRUE)
-cluster = args[1]
-process = args[2]
+cluster = as.integer(args[1])
+process = as.integer(args[2])
 
 #Get two (independent) Gaussian random fields:
 set.seed(seeds[process])
@@ -89,18 +89,18 @@ bw = gwlars.sel(Y~X1+X2+X3+X4+X5+Z, data=sim, coords=sim[,c('loc.x','loc.y')], m
 model = gwlars(Y~X1+X2+X3+X4+X5+Z-1, data=sim, coords=sim[,c('loc.x','loc.y')], N=101, mode.select='AIC', bw=bw, gweight=bisquare, tol=0.01, s=NULL, mode='step', method='knn', parallel=FALSE, longlat=FALSE, adapt=TRUE, precondition=FALSE)
 
 #Write the results to some files:
-vars = c('Intercept', 'X1', 'X2', 'X3', 'X4', 'X5', 'Z')
-for (k in 2:7) {
+vars = c('X1', 'X2', 'X3', 'X4', 'X5', 'Z')
+for (k in 1:6) {
     coefs = t(sapply(1:N**2, function(y) {sapply(model[['model']][['models']][[y]][['coeflist']], function(x) {x[k]})}))
-    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".bootstrap.csv", sep=""))
+    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".bootstrap.csv", sep=""), sep=',', row.names=FALSE, col.names=FALSE)
 }
 
 coefs = t(sapply(1:N**2, function(y) {sapply(model[['model']][['models']][[y]][['intlist']], function(x) {x[1]})}))
-write.table(coefs, file=paste("output/", Intercept, ".", cluster, ".", process, ".bootstrap.csv", sep=""))
+write.table(coefs, file=paste("output/Intercept.", cluster, ".", process, ".bootstrap.csv", sep=""), sep=',', row.names=FALSE, col.names=FALSE)
 
 coefs = t(sapply(1:N**2, function(y) {as.vector(model[['model']][['models']][[y]][['coef']])}))
-coefs = cbind(coefs, sapply(1:N**2, function(y) {model[['model']][['models']][[y]][['intercept']]}))
-write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".csv", sep=""), col.names=vars)
+coefs = cbind(sapply(1:N**2, function(y) {model[['model']][['models']][[y]][['intercept']]}), coefs)
+write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".csv", sep=""), col.names=c("Intercept", vars), sep=',', row.names=FALSE)
 
 
 params = c('bw', 'sigma2', 'loss.local', 's', 'sum.weights')
@@ -111,7 +111,7 @@ for (i in 2:length(params)) {
     target = params[i]
     output = cbind(output, sapply(1:N**2, function(y) {model[['model']][['models']][[y]][[target]]}))
 }
-write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".csv", sep=""), col.names=params)
+write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".csv", sep=""), col.names=params, sep=',', row.names=FALSE)
 
 
 

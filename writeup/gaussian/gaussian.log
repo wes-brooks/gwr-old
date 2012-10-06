@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  4 OCT 2012 19:58
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  5 OCT 2012 13:39
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -227,62 +227,106 @@ Package pdftexcmds Info: \pdfdraftmode not found.
 
 Package epstopdf Warning: Drivers other than `pdftex.def' are not supported.
 
-)) (./gaussian.aux)
+)) (/usr/local/texlive/2012/texmf-dist/tex/latex/relsize/relsize.sty
+Package: relsize 2011/09/21 ver 4.0
+
+Examine \normalsize starts \@setfontsize size may be \@xpt. 
+Examine \small starts \@setfontsize size may be \@ixpt. 
+Examine \footnotesize starts \@setfontsize size may be \@viiipt. 
+Examine \large starts \@setfontsize size may be \@xiipt. 
+Examine \Large starts \@setfontsize size may be \@xivpt. 
+Examine \LARGE starts \@setfontsize size may be \@xviipt. 
+Examine \scriptsize starts \@setfontsize size may be \@viipt. 
+Examine \tiny starts \@setfontsize size may be \@vpt. 
+Examine \huge starts \@setfontsize size may be \@xxpt. 
+Examine \Huge starts \@setfontsize size may be \@xxvpt. )
+(/usr/local/texlive/2012/texmf-dist/tex/latex/subfigure/subfigure.sty
+Package: subfigure 2002/03/15 v2.1.5 subfigure package
+\subfigtopskip=\skip50
+\subfigcapskip=\skip51
+\subfigcaptopadj=\dimen118
+\subfigbottomskip=\skip52
+\subfigcapmargin=\dimen119
+\subfiglabelskip=\skip53
+\c@subfigure=\count107
+\c@lofdepth=\count108
+\c@subtable=\count109
+\c@lotdepth=\count110
+
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+(/usr/local/texlive/2012/texmf-dist/tex/latex/subfigure/subfigure.cfg)
+\subfig@top=\skip54
+\subfig@bottom=\skip55
+)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip56
+)
+(./gaussian.aux)
 \openout1 = `gaussian.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 24.
-LaTeX Font Info:    ... okay on input line 24.
-LaTeX Font Info:    Try loading font information for U+msa on input line 25.
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
+LaTeX Font Info:    ... okay on input line 28.
+LaTeX Font Info:    Try loading font information for U+msa on input line 29.
+ (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 25.
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
+LaTeX Font Info:    Try loading font information for U+msb on input line 29.
+ (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
 
 Package natbib Warning: Citation `Fotheringham:2002' on page 1 undefined on inp
-ut line 34.
+ut line 38.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 34--35
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 36--37
+Underfull \hbox (badness 10000) in paragraph at lines 38--39
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 39.
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--41
+
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 43.
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 39.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 43.
 
 
 Package natbib Warning: Citation `Wheeler:2009' on page 1 undefined on input li
-ne 44.
+ne 48.
 
 
 Package natbib Warning: Citation `Wheeler:2009' on page 1 undefined on input li
-ne 44.
+ne 48.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 44--45
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
+
+ []
+
+
+Package natbib Warning: Citation `Wheeler:2009' on page 1 undefined on input li
+ne 50.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
 
  []
 
@@ -290,52 +334,42 @@ Underfull \hbox (badness 10000) in paragraph at lines 44--45
 
 
 ]
-
-Package natbib Warning: Citation `Wheeler:2009' on page 2 undefined on input li
-ne 46.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 46--47
+Underfull \hbox (badness 10000) in paragraph at lines 54--55
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 50--51
+Underfull \hbox (badness 10000) in paragraph at lines 64--65
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 71--72
 
  []
 
 [2]
-Overfull \hbox (0.11763pt too wide) in paragraph at lines 55--56
-[]\OT1/cmr/m/n/10 Collected in Canada's Cas-cade Moun-tains, this
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 60--61
+Underfull \hbox (badness 10000) in paragraph at lines 73--74
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 67--68
+Underfull \hbox (badness 10000) in paragraph at lines 75--77
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 69--70
-
+Overfull \hbox (5.6072pt too wide) in paragraph at lines 82--83
+[]\OT1/cmr/m/n/10 The fo-cus here is on the case where $\OML/cmm/m/it/10 f\OT1/
+cmr/m/n/10 (\OMS/cmsy/m/n/10 ^^A\OT1/cmr/m/n/10 )$ is a lin-ear model model wit
+h co-ef-fi-cients $[](\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 ) = (\OML/cmm/m/it/10 ^
+^L[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; ^^L[
+]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; [] ; ^^
+L[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 ))$
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 71--73
-
- []
-
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 78--79
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 83--84
+Underfull \hbox (badness 10000) in paragraph at lines 82--83
 
  []
 
@@ -345,66 +379,144 @@ Underfull \hbox (badness 10000) in paragraph at lines 87--88
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 96--97
+Underfull \hbox (badness 10000) in paragraph at lines 91--92
+
+ []
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 100--101
+
+ []
+
+
+Overfull \hbox (6.4143pt too wide) in paragraph at lines 106--107
+[]\OT1/cmr/m/n/10 an adap-tive band-width se-lec-tion method, in which the de-s
+ired sum-of-squared-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 109--110
 
  []
 
 [4]
-Overfull \hbox (10.39139pt too wide) in paragraph at lines 102--103
-[]\OT1/cmr/m/n/10 an adap-tive band-width se-lec-tion method, in which
+Underfull \hbox (badness 10000) in paragraph at lines 135--136
+
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 105--106
+Underfull \hbox (badness 10000) in paragraph at lines 140--141
 
  []
 
 [5]
-Overfull \hbox (76.07016pt too wide) in alignment at lines 112--115
- [][][] []
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 128--129
+Underfull \hbox (badness 10000) in paragraph at lines 160--161
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 133--134
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 164--165
 
  []
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 153--154
+Underfull \hbox (badness 10000) in paragraph at lines 175--176
 
  []
 
-[7]
-Underfull \hbox (badness 10000) in paragraph at lines 155--156
+File: ../../figures/simulation/X1.coverage.pdf Graphic file (type QTm)
+<use  "../../figures/simulation/X1.coverage.pdf" >
+File: ../../figures/simulation/X1.selection.pdf Graphic file (type QTm)
 
- []
+<use  "../../figures/simulation/X1.selection.pdf" >
+File: ../../figures/simulation/X2.coverage.pdf Graphic file (type QTm)
 
-File: ../../figures/simulation/coefs.pdf Graphic file (type QTm)
-<use  "../../figures/simulation/coefs.pdf" >
-Overfull \hbox (88.61894pt too wide) in paragraph at lines 159--160
- [] 
- []
+<use  "../../figures/simulation/X2.coverage.pdf" >
+File: ../../figures/simulation/X2.selection.pdf Graphic file (type QTm)
 
+<use  "../../figures/simulation/X2.selection.pdf" >
+File: ../../figures/simulation/X3.coverage.pdf Graphic file (type QTm)
 
-LaTeX Warning: Float too large for page by 122.48396pt on input line 162.
+<use  "../../figures/simulation/X3.coverage.pdf" >
+File: ../../figures/simulation/X3.selection.pdf Graphic file (type QTm)
 
+<use  "../../figures/simulation/X3.selection.pdf" >
+File: ../../figures/simulation/X4.coverage.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/X4.coverage.pdf" >
+File: ../../figures/simulation/X4.selection.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/X4.selection.pdf" >
+File: ../../figures/simulation/X5.coverage.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/X5.coverage.pdf" >
+File: ../../figures/simulation/X5.selection.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/X5.selection.pdf" >
+File: ../../figures/simulation/Z.coverage.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/Z.coverage.pdf" >
+File: ../../figures/simulation/Z.selection.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/Z.selection.pdf" >
+File: ../../figures/simulation/Intercept.coverage.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/Intercept.coverage.pdf" >
+File: ../../figures/simulation/Intercept.selection.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/Intercept.selection.pdf" >
+File: ../../figures/poverty/pag.estimate.pdf Graphic file (type QTm)
+
+<use  "../../figures/poverty/pag.estimate.pdf" >
+File: ../../figures/poverty/pex.estimate.pdf Graphic file (type QTm)
+
+<use  "../../figures/poverty/pex.estimate.pdf" >
+File: ../../figures/poverty/pman.estimate.pdf Graphic file (type QTm)
+
+<use  "../../figures/poverty/pman.estimate.pdf" >
+File: ../../figures/poverty/pserve.estimate.pdf Graphic file (type QTm)
+
+<use  "../../figures/poverty/pserve.estimate.pdf" >
+File: ../../figures/poverty/pfire.estimate.pdf Graphic file (type QTm)
+
+<use  "../../figures/poverty/pfire.estimate.pdf" >
+File: ../../figures/poverty/potprof.estimate.pdf Graphic file (type QTm)
+
+<use  "../../figures/poverty/potprof.estimate.pdf" >
+File: ../../figures/poverty/pwh.estimate.pdf Graphic file (type QTm)
+
+<use  "../../figures/poverty/pwh.estimate.pdf" >
+File: ../../figures/poverty/pblk.estimate.pdf Graphic file (type QTm)
+
+<use  "../../figures/poverty/pblk.estimate.pdf" >
+File: ../../figures/poverty/phisp.estimate.pdf Graphic file (type QTm)
+
+<use  "../../figures/poverty/phisp.estimate.pdf" >
+File: ../../figures/poverty/metro.estimate.pdf Graphic file (type QTm)
+
+<use  "../../figures/poverty/metro.estimate.pdf" >
 No file gaussian.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-[8] [9] (./gaussian.aux) ) 
-Here is how much of TeX's memory you used:
- 2532 strings out of 494004
- 32204 string characters out of 3150890
- 92613 words of memory out of 3000000
- 5741 multiletter control sequences out of 15000+200000
- 10249 words of font info for 38 fonts, out of 3000000 for 9000
- 1144 hyphenation exceptions out of 8191
- 42i,16n,34p,800b,228s stack positions out of 5000i,500n,10000p,200000b,50000s
+[7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20]
+(./gaussian.aux)
 
-Output written on gaussian.pdf (9 pages).
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 2889 strings out of 494004
+ 37816 string characters out of 3150890
+ 98195 words of memory out of 3000000
+ 6037 multiletter control sequences out of 15000+200000
+ 13050 words of font info for 49 fonts, out of 3000000 for 9000
+ 1144 hyphenation exceptions out of 8191
+ 42i,15n,34p,800b,284s stack positions out of 5000i,500n,10000p,200000b,50000s
+
+Output written on gaussian.pdf (20 pages).

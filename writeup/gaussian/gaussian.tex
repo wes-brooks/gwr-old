@@ -8,6 +8,10 @@
 \usepackage{epstopdf}
 \usepackage{natbib}
 
+\usepackage{relsize}
+\usepackage{subfigure}
+\usepackage{fullpage}
+
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 \DeclareMathOperator*{\argmin}{\arg\!\min}
 \DeclareMathOperator*{\argmax}{\arg\!\max}
@@ -142,7 +146,7 @@
 				\left( X_1(s), X_2(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\
 				\left( X_3(s), X_4(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\
 				X_5 &\sim& N \left( 0, 1 \right)\\
-				Z &\sim& N \left( 0, 1 \right)\\
+				Z &\stackrel{\mathsmaller{iid}}{\sim}& N \left( 0, 1 \right)\\
 				\\
 				\beta_0(s) &\equiv& 0\\				
 				\beta_1(s) &=& \begin{cases}  2 \text{  if } s_x < 0.5 \\ 0 \text{  otherwise}  \end{cases}\\
@@ -153,18 +157,215 @@
 				\beta_Z(s) &\equiv& 0\\				
 			\end{eqnarray*}
 			
-			Where $s=(s_x, s_y) \in [0,1] \times [0,1]$. The process is observed on a regular $30 \times 30$ grid.\\
+			Where $s=(s_x, s_y) \in [0,1] \times [0,1]$. The variables $X_1, X_2, X_3, X_4, \text{ and } X_5$ were generated with autocorrelation. For each of these variables, the spatial covariance is given by $C = \sigma^2 \exp(-\phi^{-1} d)$, where $d$ is the distance between points and $\phi$ and $\sigma^2$ are covariance parameters. Both covariance parameters were set to 1 during this simulation.\\
+
+			The process is observed on a regular $30 \times 30$ grid.\\		
 			
-			The analysis was carried out using the $k$-nearest-neighbors bandwidth selection method, which selected $k=0.00480$ for the optimal bandwidth. The calculated coefficients are plotted in Figure \ref{simulation-coefs}.\\			
+			Simulation proceeded by repeating the following process 200 times:\\
+			
+			\begin{enumerate}
+				\item Generate the data from the process (given above)
+				\item Select the optimal bandwidth for a GWR model on the simulated data
+				\item Generate a model using the selected bandwidth
+				\item Use the bootstrap to generate the empirical distribution of local coefficients at each observation location
+				\item At each observation location, note whether each covariate was selected for inclusion
+				\item At each observation location, note whether each covariate's true coefficient is within the 95\% confidence interval as calculated by the bootstrap.
+			\end{enumerate}
+				
+			The analysis was carried out using the $k$-nearest-neighbors bandwidth selection method.\\			
 			
 			\begin{figure}
 				\begin{center}
-					\includegraphics{../../figures/simulation/coefs}
-					\caption{Coefficients calculated by GWSELECT for the simulated data.\label{simulation-coefs}}
+					\subfigure[Coverage of 95\% CI for $X_1$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/X1.coverage.pdf}
+						\label{figX1:subfig1}
+					}
+					\subfigure[Selection frequency for $X_1$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/X1.selection.pdf}
+						\label{figX1:subfig2}
+					}
+					\caption{Confidence interval coverage and selection frequency for $X_1$.\label{figX1}}
+				\end{center}
+			\end{figure}
+					
+					
+			\begin{figure}
+				\begin{center}
+					\subfigure[Coverage of 95\% CI for $X_2$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/X2.coverage.pdf}
+						\label{figX2:subfig1}
+					}
+					\subfigure[Selection frequency for $X_2$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/X2.selection.pdf}
+						\label{figX2:subfig2}
+					}									
+					\caption{Confidence interval coverage and selection frequency for $X_2$.\label{figX2}}
 				\end{center}
 			\end{figure}
 			
-		
+			
+			\begin{figure}
+				\begin{center}
+					\subfigure[Coverage of 95\% CI for $X_3$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/X3.coverage.pdf}
+						\label{figX3:subfig1}
+					}
+					\subfigure[Selection frequency for $X_3$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/X3.selection.pdf}
+						\label{figX3:subfig2}
+					}									
+					\caption{Confidence interval coverage and selection frequency for $X_3$.\label{figX3}}
+				\end{center}
+			\end{figure}
+			
+			
+			\begin{figure}
+				\begin{center}
+					\subfigure[Coverage of 95\% CI for $X_4$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/X4.coverage.pdf}
+						\label{figX4:subfig1}
+					}
+					\subfigure[Selection frequency for $X_4$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/X4.selection.pdf}
+						\label{figX4:subfig2}
+					}									
+					\caption{Confidence interval coverage and selection frequency for $X_4$.\label{figX4}}
+				\end{center}
+			\end{figure}
+			
+			
+			\begin{figure}
+				\begin{center}
+					\subfigure[Coverage of 95\% CI for $X_5$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/X5.coverage.pdf}
+						\label{figX5:subfig1}
+					}
+					\subfigure[Selection frequency for $X_5$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/X5.selection.pdf}
+						\label{figX5:subfig2}
+					}									
+					\caption{Confidence interval coverage and selection frequency for $X_5$.\label{figX5}}
+				\end{center}
+			\end{figure}
+			
+			
+			\begin{figure}
+				\begin{center}
+					\subfigure[Coverage of 95\% CI for $Z$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/Z.coverage.pdf}
+						\label{figZ:subfig1}
+					}
+					\subfigure[Selection frequency for $Z$]{
+						\includegraphics[width=3.1in]{../../figures/simulation/Z.selection.pdf}
+						\label{figZ:subfig2}
+					}									
+					\caption{Confidence interval coverage and selection frequency for $Z$.\label{figZ}}
+				\end{center}
+			\end{figure}
+			
+			
+			\begin{figure}
+				\begin{center}
+					\subfigure[Coverage of 95\% CI for intercept]{
+						\includegraphics[width=3.1in]{../../figures/simulation/Intercept.coverage.pdf}
+						\label{figIntercept:subfig1}
+					}
+					\subfigure[Selection frequency for intercept]{
+						\includegraphics[width=3.1in]{../../figures/simulation/Intercept.selection.pdf}
+						\label{figIntercept:subfig2}
+					}									
+					\caption{Confidence interval coverage and selection frequency for intercept.\label{figIntercept}}
+				\end{center}
+			\end{figure}
+			
+			
+			
+			
+			
+		\subsection{Poverty data}
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=5in]{../../figures/poverty/pag.estimate.pdf}
+					\caption{Estimated coefficient surface for pag.\label{fig:pag}}
+				\end{center}
+			\end{figure}
+					
+					
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=5in]{../../figures/poverty/pex.estimate.pdf}
+					\caption{Estimated coefficient surface for pex.\label{fig:pex}}
+				\end{center}
+			\end{figure}
+						
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=5in]{../../figures/poverty/pman.estimate.pdf}
+					\caption{Estimated coefficient surface for pman.\label{fig:pman}}
+				\end{center}
+			\end{figure}
+						
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=5in]{../../figures/poverty/pserve.estimate.pdf}
+					\caption{Estimated coefficient surface for pserve.\label{fig:pserve}}
+				\end{center}
+			\end{figure}
+						
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=5in]{../../figures/poverty/pfire.estimate.pdf}
+					\caption{Estimated coefficient surface for pfire.\label{fig:pfire}}
+				\end{center}
+			\end{figure}
+						
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=5in]{../../figures/poverty/potprof.estimate.pdf}
+					\caption{Estimated coefficient surface for potprof.\label{fig:potprof}}
+				\end{center}
+			\end{figure}
+			
+			
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=5in]{../../figures/poverty/pwh.estimate.pdf}
+					\caption{Estimated coefficient surface for pwh.\label{fig:pwh}}
+				\end{center}
+			\end{figure}
+						
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=5in]{../../figures/poverty/pblk.estimate.pdf}
+					\caption{Estimated coefficient surface for pblk.\label{fig:pblk}}
+				\end{center}
+			\end{figure}
+						
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=5in]{../../figures/poverty/phisp.estimate.pdf}
+					\caption{Estimated coefficient surface for phisp.\label{fig:phisp}}
+				\end{center}
+			\end{figure}
+						
+			
+			\begin{figure}
+				\begin{center}
+					\includegraphics[width=5in]{../../figures/poverty/metro.estimate.pdf}
+					\caption{Estimated coefficient surface for metro.\label{fig:metro}}
+				\end{center}
+			\end{figure}
+			
+
+
+			
 \bibliographystyle{plainnat}
 \bibliography{../references/gwr}
 

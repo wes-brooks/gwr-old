@@ -28,11 +28,11 @@ plot.gwselect = function(model, var=NULL, type='fitted', locs=NULL, polygons=NUL
 
         #Draw the map
         map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))
-        if (mean(mergedata$output, na.rm=TRUE)<=0) {       
-            map <- map + scale_fill_gradient(low='red', high='white', limits=range(mergedata$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
-        } else {
+        #if (mean(mergedata$output, na.rm=TRUE)<=0) {       
+        #    map <- map + scale_fill_gradient(low='red', high='white', limits=range(mergedata$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
+        #} else {
             map <- map + scale_fill_gradient(low='white', high='red', limits=range(mergedata$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
-        }
+        #}
     
         map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))
         
