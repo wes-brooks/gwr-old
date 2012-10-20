@@ -1,3 +1,5 @@
+library(plotrix)
+
 vars = c('Intercept', 'X1', 'X2', 'X3', 'X4', 'X5', 'Z')
 params = c('bw', 'sigma2', 'loss.local', 's', 'sum.weights')
 
@@ -5,7 +7,7 @@ source('code/matplot.r')
 
 args = commandArgs(trailingOnly=TRUE)
 #cluster = as.integer(args[1])
-cluster = 28
+cluster = 29
 
 N = 30
 B = list()
@@ -21,7 +23,7 @@ B[['Z']] = rep(0, N**2)
 
 coverage = list()
 selection = list()
-indx = (1:199)[c(-13, -47)]
+indx = (1:100)
 
 for (k in indx) {
     #Import our coefficient estimates
@@ -60,12 +62,12 @@ for (v in vars) {
     cc[[v]] = apply(coverage[[v]], 1, sum) / ncol(coverage[[v]])
     ss[[v]] = apply(selection[[v]], 1, sum) / ncol(selection[[v]])
     
-    pdf(paste("figures/simulation/", v, ".coverage.pdf", sep=""))
+    pdf(paste("figures/simulation/", v, ".", cluster, ".coverage.pdf", sep=""))
     gwr.matplot(matrix(cc[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
     #title(main=paste("Coverage of 95% CI for ", v, sep=""))
     dev.off()
 
-    pdf(paste("figures/simulation/", v, ".selection.pdf", sep=""))
+    pdf(paste("figures/simulation/", v, ".", cluster, ".selection.pdf", sep=""))
     gwr.matplot(matrix(ss[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
     #title(main=paste("Frequency that ", v, "is selected", sep=""))
     dev.off()

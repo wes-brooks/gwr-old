@@ -1,4 +1,4 @@
-gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, N=1, verbose=FALSE, longlat, tol, method, adapt=FALSE, s=NULL, mode.select="CV", mode='step', parallel=FALSE, precondition=FALSE) {
+gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, N=1, verbose=FALSE, longlat, tol, method, adapt=FALSE, s=NULL, mode.select="CV", shrink=TRUE, mode='step', parallel=FALSE, precondition=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is.null(longlat) || !is.logical(longlat)) 
@@ -45,9 +45,9 @@ gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, N=1, v
     if (method=='dist') {
         weight.matrix = gweight(D, bw)
         if (parallel) {
-            res[['model']] = gwlars.fit.fixedbwparallel(x=x, y=y, prior.weights=weights, coords=coords, D=D, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, mode=mode, verbose=verbose, adapt=adapt, precondition=precondition)
+            res[['model']] = gwlars.fit.fixedbwparallel(x=x, y=y, prior.weights=weights, coords=coords, D=D, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, precondition=precondition)
         } else {
-            res[['model']] = gwlars.fit.fixedbw(x=x, y=y, prior.weights=weights, coords=coords, D=D, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, mode=mode, verbose=verbose, adapt=adapt, precondition=precondition)
+            res[['model']] = gwlars.fit.fixedbw(x=x, y=y, prior.weights=weights, coords=coords, D=D, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, precondition=precondition)
         }
     } else {        
         bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
@@ -61,15 +61,15 @@ gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, N=1, v
 
         if (method=='nen') {
             if (parallel) {
-                res[['model']] = gwlars.fit.nenparallel(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwlars.fit.nenparallel(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             } else {
-                res[['model']] = gwlars.fit.nen(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwlars.fit.nen(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             }
         } else if (method=='knn') {
             if (parallel) {
-                res[['model']] = gwlars.fit.knnparallel(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwlars.fit.knnparallel(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             } else {
-                res[['model']] = gwlars.fit.knn(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwlars.fit.knn(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             }
         }
     }
@@ -84,6 +84,7 @@ gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, N=1, v
     res[['method']] = method
     res[['adapt']] = adapt
     res[['precondition']] = precondition
+    res[['shrink']] = shrink
     res[['s']] = s
     res[['mode.select']] = mode.select
     class(res) = "gwselect"

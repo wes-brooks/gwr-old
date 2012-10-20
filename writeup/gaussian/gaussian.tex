@@ -1,23 +1,34 @@
-\documentclass[authoryear ,review]{elsarticle}
+\documentclass[authoryear, review, 11pt]{elsarticle}
+
+\setlength{\textwidth}{6.5in}
+%\setlength{\textheight}{9in}
+\setlength{\topmargin}{0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\evensidemargin}{0in}
+
 \usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\usepackage{bm}
+
 %\geometry{landscape}                % Activate for for rotated page geometry
 \usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}
-\usepackage{amssymb}
-\usepackage{amsmath}
 \usepackage{epstopdf}
 \usepackage{natbib}
 
 \usepackage{relsize}
 \usepackage{subfigure}
-\usepackage{fullpage}
+%\usepackage{fullpage}
+\usepackage{booktabs}
 
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 \DeclareMathOperator*{\argmin}{\arg\!\min}
 \DeclareMathOperator*{\argmax}{\arg\!\max}
 \DeclareMathOperator*{\bw}{\mbox{bw}}
 \DeclareMathOperator*{\df}{\mbox{df}}
-\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\vect}[1]{\bm{#1}}
 \newcommand{\E}{\mathop{\mathbb E}}
 
 
@@ -63,28 +74,35 @@
 	\subsection{Simulated data}
 		A simulation study is used to validate the method of analysis.\\
 	
-\section{Model definitions}
+\section{Weighted Regression Models}
+
+	\subsection{Model}
+	
+	\subsection{Weighted Regression}
 	%This gets confusing with time/location of sampling:
-	%Data consists of $n$ observations, sampled from spatial processes $\vect{X}(s, t)$ (predictor variables) and $Y(s, t)$ (response variable) at $m$ unique locations $s_1, \dots, s_m$. Each location $s_k$ is sampled $m_k$ times. . The number of observations at location $s_k$ is $m_k$. The observed data are $\left\{ \vect{X}(s_i) , Y(s_i) : i \in 1, \dots, m \right\}$. The response $Y$ is univariate; $\vect{X}(s)$ is $p$-variate: $\vect{X}(s) = (X_0(s), X_1(s), \dots, X_p(s))^T$, where $X_0(s) \equiv 1 \: \forall s$ \\
+	%Data consists of $n$ observations, sampled from spatial processes $\bm{X}(s, t)$ (predictor variables) and $Y(s, t)$ (response variable) at $m$ unique locations $s_1, \dots, s_m$. Each location $s_k$ is sampled $m_k$ times. . The number of observations at location $s_k$ is $m_k$. The observed data are $\left\{ \bm{X}(s_i) , Y(s_i) : i \in 1, \dots, m \right\}$. The response $Y$ is univariate; $\bm{X}(s)$ is $p$-variate: $\bm{X}(s) = (X_0(s), X_1(s), \dots, X_p(s))^T$, where $X_0(s) \equiv 1 \: \forall s$ \\
 	
 	%Assume each sample is from a unique location:
-	Data consists of $n$ observations, sampled from spatial processes $\vect{X}(s)$ (predictor variables) and $Y(s)$ (response variable) at $n$ unique locations $s_1, \dots, s_n$. The observed data are $\left\{ \vect{X}(s_i) , Y(s_i) : i \in 1, \dots, n \right\}$. The response $Y$ is univariate; $\vect{X}(s)$ is $p$-variate: $\vect{X}(s) = (X_0(s), X_1(s), \dots, X_p(s))^T$, where $X_0(s) \equiv 1 \: \forall s$ \\
+	Data consists of $n$ observations, sampled from spatial processes $\bm{X}(s)$ (predictor variables) and $Y(s)$ (response variable) at $n$ unique locations $s_1, \dots, s_n$. The observed data are $\left\{ \bm{X}(s_i) , Y(s_i) : i \in 1, \dots, n \right\}$. The response $Y$ is univariate; $\bm{X}(s)$ is $p$-variate: $\bm{X}(s) = (X_0(s), X_1(s), \dots, X_p(s))^T$, where $X_0(s) \equiv 1 \: \forall s$ \\
 	
-	The data are compiled into matrices $X_{n \times p} = \left( \vect{X}(s_1), \dots, \vect{X}(s_n) \right)^T$ and $Y_{n \times 1} = \left(Y(s_1), \dots, Y(s_n) \right)^T$\\
+	The data are compiled into matrices $X_{n \times p} = \left( \bm{X}(s_1), \dots, \bm{X}(s_n) \right)^T$ and $Y_{n \times 1} = \left(Y(s_1), \dots, Y(s_n) \right)^T$\\
 		
 	Assume that at each location $s$, the response $Y(s)$ is related to the predictor variables by a model:\\
-	% model with coefficients $\vect{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
+	% model with coefficients $\bm{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
 	
 	\[
-		Y(s_i) = f \left(\vect{X}(s_i) \right) %
+		Y(s_i) = f \left(\bm{X}(s_i) \right) %
 	\]
 	
-	The focus here is on the case where $f(\cdot)$ is a linear model model with coefficients $\vect{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
+	The focus here is on the case where $f(\cdot)$ is a linear model model with coefficients $\bm{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
 	\[
-		Y(s_i) = \vect{X}(s_i)^T \vect{\beta}(s_i) + \epsilon(s_i) \text{, where } \epsilon_i \sim N\left( 0, \sigma_i^2 \right) \text{ for } i=1, \dots, n
+		Y(s_i) = \bm{X}(s_i)^T \bm{\beta}(s_i) + \epsilon(s_i)
+	\]
+	\[
+		\epsilon_i \sim \bm{\mathcal{N}} \left( 0, \sigma_i^2 \right)
 	\]
 	
-	Since the response variable is univariate, observed values are denoted, e.g., $y(s_i)$, while the vector of observed predictors at location $s_i$ is denoted $\vect{x}(s_i)$. The $k^{\text{th}}$ element of $\vect{x}(s_i)$ is $x_k(s_i)$. The Adaptive-LASSO is used for variable selection with a different tuning parameter selected for each local model, so the Adaptive-LASSO tuning parameter at location $s_i$ is denoted $\lambda(s_i)$.\\ 
+	Since the response variable is univariate, observed values are denoted, e.g., $y(s_i)$, while the vector of observed predictors at location $s_i$ is denoted $\bm{x}(s_i)$. The $k^{\text{th}}$ element of $\bm{x}(s_i)$ is $x_k(s_i)$. The Adaptive-LASSO is used for variable selection with a different tuning parameter selected for each local model, so the Adaptive-LASSO tuning parameter at location $s_i$ is denoted $\lambda(s_i)$.\\ 
 	
 
 \section{Methods}
@@ -115,15 +133,15 @@
 
 		 \begin{eqnarray*}
 			\hat{\bw} &=& \argmin_{\text{bw}} \left( \mbox{AIC} \right)  = \argmin_{\text{bw}} \left( \sum_{i = 1}^n \frac{ \left(y(s_i)-\hat{y}\left(s_i, \hat{\lambda}(s_i), \bw \right) \right)^2 }{\sigma_i^2} + \log{\sigma_i^2} + \frac{2 \times \df}{\log{ \left(\sum_{j=1}^n w_{ij} \right) }} \right)\\	
-			\hat{\vect{\lambda}} &=& \argmin_{\vect{\lambda}} \left( \mbox{AIC} \right)  = \argmin_{\vect{\lambda}} \left( \sum_{i = 1}^n \right) 
+			\hat{\bm{\lambda}} &=& \argmin_{\bm{\lambda}} \left( \mbox{AIC} \right)  = \argmin_{\bm{\lambda}} \left( \sum_{i = 1}^n \right) 
 		\end{eqnarray*}
 		
 		Where $\hat{y}\left(s_i, \lambda(s_i), \bw \right)$ is the predicted value of the observation at location $s_i$:
 		\begin{eqnarray*}
-			\hat{\vect{\beta}}\left(s_i, \lambda(s_i), \bw \right) &=& \argmin_{\vect{\beta}} \left( \sum_{j = 1}^n w_{ij}(\bw)\left(y(s_j) - \vect{x}(s_j)^T \vect{\beta}\right)^2  +  \sum_{l=1}^p \lambda_{l}(s_i) \beta_l \right)\\
+			\hat{\bm{\beta}}\left(s_i, \lambda(s_i), \bw \right) &=& \argmin_{\bm{\beta}} \left( \sum_{j = 1}^n w_{ij}(\bw)\left(y(s_j) - \bm{x}(s_j)^T \bm{\beta}\right)^2  +  \sum_{l=1}^p \lambda_{l}(s_i) \beta_l \right)\\
 			\lambda_{l}(s_i) &=& \frac{\lambda(s_i)}{\beta_{OLS,l}(s_i, \bw)}\\
-			\hat{\vect{\beta}}_{OLS}(s_i, \bw) &=& \argmin_{\vect{\beta}} \left( \sum_{j=1}^{n} w_{ij}(\bw)\left(y(s_j) - \vect{x}(s_j)^T \vect{\beta}\right)^2\right)\\
-			\hat{y}\left(s_i, \lambda(s_i), \bw \right) &=& \vect{x}(s_i)^T \hat{\vect{\beta}}\left(s_i, \lambda(s_i), \bw \right)
+			\hat{\bm{\beta}}_{OLS}(s_i, \bw) &=& \argmin_{\bm{\beta}} \left( \sum_{j=1}^{n} w_{ij}(\bw)\left(y(s_j) - \bm{x}(s_j)^T \bm{\beta}\right)^2\right)\\
+			\hat{y}\left(s_i, \lambda(s_i), \bw \right) &=& \bm{x}(s_i)^T \hat{\bm{\beta}}\left(s_i, \lambda(s_i), \bw \right)
 		\end{eqnarray*}
 		
 		Finally, the weights are given by:
@@ -140,7 +158,7 @@
 			 A simulation study is used to validate the method of analysis. Data was simulated from the following binomial spatial process:\\
 			\begin{eqnarray*}
 				Y(s) &\sim& \text{ N } \left(\mu(s), \sigma^2 \right)\\
-				\mu(s) &=& \vect{X}(s)^T \vect{\beta}(s)\\
+				\mu(s) &=& \bm{X}(s)^T \bm{\beta}(s)\\
 				\sigma^2 &=& 1\\
 				\\
 				\left( X_1(s), X_2(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\

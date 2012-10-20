@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  5 OCT 2012 13:39
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  19 OCT 2012 14:43
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -22,8 +22,8 @@ Document Class: elsarticle 2009/09/17, 1.2.0: Elsevier Ltd
 \@bls=\dimen102
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/size10.clo
-File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/size11.clo
+File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count80
 \c@section=\count81
@@ -161,8 +161,18 @@ LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
 LaTeX Info: Redefining \[ on input line 2666.
 LaTeX Info: Redefining \] on input line 2667.
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/parskip/parskip.sty
-Package: parskip 2001/04/09 non-zero parskip adjustments
+(/usr/local/texlive/2012/texmf-dist/tex/latex/amscls/amsthm.sty
+Package: amsthm 2009/07/02 v2.20.1
+\thm@style=\toks22
+\thm@bodyfont=\toks23
+\thm@headfont=\toks24
+\thm@notefont=\toks25
+\thm@headpunct=\toks26
+\thm@preskip=\skip50
+\thm@postskip=\skip51
+\thm@headsep=\skip52
+\dth@everypar=\toks27
+LaTeX Info: Redefining \qed on input line 244.
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Package: amssymb 2009/06/22 v3.00
@@ -174,6 +184,17 @@ Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
 ))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/bm.sty
+Package: bm 2004/02/26 v1.1c Bold Symbol Support (DPC/FMi)
+\symboldoperators=\mathgroup6
+\symboldletters=\mathgroup7
+\symboldsymbols=\mathgroup8
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 138.
+LaTeX Info: Redefining \bm on input line 204.
+)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/parskip/parskip.sty
+Package: parskip 2001/04/09 non-zero parskip adjustments
+)
 (/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/epstopdf.sty
 Package: epstopdf 2010/02/09 v2.5 Conversion with epstopdf on the fly (HO)
 
@@ -230,24 +251,24 @@ Package epstopdf Warning: Drivers other than `pdftex.def' are not supported.
 )) (/usr/local/texlive/2012/texmf-dist/tex/latex/relsize/relsize.sty
 Package: relsize 2011/09/21 ver 4.0
 
-Examine \normalsize starts \@setfontsize size may be \@xpt. 
-Examine \small starts \@setfontsize size may be \@ixpt. 
-Examine \footnotesize starts \@setfontsize size may be \@viiipt. 
+Examine \normalsize starts \@setfontsize size may be \@xipt. 
+Examine \small starts \@setfontsize size may be \@xpt. 
+Examine \footnotesize starts \@setfontsize size may be \@ixpt. 
 Examine \large starts \@setfontsize size may be \@xiipt. 
 Examine \Large starts \@setfontsize size may be \@xivpt. 
 Examine \LARGE starts \@setfontsize size may be \@xviipt. 
-Examine \scriptsize starts \@setfontsize size may be \@viipt. 
-Examine \tiny starts \@setfontsize size may be \@vpt. 
+Examine \scriptsize starts \@setfontsize size may be \@viiipt. 
+Examine \tiny starts \@setfontsize size may be \@vipt. 
 Examine \huge starts \@setfontsize size may be \@xxpt. 
 Examine \Huge starts \@setfontsize size may be \@xxvpt. )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/subfigure/subfigure.sty
 Package: subfigure 2002/03/15 v2.1.5 subfigure package
-\subfigtopskip=\skip50
-\subfigcapskip=\skip51
+\subfigtopskip=\skip53
+\subfigcapskip=\skip54
 \subfigcaptopadj=\dimen118
-\subfigbottomskip=\skip52
+\subfigbottomskip=\skip55
 \subfigcapmargin=\dimen119
-\subfiglabelskip=\skip53
+\subfiglabelskip=\skip56
 \c@subfigure=\count107
 \c@lofdepth=\count108
 \c@subtable=\count109
@@ -257,76 +278,83 @@ Package: subfigure 2002/03/15 v2.1.5 subfigure package
 * Local config file subfigure.cfg used *
 ****************************************
 (/usr/local/texlive/2012/texmf-dist/tex/latex/subfigure/subfigure.cfg)
-\subfig@top=\skip54
-\subfig@bottom=\skip55
+\subfig@top=\skip57
+\subfig@bottom=\skip58
 )
-(/usr/local/texlive/2012/texmf-dist/tex/latex/preprint/fullpage.sty
-Package: fullpage 1999/02/23 1.1 (PWD)
-\FP@margin=\skip56
+(/usr/local/texlive/2012/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2005/04/14 v1.61803 publication quality tables
+\heavyrulewidth=\dimen120
+\lightrulewidth=\dimen121
+\cmidrulewidth=\dimen122
+\belowrulesep=\dimen123
+\belowbottomsep=\dimen124
+\aboverulesep=\dimen125
+\abovetopsep=\dimen126
+\cmidrulesep=\dimen127
+\cmidrulekern=\dimen128
+\defaultaddspace=\dimen129
+\@cmidla=\count111
+\@cmidlb=\count112
+\@aboverulesep=\dimen130
+\@belowrulesep=\dimen131
+\@thisruleclass=\count113
+\@lastruleclass=\count114
+\@thisrulewidth=\dimen132
 )
 (./gaussian.aux)
 \openout1 = `gaussian.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 28.
-LaTeX Font Info:    ... okay on input line 28.
-LaTeX Font Info:    Try loading font information for U+msa on input line 29.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 39.
+LaTeX Font Info:    ... okay on input line 39.
+LaTeX Font Info:    Try loading font information for U+msa on input line 40.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 29.
+LaTeX Font Info:    Try loading font information for U+msb on input line 40.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
 
 Package natbib Warning: Citation `Fotheringham:2002' on page 1 undefined on inp
-ut line 38.
+ut line 49.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 38--39
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 40--41
+Underfull \hbox (badness 10000) in paragraph at lines 49--50
 
  []
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 43.
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
+
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 54.
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 43.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 54.
 
 
 Package natbib Warning: Citation `Wheeler:2009' on page 1 undefined on input li
-ne 48.
+ne 59.
 
 
 Package natbib Warning: Citation `Wheeler:2009' on page 1 undefined on input li
-ne 48.
+ne 59.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 48--49
-
- []
-
-
-Package natbib Warning: Citation `Wheeler:2009' on page 1 undefined on input li
-ne 50.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 50--51
+Underfull \hbox (badness 10000) in paragraph at lines 59--60
 
  []
 
@@ -334,64 +362,66 @@ Underfull \hbox (badness 10000) in paragraph at lines 50--51
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 54--55
+
+Package natbib Warning: Citation `Wheeler:2009' on page 2 undefined on input li
+ne 61.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 61--62
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 64--65
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 71--72
+Underfull \hbox (badness 10000) in paragraph at lines 65--66
 
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 73--74
+Underfull \hbox (badness 10000) in paragraph at lines 75--76
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 75--77
+Overfull \hbox (16.096pt too wide) in paragraph at lines 86--87
+\OT1/cmr/m/n/10.95 (re-sponse vari-able) at $\OML/cmm/m/it/10.95 n$ \OT1/cmr/m/
+n/10.95 unique lo-ca-tions $\OML/cmm/m/it/10.95 s[]; [] ; s[]$\OT1/cmr/m/n/10.9
+5 . The ob-served data are $[]$.
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--87
 
  []
 
 
-Overfull \hbox (5.6072pt too wide) in paragraph at lines 82--83
-[]\OT1/cmr/m/n/10 The fo-cus here is on the case where $\OML/cmm/m/it/10 f\OT1/
-cmr/m/n/10 (\OMS/cmsy/m/n/10 ^^A\OT1/cmr/m/n/10 )$ is a lin-ear model model wit
-h co-ef-fi-cients $[](\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 ) = (\OML/cmm/m/it/10 ^
-^L[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; ^^L[
-]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; [] ; ^^
-L[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 s\OT1/cmr/m/n/10 ))$
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--83
+Underfull \hbox (badness 10000) in paragraph at lines 88--89
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 87--88
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 91--92
+Underfull \hbox (badness 10000) in paragraph at lines 90--92
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 100--101
+Overfull \hbox (50.15941pt too wide) in paragraph at lines 97--98
+[]\OT1/cmr/m/n/10.95 The fo-cus here is on the case where $\OML/cmm/m/it/10.95 
+f\OT1/cmr/m/n/10.95 (\OMS/cmsy/m/n/10.95 ^^A\OT1/cmr/m/n/10.95 )$ is a lin-ear 
+model model with co-ef-fi-cients $\OML/cmm/b/it/10.95 ^^L\OT1/cmr/m/n/10.95 (\O
+ML/cmm/m/it/10.95 s\OT1/cmr/m/n/10.95 ) = (\OML/cmm/m/it/10.95 ^^L[]\OT1/cmr/m/
+n/10.95 (\OML/cmm/m/it/10.95 s\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 ; ^^L[]\O
+T1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 s\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 
+; [] ; ^^L[]\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 s\OT1/cmr/m/n/10.95 ))$
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 97--98
 
  []
 
 
-Overfull \hbox (6.4143pt too wide) in paragraph at lines 106--107
-[]\OT1/cmr/m/n/10 an adap-tive band-width se-lec-tion method, in which the de-s
-ired sum-of-squared-
+Underfull \hbox (badness 10000) in paragraph at lines 105--106
+
  []
 
 
@@ -400,32 +430,42 @@ Underfull \hbox (badness 10000) in paragraph at lines 109--110
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 135--136
+Underfull \hbox (badness 10000) in paragraph at lines 118--119
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 140--141
+Underfull \hbox (badness 10000) in paragraph at lines 127--128
 
  []
 
-[5]
-Underfull \hbox (badness 10000) in paragraph at lines 160--161
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 162--163
+[5] [6]
+Underfull \hbox (badness 10000) in paragraph at lines 153--154
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 164--165
+Underfull \hbox (badness 10000) in paragraph at lines 158--159
 
  []
 
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 175--176
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 178--179
+
+ []
+
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 180--181
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 182--183
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 193--194
 
  []
 
@@ -470,53 +510,322 @@ File: ../../figures/simulation/Intercept.coverage.pdf Graphic file (type QTm)
 File: ../../figures/simulation/Intercept.selection.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/Intercept.selection.pdf" >
+
+LaTeX Warning: File `../../figures/poverty/pag.estimate.pdf' not found on input
+ line 306.
+
+./gaussian.tex:306: Unable to load picture or PDF file '../../figures/poverty/p
+ag.estimate.pdf'.
+<to be read again> 
+                   }
+l.306 ...]{../../figures/poverty/pag.estimate.pdf}
+                                                  
+? 
+
+./gaussian.tex:306: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.306 ...]{../../figures/poverty/pag.estimate.pdf}
+                                                  
+? 
 File: ../../figures/poverty/pag.estimate.pdf Graphic file (type QTm)
-
 <use  "../../figures/poverty/pag.estimate.pdf" >
+./gaussian.tex:306: Unable to load picture or PDF file '../../figures/poverty/p
+ag.estimate.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.306 ...]{../../figures/poverty/pag.estimate.pdf}
+                                                  
+? 
+
+LaTeX Warning: File `../../figures/poverty/pex.estimate.pdf' not found on input
+ line 314.
+
+./gaussian.tex:314: Unable to load picture or PDF file '../../figures/poverty/p
+ex.estimate.pdf'.
+<to be read again> 
+                   }
+l.314 ...]{../../figures/poverty/pex.estimate.pdf}
+                                                  
+? 
+
+./gaussian.tex:314: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.314 ...]{../../figures/poverty/pex.estimate.pdf}
+                                                  
+? 
 File: ../../figures/poverty/pex.estimate.pdf Graphic file (type QTm)
-
 <use  "../../figures/poverty/pex.estimate.pdf" >
+./gaussian.tex:314: Unable to load picture or PDF file '../../figures/poverty/p
+ex.estimate.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.314 ...]{../../figures/poverty/pex.estimate.pdf}
+                                                  
+? 
+
+LaTeX Warning: File `../../figures/poverty/pman.estimate.pdf' not found on inpu
+t line 322.
+
+./gaussian.tex:322: Unable to load picture or PDF file '../../figures/poverty/p
+man.estimate.pdf'.
+<to be read again> 
+                   }
+l.322 ...{../../figures/poverty/pman.estimate.pdf}
+                                                  
+? 
+
+./gaussian.tex:322: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.322 ...{../../figures/poverty/pman.estimate.pdf}
+                                                  
+? 
 File: ../../figures/poverty/pman.estimate.pdf Graphic file (type QTm)
-
 <use  "../../figures/poverty/pman.estimate.pdf" >
+./gaussian.tex:322: Unable to load picture or PDF file '../../figures/poverty/p
+man.estimate.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.322 ...{../../figures/poverty/pman.estimate.pdf}
+                                                  
+? 
+
+LaTeX Warning: File `../../figures/poverty/pserve.estimate.pdf' not found on in
+put line 330.
+
+./gaussian.tex:330: Unable to load picture or PDF file '../../figures/poverty/p
+serve.estimate.pdf'.
+<to be read again> 
+                   }
+l.330 ..../../figures/poverty/pserve.estimate.pdf}
+                                                  
+? 
+
+./gaussian.tex:330: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.330 ..../../figures/poverty/pserve.estimate.pdf}
+                                                  
+? 
 File: ../../figures/poverty/pserve.estimate.pdf Graphic file (type QTm)
-
 <use  "../../figures/poverty/pserve.estimate.pdf" >
+./gaussian.tex:330: Unable to load picture or PDF file '../../figures/poverty/p
+serve.estimate.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.330 ..../../figures/poverty/pserve.estimate.pdf}
+                                                  
+? 
+
+LaTeX Warning: File `../../figures/poverty/pfire.estimate.pdf' not found on inp
+ut line 338.
+
+./gaussian.tex:338: Unable to load picture or PDF file '../../figures/poverty/p
+fire.estimate.pdf'.
+<to be read again> 
+                   }
+l.338 ...../../figures/poverty/pfire.estimate.pdf}
+                                                  
+? 
+
+./gaussian.tex:338: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.338 ...../../figures/poverty/pfire.estimate.pdf}
+                                                  
+? 
 File: ../../figures/poverty/pfire.estimate.pdf Graphic file (type QTm)
-
 <use  "../../figures/poverty/pfire.estimate.pdf" >
+./gaussian.tex:338: Unable to load picture or PDF file '../../figures/poverty/p
+fire.estimate.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.338 ...../../figures/poverty/pfire.estimate.pdf}
+                                                  
+? 
+
+LaTeX Warning: File `../../figures/poverty/potprof.estimate.pdf' not found on i
+nput line 346.
+
+./gaussian.tex:346: Unable to load picture or PDF file '../../figures/poverty/p
+otprof.estimate.pdf'.
+<to be read again> 
+                   }
+l.346 .../../figures/poverty/potprof.estimate.pdf}
+                                                  
+? 
+
+./gaussian.tex:346: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.346 .../../figures/poverty/potprof.estimate.pdf}
+                                                  
+? 
 File: ../../figures/poverty/potprof.estimate.pdf Graphic file (type QTm)
-
 <use  "../../figures/poverty/potprof.estimate.pdf" >
+./gaussian.tex:346: Unable to load picture or PDF file '../../figures/poverty/p
+otprof.estimate.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.346 .../../figures/poverty/potprof.estimate.pdf}
+                                                  
+? 
+
+LaTeX Warning: File `../../figures/poverty/pwh.estimate.pdf' not found on input
+ line 355.
+
+./gaussian.tex:355: Unable to load picture or PDF file '../../figures/poverty/p
+wh.estimate.pdf'.
+<to be read again> 
+                   }
+l.355 ...]{../../figures/poverty/pwh.estimate.pdf}
+                                                  
+? 
+
+./gaussian.tex:355: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.355 ...]{../../figures/poverty/pwh.estimate.pdf}
+                                                  
+? 
 File: ../../figures/poverty/pwh.estimate.pdf Graphic file (type QTm)
-
 <use  "../../figures/poverty/pwh.estimate.pdf" >
+./gaussian.tex:355: Unable to load picture or PDF file '../../figures/poverty/p
+wh.estimate.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.355 ...]{../../figures/poverty/pwh.estimate.pdf}
+                                                  
+? 
+
+LaTeX Warning: File `../../figures/poverty/pblk.estimate.pdf' not found on inpu
+t line 363.
+
+./gaussian.tex:363: Unable to load picture or PDF file '../../figures/poverty/p
+blk.estimate.pdf'.
+<to be read again> 
+                   }
+l.363 ...{../../figures/poverty/pblk.estimate.pdf}
+                                                  
+? 
+
+./gaussian.tex:363: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.363 ...{../../figures/poverty/pblk.estimate.pdf}
+                                                  
+? 
 File: ../../figures/poverty/pblk.estimate.pdf Graphic file (type QTm)
-
 <use  "../../figures/poverty/pblk.estimate.pdf" >
+./gaussian.tex:363: Unable to load picture or PDF file '../../figures/poverty/p
+blk.estimate.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.363 ...{../../figures/poverty/pblk.estimate.pdf}
+                                                  
+? 
+
+LaTeX Warning: File `../../figures/poverty/phisp.estimate.pdf' not found on inp
+ut line 371.
+
+./gaussian.tex:371: Unable to load picture or PDF file '../../figures/poverty/p
+hisp.estimate.pdf'.
+<to be read again> 
+                   }
+l.371 ...../../figures/poverty/phisp.estimate.pdf}
+                                                  
+? 
+
+./gaussian.tex:371: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.371 ...../../figures/poverty/phisp.estimate.pdf}
+                                                  
+? 
 File: ../../figures/poverty/phisp.estimate.pdf Graphic file (type QTm)
-
 <use  "../../figures/poverty/phisp.estimate.pdf" >
-File: ../../figures/poverty/metro.estimate.pdf Graphic file (type QTm)
+./gaussian.tex:371: Unable to load picture or PDF file '../../figures/poverty/p
+hisp.estimate.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.371 ...../../figures/poverty/phisp.estimate.pdf}
+                                                  
+? 
 
+LaTeX Warning: File `../../figures/poverty/metro.estimate.pdf' not found on inp
+ut line 379.
+
+./gaussian.tex:379: Unable to load picture or PDF file '../../figures/poverty/m
+etro.estimate.pdf'.
+<to be read again> 
+                   }
+l.379 ...../../figures/poverty/metro.estimate.pdf}
+                                                  
+? 
+
+./gaussian.tex:379: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.379 ...../../figures/poverty/metro.estimate.pdf}
+                                                  
+? 
+File: ../../figures/poverty/metro.estimate.pdf Graphic file (type QTm)
 <use  "../../figures/poverty/metro.estimate.pdf" >
+./gaussian.tex:379: Unable to load picture or PDF file '../../figures/poverty/m
+etro.estimate.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.379 ...../../figures/poverty/metro.estimate.pdf}
+                                                  
+? 
 No file gaussian.bbl.
 
 Package natbib Warning: There were undefined citations.
 
-[7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18] [19] [20]
-(./gaussian.aux)
+[9] [10] [11] [12] [13] [14] (./gaussian.aux)
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 2889 strings out of 494004
- 37816 string characters out of 3150890
- 98195 words of memory out of 3000000
- 6037 multiletter control sequences out of 15000+200000
- 13050 words of font info for 49 fonts, out of 3000000 for 9000
+ 3081 strings out of 494004
+ 40088 string characters out of 3150890
+ 97990 words of memory out of 3000000
+ 6211 multiletter control sequences out of 15000+200000
+ 16932 words of font info for 62 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,15n,34p,800b,284s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,15n,34p,803b,284s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (20 pages).
+Output written on gaussian.pdf (14 pages).

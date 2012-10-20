@@ -1,4 +1,4 @@
-gwlars.fit.fixedbwparallel = function(x, y, coords, bw, D=NULL, s=NULL, mode.select, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE) {
+gwlars.fit.fixedbwparallel = function(x, y, coords, bw, D=NULL, s=NULL, mode.select, shrink, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE) {
     coords.unique = unique(coords)
     n = dim(coords.unique)[1]
     gwlars.object = list()
@@ -11,7 +11,7 @@ gwlars.fit.fixedbwparallel = function(x, y, coords, bw, D=NULL, s=NULL, mode.sel
     models = foreach(i=1:n, .packages=c('lars'), .errorhandling='remove') %dopar% {
         #Fit one location's model here
         loc = coords.unique[i,]
-        m = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, dist=D[i,], N=N, s=s, mode.select, verbose=verbose, gwr.weights=gwr.weights[i,], prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
+        m = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, dist=D[i,], N=N, s=s, mode.select=mode.select, shrink=shrink, verbose=verbose, gwr.weights=gwr.weights[i,], prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
         cat(paste("For i=", i, ", bw=", bw, ", loss=", paste(m[['loss']], collapse=","), "(min=", m[['loss']][m[['s']]], ").\n", sep=''))
         
         return(m)
