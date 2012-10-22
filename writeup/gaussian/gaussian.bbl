@@ -1,0 +1,24 @@
+\begin{thebibliography}{2}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Fotheringham et~al.(2002)Fotheringham, Brunsdon, and
+  Charlton]{Fotheringham:2002}
+A.S. Fotheringham, C.~Brunsdon, and M.~Charlton.
+\newblock \emph{Geographically weighted regression: the analysis of spatially
+  varying relationships}.
+\newblock Wiley, 2002.
+\newblock ISBN 9780471496168.
+\newblock URL \url{http://books.google.com/books?id=mPWlG-0G3rQC}.
+
+\bibitem[Wheeler(2009)]{Wheeler:2009}
+David~C Wheeler.
+\newblock Simultaneous coefficient penalization and model selection in
+  geographically weighted regression: the geographically weighted lasso.
+\newblock \emph{Environment and Planning A}, 41:\penalty0 722--742, 2009.
+\newblock \doi{10.1068/a40256}.
+
+\end{thebibliography}

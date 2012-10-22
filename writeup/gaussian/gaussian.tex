@@ -46,41 +46,46 @@
 
 
 \section{Introduction}
-	Varying-coefficient models are a technique of local regression used in geostatistical analysis when one suspects that the effect of some covariate is not constant across the domain of a model. One method of fitting a varying-coefficient model is Geographically Weighted Regression (GWR) \cite{Fotheringham:2002}. In GWR, a local regression model is fit at each point of interest (often, the points of interest are the locations where the data was collected). The technique of fitting the local regression model is to give a weight between zero and one to each observation based on its geographical distance from the point of interest, then do a weighted regression analysis to get the local model.\\
-
-	This paper discusses ongoing work in the area of GWR, focusing on an effort to establish a method of variable selection for GWR models. Variable selection can mean several things:\\
-
-	\begin{itemize}
-		\item What are the predictor variables that have no effect on the measured output, anywhere in the model's domain?
-		\item Which coefficients are constant throughout the model's domain?
-		\item Which coefficients are zero in some regions but non-zero in others?
-	\end{itemize}
+	Varying-coefficient regression is a technique used in spatial statistics to model a non-stationary process. Geographically Weighted Regression (GWR) \cite{Fotheringham:2002} is a method of fitting varying-coefficient models. 
 
 	The goal of this project is to develop a method that can answer these questions and work out the conditions under which the answers are reliable. Variable selection is via the Adaptive-LASSO, applied independently to each local model. The LASSO for GWR models was introduced in \cite{Wheeler:2009}. That paper describes a process for model fitting that is similar to our process in the case of Gaussian data, but does not cover the Generalized Linear Model (GLM) case for non-Gaussian data that nevertheless follows an exponential-family distribution. Justification for the process in \cite{Wheeler:2009} is by simulation - the paper does not present theoretical proof of consistency of its estimators nor does it prove an oracle property for its variable selection.\\
 	
 	The method in \cite{Wheeler:2009} requires cross-validation to select the model's tuning parameter and thus local models can be built only at locations where the output variable has been observed. It will be desirable to build local models that interpolate between the locations where the observations were taken. Using an information criterion like the Akaike Information Criterion (AIC) or Bayesian Information Criterion (BIC) to select the tuning parameter could solve this problem. Another option is weighted cross-validation.\\
 
-\section{Data}
-	\subsection{Observational data}
-		Observational data comes from four sources:\\
-		
-		\begin{description}
-			\item[Poverty data] From the U.S. Census Bureau, this data lists the proportion of families and individuals living in poverty at the county level for the midwestern states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. County populations and other social-economic variables are tracked as well. The goal of analysis with this data set is to estimate the effect that socio-economic variables have on the poverty rate]
-			\item[Soybean aphid data] Counts of aphids on soybean plats from 2003-2011, including the location of each measurement and an estimate of the crops grown nearby.
-			\item[Mountain Pine Beetle Data] Collected in Canada's Cascade Mountains, this includes annual measurements from 1972-1986 of the intensity of Pine Beetle infestation at each location, along with other landscape and climatic covariates.
-			\item[Land-cover data] The land use (in 1905, 1915, and 1986) of a region in northern Wisconsin's Chequamegon-Nicolet National Forest is compiled at the level of quarter sections of the Public Land Survey System (PLSS). Some predictor variables, calculated from land use statistics, are to be used in a model that describes the primary vegetation of each quarter section.
-		\end{description}
+%\section{Data}
+%	\subsection{Observational data}
+%		Observational data comes from four sources:\\
+%		
+%		\begin{description}
+%			\item[Poverty data] From the U.S. Census Bureau, this data lists the proportion of families and individuals living in poverty at the county level for the midwestern states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. County populations and other social-economic variables are tracked as well. The goal of analysis with this data set is to estimate the effect that socio-economic variables have on the poverty rate]
+%			\item[Soybean aphid data] Counts of aphids on soybean plats from 2003-2011, including the location of each measurement and an estimate of the crops grown nearby.
+%			\item[Mountain Pine Beetle Data] Collected in Canada's Cascade Mountains, this includes annual measurements from 1972-1986 of the intensity of Pine Beetle infestation at each location, along with other landscape and climatic covariates.
+%			\item[Land-cover data] The land use (in 1905, 1915, and 1986) of a region in northern Wisconsin's Chequamegon-Nicolet National Forest is compiled at the level of quarter sections of the Public Land Survey System (PLSS). Some predictor variables, calculated from land use statistics, are to be used in a model that describes the primary vegetation of each quarter section.
+%		\end{description}
   
-	\subsection{Simulated data}
-		A simulation study is used to validate the method of analysis.\\
+%	\subsection{Simulated data}
+%		A simulation study is used to validate the method of analysis.\\
 	
-\section{Weighted Regression Models}
+\section{Geographically-weighted regression models}
 
 	\subsection{Model}
+	Let univariate $Y(s)$ and $(p+1)$-variate $\bm{X}(s) = \left( 1, X_1(s), \dots, X_p(s) \right)$ be spatial processes indexed by location $s$. For every $s$, let there be local regression coefficients $\bm{\beta}(s) = \left( \beta_0(s), \beta_1(s), \dots, \beta_p(s) \right)$ and local variance $\sigma^2(s)$ such that, 
+	\[
+		Y(s) | \bm{X}(s) \sim \mathcal{N} \left( \bm{X}(s) \bm{\beta}(s), \sigma^2(s) \right)
+	\]
 	
-	\subsection{Weighted Regression}
+	 For $i = 1, \dots, n$, let $\bm{x}(s_i)$ and $y(s_i)$ for $i = 1, \dots, n$ be realizations of the processes at location $s_i$. The likelihood of the observed data is 
+	 \[
+	 	L = \prod_{i=1}^n \left( \sqrt{2 \pi \sigma^2(s_i)} \exp \left(-\frac{1}{2\sigma^2\left(s_i\right)} \left(y(s_i) - \bm{x}(s_i)'\bm{\beta}(s_i) \right)^2 \right) \right)
+	\]
+	
+	\subsection{Geographically-weighted regression}
+
+	
 	%This gets confusing with time/location of sampling:
 	%Data consists of $n$ observations, sampled from spatial processes $\bm{X}(s, t)$ (predictor variables) and $Y(s, t)$ (response variable) at $m$ unique locations $s_1, \dots, s_m$. Each location $s_k$ is sampled $m_k$ times. . The number of observations at location $s_k$ is $m_k$. The observed data are $\left\{ \bm{X}(s_i) , Y(s_i) : i \in 1, \dots, m \right\}$. The response $Y$ is univariate; $\bm{X}(s)$ is $p$-variate: $\bm{X}(s) = (X_0(s), X_1(s), \dots, X_p(s))^T$, where $X_0(s) \equiv 1 \: \forall s$ \\
+	
+	
 	
 	%Assume each sample is from a unique location:
 	Data consists of $n$ observations, sampled from spatial processes $\bm{X}(s)$ (predictor variables) and $Y(s)$ (response variable) at $n$ unique locations $s_1, \dots, s_n$. The observed data are $\left\{ \bm{X}(s_i) , Y(s_i) : i \in 1, \dots, n \right\}$. The response $Y$ is univariate; $\bm{X}(s)$ is $p$-variate: $\bm{X}(s) = (X_0(s), X_1(s), \dots, X_p(s))^T$, where $X_0(s) \equiv 1 \: \forall s$ \\
@@ -300,91 +305,92 @@
 			
 			
 			
-		\subsection{Poverty data}
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=5in]{../../figures/poverty/pag.estimate.pdf}
-					\caption{Estimated coefficient surface for pag.\label{fig:pag}}
-				\end{center}
-			\end{figure}
-					
-					
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=5in]{../../figures/poverty/pex.estimate.pdf}
-					\caption{Estimated coefficient surface for pex.\label{fig:pex}}
-				\end{center}
-			\end{figure}
-						
-			
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=5in]{../../figures/poverty/pman.estimate.pdf}
-					\caption{Estimated coefficient surface for pman.\label{fig:pman}}
-				\end{center}
-			\end{figure}
-						
-			
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=5in]{../../figures/poverty/pserve.estimate.pdf}
-					\caption{Estimated coefficient surface for pserve.\label{fig:pserve}}
-				\end{center}
-			\end{figure}
-						
-			
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=5in]{../../figures/poverty/pfire.estimate.pdf}
-					\caption{Estimated coefficient surface for pfire.\label{fig:pfire}}
-				\end{center}
-			\end{figure}
-						
-			
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=5in]{../../figures/poverty/potprof.estimate.pdf}
-					\caption{Estimated coefficient surface for potprof.\label{fig:potprof}}
-				\end{center}
-			\end{figure}
-			
-			
-			
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=5in]{../../figures/poverty/pwh.estimate.pdf}
-					\caption{Estimated coefficient surface for pwh.\label{fig:pwh}}
-				\end{center}
-			\end{figure}
-						
-			
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=5in]{../../figures/poverty/pblk.estimate.pdf}
-					\caption{Estimated coefficient surface for pblk.\label{fig:pblk}}
-				\end{center}
-			\end{figure}
-						
-			
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=5in]{../../figures/poverty/phisp.estimate.pdf}
-					\caption{Estimated coefficient surface for phisp.\label{fig:phisp}}
-				\end{center}
-			\end{figure}
-						
-			
-			\begin{figure}
-				\begin{center}
-					\includegraphics[width=5in]{../../figures/poverty/metro.estimate.pdf}
-					\caption{Estimated coefficient surface for metro.\label{fig:metro}}
-				\end{center}
-			\end{figure}
+		%\subsection{Poverty data}
+		%	\begin{figure}
+		%		\begin{center}
+		%			\includegraphics[width=5in]{../../figures/poverty/pag.estimate.pdf}
+		%			\caption{Estimated coefficient surface for pag.\label{fig:pag}}
+		%		\end{center}
+		%	\end{figure}
+		%			
+		%			
+		%	\begin{figure}
+		%		\begin{center}
+		%			\includegraphics[width=5in]{../../figures/poverty/pex.estimate.pdf}
+		%			\caption{Estimated coefficient surface for pex.\label{fig:pex}}
+		%		\end{center}
+		%	\end{figure}
+		%				
+		%	
+		%	\begin{figure}
+		%		\begin{center}
+		%			\includegraphics[width=5in]{../../figures/poverty/pman.estimate.pdf}
+		%			\caption{Estimated coefficient surface for pman.\label{fig:pman}}
+		%		\end{center}
+		%	\end{figure}
+		%				
+		%	
+		%	\begin{figure}
+		%		\begin{center}
+		%			\includegraphics[width=5in]{../../figures/poverty/pserve.estimate.pdf}
+		%			\caption{Estimated coefficient surface for pserve.\label{fig:pserve}}
+		%		\end{center}
+		%	\end{figure}
+		%				
+		%	
+		%	\begin{figure}
+		%		\begin{center}
+		%			\includegraphics[width=5in]{../../figures/poverty/pfire.estimate.pdf}
+		%			\caption{Estimated coefficient surface for pfire.\label{fig:pfire}}
+		%		\end{center}
+		%	\end{figure}
+		%				
+		%	
+		%	\begin{figure}
+		%		\begin{center}
+		%			\includegraphics[width=5in]{../../figures/poverty/potprof.estimate.pdf}
+		%			\caption{Estimated coefficient surface for potprof.\label{fig:potprof}}
+		%		\end{center}
+		%	\end{figure}
+		%	
+		%	
+		%	
+		%	\begin{figure}
+		%		\begin{center}
+		%			\includegraphics[width=5in]{../../figures/poverty/pwh.estimate.pdf}
+		%			\caption{Estimated coefficient surface for pwh.\label{fig:pwh}}
+		%		\end{center}
+		%	\end{figure}
+		%				
+		%	
+		%	\begin{figure}
+		%		\begin{center}
+		%			\includegraphics[width=5in]{../../figures/poverty/pblk.estimate.pdf}
+		%			\caption{Estimated coefficient surface for pblk.\label{fig:pblk}}
+		%		\end{center}
+		%	\end{figure}
+		%				
+		%	
+		%	\begin{figure}
+		%		\begin{center}
+		%			\includegraphics[width=5in]{../../figures/poverty/phisp.estimate.pdf}
+		%			\caption{Estimated coefficient surface for phisp.\label{fig:phisp}}
+		%		\end{center}
+		%	\end{figure}
+		%				
+		%	
+		%	\begin{figure}
+		%		\begin{center}
+		%			\includegraphics[width=5in]{../../figures/poverty/metro.estimate.pdf}
+		%			\caption{Estimated coefficient surface for metro.\label{fig:metro}}
+		%		\end{center}
+		%	\end{figure}
 			
 
 
 			
+\section{References}
 \bibliographystyle{plainnat}
-\bibliography{../references/gwr}
+\bibliography{../../references/gwr}
 
 \end{document}  

@@ -8,8 +8,6 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
         gwr.weights = gwr.weights
     }      
 
-    if (sum(gwr.weights)==0) { return(list(cv.error=Inf, resid=Inf)) }   
-
     if (mode.select=='CV') { 
         xx = as.matrix(x[-colocated,])
         yy = as.matrix(y[-colocated])
@@ -19,6 +17,8 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
         yy = as.matrix(y)
         w <- prior.weights * gwr.weights
     }
+
+    if (sum(gwr.weights)==0) { return(list(loss.local=Inf, resid=Inf)) } 
 
     m <- ncol(xx)
     n <- nrow(xx)
@@ -47,7 +47,7 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
         yyy = sqrt.w %*% yy[permutation,]
         meany = mean(yyy)
         yyy = yyy - meany
-        
+
         if (precondition==TRUE) {
             s = svd(xxx)
             F = s$u  %*% diag(1/s$d)  %*%  t(s$u)
@@ -75,7 +75,7 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
         
             if(class(lm.step) == "try-error") { 
                 cat(paste("Couldn't make a model for finding the SSR at location ", i, ", bandwidth ", bw, "\n", sep=""))
-                return(Inf)
+                return(return(list(loss.local=Inf, resid=Inf)))
             }
             
             beta.lm = lm.step$coeff #[2:(m+1)]                   # mle except for intercept
@@ -130,14 +130,15 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
 
         } else if (mode.select=='AIC') {
             predx = t(apply(xx, 1, function(X) {(X-meanx) * adapt.weight / normx}))
-            cv = cv.lars(x=xfit, y=yfit, mode='step', type='lar', K=10, plot.it=FALSE)
-            cv.lim = min(cv$cv) + cv$cv.error[which.min(cv$cv)]
-            S = which(cv$cv<cv.lim)[1]
             vars = apply(predict(model, type='coef')[['coefficients']], 1, function(x) {which(abs(x)>0)})
             df = sapply(vars, length) + 1
                         
             if (sum(w[permutation]) > nsteps) {
                 if (shrink==FALSE) {
+                    cv = cv.lars(x=xfit, y=yfit, mode='step', type='lar', K=min(10, n.weighted), plot.it=FALSE)
+                    cv.lim = min(cv$cv) + cv$cv.error[which.min(cv$cv)]
+                    S = which(cv$cv<cv.lim)[1]
+
                     models = list()
                     loss = vector()
                     coefs = vector()
@@ -188,9 +189,7 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
     
         #Get the tuning parameter to minimize the loss:
         s.optimal = which.min(loss)
-        #print(loss.local)
         loss.local = loss.local[s.optimal]
-        #print(loss.local)        
 
         #Get the coefficients:
         coefs = coefs[s.optimal,] #predict(model, type='coefficients', s=s.optimal, mode='step')[['coefficients']]
