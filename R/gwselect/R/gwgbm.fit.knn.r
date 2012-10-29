@@ -1,7 +1,7 @@
-gwglmnet.fit.knn = function(x, y, family, coords, D, s, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE) {
+gwgbm.fit.knn = function(x, y, family, coords, D, s, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE) {
     coords.unique = unique(coords)
     n = dim(coords.unique)[1]
-    gwglmnet.object = list()
+    gwgbm.object = list()
     models = list()
 
     max.weights = rep(1, n)
@@ -11,20 +11,20 @@ gwglmnet.fit.knn = function(x, y, family, coords, D, s, verbose, prior.weights, 
         loc = coords.unique[i,]
         dist = D[i,]
 
-        opt = optimize(gwglmnet.knn, lower=beta1, upper=beta2, 
+        opt = optimize(gwgbm.knn, lower=beta1, upper=beta2, 
             maximum=FALSE, tol=target/1000, coords=coords, loc=loc,
             gweight=gweight, verbose=verbose, dist=dist, total.weight=total.weight,
             prior.weights=prior.weights, target=target)
         bandwidth = opt$minimum
 
-        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition)
+        models[[i]] = gwgbm.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, precondition=precondition)
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
     }
 
-    gwglmnet.object[['models']] = models
-    gwglmnet.object[['coords']] = coords
-    gwglmnet.object[['s.range']] = s
+    gwgbm.object[['models']] = models
+    gwgbm.object[['coords']] = coords
+    gwgbm.object[['s.range']] = s
 
-    class(gwglmnet.object) = 'gwglmnet.object'
-    return(gwglmnet.object)
+    class(gwgbm.object) = 'gwgbm.object'
+    return(gwgbm.object)
 }

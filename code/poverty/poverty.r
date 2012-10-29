@@ -60,9 +60,12 @@ for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
     #Define which variables we'll use as predictors of poverty:
     #weights=rep(1, nrow(pov2))
     predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
-    f = as.formula(paste("logitindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
+    #f = as.formula(paste("logitindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
+    f = as.formula(paste("pindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
     #bw.pov = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], weights=df$X09pop, longlat=TRUE, gweight=bisquare, mode='step', mode.select='AIC', s=NULL, method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
-    bw[[as.character(year)]] = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', mode.select='AIC', s=NULL, method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE, shrink=TRUE)
+    #bw[[as.character(year)]] = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode='step', mode.select='AIC', s=NULL, method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE, shrink=TRUE)
+	bw[[as.character(year)]] = gwgbm.sel(formula=f, family='binomial', weights=df$X09pop, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, s=NULL, method="knn", tol=0.001, parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+ 
     #bw.pov (pov2, CV, knn) = 0.189408989047768
     #bw.pov (pov2, AIC, knn) = 0.491
     #bw.pov (df, AIC, knn) Bandwidth: 0.866496634540107. Loss: 0.116838909368888

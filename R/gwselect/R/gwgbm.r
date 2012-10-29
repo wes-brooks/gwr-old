@@ -1,4 +1,4 @@
-gwglmnet <- function(formula, data, family, weights=NULL, coords, gweight, bw=NULL, verbose=FALSE, longlat, tol, method, adapt=FALSE, s=NULL, parallel=FALSE, precondition=FALSE) {
+gwgbm <- function(formula, data, family, weights=NULL, coords, gweight, bw=NULL, verbose=FALSE, longlat, tol, method, adapt=FALSE, s=NULL, parallel=FALSE, precondition=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -51,7 +51,7 @@ gwglmnet <- function(formula, data, family, weights=NULL, coords, gweight, bw=NU
 
     if (method=='distance') {
         weight.matrix = gweight(D, bw)
-        res[['model']] = gwglmnet.fit.fixedbw(x=x, y=y, family=family, weights=weights, coords=coords, weight.matrix=weight.matrix, s=s, verbose=verbose, adapt=adapt, precondition=precondition)
+        res[['model']] = gwgbm.fit.fixedbw(x=x, y=y, family=family, weights=weights, coords=coords, weight.matrix=weight.matrix, s=s, verbose=verbose, adapt=adapt, precondition=precondition)
     } else {        
         bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
         difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
@@ -62,15 +62,15 @@ gwglmnet <- function(formula, data, family, weights=NULL, coords, gweight, bw=NU
 
         if (method=='nen') {
             if (parallel) {
-                res[['model']] = gwglmnet.fit.nenparallel(x=x, y=y, family=family, prior.weights=weights, coords=coords, D=D, longlat=longlat, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwgbm.fit.nenparallel(x=x, y=y, family=family, prior.weights=weights, coords=coords, D=D, longlat=longlat, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             } else {
-                res[['model']] = gwglmnet.fit.nen(x=x, y=y, family=family, prior.weights=weights, coords=coords, D=D, longlat=longlat, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwgbm.fit.nen(x=x, y=y, family=family, prior.weights=weights, coords=coords, D=D, longlat=longlat, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             }
         } else if (method=='knn') {
             if (parallel) {
-                res[['model']] = gwglmnet.fit.knnparallel(x=x, y=y, family=family, prior.weights=weights, coords=coords, D=D, longlat=longlat, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwgbm.fit.knnparallel(x=x, y=y, family=family, prior.weights=weights, coords=coords, D=D, longlat=longlat, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             } else {
-                res[['model']] = gwglmnet.fit.knn(x=x, y=y, family=family, prior.weights=weights, coords=coords, D=D, longlat=longlat, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwgbm.fit.knn(x=x, y=y, family=family, prior.weights=weights, coords=coords, D=D, longlat=longlat, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             }
         }
     }

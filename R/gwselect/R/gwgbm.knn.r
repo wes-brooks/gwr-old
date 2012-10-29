@@ -1,4 +1,4 @@
-gwglmnet.knn = function(bw, coords, loc, dist, verbose, prior.weights, total.weight, gweight, target) {
+gwgbm.knn = function(bw, coords, loc, dist, verbose, prior.weights, total.weight, gweight, target) {
     gwr.weights = gweight(dist, bw)
     w = gwr.weights * prior.weights
     prop = sum(w)/total.weight

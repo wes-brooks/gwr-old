@@ -1,4 +1,4 @@
-gwglmnet.sel = function(formula, data=list(), family, weights=NULL, coords, adapt=FALSE, gweight=gwr.Gauss, s, method="dist", verbose=FALSE, longlat=FALSE, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE) {
+gwgbm.sel = function(formula, data=list(), family, weights=NULL, coords, adapt=FALSE, gweight=gwr.Gauss, s, method="dist", verbose=FALSE, longlat=FALSE, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is.null(longlat) || !is.logical(longlat)) 
@@ -22,7 +22,7 @@ gwglmnet.sel = function(formula, data=list(), family, weights=NULL, coords, adap
         beta1 = beta2/1000
     }
 
-    opt <- optimize(gwglmnet.cv.f, lower=beta1, upper=beta2, 
+    opt <- optimize(gwgbm.cv.f, lower=beta1, upper=beta2, 
         maximum=FALSE, formula=formula, coords=coords, s=s, family=family,
         gweight=gweight, verbose=verbose, longlat=longlat, data=data, method=method,
         weights=weights, tol=tol, adapt=adapt, parallel=parallel, precondition=precondition)
