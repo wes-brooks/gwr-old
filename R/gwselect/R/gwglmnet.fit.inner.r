@@ -1,4 +1,4 @@
-gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, dist=NULL, indx=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, mode, mode.select, gweight=NULL, shrink=TRUE, longlat=FALSE, adapt=FALSE, precondition=FALSE, N) {
+gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, dist=NULL, indx=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, mode, mode.select, gweight=NULL, shrink=TRUE, longlat=FALSE, adapt=FALSE, precondition=FALSE, N) {
     if (!is.null(indx)) {
         colocated = which(coords[indx,1]==as.numeric(loc[1]) & coords[indx,2]==as.numeric(loc[2]))
     }
@@ -174,5 +174,7 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, dist=NULL, ind
     #fitted = predict(model, newx=xfit, s=s.optimal, type='fit', mode='step')[['fit']]
     #resid = yfit - fitted
     
-    return(list(model=model, loss=loss, coef=coefs, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df2, loss.local=loss.local, sum.weights=sum(w), N=N))#, resid=resid, intercept=intercept, intlist=int.list))
+    if (tuning) {
+        return(list(loss.local=loss.local))
+    } else {return(list(model=model, loss=loss, coef=coefs, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df2, loss.local=loss.local, sum.weights=sum(w), N=N)) }#, resid=resid, intercept=intercept, intlist=int.list))
 }
