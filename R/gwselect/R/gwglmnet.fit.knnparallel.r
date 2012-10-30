@@ -1,23 +1,25 @@
-gwglmnet.fit.knnparallel = function(x, y, family, coords, D, s,mode.select=mode.select, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE) {
+gwglmnet.fit.knnparallel = function(x, y, family, coords, indx, D, s, verbose, prior.weights, gweight, mode, mode.select, shrink, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE, N) {
     coords.unique = unique(coords)
-    n = dim(coords.unique)[1]
+    n = dim(prior.weights)[1]
+    n.loc = dim(coords.unique)[1]
     gwglmnet.object = list()
 
     max.weights = rep(1, n)
     total.weight = sum(max.weights * prior.weights)
 
-    models = foreach(i=1:n, .packages=c('glmnet'), .errorhandling='remove') %dopar% {
+    models = foreach(i=1:n.loc, .packages=c('glmnet'), .errorhandling='remove') %dopar% {
         loc = coords.unique[i,]
         dist = D[i,]
 
         opt = optimize(gwglmnet.knn, lower=beta1, upper=beta2, 
-            maximum=FALSE, tol=target/1000, coords=coords, loc=loc, mode.select=mode.select,
+            maximum=FALSE, tol=target/1000, coords=coords, loc=loc, indx=indx,
             gweight=gweight, verbose=verbose, dist=dist, total.weight=total.weight,
             prior.weights=prior.weights, target=target)
         bandwidth = opt$minimum
-
-        cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
-        return(gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, mode.select=mode.select, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition))
+        
+        m = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, indx=indx, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, mode=mode, mode.select=mode.select, shrink=shrink, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N)
+        cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ", loss=", m[['loss.local']], ".\n", sep=''))
+        return(m)
     }
 
     gwglmnet.object[['models']] = models

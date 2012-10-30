@@ -159,7 +159,8 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
                 } else {
                     coefs = cbind("(Intercept)"=meany, coef(model))
                     fitted = predict(model, newx=predx, type='fit', mode='step')[['fit']] 
-                    s2 = sum((w*(fitted[,nsteps] - as.matrix(yy)))[permutation]**2) / sum(w[permutation])
+                    #s2 = sum((w*(fitted[,nsteps] - as.matrix(yy)))[permutation]**2) / sum(w[permutation])
+                    s2 = sum(lsfit(y=yfit, x=xfit)$residuals**2) / (sum(w[permutation]) - nsteps - 1)
                     loss = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy))[permutation]**2)})/s2 + 2*df)                                   
                 }
                 loss.local = as.vector(apply(fitted, 2, function(z) {sum((w*(z - (yy-meany)))[colocated]**2)})/s2 + log(s2) + 2*df/sum(w[permutation])) 
