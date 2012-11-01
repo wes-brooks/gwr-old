@@ -1,12 +1,22 @@
-gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.select='', shrink=TRUE, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE, N=N) {
-    colocated = which(coords[,1]==as.numeric(loc[1]) & coords[,2]==as.numeric(loc[2]))
+gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=NULL, mode.select='', tuning=FALSE, predict=FALSE, shrink=TRUE, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE, N=N) {
+    if (!is.null(indx)) {
+        colocated = which(coords[indx,1]==as.numeric(loc[1]) & coords[indx,2]==as.numeric(loc[2]))
+    }
+    else {
+        colocated = which(coords[,1]==as.numeric(loc[1]) & coords[,2]==as.numeric(loc[2]))        
+    }
     reps = length(colocated)
 
     if (is.null(gwr.weights)) {
         gwr.weights = gweight(dist, bw)     
     } else {
         gwr.weights = gwr.weights
-    }      
+    }    
+    gwr.weights = drop(gwr.weights)  
+
+    if (!is.null(indx)) {
+        gwr.weights = gwr.weights[indx]
+    }
 
     if (mode.select=='CV') { 
         xx = as.matrix(x[-colocated,])
@@ -18,7 +28,7 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
         w <- prior.weights * gwr.weights
     }
 
-    if (sum(gwr.weights)==0) { return(list(loss.local=Inf, resid=Inf)) } 
+    if (sum(gwr.weights)==length(colocated)) { return(list(loss.local=Inf, resid=Inf)) } 
 
     m <- ncol(xx)
     n <- nrow(xx)
@@ -163,7 +173,12 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
                     s2 = sum(lsfit(y=yfit, x=xfit)$residuals**2) / (sum(w[permutation]) - nsteps - 1)
                     loss = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy))[permutation]**2)})/s2 + 2*df)                                   
                 }
-                loss.local = as.vector(apply(fitted, 2, function(z) {sum((w*(z - (yy-meany)))[colocated]**2)})/s2 + log(s2) + 2*df/sum(w[permutation])) 
+
+                if (length(colocated)>0) {
+                    loss.local = as.vector(apply(fitted, 2, function(z) {sum((w*(z - (yy-meany)))[colocated]**2)})/s2 + log(s2) + 2*df/sum(w[permutation])) 
+                } else {
+                    loss.local = rep(NA, length(loss))
+                }                     
                 #print(loss.local)
             } else {
                 s2 = 0
@@ -212,5 +227,10 @@ gwlars.fit.inner = function(x, y, coords, loc, bw=NULL, dist=NULL, s=NULL, mode.
     #fitted = predict(model, newx=xfit, s=s.optimal, type='fit', mode='step')[['fit']]
     #resid = yfit - fitted
     
-    return(list(model=model, loss=loss, coef=coefs, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N))#, resid=resid, intercept=intercept, intlist=int.list))
+    if (tuning) {
+        return(list(loss.local=loss.local))
+    } else if (predict) {
+        return(list(loss.local=loss.local, coef=coefs))
+    } else {return(list(model=model, loss=loss, coef=coefs, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N))
+    }
 }

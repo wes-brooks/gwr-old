@@ -1,0 +1,1 @@
+tar -zcvf output/output$2.tbz2 output/*70*.csv

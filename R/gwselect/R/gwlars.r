@@ -1,4 +1,4 @@
-gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, N=1, verbose=FALSE, longlat, tol, method, adapt=FALSE, s=NULL, mode.select="CV", shrink=TRUE, mode='step', parallel=FALSE, precondition=FALSE) {
+gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL, gweight, D=NULL, bw=NULL, N=1, verbose=FALSE, longlat, tol, method, tuning=FALSE, predict=FALSE, adapt=FALSE, s=NULL, mode.select="CV", shrink=TRUE, mode='step', parallel=FALSE, precondition=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is.null(longlat) || !is.logical(longlat)) 
@@ -31,13 +31,15 @@ gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, N=1, v
     predictor.names = attr(terms(formula, data=data), 'term.labels')
 
     #Get the matrices of distances and weights
-    n = dim(coords)[1]
-    if (longlat) {
-        D = as.matrix(earth.dist(coords),n,n)
-    } else {
-        Xmat = matrix(rep(coords[,1], times=n), n, n)
-        Ymat = matrix(rep(coords[,2], times=n), n, n)
-        D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
+    if (is.null(D)) {
+        n = dim(coords)[1]
+        if (longlat) {
+            D = as.matrix(earth.dist(coords),n,n)
+        } else {
+            Xmat = matrix(rep(coords[,1], times=n), n, n)
+            Ymat = matrix(rep(coords[,2], times=n), n, n)
+            D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
+        }
     }
 
     res = list()
@@ -45,9 +47,9 @@ gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, N=1, v
     if (method=='dist') {
         weight.matrix = gweight(D, bw)
         if (parallel) {
-            res[['model']] = gwlars.fit.fixedbwparallel(x=x, y=y, prior.weights=weights, coords=coords, D=D, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, precondition=precondition)
+            res[['model']] = gwlars.fit.fixedbwparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, tuning=tuning, predict=predict, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, precondition=precondition)
         } else {
-            res[['model']] = gwlars.fit.fixedbw(x=x, y=y, prior.weights=weights, coords=coords, D=D, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, precondition=precondition)
+            res[['model']] = gwlars.fit.fixedbw(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, tuning=tuning, predict=predict, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, precondition=precondition)
         }
     } else {        
         bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
@@ -61,32 +63,34 @@ gwlars <- function(formula, data, weights=NULL, coords, gweight, bw=NULL, N=1, v
 
         if (method=='nen') {
             if (parallel) {
-                res[['model']] = gwlars.fit.nenparallel(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwlars.fit.nenparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, predict=predict, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             } else {
-                res[['model']] = gwlars.fit.nen(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwlars.fit.nen(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, predict=predict, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             }
         } else if (method=='knn') {
             if (parallel) {
-                res[['model']] = gwlars.fit.knnparallel(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwlars.fit.knnparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, predict=predict, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             } else {
-                res[['model']] = gwlars.fit.knn(x=x, y=y, prior.weights=weights, coords=coords, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwlars.fit.knn(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, predict=predict, shrink=shrink, mode=mode, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             }
         }
     }
 
-    res[['data']] = data
-    res[['response']] = as.character(formula[[2]])
-    res[['coords']] = coords
-    res[['weights']] = weights
-    res[['longlat']] = longlat
-    res[['gweight']] = gweight
-    res[['bw']] = bw
-    res[['method']] = method
-    res[['adapt']] = adapt
-    res[['precondition']] = precondition
-    res[['shrink']] = shrink
-    res[['s']] = s
-    res[['mode.select']] = mode.select
+    if (!tuning) {
+        res[['data']] = data
+        res[['response']] = as.character(formula[[2]])
+        res[['coords']] = coords
+        res[['weights']] = weights
+        res[['longlat']] = longlat
+        res[['gweight']] = gweight
+        res[['bw']] = bw
+        res[['method']] = method
+        res[['adapt']] = adapt
+        res[['precondition']] = precondition
+        res[['shrink']] = shrink
+        res[['s']] = s
+        res[['mode.select']] = mode.select
+    }
     class(res) = "gwselect"
     
     res

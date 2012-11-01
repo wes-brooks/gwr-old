@@ -46,11 +46,11 @@
 
 
 \section{Introduction}
-	Varying-coefficient regression is a technique used in spatial statistics to model a non-stationary process. Geographically Weighted Regression (GWR) \cite{Fotheringham:2002} is a method of fitting varying-coefficient models. 
+	%Varying-coefficient regression is a technique used in spatial statistics to model a non-stationary process. Geographically Weighted Regression (GWR) \cite{Fotheringham:2002} is a method of fitting varying-coefficient models. 
 
-	The goal of this project is to develop a method that can answer these questions and work out the conditions under which the answers are reliable. Variable selection is via the Adaptive-LASSO, applied independently to each local model. The LASSO for GWR models was introduced in \cite{Wheeler:2009}. That paper describes a process for model fitting that is similar to our process in the case of Gaussian data, but does not cover the Generalized Linear Model (GLM) case for non-Gaussian data that nevertheless follows an exponential-family distribution. Justification for the process in \cite{Wheeler:2009} is by simulation - the paper does not present theoretical proof of consistency of its estimators nor does it prove an oracle property for its variable selection.\\
+	%The goal of this project is to develop a method that can answer these questions and work out the conditions under which the answers are reliable. Variable selection is via the Adaptive-LASSO, applied independently to each local model. The LASSO for GWR models was introduced in \cite{Wheeler:2009}. That paper describes a process for model fitting that is similar to our process in the case of Gaussian data, but does not cover the Generalized Linear Model (GLM) case for non-Gaussian data that nevertheless follows an exponential-family distribution. Justification for the process in \cite{Wheeler:2009} is by simulation - the paper does not present theoretical proof of consistency of its estimators nor does it prove an oracle property for its variable selection.\\
 	
-	The method in \cite{Wheeler:2009} requires cross-validation to select the model's tuning parameter and thus local models can be built only at locations where the output variable has been observed. It will be desirable to build local models that interpolate between the locations where the observations were taken. Using an information criterion like the Akaike Information Criterion (AIC) or Bayesian Information Criterion (BIC) to select the tuning parameter could solve this problem. Another option is weighted cross-validation.\\
+	%The method in \cite{Wheeler:2009} requires cross-validation to select the model's tuning parameter and thus local models can be built only at locations where the output variable has been observed. It will be desirable to build local models that interpolate between the locations where the observations were taken. Using an information criterion like the Akaike Information Criterion (AIC) or Bayesian Information Criterion (BIC) to select the tuning parameter could solve this problem. Another option is weighted cross-validation.\\
 
 %\section{Data}
 %	\subsection{Observational data}
@@ -66,7 +66,7 @@
 %	\subsection{Simulated data}
 %		A simulation study is used to validate the method of analysis.\\
 	
-\section{Geographically-weighted regression models}
+\section{Geographically-weighted regression models \label{section:model}}
 
 	\subsection{Model}
 	Let univariate $Y(s)$ and $(p+1)$-variate $\bm{X}(s) = \left( 1, X_1(s), \dots, X_p(s) \right)$ be spatial processes indexed by location $s$. For every $s$, let there be local regression coefficients $\bm{\beta}(s) = \left( \beta_0(s), \beta_1(s), \dots, \beta_p(s) \right)$ and local variance $\sigma^2(s)$ such that, 
@@ -110,93 +110,53 @@
 	Since the response variable is univariate, observed values are denoted, e.g., $y(s_i)$, while the vector of observed predictors at location $s_i$ is denoted $\bm{x}(s_i)$. The $k^{\text{th}}$ element of $\bm{x}(s_i)$ is $x_k(s_i)$. The Adaptive-LASSO is used for variable selection with a different tuning parameter selected for each local model, so the Adaptive-LASSO tuning parameter at location $s_i$ is denoted $\lambda(s_i)$.\\ 
 	
 
-\section{Methods}
-	The basic operation of GWR is to build a regression model at each of a set of pre-specified locations. At each model location, all of the observations in the data set are weighted based on their distance from the model location (the weights are uniquely specified by the combination of kernel function and bandwidth). The weighted observations are then used to build a regression model for that location.\\
+\section{Model selection and shrinkage \label{section:method}}
+	Coefficient shrinkage and variable selection are accomplished locally via the Lasso \citep{Tibshirani:1996}. At each location $s_i$, the ordinary geographically-weighted regression estimator minimizes the objective function:\\
+
+	\begin{eqnarray}
+		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2
+	\end{eqnarray}
 	
-	\subsection{Kernels}
-		The kernel for geographic weighting could in principle be any function that applies a positive weight to each observation in the data set. This analysis uses the bisquare kernel throughout, with weights based on distance (without regard for North-South versus East-West distances):
-		\[
-			\text{W}(\text{dist, bw}) = \begin{cases} (1-(\frac{\text{dist}}{\text{bw}})^2)^2, & \mbox{if dist} < \mbox{bw} \\
-			0, & \mbox{if dist} \ge \mbox{bw} \end{cases}
-		\]
-		
-		The bisquare kernel has the benefit of giving zero weight to observations beyond the bandwidth, so that each local model depends only on the data from a local neighborhood and not at all on observations from outside that neighborhood.\\
-		
-		Picking the bandwidth of the kernel is one crucial part of GWR. We currently have three methods to choose the bandwidth:
-		\begin{description}
-			\item[Global] the bandwidth is the same distance for all local models.
-			\item[$k$-nearest-neighbors] for a given proportion $q$ and $n$ total observations, the bandwidth of each local model is set so that the sum of the geographic weights is $q \times n$.
-			\item[Effective nearest neighbors] an adaptive bandwidth selection method, in which the desired sum-of-squared-residuals is pre-specified, and the bandwidth of each local model is adjusted to meet this criterion. The goal is to broaden the bandwidth in areas where the model does not change much, and to narrow it in areas where there is a steep gradient to the coefficient surface. Pearson residuals are used to find the effective nearest neighbors bandwidth for a GW-GLM.
-		\end{description}
-		
-		Each method requires a tuning parameter: this is the sum-of-squared-residuals for effective nearest neighbors, $q$ for k-nearest neighbors, and the bandwidth itself in the case of a global bandwidth. The local tuning parameter is selected by minimizing the sum of absolute cross-validation error at the location of interest This is a sum (and therefor not quite the same as leave-one-out cross-validation) because we will sometimes have more than one observation per location (e.g., each of the six decennial censuses in the \verb~poverty~ dataset gives us an observation at each county.)\\
-		
-		
-	\subsection{Model fitting}
-		\subsubsection{Gaussian data}
-		Fitting a GWR model to Gaussian data is done by minimizing the cross-validation criterion, using the Adaptive-LASSO for variable selection, where the adaptive weights are the Ordinary Least Squares (OLS) estimates of the model coefficients:
+	The objective minimized by the geographically-weighted also (GWL) is:\\
+	
+	\begin{eqnarray}
+		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \sum_{j=1}^p \lambda_{ij} \beta_{ij}
+	\end{eqnarray}
+	
+	Where $\lambda_{ij}, j \in \{1, \dots, p\}$ are penalties from the adaptive lasso \citep{Zou:2006}. The LAR algorithm is a
+stepwise regression algorithm; the number of steps to include in the model is chosen by minimizing
+the local AIC, with the sum of the weights around$s_i$ $\sum_{i'=1}^n w_{ii'}$ playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}. The estimated local variance $\hat{\sigma}_i^2$ is the variance estimate of the unpenalized local model \citep{Zou:2007}.\\
 
-		 \begin{eqnarray*}
-			\hat{\bw} &=& \argmin_{\text{bw}} \left( \mbox{AIC} \right)  = \argmin_{\text{bw}} \left( \sum_{i = 1}^n \frac{ \left(y(s_i)-\hat{y}\left(s_i, \hat{\lambda}(s_i), \bw \right) \right)^2 }{\sigma_i^2} + \log{\sigma_i^2} + \frac{2 \times \df}{\log{ \left(\sum_{j=1}^n w_{ij} \right) }} \right)\\	
-			\hat{\bm{\lambda}} &=& \argmin_{\bm{\lambda}} \left( \mbox{AIC} \right)  = \argmin_{\bm{\lambda}} \left( \sum_{i = 1}^n \right) 
-		\end{eqnarray*}
-		
-		Where $\hat{y}\left(s_i, \lambda(s_i), \bw \right)$ is the predicted value of the observation at location $s_i$:
-		\begin{eqnarray*}
-			\hat{\bm{\beta}}\left(s_i, \lambda(s_i), \bw \right) &=& \argmin_{\bm{\beta}} \left( \sum_{j = 1}^n w_{ij}(\bw)\left(y(s_j) - \bm{x}(s_j)^T \bm{\beta}\right)^2  +  \sum_{l=1}^p \lambda_{l}(s_i) \beta_l \right)\\
-			\lambda_{l}(s_i) &=& \frac{\lambda(s_i)}{\beta_{OLS,l}(s_i, \bw)}\\
-			\hat{\bm{\beta}}_{OLS}(s_i, \bw) &=& \argmin_{\bm{\beta}} \left( \sum_{j=1}^{n} w_{ij}(\bw)\left(y(s_j) - \bm{x}(s_j)^T \bm{\beta}\right)^2\right)\\
-			\hat{y}\left(s_i, \lambda(s_i), \bw \right) &=& \bm{x}(s_i)^T \hat{\bm{\beta}}\left(s_i, \lambda(s_i), \bw \right)
-		\end{eqnarray*}
-		
-		Finally, the weights are given by:
-		\[
-			w_{ij}(\bw) =  \begin{cases} \left(1-\left(\frac{D(s_i,s_j)}{\bw}\right)^2\right)^2, & \mbox{if } D(s_i,s_j) < \bw \\
-			0, & \mbox{if }D(s_i,s_j) \ge \bw \end{cases}
-		\]
-		
-		Where $D(s_i,s_j)$ is the distance from location of observation $i$ to location of observation $j$\\
-		
-		
-	\section{Data analysis}
-		\subsection{Simulated data}
-			 A simulation study is used to validate the method of analysis. Data was simulated from the following binomial spatial process:\\
-			\begin{eqnarray*}
-				Y(s) &\sim& \text{ N } \left(\mu(s), \sigma^2 \right)\\
-				\mu(s) &=& \bm{X}(s)^T \bm{\beta}(s)\\
-				\sigma^2 &=& 1\\
-				\\
-				\left( X_1(s), X_2(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\
-				\left( X_3(s), X_4(s) \right) &\sim& N \left( \left( \begin{array}{c} 0 \\ 0 \end{array} \right), \left( \begin{array}{cc} 1 & 0.2 \\ 0.2 & 1 \end{array} \right) \right)\\
-				X_5 &\sim& N \left( 0, 1 \right)\\
-				Z &\stackrel{\mathsmaller{iid}}{\sim}& N \left( 0, 1 \right)\\
-				\\
-				\beta_0(s) &\equiv& 0\\				
-				\beta_1(s) &=& \begin{cases}  2 \text{  if } s_x < 0.5 \\ 0 \text{  otherwise}  \end{cases}\\
-				\beta_2(s) &=& 0\\
-				\beta_3(s) &\equiv&  s_y\\\
-				\beta_4(s) &\equiv& 0\\
-				\beta_5(s) &\equiv& 0\\
-				\beta_Z(s) &\equiv& 0\\				
-			\end{eqnarray*}
-			
-			Where $s=(s_x, s_y) \in [0,1] \times [0,1]$. The variables $X_1, X_2, X_3, X_4, \text{ and } X_5$ were generated with autocorrelation. For each of these variables, the spatial covariance is given by $C = \sigma^2 \exp(-\phi^{-1} d)$, where $d$ is the distance between points and $\phi$ and $\sigma^2$ are covariance parameters. Both covariance parameters were set to 1 during this simulation.\\
+	Thus:
+	\begin{eqnarray}
+		\mbox{AIC}_{\mbox{loc}} = \sum_{i'=1}^n w_{ii'} \hat{\sigma}_i^{-2} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + 2 \mbox{df}_i
+	\end{eqnarray}
 
-			The process is observed on a regular $30 \times 30$ grid.\\		
+	Because GWL is not a linear smoother (there is no smoothing matrix $\bm{S}$ such that $\hat{bm{y}} = \bm{S} \bm{y}$) the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}.
+
+	\subsection{Bandwidth selection}
+		The bandwidth is selected to minimize the total AIC. Because of the kernel weights and the application of the lasso, the sample size and degrees of freedom are different for each observation. The total AIC is found by taking the sum over all of the observed data:\\
+		
+		\begin{eqnarray}
+			\mbox{AIC}_{\mbox{tot}} = \sum_{i=1}^n \left( \hat{\sigma}_i^{-2} \left( y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \log \hat{\sigma}_i^2 + 2 \mbox{df}_i \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \right)
+		\end{eqnarray}
 			
-			Simulation proceeded by repeating the following process 200 times:\\
+			The bandwidth that minimizes $\mbox{AIC}_{\mbox{tot}}$ is found by a line search.\\
 			
-			\begin{enumerate}
-				\item Generate the data from the process (given above)
-				\item Select the optimal bandwidth for a GWR model on the simulated data
-				\item Generate a model using the selected bandwidth
-				\item Use the bootstrap to generate the empirical distribution of local coefficients at each observation location
-				\item At each observation location, note whether each covariate was selected for inclusion
-				\item At each observation location, note whether each covariate's true coefficient is within the 95\% confidence interval as calculated by the bootstrap.
-			\end{enumerate}
-				
-			The analysis was carried out using the $k$-nearest-neighbors bandwidth selection method.\\			
-			
+\section{Simulation}
+	\subsection{Simulation setup}
+		A simulation study was conducted to assess the finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[0,1] \times [0,1]$, which was divided into a $30 \times 30$ grid. Each of the $p=5$ covariates was simulated by a Gaussian random field with mean zero and exponential covariance $Cov \left(Z_j(s_i), Z_j(s_{i'}) \right) = \sigma^2 \exp{\left( -\tau^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma^2=1$ is the variance and $\tau$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.\\
+		
+		The simulated response is $Y(s) = \bm{X}(s) \bm{\beta}(s) + \epsilon(s)$, where the coefficient surface used to generate the data is $\bm{\beta}(s) = \left( \beta_0(s), \dots, \beta_5(s) \right) = \left( 0, \beta_1(s), 0, 0, 0, 0 \right)$ and $\epsilon(s) \overset{\mbox{iid}}{\sim} \mathcal{N} \left( 0, 1 \right)$.\\
+		
+		In order to evaluate the performance over a range of data conditions, the data was simulated at low and high values of the spatial covariance range, and at low and high values of the between-covariate correlation, for two cases of $\beta_1(s)$: the step function $\beta_1(s) = \begin{cases} 0 &\mbox{ if } s_y<0.5 \\ 1 &\mbox{ o.w.} \end{cases}$ and the constant gradient $\beta_1(s) = 1-s_y$.\\
+	
+		Each case was simulated 100 times.\\
+	
+	\subsection{Simulation results}
+		The coverage of the $95\%$ CI and the selection frequency are plotted in the figures.\\
+		
+		
 			\begin{figure}
 				\begin{center}
 					\subfigure[Coverage of 95\% CI for $X_1$]{

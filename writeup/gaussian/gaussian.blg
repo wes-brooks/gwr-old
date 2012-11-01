@@ -3,44 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: gaussian.aux
 The style file: plainnat.bst
 Database file #1: ../../references/gwr.bib
-You've used 2 entries,
+You've used 4 entries,
             2773 wiz_defined-function locations,
-            609 strings with 5306 characters,
-and the built_in function-call counts, 857 in all, are:
-= -- 74
-> -- 40
-< -- 1
-+ -- 14
-- -- 12
-* -- 66
-:= -- 143
-add.period$ -- 9
-call.type$ -- 2
-change.case$ -- 9
-chr.to.int$ -- 2
-cite$ -- 4
-duplicate$ -- 41
-empty$ -- 73
-format.name$ -- 14
-if$ -- 174
+            624 strings with 5473 characters,
+and the built_in function-call counts, 1729 in all, are:
+= -- 147
+> -- 80
+< -- 2
++ -- 28
+- -- 24
+* -- 140
+:= -- 272
+add.period$ -- 12
+call.type$ -- 4
+change.case$ -- 19
+chr.to.int$ -- 4
+cite$ -- 8
+duplicate$ -- 82
+empty$ -- 158
+format.name$ -- 28
+if$ -- 359
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 3
-newline$ -- 21
-num.names$ -- 8
-pop$ -- 19
+missing$ -- 5
+newline$ -- 28
+num.names$ -- 16
+pop$ -- 39
 preamble$ -- 1
-purify$ -- 8
+purify$ -- 16
 quote$ -- 0
-skip$ -- 28
+skip$ -- 56
 stack$ -- 0
-substring$ -- 25
-swap$ -- 2
+substring$ -- 83
+swap$ -- 4
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 17
+type$ -- 39
 warning$ -- 0
-while$ -- 7
+while$ -- 15
 width$ -- 0
-write$ -- 38
+write$ -- 58

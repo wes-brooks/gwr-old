@@ -1,4 +1,4 @@
-gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, dist=NULL, indx=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, mode, mode.select, gweight=NULL, shrink=TRUE, longlat=FALSE, adapt=FALSE, precondition=FALSE, N) {
+gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, predict=FALSE, dist=NULL, indx=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, mode, mode.select, gweight=NULL, shrink=TRUE, longlat=FALSE, adapt=FALSE, precondition=FALSE, N) {
     if (!is.null(indx)) {
         colocated = which(coords[indx,1]==as.numeric(loc[1]) & coords[indx,2]==as.numeric(loc[2]))
     }
@@ -6,19 +6,19 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
         colocated = which(coords[,1]==as.numeric(loc[1]) & coords[,2]==as.numeric(loc[2]))
     }
     
-    reps = length(colocated)
+    reps = length(colocated)   
 
     if (is.null(gwr.weights)) {
         gwr.weights = gweight(dist, bw)     
     } else {
         gwr.weights = gwr.weights
     }      
+    gwr.weights = drop(gwr.weights)
 
     if (!is.null(indx)) {
         gwr.weights = gwr.weights[indx]
     }
     
-
     if (mode.select=='CV') { 
         xx = as.matrix(x[-colocated,])
         yy = as.matrix(y[-colocated])
@@ -132,8 +132,11 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
                     #s2 = sum(lsfit(y=yfit, x=xfit)$residuals**2) / (sum(w[permutation]) - nsteps - 1)
                     loss = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy))[permutation]**2/(z*(1-z)))}) + 2*df2/sum(w[permutation]))                                   
                     
-                    loss.local = as.vector(apply(fitted, 2, function(z) {sum(((w*(z - yy))**2 / (z*(1-z)))[colocated])}) + 2*df2/sum(w[permutation]))
-                    #print(loss.local)
+                    if (length(colocated)>0) {
+                        loss.local = as.vector(apply(fitted, 2, function(z) {sum(((w*(z - yy))**2 / (z*(1-z)))[colocated])}) + 2*df2/sum(w[permutation]))
+                    } else {
+                        loss.local = rep(NA, length(loss))
+                    }                    
                 } else {
                     s2 = 0
                     loss = Inf
@@ -176,5 +179,7 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
     
     if (tuning) {
         return(list(loss.local=loss.local))
+    } else if (predict) {
+        return(list(loss.local=loss.local, coef=coefs))
     } else {return(list(model=model, loss=loss, coef=coefs, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df2, loss.local=loss.local, sum.weights=sum(w), N=N)) }#, resid=resid, intercept=intercept, intlist=int.list))
 }
