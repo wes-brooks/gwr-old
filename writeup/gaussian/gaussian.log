@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  31 OCT 2012 15:41
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  2 NOV 2012 18:27
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -324,98 +324,54 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 40.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 )
-Overfull \hbox (16.096pt too wide) in paragraph at lines 91--92
-\OT1/cmr/m/n/10.95 (re-sponse vari-able) at $\OML/cmm/m/it/10.95 n$ \OT1/cmr/m/
-n/10.95 unique lo-ca-tions $\OML/cmm/m/it/10.95 s[]; [] ; s[]$\OT1/cmr/m/n/10.9
-5 . The ob-served data are $[]$.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 91--92
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 93--94
-
+Overfull \hbox (15.90619pt too wide) in paragraph at lines 62--63
+[]\OT1/cmr/m/n/10.95 Consider $\OML/cmm/m/it/10.95 n$ \OT1/cmr/m/n/10.95 ob-ser
+-va-tions of $(\OML/cmm/m/it/10.95 p \OT1/cmr/m/n/10.95 + 1)$-variate $\OML/cmm
+/b/it/10.95 X \OT1/cmr/m/n/10.95 = [][]$ and uni-vari-ate $\OML/cmm/b/it/10.95 
+y \OT1/cmr/m/n/10.95 = []$,
  []
 
 [1
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 95--97
-
+Overfull \hbox (34.31108pt too wide) in paragraph at lines 83--84
+[]\OT1/cmr/m/n/10.95 The first and sec-ond deriva-tives of the lo-cal log-likel
+ihood are $[] = []$
  []
 
 
-Overfull \hbox (50.15941pt too wide) in paragraph at lines 102--103
-[]\OT1/cmr/m/n/10.95 The fo-cus here is on the case where $\OML/cmm/m/it/10.95 
-f\OT1/cmr/m/n/10.95 (\OMS/cmsy/m/n/10.95 ^^A\OT1/cmr/m/n/10.95 )$ is a lin-ear 
-model model with co-ef-fi-cients $\OML/cmm/b/it/10.95 ^^L\OT1/cmr/m/n/10.95 (\O
-ML/cmm/m/it/10.95 s\OT1/cmr/m/n/10.95 ) = (\OML/cmm/m/it/10.95 ^^L[]\OT1/cmr/m/
-n/10.95 (\OML/cmm/m/it/10.95 s\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 ; ^^L[]\O
-T1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 s\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 
-; [] ; ^^L[]\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 s\OT1/cmr/m/n/10.95 ))$
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 102--103
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 110--111
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 114--115
+Underfull \hbox (badness 10000) in paragraph at lines 98--99
 
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 120--121
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 126--129
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 138--139
+Underfull \hbox (badness 10000) in paragraph at lines 126--127
 
  []
 
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 144--145
+Underfull \hbox (badness 10000) in paragraph at lines 143--144
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 148--149
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 150--151
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 152--153
+Underfull \hbox (badness 10000) in paragraph at lines 147--148
 
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 154--155
+Underfull \hbox (badness 10000) in paragraph at lines 149--150
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 157--158
+Underfull \hbox (badness 10000) in paragraph at lines 158--159
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 161--162
 
  []
 
@@ -423,7 +379,7 @@ File: ../../figures/simulation/X1.coverage.pdf Graphic file (type QTm)
 <use  "../../figures/simulation/X1.coverage.pdf" >
 File: ../../figures/simulation/X1.selection.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/X1.selection.pdf" >
+<use  "../../figures/simulation/X1.selection.pdf" > [5]
 File: ../../figures/simulation/X2.coverage.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/X2.coverage.pdf" >
@@ -460,14 +416,18 @@ File: ../../figures/simulation/Intercept.coverage.pdf Graphic file (type QTm)
 File: ../../figures/simulation/Intercept.selection.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/Intercept.selection.pdf" > (./gaussian.bbl
-[5] [6] [7] [8]) [9] (./gaussian.aux) ) 
+[6] [7] [8] [9]) [10] (./gaussian.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 3037 strings out of 494004
- 39273 string characters out of 3150890
- 94990 words of memory out of 3000000
- 6190 multiletter control sequences out of 15000+200000
+ 3034 strings out of 494004
+ 39259 string characters out of 3150890
+ 97949 words of memory out of 3000000
+ 6187 multiletter control sequences out of 15000+200000
  16764 words of font info for 61 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,9n,34p,890b,286s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,15n,34p,890b,286s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (9 pages).
+Output written on gaussian.pdf (10 pages).

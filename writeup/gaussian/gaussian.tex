@@ -52,91 +52,90 @@
 	
 	%The method in \cite{Wheeler:2009} requires cross-validation to select the model's tuning parameter and thus local models can be built only at locations where the output variable has been observed. It will be desirable to build local models that interpolate between the locations where the observations were taken. Using an information criterion like the Akaike Information Criterion (AIC) or Bayesian Information Criterion (BIC) to select the tuning parameter could solve this problem. Another option is weighted cross-validation.\\
 
-%\section{Data}
-%	\subsection{Observational data}
-%		Observational data comes from four sources:\\
-%		
-%		\begin{description}
-%			\item[Poverty data] From the U.S. Census Bureau, this data lists the proportion of families and individuals living in poverty at the county level for the midwestern states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. County populations and other social-economic variables are tracked as well. The goal of analysis with this data set is to estimate the effect that socio-economic variables have on the poverty rate]
-%			\item[Soybean aphid data] Counts of aphids on soybean plats from 2003-2011, including the location of each measurement and an estimate of the crops grown nearby.
-%			\item[Mountain Pine Beetle Data] Collected in Canada's Cascade Mountains, this includes annual measurements from 1972-1986 of the intensity of Pine Beetle infestation at each location, along with other landscape and climatic covariates.
-%			\item[Land-cover data] The land use (in 1905, 1915, and 1986) of a region in northern Wisconsin's Chequamegon-Nicolet National Forest is compiled at the level of quarter sections of the Public Land Survey System (PLSS). Some predictor variables, calculated from land use statistics, are to be used in a model that describes the primary vegetation of each quarter section.
-%		\end{description}
-  
-%	\subsection{Simulated data}
-%		A simulation study is used to validate the method of analysis.\\
 	
 \section{Geographically-weighted regression models \label{section:model}}
 
 	\subsection{Model}
-	Let univariate $Y(s)$ and $(p+1)$-variate $\bm{X}(s) = \left( 1, X_1(s), \dots, X_p(s) \right)$ be spatial processes indexed by location $s$. For every $s$, let there be local regression coefficients $\bm{\beta}(s) = \left( \beta_0(s), \beta_1(s), \dots, \beta_p(s) \right)$ and local variance $\sigma^2(s)$ such that, 
-	\[
-		Y(s) | \bm{X}(s) \sim \mathcal{N} \left( \bm{X}(s) \bm{\beta}(s), \sigma^2(s) \right)
-	\]
+	Consider $n$ data observations, made at locations $s_1, \dots, s_n$. For $i \in \left\{1, \dots, n \right\}$, let $y(s_i)$ and $\bm{x}(s_i)$ be the univariate outcome of interest, and a $(p+1)$-variate vector of covariates measured at location $s_i$, respectively.
 	
-	 For $i = 1, \dots, n$, let $\bm{x}(s_i)$ and $y(s_i)$ for $i = 1, \dots, n$ be realizations of the processes at location $s_i$. The likelihood of the observed data is 
-	 \[
-	 	L = \prod_{i=1}^n \left( \sqrt{2 \pi \sigma^2(s_i)} \exp \left(-\frac{1}{2\sigma^2\left(s_i\right)} \left(y(s_i) - \bm{x}(s_i)'\bm{\beta}(s_i) \right)^2 \right) \right)
-	\]
+	
+	Consider $n$ observations of $(p+1)$-variate $\bm{X} = \left( \bm{x}(s_1), \dots, \bm{x}(s_n) \right)'$ and univariate $\bm{y} = \left( y(s_1), \dots, y(s_n) \right)$, where each observation is associated with a location $s_i$, $i \in \left\{ 1, \dots, n \right\}$ and let there exist a spatially-varying coefficient surface $\bm{\beta}(s)$ such that	
+	\begin{eqnarray}
+		y(s_i) = \bm{x}'(s_i) \bm{\beta}(s_i) + \epsilon(s_i)
+	\end{eqnarray}
+	
+	where the error term $\epsilon(s)$ is normally distributed with zero mean and a possibly spatially-varying variance $\sigma^2(s)$:	
+	\begin{eqnarray}
+		\epsilon(s_i) \sim \mathcal{N} \left( 0,\sigma^2(s_i) \right)
+	\end{eqnarray}
+	
+	In order to simplify the notation, let subscripts denote the values of data or parameters at the locations where data is observed. Thus, $\bm{x}(s_i) \equiv \bm{x}_i \equiv \left( 1, x_{i1}, \dots, x_{ip} \right)'$, $\bm{\beta}(s_i) \equiv \bm{\beta}_i \equiv \left(\beta_{i0}, \beta_{i1}, \dots, \beta_{ip} \right)'$, $y(s_i) \equiv y_i$, and $\sigma^2(s_i) \equiv \sigma^2_i$. Let $\bm{X} = \left( \bm{x}_1, \dots, \bm{x}_n \right)'$ and $\bm{Y} = \left( y_1, \dots, y_n \right)'$. The likelihood of the observed data is then	 
+	 \begin{eqnarray}
+	 	L\left( \bm{\beta} \right) = \prod_{i=1}^n \left[ \left(2 \pi \sigma^2_i\right)^{-\frac{1}{2}} \exp \left\{-\left( 2\sigma^2_i \right)^{-1} \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2 \right\} \right]
+	\end{eqnarray}
 	
 	\subsection{Geographically-weighted regression}
-
+	Geographically-weighted regression (GWR) estimates the value of the coefficient surface $\bm{\beta}(s)$ at each location $s_i$. Estimation is done by maximizing the local likelihood \citep{Fotheringham:2002}.	
+	\begin{eqnarray}
+		\ell_i\left(\bm{\beta}_i\right) &=& \sum_{i'=1}^n \left\{ -\frac{1}{2} \log{\left(2 \pi\right)}  - \frac{1}{2} \log{\left(\sigma^2_i w^{-2}_{ii'} \right)}  -\left( 2 \sigma^2_i w^{-2}_{ii'} \right)^{-1} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}
+	\end{eqnarray}
 	
-	%This gets confusing with time/location of sampling:
-	%Data consists of $n$ observations, sampled from spatial processes $\bm{X}(s, t)$ (predictor variables) and $Y(s, t)$ (response variable) at $m$ unique locations $s_1, \dots, s_m$. Each location $s_k$ is sampled $m_k$ times. . The number of observations at location $s_k$ is $m_k$. The observed data are $\left\{ \bm{X}(s_i) , Y(s_i) : i \in 1, \dots, m \right\}$. The response $Y$ is univariate; $\bm{X}(s)$ is $p$-variate: $\bm{X}(s) = (X_0(s), X_1(s), \dots, X_p(s))^T$, where $X_0(s) \equiv 1 \: \forall s$ \\
+	The first and second derivatives of the local log-likelihood are $\frac{\partial \ell_i}{\partial \bm{\beta}_i} =  \left\{ \sum_{i'=1}^n \left[ x_{i'j} \left( \sigma^2_i w^{-2}_{ii'} \right)^{-1} \left( y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right) \right] \right\}$ and 
+	\begin{eqnarray}
+		\frac{\partial^2 \ell_i}{\partial \bm{\beta}_i \partial \bm{\beta}'_i} = \left( \begin{array}{ccc} -\sum_{i'=1}^n \left\{ x^2_{i'1} \left( \sigma^2_i w^{-2}_{ii'} \right)^{-1} \right\}  & \cdots & -\sum_{i'=1}^n \left\{ x_{i'1} x_{i'p} \left( \sigma^2_i w^{-2}_{ii'} \right)^{-1} \right\} \\ \vdots & \ddots & \vdots \\ -\sum_{i'=1}^n \left\{ x_{i'p} x_{i'1} \left( \sigma^2_i w^{-2}_{ii'} \right)^{-1} \right\}  & \cdots & -\sum_{i'=1}^n \left\{ x^2_{i'p} \left( \sigma^2_i w^{-2}_{ii'} \right)^{-1} \right\} \end{array} \right)
+	\end{eqnarray}
+	
+	So the observed Fisher information in the locally weighted sample is	
+	\begin{eqnarray}
+		\mathcal{J}_i = \sigma^{-2}_i \left( \begin{array}{ccc} \sum_{i'=1}^n \left( x_{i'1} w_{ii'} \right)^2 & \dots & \sum_{i'=1}^n \left\{ \left(x_{i'1} w_{ii'}\right) \left(x_{i'p} w_{ii'}\right) \right\} \\ \vdots & \ddots & \vdots \\ \sum_{i'=1}^n \left\{ \left(x_{i'p} w_{ii'}\right) \left(x_{i'1} w_{ii'}\right)  \right\} & \dots & \sum_{i'=1}^n \left( x_{i'p} w_{ii'} \right)^2 \end{array} \right)
+	\end{eqnarray}	
+	
+	The bisquare kernel function is used to generate geographic weights based on the distance between observation locations. For estimating the value of the coefficient surface at location $s_i$, the weight given to the observation at location $s_{i'}$ is	
+	\begin{eqnarray}
+		w_{ii'} = \begin{cases} \left[ 1-\left( \bw^{-1} \|s_i-s_{i'}\| \right)^2 \right] & \mbox{ if } \|s_i-s_{i'}\| < \bw \\ 0 & \mbox{ if } \|s_i-s_{i'}\| \geq \bw \end{cases}
+	\end{eqnarray}
+	
+	where $\bw$ is the kernel bandwidth.\\
+	
+	Letting the weight matrix $\bm{W}_i$ be	
+	\begin{eqnarray}
+		\bm{W}_i =  \left( \begin{array}{ccc} w_{i1} & \cdots & 0 \\ \vdots & \ddots & \vdots \\ 0 & \cdots & w_{in} \end{array} \right)
+	\end{eqnarray}
+	
+	estimation of the ordinary geographically-weighted regression coefficient surface is by weighted least squares:	
+	\begin{eqnarray}
+		\hat{\bm{\beta}}_{i, \mbox{GWR}} = \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{X}'\bm{W}_i\bm{Y}
+	\end{eqnarray}
 	
 	
-	
-	%Assume each sample is from a unique location:
-	Data consists of $n$ observations, sampled from spatial processes $\bm{X}(s)$ (predictor variables) and $Y(s)$ (response variable) at $n$ unique locations $s_1, \dots, s_n$. The observed data are $\left\{ \bm{X}(s_i) , Y(s_i) : i \in 1, \dots, n \right\}$. The response $Y$ is univariate; $\bm{X}(s)$ is $p$-variate: $\bm{X}(s) = (X_0(s), X_1(s), \dots, X_p(s))^T$, where $X_0(s) \equiv 1 \: \forall s$ \\
-	
-	The data are compiled into matrices $X_{n \times p} = \left( \bm{X}(s_1), \dots, \bm{X}(s_n) \right)^T$ and $Y_{n \times 1} = \left(Y(s_1), \dots, Y(s_n) \right)^T$\\
-		
-	Assume that at each location $s$, the response $Y(s)$ is related to the predictor variables by a model:\\
-	% model with coefficients $\bm{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
-	
-	\[
-		Y(s_i) = f \left(\bm{X}(s_i) \right) %
-	\]
-	
-	The focus here is on the case where $f(\cdot)$ is a linear model model with coefficients $\bm{\beta}(s) = (\beta_0(s), \beta_1(s), \dots, \beta_p(s))$ :\\
-	\[
-		Y(s_i) = \bm{X}(s_i)^T \bm{\beta}(s_i) + \epsilon(s_i)
-	\]
-	\[
-		\epsilon_i \sim \bm{\mathcal{N}} \left( 0, \sigma_i^2 \right)
-	\]
-	
-	Since the response variable is univariate, observed values are denoted, e.g., $y(s_i)$, while the vector of observed predictors at location $s_i$ is denoted $\bm{x}(s_i)$. The $k^{\text{th}}$ element of $\bm{x}(s_i)$ is $x_k(s_i)$. The Adaptive-LASSO is used for variable selection with a different tuning parameter selected for each local model, so the Adaptive-LASSO tuning parameter at location $s_i$ is denoted $\lambda(s_i)$.\\ 
-	
-
-\section{Model selection and shrinkage \label{section:method}}
-	Coefficient shrinkage and variable selection are accomplished locally via the Lasso \citep{Tibshirani:1996}. At each location $s_i$, the ordinary geographically-weighted regression estimator minimizes the objective function:\\
-
+	At each location $s_i$, the ordinary geographically-weighted regression estimator minimizes the objective function:
 	\begin{eqnarray}
 		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2
 	\end{eqnarray}
 	
-	The objective minimized by the geographically-weighted also (GWL) is:\\
+	 The estimated local variance $\hat{\sigma}_i^2$ is the variance estimate of the unpenalized local model \citep{Zou:2007}.
 	
+\section{Model selection and shrinkage \label{section:method}}
+	Coefficient shrinkage and variable selection are accomplished locally via the Lasso \citep{Tibshirani:1996}.
+	
+	The objective minimized by the geographically-weighted also (GWL) is:	
 	\begin{eqnarray}
 		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \sum_{j=1}^p \lambda_{ij} \beta_{ij}
 	\end{eqnarray}
 	
-	Where $\lambda_{ij}, j \in \{1, \dots, p\}$ are penalties from the adaptive lasso \citep{Zou:2006}. The LAR algorithm is a
-stepwise regression algorithm; the number of steps to include in the model is chosen by minimizing
-the local AIC, with the sum of the weights around$s_i$ $\sum_{i'=1}^n w_{ii'}$ playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}. The estimated local variance $\hat{\sigma}_i^2$ is the variance estimate of the unpenalized local model \citep{Zou:2007}.\\
+	Where $\lambda_{ij}, j \in \{1, \dots, p\}$ are penalties from the adaptive lasso \citep{Zou:2006}.\\
+	
+	The LAR algorithm is a stepwise regression algorithm; the number of steps to include in the model is chosen by minimizing the local AIC, with the sum of the weights around$s_i$ $\sum_{i'=1}^n w_{ii'}$ playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.
 
 	Thus:
 	\begin{eqnarray}
 		\mbox{AIC}_{\mbox{loc}} = \sum_{i'=1}^n w_{ii'} \hat{\sigma}_i^{-2} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + 2 \mbox{df}_i
 	\end{eqnarray}
 
-	Because GWL is not a linear smoother (there is no smoothing matrix $\bm{S}$ such that $\hat{bm{y}} = \bm{S} \bm{y}$) the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}.
+	Because GWL is not a linear smoother (there is no smoothing matrix $\bm{S}$ such that $\hat{\bm{y}} = \bm{S} \bm{y}$) the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}.
 
 	\subsection{Bandwidth selection}
-		The bandwidth is selected to minimize the total AIC. Because of the kernel weights and the application of the lasso, the sample size and degrees of freedom are different for each observation. The total AIC is found by taking the sum over all of the observed data:\\
-		
+		The bandwidth is selected to minimize the total AIC. Because of the kernel weights and the application of the lasso, the sample size and degrees of freedom are different for each observation. The total AIC is found by taking the sum over all of the observed data:		
 		\begin{eqnarray}
 			\mbox{AIC}_{\mbox{tot}} = \sum_{i=1}^n \left( \hat{\sigma}_i^{-2} \left( y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \log \hat{\sigma}_i^2 + 2 \mbox{df}_i \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \right)
 		\end{eqnarray}
@@ -149,8 +148,13 @@ the local AIC, with the sum of the weights around$s_i$ $\sum_{i'=1}^n w_{ii'}$ p
 		
 		The simulated response is $Y(s) = \bm{X}(s) \bm{\beta}(s) + \epsilon(s)$, where the coefficient surface used to generate the data is $\bm{\beta}(s) = \left( \beta_0(s), \dots, \beta_5(s) \right) = \left( 0, \beta_1(s), 0, 0, 0, 0 \right)$ and $\epsilon(s) \overset{\mbox{iid}}{\sim} \mathcal{N} \left( 0, 1 \right)$.\\
 		
-		In order to evaluate the performance over a range of data conditions, the data was simulated at low and high values of the spatial covariance range, and at low and high values of the between-covariate correlation, for two cases of $\beta_1(s)$: the step function $\beta_1(s) = \begin{cases} 0 &\mbox{ if } s_y<0.5 \\ 1 &\mbox{ o.w.} \end{cases}$ and the constant gradient $\beta_1(s) = 1-s_y$.\\
-	
+		In order to evaluate the performance over a range of data conditions, the data was simulated at low and high values of the spatial covariance range, and at low and high values of the between-covariate correlation, for two cases of $\beta_1(s)$: the step function		
+		\begin{eqnarray}
+			\beta_1(s) = \begin{cases} 0 &\mbox{ if } s_y<0.5 \\ 1 &\mbox{ o.w.} \end{cases}
+		\end{eqnarray}
+		
+		and the constant gradient $\beta_1(s) = 1-s_y$.
+			
 		Each case was simulated 100 times.\\
 	
 	\subsection{Simulation results}
@@ -350,7 +354,7 @@ the local AIC, with the sum of the weights around$s_i$ $\sum_{i'=1}^n w_{ii'}$ p
 
 			
 \section{References}
-\bibliographystyle{plainnat}
+\bibliographystyle{chicago}
 \bibliography{../../references/gwr}
 
 \end{document}  
