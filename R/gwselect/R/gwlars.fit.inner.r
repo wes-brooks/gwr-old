@@ -1,4 +1,4 @@
-gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=NULL, mode.select='', tuning=FALSE, predict=FALSE, shrink=TRUE, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE, N=N) {
+gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=NULL, mode.select='', tuning=FALSE, predict=FALSE, simulation=FALSE, shrink=TRUE, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE, N=N) {
     if (!is.null(indx)) {
         colocated = which(coords[indx,1]==as.numeric(loc[1]) & coords[indx,2]==as.numeric(loc[2]))
     }
@@ -42,6 +42,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
 
     int.list = list()
     coef.list = list()
+    coef.unshrunk.list=list()
 
     for (i in 1:N) {
         #Final permutation is the original ordering of the data:
@@ -167,11 +168,31 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                     }
                     #print(loss)
                 } else {
-                    coefs = cbind("(Intercept)"=meany, coef(model))
-                    fitted = predict(model, newx=predx, type='fit', mode='step')[['fit']] 
-                    #s2 = sum((w*(fitted[,nsteps] - as.matrix(yy)))[permutation]**2) / sum(w[permutation])
-                    s2 = sum(lsfit(y=yfit, x=xfit)$residuals**2) / (sum(w[permutation]) - nsteps - 1)
-                    loss = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy))[permutation]**2)})/s2 + 2*df)                                   
+                    coefs = cbind(`(Intercept)` = meany, coef(model))
+                    fitted = predict(model, newx = predx, type = "fit", mode = "step")[["fit"]]
+                    s2 = sum(lsfit(y=yfit, x=xfit)$residuals^2) / (sum(w[permutation]) - nsteps - 1)
+                    loss = as.vector(apply(fitted, 2, function(z) {sum((w * (z - yy))[permutation]^2)}) / s2 + 2 * df)
+                    k = which.min(loss)
+                
+                    if (k > 1) {
+                        varset = vars[[k]]
+                        modeldata = data.frame(y=yy[permutation], xx[permutation,varset])
+                        m = lm(y~., data=modeldata, weights=w)
+                        #m = lsfit(x=modeldata, y=yfit, intercept=FALSE)
+                        coefs.unshrunk = rep(0, ncol(x) + 1)
+                        coefs.unshrunk[c(1, varset + 1)] = coef(m)
+                        s2.unshrunk = sum(m$residuals^2)/(sum(w[permutation]) - 1 - length(coef(m)))
+
+                        se.unshrunk = rep(0, ncol(x) + 1)
+                        se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']
+                    } else {
+                        coefs.unshrunk = rep(0, ncol(x) + 1)
+                        coefs.unshrunk[1] = meany
+                        
+                        s2.unshrunk = sum(yfit^2)/(sum(w[permutation]) - 1)
+                        se.unshrunk = rep(0, ncol(x) + 1)
+                        se.unshrunk[1] = sqrt(s2.unshrunk / sum(w[permutation]))
+                    }
                 }
 
                 if (length(colocated)>0) {
@@ -216,9 +237,17 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
         coefs[1] = coefs[1] - sum(coefs[2:length(coefs)] * meanx)
         #print(coefs)
         if (verbose) {print(coefs)}
-        #intercept = predict(model, type='fit', s=s.optimal, mode='step', newx=matrix(0,1,nrow(coef)))[['fit']] #- coef[2:length(coef)] * meanx[2:length(coef)]
 
-        #int.list[[i]] = intercept
+        coefs.unshrunk = Matrix(coefs.unshrunk, ncol = 1)
+        rownames(coefs.unshrunk) = c("(Intercept)", colnames(x))
+
+        se.unshrunk = Matrix(se.unshrunk, ncol = 1)
+        rownames(se.unshrunk) = c("(Intercept)", colnames(x))
+        
+        #coefs.unshrunk = coefs.unshrunk * c(1, adapt.weight) / c(1, normx)
+        #coefs.unshrunk[1] = coefs.unshrunk[1] - sum(coefs.unshrunk[2:length(coefs.unshrunk)] * meanx)
+
+        coef.unshrunk.list[[i]] = coefs.unshrunk
         coef.list[[i]] = coefs
     }
     
@@ -231,6 +260,9 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
         return(list(loss.local=loss.local))
     } else if (predict) {
         return(list(loss.local=loss.local, coef=coefs))
-    } else {return(list(model=model, loss=loss, coef=coefs, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N))
+    } else if (simulation) {
+        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, s=s.optimal, bw=bw, sigma2=s2, coefs.unshrunk=coefs.unshrunk, s2.unshrunk=s2.unshrunk, coef.unshrunk.list=coef.unshrunk.list, se.unshrunk=se.unshrunk))
+    } else {
+        return(list(model=model, loss=loss, coef=coefs, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N))
     }
 }
