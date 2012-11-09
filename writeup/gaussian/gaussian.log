@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  2 NOV 2012 18:27
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  9 NOV 2012 14:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -248,7 +248,13 @@ Package pdftexcmds Info: \pdfdraftmode not found.
 
 Package epstopdf Warning: Drivers other than `pdftex.def' are not supported.
 
-)) (/usr/local/texlive/2012/texmf-dist/tex/latex/relsize/relsize.sty
+)) (/usr/local/texlive/2012/texmf-dist/tex/latex/tools/verbatim.sty
+Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
+\every@verbatim=\toks28
+\verbatim@line=\toks29
+\verbatim@in@stream=\read1
+)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/relsize/relsize.sty
 Package: relsize 2011/09/21 ver 4.0
 
 Examine \normalsize starts \@setfontsize size may be \@xipt. 
@@ -304,64 +310,51 @@ Package: booktabs 2005/04/14 v1.61803 publication quality tables
 (./gaussian.aux)
 \openout1 = `gaussian.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 39.
-LaTeX Font Info:    ... okay on input line 39.
-LaTeX Font Info:    Try loading font information for U+msa on input line 40.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 40.
+LaTeX Font Info:    ... okay on input line 40.
+LaTeX Font Info:    Try loading font information for U+msa on input line 41.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 40.
+LaTeX Font Info:    Try loading font information for U+msb on input line 41.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
-)
-Overfull \hbox (15.90619pt too wide) in paragraph at lines 62--63
-[]\OT1/cmr/m/n/10.95 Consider $\OML/cmm/m/it/10.95 n$ \OT1/cmr/m/n/10.95 ob-ser
--va-tions of $(\OML/cmm/m/it/10.95 p \OT1/cmr/m/n/10.95 + 1)$-variate $\OML/cmm
-/b/it/10.95 X \OT1/cmr/m/n/10.95 = [][]$ and uni-vari-ate $\OML/cmm/b/it/10.95 
-y \OT1/cmr/m/n/10.95 = []$,
- []
-
-[1
+) [1
 
 
-]
-Overfull \hbox (34.31108pt too wide) in paragraph at lines 83--84
-[]\OT1/cmr/m/n/10.95 The first and sec-ond deriva-tives of the lo-cal log-likel
-ihood are $[] = []$
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--99
-
- []
-
-[2]
-Underfull \hbox (badness 10000) in paragraph at lines 126--127
-
- []
-
+] [2]
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 143--144
+Underfull \hbox (badness 10000) in paragraph at lines 131--132
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 147--148
+Underfull \hbox (badness 10000) in paragraph at lines 134--135
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 136--137
 
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 149--150
+Underfull \hbox (badness 10000) in paragraph at lines 147--149
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 150--151
 
  []
 
@@ -371,63 +364,33 @@ Underfull \hbox (badness 10000) in paragraph at lines 158--159
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 161--162
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
 
  []
 
-File: ../../figures/simulation/X1.coverage.pdf Graphic file (type QTm)
-<use  "../../figures/simulation/X1.coverage.pdf" >
-File: ../../figures/simulation/X1.selection.pdf Graphic file (type QTm)
+[5]
+Underfull \hbox (badness 10000) in paragraph at lines 164--165
 
-<use  "../../figures/simulation/X1.selection.pdf" > [5]
-File: ../../figures/simulation/X2.coverage.pdf Graphic file (type QTm)
+ []
 
-<use  "../../figures/simulation/X2.coverage.pdf" >
-File: ../../figures/simulation/X2.selection.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/X2.selection.pdf" >
-File: ../../figures/simulation/X3.coverage.pdf Graphic file (type QTm)
+Underfull \hbox (badness 10000) in paragraph at lines 223--224
 
-<use  "../../figures/simulation/X3.coverage.pdf" >
-File: ../../figures/simulation/X3.selection.pdf Graphic file (type QTm)
+ []
 
-<use  "../../figures/simulation/X3.selection.pdf" >
-File: ../../figures/simulation/X4.coverage.pdf Graphic file (type QTm)
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 226--227
 
-<use  "../../figures/simulation/X4.coverage.pdf" >
-File: ../../figures/simulation/X4.selection.pdf Graphic file (type QTm)
+ []
 
-<use  "../../figures/simulation/X4.selection.pdf" >
-File: ../../figures/simulation/X5.coverage.pdf Graphic file (type QTm)
-
-<use  "../../figures/simulation/X5.coverage.pdf" >
-File: ../../figures/simulation/X5.selection.pdf Graphic file (type QTm)
-
-<use  "../../figures/simulation/X5.selection.pdf" >
-File: ../../figures/simulation/Z.coverage.pdf Graphic file (type QTm)
-
-<use  "../../figures/simulation/Z.coverage.pdf" >
-File: ../../figures/simulation/Z.selection.pdf Graphic file (type QTm)
-
-<use  "../../figures/simulation/Z.selection.pdf" >
-File: ../../figures/simulation/Intercept.coverage.pdf Graphic file (type QTm)
-
-<use  "../../figures/simulation/Intercept.coverage.pdf" >
-File: ../../figures/simulation/Intercept.selection.pdf Graphic file (type QTm)
-
-<use  "../../figures/simulation/Intercept.selection.pdf" > (./gaussian.bbl
-[6] [7] [8] [9]) [10] (./gaussian.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+(./gaussian.bbl) [7] [8] (./gaussian.aux) ) 
 Here is how much of TeX's memory you used:
- 3034 strings out of 494004
- 39259 string characters out of 3150890
- 97949 words of memory out of 3000000
- 6187 multiletter control sequences out of 15000+200000
- 16764 words of font info for 61 fonts, out of 3000000 for 9000
+ 2968 strings out of 494004
+ 38137 string characters out of 3150890
+ 99580 words of memory out of 3000000
+ 6153 multiletter control sequences out of 15000+200000
+ 13036 words of font info for 47 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,15n,34p,890b,286s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,15n,34p,954b,200s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (10 pages).
+Output written on gaussian.pdf (8 pages).

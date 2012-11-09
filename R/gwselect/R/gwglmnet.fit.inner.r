@@ -130,10 +130,10 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
                     fitted = predict(model, newx=predx, type='response')
                     #s2 = sum((w*(fitted[,nsteps] - as.matrix(yy)))[permutation]**2) / sum(w[permutation])
                     #s2 = sum(lsfit(y=yfit, x=xfit)$residuals**2) / (sum(w[permutation]) - nsteps - 1)
-                    loss = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy))[permutation]**2/(z*(1-z)))}) + 2*df2/sum(w[permutation]))                                   
+                    loss = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy)**2/(z*(1-z)))[permutation])}) + 2*df2/sum(w[permutation]))                                   
                     
                     if (length(colocated)>0) {
-                        loss.local = as.vector(apply(fitted, 2, function(z) {sum(((w*(z - yy))**2 / (z*(1-z)))[colocated])}) + 2*df2/sum(w[permutation]))
+                        loss.local = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy)**2 / (z*(1-z)))[colocated])}) + 2*df2/sum(w[permutation]))
                     } else {
                         loss.local = rep(NA, length(loss))
                     }                    

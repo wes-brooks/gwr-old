@@ -1,5 +1,12 @@
 \begin{thebibliography}{}
 
+\bibitem[\protect\citeauthoryear{Efron and Tibshirani}{Efron and
+  Tibshirani}{1986}]{Efron:1986}
+Efron, B. and R.~Tibshirani (1986).
+\newblock Bootstrap methods for standard errors, confidence intervals, and
+  other measures of statistical accuracy.
+\newblock {\em Statistical Science\/}~{\em 1\/}(1), 54--75.
+
 \bibitem[\protect\citeauthoryear{Fotheringham, Brunsdon, and
   Charlton}{Fotheringham et~al.}{2002}]{Fotheringham:2002}
 Fotheringham, A., C.~Brunsdon, and M.~Charlton (2002).
@@ -7,11 +14,11 @@ Fotheringham, A., C.~Brunsdon, and M.~Charlton (2002).
   varying relationships}.
 \newblock Wiley.
 
-\bibitem[\protect\citeauthoryear{Tibshirani}{Tibshirani}{1996}]{Tibshirani:1996}
-Tibshirani, R. (1996).
-\newblock Regression shrinkage and selection via the lasso.
-\newblock {\em Journal of the Royal Statistical Society. Series B
-  (Methodological)\/}~{\em 58}, 267--288.
+\bibitem[\protect\citeauthoryear{Wheeler}{Wheeler}{2009}]{Wheeler:2009}
+Wheeler, D.~C. (2009).
+\newblock Simultaneous coefficient penalization and model selection in
+  geographically weighted regression: the geographically weighted lasso.
+\newblock {\em Environment and Planning A\/}~{\em 41}, 722--742.
 
 \bibitem[\protect\citeauthoryear{Zou}{Zou}{2006}]{Zou:2006}
 Zou, H. (2006).

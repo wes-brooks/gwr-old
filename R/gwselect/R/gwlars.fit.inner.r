@@ -171,7 +171,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                     coefs = cbind(`(Intercept)` = meany, coef(model))
                     fitted = predict(model, newx = predx, type = "fit", mode = "step")[["fit"]]
                     s2 = sum(lsfit(y=yfit, x=xfit)$residuals^2) / (sum(w[permutation]) - nsteps - 1)
-                    loss = as.vector(apply(fitted, 2, function(z) {sum((w * (z - yy))[permutation]^2)}) / s2 + 2 * df)
+                    loss = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy)**2)[permutation])}) / s2 + 2 * df)
                     k = which.min(loss)
                 
                     if (k > 1) {
@@ -196,7 +196,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 }
 
                 if (length(colocated)>0) {
-                    loss.local = as.vector(apply(fitted, 2, function(z) {sum((w*(z - (yy-meany)))[colocated]**2)})/s2 + log(s2) + 2*df/sum(w[permutation])) 
+                    loss.local = as.vector(apply(fitted, 2, function(z) {sum((w*(z - (yy-meany))**2)[colocated])})/s2 + log(s2) + 2*df/sum(w[permutation])) 
                 } else {
                     loss.local = rep(NA, length(loss))
                 }                     
