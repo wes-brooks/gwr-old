@@ -103,7 +103,12 @@
 		&=& \sigma^{-2}_i \sum_{i'=1}^n w_{ii'} \bm{x}_{i'} \bm{x}'_{i'}
 	\end{eqnarray}	
 	
-	The form of the observed Fisher information suggests that the information in the data $\bm{x}_{i'}$ about the coefficients at location $s_i$ is proportional to the weight $w_{ii'}$. 
+	The form of the observed Fisher information suggests that the information in the data $\bm{x}_{i'}$ about the coefficients at location $s_i$ is proportional to the weight $w_{ii'}$
+	
+	At each location $s_i$, the ordinary geographically-weighted regression estimator minimizes the objective function:
+	\begin{eqnarray}
+		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2
+	\end{eqnarray}
 	
 	Letting the weight matrix $\bm{W}_i$ be	
 	\begin{eqnarray}
@@ -113,12 +118,6 @@
 	estimation of the ordinary geographically-weighted regression coefficient surface is by weighted least squares:	
 	\begin{eqnarray}
 		\hat{\bm{\beta}}_{i, \mbox{GWR}} = \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{X}'\bm{W}_i\bm{Y}
-	\end{eqnarray}
-	
-	
-	At each location $s_i$, the ordinary geographically-weighted regression estimator minimizes the objective function:
-	\begin{eqnarray}
-		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2
 	\end{eqnarray}
 	
 	 
@@ -136,21 +135,27 @@
 	Applying the Adaptive LASSO in the setting of a GWR model requires that a tuning parameter be selected at each location where the coefficients are to be estimated. In \cite{Wheeler:2009}, the tuning parameter for the LASSO at location $s_i$ is selected to minimize the absolute jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$, which means that the coefficients can only be estimated at the locations where data has been observed. On the other hand, using the local AIC to select the tuning parameter allows coefficients to be estimated at any location where the local likelihood can be calculated. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$ playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.\\
 
 
-	The objective minimized by the geographically-weighted also (GWL) is:	
+	The objective minimized by the geographically-weighted lasso (GWL) is:	
 	\begin{eqnarray}
 		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \sum_{j=1}^p \lambda_{ij} \beta_{ij}
 	\end{eqnarray}
 	
-	Where $\lambda_{ij}, j \in \{1, \dots, p\}$ are penalties from the Adaptive LASSO \citep{Zou:2006}.
+	Where $\lambda_{ij}, j \in \{1, \dots, p\}$ are penalties from the Adaptive LASSO \citep{Zou:2006}. Taking the derivatives with respect to $\beta$ and setting to zero, we see that
 	\begin{eqnarray}
+		\hat{\bm{\beta}}_{i, \mbox{GWL}} &=& \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i\\
+		\hat{y}_i = \bm{x}_i \hat{\bm{\beta}}_{i, \mbox{GWL}} &=&  \bm{x}_i \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \bm{x}_i \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i
+	\end{eqnarray}
+	
+	So unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GWL is not a linear smoother the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}. The local AIC ($\mbox{AIC}_{\mbox{loc}}$) is minimized to select the adaptive lasso tuning parameter.
+		\begin{eqnarray}
 		\mbox{AIC}_{\mbox{loc}} = \sum_{i'=1}^n w_{ii'} \hat{\sigma}_i^{-2} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + 2 \mbox{df}_i
 	\end{eqnarray}	
-	Where the estimated local variance $\hat{\sigma}_i^2$ is the variance estimate from the unpenalized local model \citep{Zou:2007}.\\
-
-	Because GWL is not a linear smoother (there is no matrix $\bm{S}$ such that $\hat{\bm{y}} = \bm{S} \bm{y}$) the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}. Confidence intervals for the coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by using the variables selected by the Adaptive LASSO in a weighted least squares model.\\
+	Where the estimated local variance $\hat{\sigma}_i^2$ is the variance estimate from the unpenalized local model (i.e. the ordinary GWR model) \citep{Zou:2007}.\\
+	
+	 Confidence intervals for the coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by using the variables selected by the Adaptive LASSO in a weighted least squares model. To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5\%, 97.5\%) quantiles of the coefficient estimates from the bootstrap replicates. \\
 
 	\subsection{Bandwidth selection}
-		The bandwidth is selected to minimize the total AIC. Because of the kernel weights and the application of the lasso, the sample size and degrees of freedom are different for each observation. The total AIC is found by taking the sum over all of the observed data:		
+		The bandwidth is selected to minimize the total AIC ($\mbox{AIC}_{\mbox{tot}}$). Because of the kernel weights and the application of the lasso, the sample size and degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:		
 		\begin{eqnarray}
 			\mbox{AIC}_{\mbox{tot}} = \sum_{i=1}^n \left\{ \hat{\sigma}_i^{-2} \left( y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \log \hat{\sigma}_i^2 + 2 \mbox{df}_i \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \right\}
 		\end{eqnarray}
@@ -161,14 +166,13 @@
 	\subsection{Simulation setup}
 		A simulation study was conducted to assess the finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[0,1] \times [0,1]$, which was divided into a $30 \times 30$ grid. Each of the $p=5$ covariates was simulated by a Gaussian random field with mean zero and exponential covariance $Cov \left(Z_j(s_i), Z_j(s_{i'}) \right) = \sigma^2 \exp{\left( -\tau^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma^2=1$ is the variance and $\tau$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.\\
 		
-		The simulated response is $Y(s) = \bm{X}(s) \bm{\beta}(s) + \epsilon(s)$, where the coefficient surface used to generate the data is $\bm{\beta}(s) = \left( \beta_0(s), \dots, \beta_5(s) \right) = \left( 0, \beta_1(s), 0, 0, 0, 0 \right)$.\\
-		
-		In order to evaluate the performance of GWL under a range of conditions, the data was simulated under 36 different settings (Table \ref{table:simulation_settings}): high (0.8) and low (0.1) values of the autoregression range parameter $\tau$ for the Gaussian random fields used to generate the covariates $\bm{X}_1(s), \dots, \bm{X}_5(s)$; three levels of between-covariate correlation $\rho$ (0, 0.5, 0.8); three values of the autoregression range parameter $\tau$ for the Gaussian random field used to generate the error term $\epsilon(s)$; and two different types of coefficient surface $\beta_1(s)$: the step function
+		The simulated response is $y_i = \bm{x}_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 900$. The simulated data included the output $y$ and five covariates $x_1, \dots, x_5$. The true data-generating model used only $x_1$, so $x_2, \dots, x_5$ are included to test the variable-selection properties of GWL. Two different types of coefficient surface were tested for $\beta_1(s)$: the constant gradient $\beta_1(s) = 1-s_y$, and the step function
 		\begin{eqnarray}
 			\beta_1(s) = \begin{cases} 0 &\mbox{ if } s_y<0.5 \\ 1 &\mbox{ o.w.} \end{cases}
-		\end{eqnarray}		
-		and the constant gradient $\beta_1(s) = 1-s_y$ .
-			
+		\end{eqnarray}
+		
+		In order to evaluate the performance of GWL under a range of conditions, the data was simulated under 18 different settings for each type of $\beta_1$ (Table \ref{table:simulation_settings}): high (0.8) and low (0.1) values of the autoregression range parameter $\tau$ for the Gaussian random fields used to generate the covariates $\bm{X}_1(s), \dots, \bm{X}_5(s)$; three levels of between-covariate correlation $\rho$ (0, 0.5, 0.8); and three values of the autoregression range parameter $\tau$ for the Gaussian random field used to generate the error term $\epsilon(s)$. Each case was simulated 100 times.\\
+		
 		\begin{table}[ht]
 			\caption{Simulation settings} % title of Table
 			\vspace{1mm}
@@ -219,11 +223,227 @@
 			\end{tabular}
 			\label{table:simulation_settings} % is used to refer this table in the text
 		\end{table}
-		
-		Each case was simulated 100 times.\\
 	
 	\subsection{Simulation results}
 		The coverage of the $95\%$ CI and the selection frequency are plotted in the figures.\\
+		
+		% latex table generated in R 2.15.1 by xtable 1.7-0 package
+% Thu Nov 15 16:10:33 2012
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrrr}
+  \hline
+ & X1 & X2 & X3 & X4 & X5 \\ 
+  \hline
+1 & 0.88 & 0.86 & 0.84 & 0.85 & 0.86 \\ 
+  2 & 0.91 & 0.83 & 0.82 & 0.85 & 0.83 \\ 
+  3 & 0.79 & 0.58 & 0.58 & 0.57 & 0.57 \\ 
+  4 & 0.75 & 0.56 & 0.56 & 0.56 & 0.55 \\ 
+  5 & 0.64 & 0.32 & 0.34 & 0.32 & 0.33 \\ 
+  6 & 0.90 & 0.31 & 0.31 & 0.30 & 0.31 \\ 
+  7 & 0.88 & 0.85 & 0.83 & 0.82 & 0.83 \\ 
+  8 & 0.90 & 0.80 & 0.80 & 0.80 & 0.82 \\ 
+  9 & 0.78 & 0.57 & 0.59 & 0.57 & 0.57 \\ 
+  10 & 0.71 & 0.56 & 0.57 & 0.55 & 0.55 \\ 
+  11 & 0.65 & 0.33 & 0.34 & 0.32 & 0.33 \\ 
+  12 & 0.89 & 0.32 & 0.34 & 0.31 & 0.31 \\ 
+  13 & 0.87 & 0.82 & 0.83 & 0.82 & 0.81 \\ 
+  14 & 0.88 & 0.77 & 0.76 & 0.76 & 0.78 \\ 
+  15 & 0.75 & 0.58 & 0.58 & 0.58 & 0.58 \\ 
+  16 & 0.63 & 0.55 & 0.57 & 0.55 & 0.56 \\ 
+  17 & 0.65 & 0.35 & 0.33 & 0.35 & 0.36 \\ 
+  18 & 0.86 & 0.31 & 0.33 & 0.31 & 0.30 \\ 
+  19 & 0.86 & 0.73 & 0.76 & 0.74 & 0.73 \\ 
+  20 & 0.86 & 0.68 & 0.68 & 0.63 & 0.67 \\ 
+  21 & 0.67 & 0.50 & 0.50 & 0.50 & 0.51 \\ 
+  22 & 0.61 & 0.53 & 0.51 & 0.53 & 0.52 \\ 
+  23 & 0.62 & 0.27 & 0.27 & 0.26 & 0.26 \\ 
+  24 & 0.85 & 0.25 & 0.25 & 0.27 & 0.24 \\ 
+  25 & 0.87 & 0.77 & 0.75 & 0.78 & 0.79 \\ 
+  26 & 0.84 & 0.68 & 0.63 & 0.66 & 0.71 \\ 
+  27 & 0.64 & 0.51 & 0.51 & 0.52 & 0.51 \\ 
+  28 & 0.56 & 0.52 & 0.51 & 0.53 & 0.53 \\ 
+  29 & 0.60 & 0.25 & 0.26 & 0.27 & 0.25 \\ 
+  30 & 0.82 & 0.28 & 0.28 & 0.29 & 0.27 \\ 
+  31 & 0.87 & 0.75 & 0.74 & 0.75 & 0.75 \\ 
+  32 & 0.80 & 0.62 & 0.62 & 0.59 & 0.67 \\ 
+  33 & 0.61 & 0.54 & 0.53 & 0.55 & 0.54 \\ 
+  34 & 0.51 & 0.55 & 0.55 & 0.53 & 0.55 \\ 
+  35 & 0.58 & 0.30 & 0.29 & 0.30 & 0.30 \\ 
+  36 & 0.78 & 0.29 & 0.29 & 0.31 & 0.29 \\ 
+   \hline
+\end{tabular}
+\caption{Selection frequency}
+\end{center}
+\end{table}
+
+
+% latex table generated in R 2.15.1 by xtable 1.7-0 package
+% Thu Nov 15 16:12:47 2012
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrrrr}
+  \hline
+ & (Intercept) & X1 & X2 & X3 & X4 & X5 \\ 
+  \hline
+1 & 0.88 & 0.76 & 0.99 & 0.99 & 1.00 & 1.00 \\ 
+  2 & 0.86 & 0.71 & 1.00 & 1.00 & 1.00 & 0.99 \\ 
+  3 & 0.48 & 0.75 & 0.91 & 0.92 & 0.90 & 0.90 \\ 
+  4 & 0.49 & 0.63 & 0.89 & 0.90 & 0.90 & 0.89 \\ 
+  5 & 0.14 & 0.51 & 0.70 & 0.76 & 0.72 & 0.71 \\ 
+  6 & 0.14 & 0.48 & 0.69 & 0.67 & 0.68 & 0.70 \\ 
+  7 & 0.87 & 0.78 & 0.99 & 0.99 & 0.99 & 1.00 \\ 
+  8 & 0.88 & 0.75 & 1.00 & 1.00 & 0.99 & 1.00 \\ 
+  9 & 0.49 & 0.77 & 0.91 & 0.91 & 0.91 & 0.91 \\ 
+  10 & 0.47 & 0.64 & 0.90 & 0.91 & 0.89 & 0.90 \\ 
+  11 & 0.15 & 0.55 & 0.72 & 0.73 & 0.70 & 0.72 \\ 
+  12 & 0.15 & 0.48 & 0.71 & 0.73 & 0.69 & 0.70 \\ 
+  13 & 0.86 & 0.81 & 1.00 & 0.99 & 0.99 & 0.99 \\ 
+  14 & 0.88 & 0.80 & 1.00 & 0.99 & 0.99 & 0.99 \\ 
+  15 & 0.50 & 0.79 & 0.91 & 0.92 & 0.91 & 0.92 \\ 
+  16 & 0.47 & 0.65 & 0.90 & 0.90 & 0.91 & 0.90 \\ 
+  17 & 0.15 & 0.59 & 0.74 & 0.74 & 0.74 & 0.74 \\ 
+  18 & 0.14 & 0.49 & 0.70 & 0.74 & 0.69 & 0.71 \\ 
+  19 & 0.85 & 0.78 & 0.96 & 0.98 & 0.96 & 0.97 \\ 
+  20 & 0.83 & 0.74 & 0.98 & 0.97 & 0.96 & 0.96 \\ 
+  21 & 0.69 & 0.75 & 0.88 & 0.87 & 0.87 & 0.88 \\ 
+  22 & 0.71 & 0.62 & 0.88 & 0.87 & 0.88 & 0.88 \\ 
+  23 & 0.50 & 0.56 & 0.68 & 0.66 & 0.67 & 0.66 \\ 
+  24 & 0.48 & 0.49 & 0.64 & 0.64 & 0.65 & 0.64 \\ 
+  25 & 0.87 & 0.79 & 0.98 & 0.97 & 0.98 & 0.98 \\ 
+  26 & 0.80 & 0.69 & 0.95 & 0.96 & 0.97 & 0.98 \\ 
+  27 & 0.71 & 0.76 & 0.87 & 0.88 & 0.89 & 0.88 \\ 
+  28 & 0.71 & 0.63 & 0.88 & 0.87 & 0.89 & 0.88 \\ 
+  29 & 0.48 & 0.57 & 0.65 & 0.68 & 0.67 & 0.67 \\ 
+  30 & 0.48 & 0.49 & 0.68 & 0.67 & 0.70 & 0.67 \\ 
+  31 & 0.87 & 0.85 & 0.98 & 0.97 & 0.98 & 0.97 \\ 
+  32 & 0.83 & 0.73 & 0.94 & 0.96 & 0.96 & 0.97 \\ 
+  33 & 0.70 & 0.76 & 0.90 & 0.89 & 0.89 & 0.89 \\ 
+  34 & 0.71 & 0.61 & 0.89 & 0.91 & 0.89 & 0.90 \\ 
+  35 & 0.50 & 0.59 & 0.69 & 0.68 & 0.70 & 0.68 \\ 
+  36 & 0.50 & 0.51 & 0.67 & 0.69 & 0.71 & 0.70 \\ 
+   \hline
+\end{tabular}
+\caption{Coverage frequency of the 95\% bootstrap confidence interval}
+\end{center}
+\end{table}
+
+
+% latex table generated in R 2.15.1 by xtable 1.7-0 package
+% Thu Nov 15 16:20:16 2012
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrrrr}
+  \hline
+ & (Intercept) & X1 & X2 & X3 & X4 & X5 \\ 
+  \hline
+1 & 0.88 & 0.70 & 0.91 & 0.90 & 0.90 & 0.91 \\ 
+  2 & 0.83 & 0.62 & 0.91 & 0.88 & 0.91 & 0.89 \\ 
+  3 & 0.47 & 0.67 & 0.76 & 0.77 & 0.76 & 0.76 \\ 
+  4 & 0.46 & 0.49 & 0.75 & 0.75 & 0.75 & 0.74 \\ 
+  5 & 0.14 & 0.50 & 0.61 & 0.70 & 0.68 & 0.65 \\ 
+  6 & 0.13 & 0.47 & 0.64 & 0.61 & 0.63 & 0.65 \\ 
+  7 & 0.87 & 0.70 & 0.92 & 0.92 & 0.91 & 0.92 \\ 
+  8 & 0.84 & 0.61 & 0.92 & 0.92 & 0.89 & 0.91 \\ 
+  9 & 0.47 & 0.67 & 0.76 & 0.77 & 0.76 & 0.76 \\ 
+  10 & 0.44 & 0.45 & 0.76 & 0.77 & 0.75 & 0.75 \\ 
+  11 & 0.15 & 0.54 & 0.68 & 0.67 & 0.66 & 0.66 \\ 
+  12 & 0.13 & 0.44 & 0.64 & 0.65 & 0.62 & 0.64 \\ 
+  13 & 0.86 & 0.70 & 0.93 & 0.93 & 0.92 & 0.93 \\ 
+  14 & 0.85 & 0.60 & 0.92 & 0.91 & 0.92 & 0.92 \\ 
+  15 & 0.48 & 0.65 & 0.77 & 0.77 & 0.77 & 0.77 \\ 
+  16 & 0.45 & 0.39 & 0.76 & 0.76 & 0.76 & 0.76 \\ 
+  17 & 0.14 & 0.56 & 0.69 & 0.66 & 0.69 & 0.69 \\ 
+  18 & 0.13 & 0.43 & 0.62 & 0.67 & 0.62 & 0.63 \\ 
+  19 & 0.86 & 0.74 & 0.86 & 0.90 & 0.88 & 0.87 \\ 
+  20 & 0.82 & 0.59 & 0.87 & 0.88 & 0.82 & 0.86 \\ 
+  21 & 0.68 & 0.63 & 0.74 & 0.73 & 0.73 & 0.74 \\ 
+  22 & 0.69 & 0.37 & 0.75 & 0.74 & 0.75 & 0.74 \\ 
+  23 & 0.40 & 0.55 & 0.65 & 0.64 & 0.63 & 0.63 \\ 
+  24 & 0.38 & 0.46 & 0.61 & 0.60 & 0.62 & 0.60 \\ 
+  25 & 0.87 & 0.73 & 0.89 & 0.90 & 0.90 & 0.92 \\ 
+  26 & 0.82 & 0.52 & 0.85 & 0.83 & 0.86 & 0.88 \\ 
+  27 & 0.69 & 0.61 & 0.74 & 0.74 & 0.75 & 0.74 \\ 
+  28 & 0.70 & 0.34 & 0.75 & 0.74 & 0.75 & 0.75 \\ 
+  29 & 0.38 & 0.56 & 0.61 & 0.64 & 0.63 & 0.64 \\ 
+  30 & 0.38 & 0.45 & 0.62 & 0.65 & 0.64 & 0.61 \\ 
+  31 & 0.89 & 0.77 & 0.89 & 0.89 & 0.91 & 0.89 \\ 
+  32 & 0.83 & 0.52 & 0.83 & 0.85 & 0.84 & 0.87 \\ 
+  33 & 0.70 & 0.58 & 0.76 & 0.75 & 0.75 & 0.75 \\ 
+  34 & 0.70 & 0.29 & 0.76 & 0.76 & 0.75 & 0.76 \\ 
+  35 & 0.40 & 0.55 & 0.65 & 0.65 & 0.65 & 0.65 \\ 
+  36 & 0.38 & 0.43 & 0.63 & 0.66 & 0.65 & 0.65 \\ 
+   \hline
+\end{tabular}
+\caption{Coverage frequency of the 95\% confidence interval from normal approximation}
+\end{center}
+\end{table}
+
+
+% latex table generated in R 2.15.1 by xtable 1.7-0 package
+% Thu Nov 15 17:06:15 2012
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrrr}
+  \hline
+ & X1 & X2 & X3 & X4 & X5 \\ 
+  \hline
+0.1 & 0.80 & 0.60 & 0.60 & 0.60 & 0.60 \\ 
+  0.8 & 0.72 & 0.48 & 0.48 & 0.48 & 0.49 \\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+% latex table generated in R 2.15.1 by xtable 1.7-0 package
+% Thu Nov 15 17:06:15 2012
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrrr}
+  \hline
+ & X1 & X2 & X3 & X4 & X5 \\ 
+  \hline
+0 & 0.87 & 0.76 & 0.76 & 0.75 & 0.77 \\ 
+  0.1 & 0.67 & 0.55 & 0.55 & 0.55 & 0.54 \\ 
+  0.8 & 0.74 & 0.30 & 0.30 & 0.30 & 0.30 \\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+% latex table generated in R 2.15.1 by xtable 1.7-0 package
+% Thu Nov 15 17:07:29 2012
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrrr}
+  \hline
+ & X1 & X2 & X3 & X4 & X5 \\ 
+  \hline
+0 & 0.78 & 0.53 & 0.53 & 0.53 & 0.53 \\ 
+  0.5 & 0.76 & 0.54 & 0.53 & 0.54 & 0.54 \\ 
+  0.8 & 0.73 & 0.54 & 0.53 & 0.53 & 0.54 \\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+% latex table generated in R 2.15.1 by xtable 1.7-0 package
+% Thu Nov 15 17:06:15 2012
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rrrrrr}
+  \hline
+ & X1 & X2 & X3 & X4 & X5 \\ 
+  \hline
+gradient & 0.78 & 0.52 & 0.52 & 0.52 & 0.53 \\ 
+  step & 0.73 & 0.55 & 0.55 & 0.55 & 0.55 \\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
 		
 		\begin{comment}
 			\begin{figure}
