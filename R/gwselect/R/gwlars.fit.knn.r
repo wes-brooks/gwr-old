@@ -1,10 +1,8 @@
-gwlars.fit.knn = function(x, y, coords, indx, fit.loc, D, N=N, s, mode.select, tuning, predict, simulation, shrink, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE, oracle) {
+gwlars.fit.knn = function(x, y, coords, indx, fit.loc, D, N=N, s, mode.select, tuning, predict, simulation, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE, oracle) {
     if (!is.null(fit.loc)) {
-        coords.unique = unique(fit.loc)
-        n.loc = dim(coords.unique)[1]
+        coords.unique = fit.loc
     } else {
         coords.unique = unique(coords)
-        n.loc = dim(coords.unique)[1]
     }
     n = dim(coords.unique)[1]
 
@@ -15,7 +13,7 @@ gwlars.fit.knn = function(x, y, coords, indx, fit.loc, D, N=N, s, mode.select, t
     max.weights = rep(1, length(prior.weights))
     total.weight = sum(max.weights * prior.weights)
 
-    for (i in 1:n.loc) {
+    for (i in 1:n) {
         loc = coords.unique[i,]
         dist = drop(D[i,])
 
@@ -26,7 +24,7 @@ gwlars.fit.knn = function(x, y, coords, indx, fit.loc, D, N=N, s, mode.select, t
         bandwidth = opt$minimum
 
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
-        models[[i]] = gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, indx=indx, bw=bandwidth, dist=dist, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, shrink=shrink, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition, oracle=oracle)
+        models[[i]] = gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, indx=indx, bw=bandwidth, dist=dist, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
     }
 
     gwlars.object[['models']] = models
