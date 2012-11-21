@@ -23,8 +23,12 @@ gwlars.fit.fixedbwparallel = function(x, y, coords, indx, fit.loc, bw, D=NULL, N
         loc = coords.unique[i,]
         gw = gweights[[i]]
 
-        m = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
-        cat(paste("For i=", i, ", bw=", bw, ", loss=", m[['loss.local']], ".\n", sep=''))
+        if (is.null(oracle)) {
+            m = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
+        } else {
+            m = gwlars.fit.oracle(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight)
+        }
+        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", bw, "; loss=", m[['loss.local']], ".\n", sep=''))
         return(m)
     }
 

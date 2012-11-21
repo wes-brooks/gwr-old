@@ -22,8 +22,14 @@ gwlars.fit.knnparallel = function(x, y, coords, indx, fit.loc, D, N=N, s, mode.s
             prior.weights=prior.weights, target=target)
         bandwidth = opt$minimum
 
-        cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
-        return(gwlars.fit.inner(x=x, y=y, coords=coords, indx=indx, loc=loc, bw=bandwidth, dist=dist, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition))
+        if (is.null(oracle)) {
+            m = gwlars.fit.inner(x=x, y=y, bw=bandwidth, coords=coords, loc=loc, indx=indx, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, dist=dist, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
+        } else {
+            m = gwlars.fit.oracle(x=x, y=y, bw=bandwidth, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, dist=dist, prior.weights=prior.weights, gweight=gweight)
+        } 
+        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); target=", target, "; bw=", bandwidth, "; tolerance=", target/1000, "; loss=", m[['loss.local']], ".\n", sep=''))
+
+        return(m)
     }
 
     gwlars.object[['models']] = models
