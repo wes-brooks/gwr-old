@@ -82,10 +82,10 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, o
     
             } else if (mode.select=='AIC') {                           
                 fitted = predict(model, newdata=localdata)
-                s2 = sum(model$residuals^2) / (sum(w[permutation]) - length(oracle) - 1)     
+                s2 = sum(w[permutation]*model$residuals**2) / (sum(w[permutation]) - length(oracle) - 1)     
                 
                 if (length(colocated)>0) {
-                    loss.local = sum(w[colocated]*(fitted - localdata$y)**2)/s2 + log(s2) + 2*df/sum(w[permutation])
+                    loss.local = log(s2) + 2*df/sum(w[permutation])
                 } else {
                     loss.local = NA
                 }                     
