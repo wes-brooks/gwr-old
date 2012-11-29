@@ -1,4 +1,4 @@
-gwlars.fit.fixedbwparallel = function(x, y, coords, indx, fit.loc, bw, D=NULL, N, s=NULL, mode.select, tuning, predict, simulation, oracle, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE) {
+gwlars.fit.fixedbwparallel = function(x, y, coords, indx, fit.loc, bw, D=NULL, N, s=NULL, mode.select, tuning, predict, simulation, oracle, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE) {
     if (!is.null(fit.loc)) {
         coords.unique = fit.loc
     } else {
@@ -24,7 +24,7 @@ gwlars.fit.fixedbwparallel = function(x, y, coords, indx, fit.loc, bw, D=NULL, N
         gw = gweights[[i]]
 
         if (is.null(oracle)) {
-            m = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
+            m = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition)
         } else {
             m = gwlars.fit.oracle(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight)
         }
@@ -33,7 +33,6 @@ gwlars.fit.fixedbwparallel = function(x, y, coords, indx, fit.loc, bw, D=NULL, N
     }
 
     gwlars.object[['models']] = models
-    gwlars.object[['mode']] = mode
 
     if (tuning) {
     } else if (predict) {

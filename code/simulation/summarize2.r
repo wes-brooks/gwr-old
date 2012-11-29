@@ -51,10 +51,12 @@ for (k in 1:length(vars)) {
     }
 }
 
+mean.coverage.ub = rbind(mean.coverage.b, cbv)
 coverage.b = rbind(coverage.b, cbv)
 coverage.s = rbind(coverage.s, csv)
 selection = rbind(selection, sv)
 
 colnames(coverage.b) = vars
+
 colnames(coverage.s) = vars
 colnames(selection) = vars[1:5]

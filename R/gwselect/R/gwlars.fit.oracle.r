@@ -44,7 +44,6 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, o
     
     int.list = list()
     coef.list = list()
-    coef.unshrunk.list=list()
     
     for (i in 1:N) {
         #Final permutation is the original ordering of the data:
@@ -92,10 +91,10 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, o
     
             } else if (mode.select=='BIC') {   
                 fitted = predict(model, newdata=localdata)
-                s2 = sum(model$residuals^2) / (sum(w[permutation]) - length(oracle) - 1)    
+                s2 = sum(w[permutation]*model$residuals**2) / (sum(w[permutation]) - length(oracle) - 1)   
     
                 if (length(colocated)>0) {
-                    loss.local = sum(w[colocated]*(fitted - localdata$y)**2)/s2 + log(s2) + 2*log(sum(w[permutation]))/sum(w[permutation])
+                    loss.local = log(s2) + 2*log(sum(w[permutation]))/sum(w[permutation])
                 } else {
                     loss.local = NA
                 }

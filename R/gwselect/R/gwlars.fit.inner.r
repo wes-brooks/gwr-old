@@ -1,4 +1,4 @@
-gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=NULL, mode.select='', tuning=FALSE, predict=FALSE, simulation=FALSE, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, mode, precondition=FALSE, N=N) {
+gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=NULL, mode.select='', tuning=FALSE, predict=FALSE, simulation=FALSE, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, N=N) {
     if (!is.null(indx)) {
         colocated = which(round(coords[indx,1],5)==round(as.numeric(loc[1]),5) & round(coords[indx,2],5) == round(as.numeric(loc[2]),5))
     }
@@ -189,7 +189,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
         loss.local = loss.local[s.optimal]
 
         #Get the coefficients:
-        coefs = coefs[s.optimal,] #predict(model, type='coefficients', s=s.optimal, mode='step')[['coefficients']]
+        coefs = coefs[s.optimal,]
         coefs = Matrix(coefs, ncol=1)
         rownames(coefs) = c("(Intercept)", colnames(x))
             
@@ -203,16 +203,9 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
         se.unshrunk = Matrix(se.unshrunk, ncol=1)
         rownames(se.unshrunk) = c("(Intercept)", colnames(xx))
         
-        #coefs.unshrunk = coefs.unshrunk * c(1, adapt.weight) / c(1, normx)
-        #coefs.unshrunk[1] = coefs.unshrunk[1] - sum(coefs.unshrunk[2:length(coefs.unshrunk)] * meanx)
-
         coef.unshrunk.list[[i]] = coefs.unshrunk
         coef.list[[i]] = coefs
     }
-            
-    #Get the residuals at this choice of s:
-    #fitted = predict(model, newx=xfit, s=s.optimal, type='fit', mode='step')[['fit']]
-    #resid = yfit - fitted
     
     if (tuning) {
         return(list(loss.local=loss.local))
