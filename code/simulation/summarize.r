@@ -24,9 +24,11 @@ params = data.frame(tau, rho, sigma.tau, function.type)
 N = 30
 B = list()
 settings = 2
+b=25
 
 coord = seq(0, 1, length.out=N)
 B[['(Intercept)']] = rep(0, N**2)
+B[['X1']] = as.vector(matrix(rep(exp(b*coord - b/2) / (1+exp(b*coord - b/2)), N), N, N))
 B[['X2']] = rep(0, N**2)
 B[['X3']] = rep(0, N**2)
 B[['X4']] = rep(0, N**2)
@@ -40,6 +42,16 @@ mean.selection = data.frame()
 mean.coverage.oracular.b = data.frame()
 mean.coverage.oracular.se = data.frame()
 
+
+coverage.ub.aggregate = list()
+coverage.b.aggregate = list()
+coverage.se.aggregate = list()
+selection.aggregate = list()
+
+coverage.oracular.b.aggregate = list()
+coverage.oracular.se.aggregate = list()
+
+
 for (setting in settings) {
     coverage.bootstrap = list()
     coverage.unshrunk.bootstrap = list()
@@ -51,11 +63,8 @@ for (setting in settings) {
 
     vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
 
-    if (setting %% 2 == 1) {
-        B[['X1']] = as.vector(matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N))
-    } else {
-        B[['X1']] = as.vector(matrix(rep(1-coord, N), N, N))
-    }
+        
+
 
     nsims = ifelse(setting<36,100,99)
     nsims = 1
@@ -128,7 +137,7 @@ for (setting in settings) {
                 coverage.bootstrap[[v]] = cbind(coverage.oracular.bootstrap[[v]], as.matrix(ifelse(B[[v]] < CI.oracular.b[,1] | B[[v]] > CI.oracular.b[,2],0,1)))
             }
 
-            print(B[[v]])
+            #print(B[[v]])
     
             if (k==0) {
                 coverage.oracular.se[[v]] = as.matrix(ifelse(B[[v]] < CI.oracular.se[,1] | B[[v]] > CI.oracular.se[,2],0,1))
@@ -155,6 +164,14 @@ for (setting in settings) {
 
     cbo = list()
     cso = list()
+
+    coverage.ub.aggregate[[setting]] = list()
+    coverage.b.aggregate[[setting]] = list()
+    coverage.se.aggregate[[setting]] = list()
+    selection.aggregate[[setting]] = list()
+
+    coverage.oracular.b.aggregate[[setting]] = list()
+    coverage.oracular.se.aggregate[[setting]] = list()
 
     for (v in vars) {
         cb[[v]] = apply(coverage.bootstrap[[v]], 1, sum) / ncol(coverage.bootstrap[[v]])
@@ -194,6 +211,14 @@ for (setting in settings) {
 #         gwr.matplot(matrix(ss[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
 #         #title(main=paste("Frequency that ", v, "is selected", sep=""))
 #         dev.off()
+
+        coverage.ub.aggregate[[setting]][[v]] = cub[[v]]
+        coverage.b.aggregate[[setting]][[v]] = cb[[v]]
+        coverage.se.aggregate[[setting]][[v]] = cs[[v]]
+        selection.aggregate[[setting]][[v]] = ss[[v]]
+    
+        coverage.oracular.b.aggregate[[setting]][[v]] = cbo[[v]]
+        coverage.oracular.se.aggregate[[setting]][[v]] = cso[[v]]
     }
 
 
@@ -238,35 +263,38 @@ for (setting in settings) {
 #     dev.off()
 #   
 
-    cbv = vector()
-    cubv = vector()
-    csv = vector()
-    sv = vector()
+#    cbv = vector()
+#    cubv = vector()
+#    csv = vector()
+#    sv = vector()
+#
+#    cbov = vector()
+#    csov = vector()
+#
+#    for (k in 1:length(vars)) {
+#        v = vars[k]
+#        csv = c(csv, mean(cs[[v]]))
+#        cbv = c(cbv, mean(cb[[v]]))
+#        cubv = c(cubv, mean(cub[[v]]))
+#
+#        csov = c(csov, mean(cso[[v]]))
+#        cbov = c(cbov, mean(cbo[[v]]))
+#        
+#        if (v!="(Intercept)") {
+#            sv = c(sv, mean(ifelse(B[[v]]==0, 1-ss[[v]], ss[[v]])))
+#        }
+#    }
+#    
+#    mean.coverage.ub = rbind(mean.coverage.ub, cubv)
+#    mean.coverage.b = rbind(mean.coverage.b, cbv)
+#    mean.coverage.se = rbind(mean.coverage.se, csv)
+#    mean.selection = rbind(mean.selection, sv)
+#
+#    mean.coverage.oracular.b = rbind(mean.coverage.oracular.b, cbov)
+#    mean.coverage.oracular.se = rbind(mean.coverage.oracular.se, csov)
 
-    cbov = vector()
-    csov = vector()
 
-    for (k in 1:length(vars)) {
-        v = vars[k]
-        csv = c(csv, mean(cs[[v]]))
-        cbv = c(cbv, mean(cb[[v]]))
-        cubv = c(cubv, mean(cub[[v]]))
 
-        csov = c(csov, mean(cso[[v]]))
-        cbov = c(cbov, mean(cbo[[v]]))
-        
-        if (v!="(Intercept)") {
-            sv = c(sv, mean(ifelse(B[[v]]==0, 1-ss[[v]], ss[[v]])))
-        }
-    }
-    
-    mean.coverage.ub = rbind(mean.coverage.ub, cubv)
-    mean.coverage.b = rbind(mean.coverage.b, cbv)
-    mean.coverage.se = rbind(mean.coverage.se, csv)
-    mean.selection = rbind(mean.selection, sv)
-
-    mean.coverage.oracular.b = rbind(mean.coverage.oracular.b, cbov)
-    mean.coverage.oracular.se = rbind(mean.coverage.oracular.se, csov)
 }
 
 
@@ -297,37 +325,71 @@ for (setting in settings) {
 #    legend(vars, lty=1:length(vars), bty='n', x='bottomleft')
 #    dev.off()
 #}
+#
+#
+#
+#colnames(mean.coverage.ub) = vars
+#colnames(mean.coverage.b) = vars
+#colnames(mean.coverage.se) = vars
+#colnames(mean.selection) = vars[2:6]
+#colnames(mean.coverage.oracular.b) = vars
+#colnames(mean.coverage.oracular.se) = vars
+
+t.x = list()
+t.x[[1]] = 1:16
+t.x[[2]] = 17:36
+
+rho = list()
+rho[[1]] = c(1:6, 19:24)
+rho[[2]] = c(7:12, 25:30)
+rho[[3]] = c(13:18, 31:36)
+
+t.e = list()
+t.e[[1]] = c(1:2, 7:8, 13:14, 19:20, 25:26, 31:32)
+t.e[[2]] = c(3:4, 9:10, 15:16, 21:22, 27:28, 33:34)
+t.e[[3]] = c(5:6, 11:12, 17:18, 23:24, 29:30, 35:36)
+
+function.type = list()
+function.type[['step']] = (1:18)*2 - 1
+function.type[['gradient']] = (1:18)*2
 
 
+contrasts = c("t.x", "rho", "t.e", "function.type")
+for (contrast in contrasts) {
+    contr = get(contrast)
+    #pdf(paste("figures/simulation/", cluster, ".", contrast, ".profile_bootstrap_coverage.pdf", sep=""))
+    for (i in 1:length(contr)) {
+        element = contr[[i]]
 
-colnames(mean.coverage.ub) = vars
-colnames(mean.coverage.b) = vars
-colnames(mean.coverage.se) = vars
-colnames(mean.selection) = vars[2:6]
-colnames(mean.coverage.oracular.b) = vars
-colnames(mean.coverage.oracular.se) = vars
+        #Isolate data for the boxplot
+        plotdata = data.frame()
+        for (j in element) {
+            plotdata = rbind(plotdata, coverage.ub.aggregate[[j]][['X1']])
+        }
 
-t.x.1 = 1:16
-t.x.2 = 17:36
-
-rho.1 = c(1:6, 19:24)
-rho.2 = c(7:12, 25:30)
-rho.3 = c(13:18, 31:36)
-
-t.e.1 = c(1:2, 7:8, 13:14, 19:20, 25:26, 31:32)
-t.e.2 = c(3:4, 9:10, 15:16, 21:22, 27:28, 33:34)
-t.e.3 = c(5:6, 11:12, 17:18, 23:24, 29:30, 35:36)
-
-step = (1:18)*2 - 1
-gradient = (1:18)*2
+        boxplot(plotdata, col=i)
+    }
+}
+        plot(apply(matrix(cs[['X1']], 30, 30),1,mean), type='l', lty=1, bty='n', xlim=xx, ylim=yy, xlab="location", ylab="95% CI coverage frequency")
 
 
-t.x.selection.table = rbind(apply(mean.selection[t.x.1,],2,mean), apply(mean.selection[t.x.2,],2,mean))
-t.x.b.coverage.table = rbind(apply(mean.coverage.b[t.x.1,],2,mean), apply(mean.coverage.b[t.x.2,],2,mean))
-t.x.ub.coverage.table = rbind(apply(mean.coverage.ub[t.x.1,],2,mean), apply(mean.coverage.ub[t.x.2,],2,mean))
-t.x.s.coverage.table = rbind(apply(mean.coverage.se[t.x.1,],2,mean), apply(mean.coverage.se[t.x.2,],2,mean))
-t.x.o.b.coverage.table = rbind(apply(mean.coverage.oracular.b[t.x.1,],2,mean), apply(mean.coverage.oracular.b[t.x.2,],2,mean))
-t.x.o.se.coverage.table = rbind(apply(mean.coverage.oracular.se[t.x.1,],2,mean), apply(mean.coverage.oracular.se[t.x.2,],2,mean))
+        for (k in 2:length(vars)) {
+            v = vars[k]
+            par(new=TRUE, xaxt='n', yaxt='n', ann=FALSE, bty='n')
+            plot(apply(matrix(cs[[v]], 30, 30),1,mean), type='l', lty=k, xlim=xx, ylim=yy)
+        }
+        abline(h=0.95, lty=3, col='red')
+        legend(vars, lty=1:length(vars), bty='n', x='bottomleft')
+        dev.off()
+    }
+}
+
+t.x.selection.table = rbind(apply(mean.selection[t.x[[1]],],2,mean), apply(mean.selection[t.x[[2]],],2,mean))
+t.x.b.coverage.table = rbind(apply(mean.coverage.b[t.x[[1]],],2,mean), apply(mean.coverage.b[t.x[[2]],],2,mean))
+t.x.ub.coverage.table = rbind(apply(mean.coverage.ub[t.x[[1]],],2,mean), apply(mean.coverage.ub[t.x[[2]],],2,mean))
+t.x.s.coverage.table = rbind(apply(mean.coverage.se[t.x[[1]],],2,mean), apply(mean.coverage.se[t.x[[2]],],2,mean))
+t.x.o.b.coverage.table = rbind(apply(mean.coverage.oracular.b[t.x[[1]],],2,mean), apply(mean.coverage.oracular.b[t.x[[2]],],2,mean))
+t.x.o.se.coverage.table = rbind(apply(mean.coverage.oracular.se[t.x[[1]],],2,mean), apply(mean.coverage.oracular.se[t.x[[2]],],2,mean))
 rownames(t.x.selection.table) = rownames(t.x.o.b.coverage.table) = rownames(t.x.o.se.coverage.table) = rownames(t.x.b.coverage.table) = rownames(t.x.ub.coverage.table) = rownames(t.x.s.coverage.table) = c("0.1", "0.8")
 xtable(t.x.selection.table)
 xtable(t.x.b.coverage.table)
@@ -336,12 +398,12 @@ xtable(t.x.s.coverage.table)
 xtable(t.x.o.b.coverage.table)
 xtable(t.x.o.se.coverage.table)
 
-t.e.selection.table = rbind(apply(mean.selection[t.e.1,],2,mean), apply(mean.selection[t.e.2,],2,mean), apply(mean.selection[t.e.3,],2,mean))
-t.e.b.coverage.table = rbind(apply(mean.coverage.b[t.e.1,],2,mean), apply(mean.coverage.b[t.e.2,],2,mean), apply(mean.coverage.b[t.e.3,],2,mean))
-t.e.ub.coverage.table = rbind(apply(mean.coverage.ub[t.e.1,],2,mean), apply(mean.coverage.ub[t.e.2,],2,mean), apply(mean.coverage.ub[t.e.3,],2,mean))
-t.e.s.coverage.table = rbind(apply(mean.coverage.se[t.e.1,],2,mean), apply(mean.coverage.se[t.e.2,],2,mean), apply(mean.coverage.se[t.e.3,],2,mean))
-t.e.o.b.coverage.table = rbind(apply(mean.coverage.oracular.b[t.e.1,],2,mean), apply(mean.coverage.oracular.b[t.e.2,],2,mean), apply(mean.coverage.oracular.b[t.e.3,],2,mean))
-t.e.o.se.coverage.table = rbind(apply(mean.coverage.oracular.se[t.e.1,],2,mean), apply(mean.coverage.oracular.se[t.e.2,],2,mean), apply(mean.coverage.oracular.se[t.e.3,],2,mean))
+t.e.selection.table = rbind(apply(mean.selection[t.e[[1]],],2,mean), apply(mean.selection[t.e[[2]],],2,mean), apply(mean.selection[t.e[[3]],],2,mean))
+t.e.b.coverage.table = rbind(apply(mean.coverage.b[t.e[[1]],],2,mean), apply(mean.coverage.b[t.e[[2]],],2,mean), apply(mean.coverage.b[t.e[[3]],],2,mean))
+t.e.ub.coverage.table = rbind(apply(mean.coverage.ub[t.e[[1]],],2,mean), apply(mean.coverage.ub[t.e[[2]],],2,mean), apply(mean.coverage.ub[t.e[[3]],],2,mean))
+t.e.s.coverage.table = rbind(apply(mean.coverage.se[t.e[[1]],],2,mean), apply(mean.coverage.se[t.e[[2]],],2,mean), apply(mean.coverage.se[t.e[[3]],],2,mean))
+t.e.o.b.coverage.table = rbind(apply(mean.coverage.oracular.b[t.e[[1]],],2,mean), apply(mean.coverage.oracular.b[t.e[[2]],],2,mean), apply(mean.coverage.oracular.b[t.e[[3]],],2,mean))
+t.e.o.se.coverage.table = rbind(apply(mean.coverage.oracular.se[t.e[[1]],],2,mean), apply(mean.coverage.oracular.se[t.e[[2]],],2,mean), apply(mean.coverage.oracular.se[t.e[[3]],],2,mean))
 rownames(t.e.selection.table) = rownames(t.e.o.b.coverage.table) = rownames(t.e.o.se.coverage.table) = rownames(t.e.b.coverage.table) = rownames(t.e.ub.coverage.table) = rownames(t.e.s.coverage.table) = c("0", "0.1", "0.8")
 xtable(t.e.selection.table)
 xtable(t.e.b.coverage.table)
@@ -350,12 +412,12 @@ xtable(t.e.s.coverage.table)
 xtable(t.e.o.b.coverage.table)
 xtable(t.e.o.se.coverage.table)
 
-rho.selection.table = rbind(apply(mean.selection[rho.1,],2,mean), apply(mean.selection[rho.2,],2,mean), apply(mean.selection[rho.3,],2,mean))
-rho.b.coverage.table = rbind(apply(mean.coverage.b[rho.1,],2,mean), apply(mean.coverage.b[rho.2,],2,mean), apply(mean.coverage.b[rho.3,],2,mean))
-rho.ub.coverage.table = rbind(apply(mean.coverage.ub[rho.1,],2,mean), apply(mean.coverage.ub[rho.2,],2,mean), apply(mean.coverage.ub[rho.3,],2,mean))
-rho.s.coverage.table = rbind(apply(mean.coverage.se[rho.1,],2,mean), apply(mean.coverage.se[rho.2,],2,mean), apply(mean.coverage.se[rho.3,],2,mean))
-rho.o.b.coverage.table = rbind(apply(mean.coverage.oracular.b[rho.1,],2,mean), apply(mean.coverage.oracular.b[rho.2,],2,mean), apply(mean.coverage.oracular.b[rho.3,],2,mean))
-rho.o.se.coverage.table = rbind(apply(mean.coverage.oracular.se[rho.1,],2,mean), apply(mean.coverage.oracular.se[rho.2,],2,mean), apply(mean.coverage.oracular.se[rho.3,],2,mean))
+rho.selection.table = rbind(apply(mean.selection[rho[[1]],],2,mean), apply(mean.selection[rho[[2]],],2,mean), apply(mean.selection[rho[[3]],],2,mean))
+rho.b.coverage.table = rbind(apply(mean.coverage.b[rho[[1]],],2,mean), apply(mean.coverage.b[rho[[2]],],2,mean), apply(mean.coverage.b[rho[[3]],],2,mean))
+rho.ub.coverage.table = rbind(apply(mean.coverage.ub[rho[[1]],],2,mean), apply(mean.coverage.ub[rho[[2]],],2,mean), apply(mean.coverage.ub[rho[[3]],],2,mean))
+rho.s.coverage.table = rbind(apply(mean.coverage.se[rho[[1]],],2,mean), apply(mean.coverage.se[rho[[2]],],2,mean), apply(mean.coverage.se[rho[[3]],],2,mean))
+rho.o.b.coverage.table = rbind(apply(mean.coverage.oracular.b[rho[[1]],],2,mean), apply(mean.coverage.oracular.b[rho[[2]],],2,mean), apply(mean.coverage.oracular.b[rho[[3]],],2,mean))
+rho.o.se.coverage.table = rbind(apply(mean.coverage.oracular.se[rho[[1]],],2,mean), apply(mean.coverage.oracular.se[rho[[2]],],2,mean), apply(mean.coverage.oracular.se[rho[[3]],],2,mean))
 rownames(rho.selection.table) = rownames(rho.o.b.coverage.table) = rownames(rho.o.se.coverage.table) = rownames(rho.b.coverage.table) = rownames(rho.ub.coverage.table) = rownames(rho.s.coverage.table) = c("0", "0.5", "0.8")
 xtable(rho.selection.table)
 xtable(rho.b.coverage.table)
@@ -364,12 +426,12 @@ xtable(rho.s.coverage.table)
 xtable(rho.o.b.coverage.table)
 xtable(rho.o.se.coverage.table)
 
-func.selection.table = rbind(apply(mean.selection[gradient,],2,mean), apply(mean.selection[step,],2,mean))
-func.b.coverage.table = rbind(apply(mean.coverage.b[gradient,],2,mean), apply(mean.coverage.b[step,],2,mean))
-func.ub.coverage.table = rbind(apply(mean.coverage.ub[gradient,],2,mean), apply(mean.coverage.ub[step,],2,mean))
-func.s.coverage.table = rbind(apply(mean.coverage.se[gradient,],2,mean), apply(mean.coverage.se[step,],2,mean))
-func.o.b.coverage.table = rbind(apply(mean.coverage.oracular.b[gradient,],2,mean), apply(mean.coverage.oracular.b[step,],2,mean))
-func.o.se.coverage.table = rbind(apply(mean.coverage.oracular.se[gradient,],2,mean), apply(mean.coverage.oracular.se[step,],2,mean))
+func.selection.table = rbind(apply(mean.selection[function.type[['gradient']],],2,mean), apply(mean.selection[function.type[['step']],],2,mean))
+func.b.coverage.table = rbind(apply(mean.coverage.b[function.type[['gradient']],],2,mean), apply(mean.coverage.b[function.type[['step']],],2,mean))
+func.ub.coverage.table = rbind(apply(mean.coverage.ub[function.type[['gradient']],],2,mean), apply(mean.coverage.ub[function.type[['step']],],2,mean))
+func.s.coverage.table = rbind(apply(mean.coverage.se[function.type[['gradient']],],2,mean), apply(mean.coverage.se[function.type[['step']],],2,mean))
+func.o.b.coverage.table = rbind(apply(mean.coverage.oracular.b[function.type[['gradient']],],2,mean), apply(mean.coverage.oracular.b[function.type[['step']],],2,mean))
+func.o.se.coverage.table = rbind(apply(mean.coverage.oracular.se[function.type[['gradient']],],2,mean), apply(mean.coverage.oracular.se[function.type[['step']],],2,mean))
 rownames(func.selection.table) = rownames(func.o.b.coverage.table) = rownames(func.o.se.coverage.table) = rownames(func.b.coverage.table) = rownames(func.ub.coverage.table) = rownames(func.s.coverage.table) = c("gradient", "step")
 xtable(func.selection.table)
 xtable(func.b.coverage.table)

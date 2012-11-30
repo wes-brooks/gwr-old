@@ -134,7 +134,7 @@
 
 	Applying the Adaptive LASSO in the setting of a GWR model requires that a tuning parameter be selected at each location where the coefficients are to be estimated. In \cite{Wheeler:2009}, the tuning parameter for the LASSO at location $s_i$ is selected to minimize the absolute jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$, which means that the coefficients can only be estimated at the locations where data has been observed. On the other hand, using the local AIC to select the tuning parameter allows coefficients to be estimated at any location where the local likelihood can be calculated. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$ playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.\\
 
-
+	\subsection{Tuning parameter selection}
 	The objective minimized by the geographically-weighted lasso (GWL) is:	
 	\begin{eqnarray}
 		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \sum_{j=1}^p \lambda_{ij} \beta_{ij}
@@ -147,87 +147,99 @@
 	\end{eqnarray}
 	
 	So unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GWL is not a linear smoother the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}. The local AIC ($\mbox{AIC}_{\mbox{loc}}$) is minimized to select the adaptive lasso tuning parameter.
-		\begin{eqnarray}
+	\begin{eqnarray}
 		\mbox{AIC}_{\mbox{loc}} = \sum_{i'=1}^n w_{ii'} \hat{\sigma}_i^{-2} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + 2 \mbox{df}_i
 	\end{eqnarray}	
 	Where the estimated local variance $\hat{\sigma}_i^2$ is the variance estimate from the unpenalized local model (i.e. the ordinary GWR model) \citep{Zou:2007}.\\
-	
-	 Confidence intervals for the coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by using the variables selected by the Adaptive LASSO in a weighted least squares model. To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5\%, 97.5\%) quantiles of the coefficient estimates from the bootstrap replicates. \\
-
+	 
 	\subsection{Bandwidth selection}
-		The bandwidth is selected to minimize the total AIC ($\mbox{AIC}_{\mbox{tot}}$). Because of the kernel weights and the application of the lasso, the sample size and degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:		
-		\begin{eqnarray}
-			\mbox{AIC}_{\mbox{tot}} = \sum_{i=1}^n \left\{ \hat{\sigma}_i^{-2} \left( y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \log \hat{\sigma}_i^2 + 2 \mbox{df}_i \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \right\}
-		\end{eqnarray}
+	The bandwidth is selected to minimize the total AIC ($\mbox{AIC}_{\mbox{tot}}$). Because of the kernel weights and the application of the lasso, the sample size and degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:		
+	\begin{eqnarray}
+		\mbox{AIC}_{\mbox{tot}} = \sum_{i=1}^n \left\{ \hat{\sigma}_i^{-2} \left( y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \log \hat{\sigma}_i^2 + 2 \mbox{df}_i \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \right\}
+	\end{eqnarray}
 			
-			The bandwidth that minimizes $\mbox{AIC}_{\mbox{tot}}$ is found by a line search.\\
-			
+	The bandwidth that minimizes $\mbox{AIC}_{\mbox{tot}}$ is found by a line search.\\
+	
+	\subsection{Confidence interval estimation}
+	 Confidence intervals for the coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by using the variables selected by the Adaptive LASSO in a weighted least squares model. To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
+	 
+	 Unshrunk coefficient estimates are found by using the GWL at each location for variable selection only and then estimating the coefficients for the selected variables by GWR. An unshrunk bootstrap confidence interval is found by estimating the unshrunk coefficients for each of the $n_B$ bootstrap replicates and then calculating the percentiles as above.\\
+	 
+	 A third way to estimate the coefficient confidence intervals is to use the GWL for variable selection only and then to use GWR to calculate a confidence interval based on the assumption of an independent, identically distributed, Gaussian error structure. In this case, the standard error of the regression coefficients is 
+	 \begin{eqnarray}
+		\hat{\mbox{se}}_{\beta_i} &=& \left( \tilde{\bm{X}}_i'\bm{W}_i \tilde{\bm{X}}_i \right)^{-1}  \tilde{\bm{X}}_i'\bm{W}_i\bm{Y}
+	\end{eqnarray}
+	
+	where $\tilde{\bm{X}}_i$ is the model matrix including only those variables that are selected by GWL at location $i$.
+
 \section{Simulation}
 	\subsection{Simulation setup}
-		A simulation study was conducted to assess the finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[0,1] \times [0,1]$, which was divided into a $30 \times 30$ grid. Each of the $p=5$ covariates was simulated by a Gaussian random field with mean zero and exponential covariance $Cov \left(Z_j(s_i), Z_j(s_{i'}) \right) = \sigma^2 \exp{\left( -\tau^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma^2=1$ is the variance and $\tau$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.\\
+	A simulation study was conducted to assess the finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[-0.5,1.5] \times [-0.5,1.5]$, which was divided into a $60 \times 60$ grid. Each of the $p=5$ covariates was simulated by a Gaussian random field with mean zero and exponential covariance $Cov \left(Z_j(s_i), Z_j(s_{i'}) \right) = \sigma^2 \exp{\left( -\tau^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma^2=1$ is the variance and $\tau$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.\\
 		
-		The simulated response is $y_i = \bm{x}_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 900$. The simulated data included the output $y$ and five covariates $x_1, \dots, x_5$. The true data-generating model used only $x_1$, so $x_2, \dots, x_5$ are included to test the variable-selection properties of GWL. Two different types of coefficient surface were tested for $\beta_1(s)$: the constant gradient $\beta_1(s) = 1-s_y$, and the step function
-		\begin{eqnarray}
-			\beta_1(s) = \begin{cases} 0 &\mbox{ if } s_y<0.5 \\ 1 &\mbox{ o.w.} \end{cases}
-		\end{eqnarray}
+	The simulated response is $y_i = \bm{x}_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 3600$. The simulated data included the output $y$ and five covariates $x_1, \dots, x_5$. The true data-generating model used only $x_1$, so $x_2, \dots, x_5$ are included to test the variable-selection properties of GWL. Two different types of coefficient surface were tested for $\beta_1(s)$: the constant gradient $\beta_1(s) = 1-s_y$, and the ``step" function
+	\begin{eqnarray}
+		\beta_1(s) = \begin{cases} 0 &\mbox{ if } s_y<0.4 \\ 5(s_y-0.4) &\mbox{ if } 0.4 \leq s_y<0.6 \\ 1 &\mbox{ o.w.} \end{cases}
+	\end{eqnarray}.\\
 		
-		In order to evaluate the performance of GWL under a range of conditions, the data was simulated under 18 different settings for each type of $\beta_1$ (Table \ref{table:simulation_settings}): high (0.8) and low (0.1) values of the autoregression range parameter $\tau$ for the Gaussian random fields used to generate the covariates $\bm{X}_1(s), \dots, \bm{X}_5(s)$; three levels of between-covariate correlation $\rho$ (0, 0.5, 0.8); and three values of the autoregression range parameter $\tau$ for the Gaussian random field used to generate the error term $\epsilon(s)$. Each case was simulated 100 times.\\
+	In order to evaluate the performance of GWL under a range of conditions, the data was simulated under 18 different settings for each type of $\beta_1$ (Table \ref{table:simulation_settings}): high (0.1) and low (0.03) levels of the autoregression range parameter $\tau$ for the Gaussian random fields used to generate the covariates $\bm{X}_1(s), \dots, \bm{X}_5(s)$; three levels (0, 0.5, 0.8) of between-covariate correlation $\rho$; and three levels (0, 0.03, 0.1) of the autoregression range parameter $\tau$ for the Gaussian random field used to generate the error term $\epsilon(s)$. Each case was simulated 100 times.\\
 		
-		\begin{table}[ht]
-			\caption{Simulation settings} % title of Table
-			\vspace{1mm}
-			\centering  % used for centering table
-			\begin{tabular}{c c c c c} % centered columns (4 columns)
-			\hline\hline                        %inserts double horizontal lines
-			$\tau_x$ & $\rho$ & $\tau_\epsilon$ & $\beta_1$ \\ % % inserts table 
-			%heading
-			\hline                  % inserts single horizontal line
-			0.1 & 0 & 0 & step \\
-			0.1 & 0 & 0 & gradient \\
-			0.1 & 0 & 0.1 & step \\
-			0.1 & 0 & 0.1 & gradient \\
-			0.1 & 0 & 0.8 & step \\
-			0.1 & 0 & 0.8 & gradient \\
-			0.1 & 0.5 & 0 & step \\
-			0.1 & 0.5 & 0 & gradient \\
-			0.1 & 0.5 & 0.1 & step \\
-			0.1 & 0.5 & 0.1 & gradient \\
-			0.1 & 0.5 & 0.8 & step \\
-			0.1 & 0.5 & 0.8 & gradient \\
-			0.1 & 0.8 & 0 & step \\
-			0.1 & 0.8 & 0 & gradient \\
-			0.1 & 0.8 & 0.1 & step \\
-			0.1 & 0.8 & 0.1 & gradient \\
-			0.1 & 0.8 & 0.8 & step \\
-			0.1 & 0.8 & 0.8 & gradient \\				
-			0.8 & 0 & 0 & step \\
-			0.8 & 0 & 0 & gradient \\
-			0.8 & 0 & 0.1 & step \\
-			0.8 & 0 & 0.1 & gradient \\
-			0.8 & 0 & 0.8 & step \\
-			0.8 & 0 & 0.8 & gradient \\
-			0.8 & 0.5 & 0 & step \\
-			0.8 & 0.5 & 0 & gradient \\
-			0.8 & 0.5 & 0.1 & step \\
-			0.8 & 0.5 & 0.1 & gradient \\
-			0.8 & 0.5 & 0.8 & step \\
-			0.8 & 0.5 & 0.8 & gradient \\
-			0.8 & 0.8 & 0 & step \\
-			0.8 & 0.8 & 0 & gradient \\
-			0.8 & 0.8 & 0.1 & step \\
-			0.8 & 0.8 & 0.1 & gradient \\
-			0.8 & 0.8 & 0.8 & step \\
-			0.8 & 0.8 & 0.8 & gradient \\						
+	The data-generating process was simulated on the full $60 \times 60$ grid spanning $[-0.5,1.5] \times [-0.5,1.5]$, but to avoid edge effects the model was only fit on the $30 \times 30$ grid spanning $[0,1] \times [0,1]$. Bootstrap confidence intervals were estimated with $n_B = 101$.
+		
+	\begin{table}[ht]
+		\caption{Simulation settings} % title of Table
+		\vspace{1mm}
+		\centering  % used for centering table
+		\begin{tabular}{c c c c c} % centered columns (4 columns)
+		\hline\hline                        %inserts double horizontal lines
+		$\tau_x$ & $\rho$ & $\tau_\epsilon$ & $\beta_1$ \\ % % inserts table 
+		%heading
+		\hline                  % inserts single horizontal line
+		0.03 & 0 & 0 & step \\
+		0.03 & 0 & 0 & gradient \\
+		0.03 & 0 & 0.03 & step \\
+		0.03 & 0 & 0.03 & gradient \\
+		0.03 & 0 & 0.1 & step \\
+		0.03 & 0 & 0.1 & gradient \\
+		0.03 & 0.5 & 0 & step \\
+		0.03 & 0.5 & 0 & gradient \\
+		0.03 & 0.5 & 0.03 & step \\
+		0.03 & 0.5 & 0.03 & gradient \\
+		0.03 & 0.5 & 0.1 & step \\
+		0.03 & 0.5 & 0.1 & gradient \\
+		0.03 & 0.8 & 0 & step \\
+		0.03 & 0.8 & 0 & gradient \\
+		0.03 & 0.8 & 0.03 & step \\
+		0.03 & 0.8 & 0.03 & gradient \\
+		0.03 & 0.8 & 0.1 & step \\
+		0.03 & 0.8 & 0.1 & gradient \\				
+		0.1 & 0 & 0 & step \\
+		0.1 & 0 & 0 & gradient \\
+		0.1 & 0 & 0.03 & step \\
+		0.1 & 0 & 0.03 & gradient \\
+		0.1 & 0 & 0.1 & step \\
+		0.1 & 0 & 0.1 & gradient \\
+		0.1 & 0.5 & 0 & step \\
+		0.1 & 0.5 & 0 & gradient \\
+		0.1 & 0.5 & 0.03 & step \\
+		0.1 & 0.5 & 0.03 & gradient \\
+		0.1 & 0.5 & 0.1 & step \\
+		0.1 & 0.5 & 0.1 & gradient \\
+		0.1 & 0.8 & 0 & step \\
+		0.1 & 0.8 & 0 & gradient \\
+		0.1 & 0.8 & 0.03 & step \\
+		0.1 & 0.8 & 0.03 & gradient \\
+		0.1 & 0.8 & 0.1 & step \\
+		0.1 & 0.8 & 0.1 & gradient \\						
 
-			\hline %inserts single line
-			\end{tabular}
-			\label{table:simulation_settings} % is used to refer this table in the text
-		\end{table}
+		\hline %inserts single line
+		\end{tabular}
+		\label{table:simulation_settings} % is used to refer this table in the text
+	\end{table}
 	
 	\subsection{Simulation results}
-		The coverage of the $95\%$ CI and the selection frequency are plotted in the figures.\\
+	The coverage of the $95\%$ CI and the selection frequency are plotted in the figures.\\
 		
-		% latex table generated in R 2.15.1 by xtable 1.7-0 package
+	% latex table generated in R 2.15.1 by xtable 1.7-0 package
 % Thu Nov 15 16:10:33 2012
 \begin{table}[ht]
 \begin{center}
