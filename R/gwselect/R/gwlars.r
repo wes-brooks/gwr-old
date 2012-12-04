@@ -1,4 +1,4 @@
-gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL, gweight, D=NULL, bw=NULL, N=1, verbose=FALSE, longlat, tol, method, tuning=FALSE, predict=FALSE, simulation=FALSE, adapt=FALSE, s=NULL, mode.select="CV", parallel=FALSE, precondition=FALSE, oracle=NULL) {
+gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL, gweight, D=NULL, bw=NULL, N=1, verbose=FALSE, longlat, tol, method, tuning=FALSE, predict=FALSE, simulation=FALSE, adapt=FALSE, s=NULL, mode.select="AIC", parallel=FALSE, precondition=FALSE, oracle=NULL) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is.null(longlat) || !is.logical(longlat)) 

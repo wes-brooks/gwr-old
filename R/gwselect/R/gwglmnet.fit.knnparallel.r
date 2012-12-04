@@ -1,20 +1,18 @@
-gwglmnet.fit.knnparallel = function(x, y, family, coords, fit.loc, indx, D, s, verbose, prior.weights, tuning, predict, gweight, mode, mode.select, shrink, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE, N) {
+gwglmnet.fit.knnparallel = function(x, y, family, coords, fit.loc, indx, D, s, verbose, prior.weights, tuning, predict, gweight, mode.select, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE, N) {
     if (!is.null(fit.loc)) {
         coords.unique = unique(fit.loc)
-        n.loc = dim(coords.unique)[1]
     } else {
         coords.unique = unique(coords)
-        n.loc = dim(coords.unique)[1]
     }
+    n = dim(coords.unique)[1]
 
-    n = dim(prior.weights)[1]
     gwglmnet.object = list()
 
     prior.weights = drop(prior.weights)
-    max.weights = rep(1, n)
+    max.weights = rep(1, length(prior.weights))
     total.weight = sum(max.weights * prior.weights)
 
-    models = foreach(i=1:n.loc, .packages=c('glmnet'), .errorhandling='remove') %dopar% {
+    models = foreach(i=1:n, .packages=c('glmnet'), .errorhandling='remove') %dopar% {
         loc = coords.unique[i,]
         dist = drop(D[i,])
 
@@ -24,7 +22,7 @@ gwglmnet.fit.knnparallel = function(x, y, family, coords, fit.loc, indx, D, s, v
             prior.weights=prior.weights, target=target)
         bandwidth = opt$minimum
         
-        m = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, tuning=tuning, predict=predict, indx=indx, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, mode=mode, mode.select=mode.select, shrink=shrink, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N)
+        m = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, tuning=tuning, predict=predict, indx=indx, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, mode.select=mode.select, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N)
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ", loss=", m[['loss.local']], ".\n", sep=''))
         return(m)
     }

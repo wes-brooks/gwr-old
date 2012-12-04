@@ -1,11 +1,10 @@
-gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, predict=FALSE, dist=NULL, indx=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, mode, mode.select, gweight=NULL, shrink=TRUE, longlat=FALSE, adapt=FALSE, precondition=FALSE, N) {
+gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, predict=FALSE, dist=NULL, indx=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, mode.select, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, N) {
     if (!is.null(indx)) {
         colocated = which(coords[indx,1]==as.numeric(loc[1]) & coords[indx,2]==as.numeric(loc[2]))
     }
     else {
         colocated = which(coords[,1]==as.numeric(loc[1]) & coords[,2]==as.numeric(loc[2]))
-    }
-    
+    }    
     reps = length(colocated)   
 
     if (is.null(gwr.weights)) {
@@ -164,11 +163,8 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
     
         coefs = coefs * c(1, adapt.weight) / c(1, normx)
         coefs[1] = coefs[1] - sum(coefs[2:length(coefs)] * meanx)
-        #print(coefs)
-        if (verbose) {print(coefs)}
-        #intercept = predict(model, type='fit', s=s.optimal, mode='step', newx=matrix(0,1,nrow(coef)))[['fit']] #- coef[2:length(coef)] * meanx[2:length(coef)]
 
-        #int.list[[i]] = intercept
+        if (verbose) {print(coefs)}
         coef.list[[i]] = coefs
     }
     

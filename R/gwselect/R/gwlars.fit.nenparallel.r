@@ -1,7 +1,22 @@
 gwlars.fit.nenparallel = function(x, y, coords, D, N=N, s, mode.select, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE) {
-    coords.unique = unique(coords)
+    if (!is.null(fit.loc)) {
+        coords.unique = fit.loc
+    } else {
+        coords.unique = unique(coords)
+    }
     n = dim(coords.unique)[1]
+
     gwlars.object = list()
+    models = list()
+
+    if (is.null(gwr.weights)) {
+        gwr.weights = gweight(D, bw)    
+    }       
+
+    gweights = list()
+    for (j in 1:nrow(gwr.weights)) {
+        gweights[[j]] = as.vector(gwr.weights[j,])
+    }
 
     if (verbose) {cat(paste('beta1:', beta1, ', beta2:', beta2, '\n', sep=''))}
 

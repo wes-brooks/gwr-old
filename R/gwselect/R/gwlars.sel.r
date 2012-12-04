@@ -1,4 +1,4 @@
-gwlars.sel = function(formula, data=list(), coords, indx=NULL, fit.loc=NULL, range=NULL, adapt=FALSE, gweight=gwr.Gauss, s, N=1, mode.select="CV", method="dist", verbose=FALSE, longlat=FALSE, weights=NULL, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE, oracle=NULL) {
+gwlars.sel = function(formula, data=list(), coords, indx=NULL, fit.loc=NULL, range=NULL, adapt=FALSE, gweight=gwr.Gauss, s=NULL, N=1, mode.select="CV", method="dist", verbose=FALSE, longlat=FALSE, weights=NULL, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE, oracle=NULL) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is.null(longlat) || !is.logical(longlat)) 

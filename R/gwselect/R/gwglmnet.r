@@ -1,4 +1,4 @@
-gwglmnet <- function(formula, data, family, weights=NULL, coords, fit.loc=NULL, indx=NULL, tuning=FALSE, predict=FALSE, gweight, bw=NULL, mode='step', mode.select='AIC', verbose=FALSE, longlat, tol, N, method, adapt=FALSE, s=NULL, parallel=FALSE, precondition=FALSE, shrink=TRUE, D=NULL) {
+gwglmnet <- function(formula, data, family, weights=NULL, coords, fit.loc=NULL, indx=NULL, tuning=FALSE, predict=FALSE, gweight, bw=NULL, mode.select='AIC', verbose=FALSE, longlat, tol, N=1, method, adapt=FALSE, s=NULL, parallel=FALSE, precondition=FALSE, D=NULL) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -53,7 +53,7 @@ gwglmnet <- function(formula, data, family, weights=NULL, coords, fit.loc=NULL, 
 
     if (method=='distance') {
         weight.matrix = gweight(D, bw)
-        res[['model']] = gwglmnet.fit.fixedbw(x=x, y=y, family=family, weights=weights, tuning=tuning, predict=predict, indx=indx, mode=mode, N=N, mode.select=mode.select, shrink=shrink, coords=coords, fit.loc=fit.loc, weight.matrix=weight.matrix, s=s, verbose=verbose, adapt=adapt, precondition=precondition)
+        res[['model']] = gwglmnet.fit.fixedbw(x=x, y=y, family=family, weights=weights, tuning=tuning, predict=predict, indx=indx, N=N, mode.select=mode.select, coords=coords, fit.loc=fit.loc, weight.matrix=weight.matrix, s=s, verbose=verbose, adapt=adapt, precondition=precondition)
     } else {        
         bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
         difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
@@ -64,15 +64,15 @@ gwglmnet <- function(formula, data, family, weights=NULL, coords, fit.loc=NULL, 
 
         if (method=='nen') {
             if (parallel) {
-                res[['model']] = gwglmnet.fit.nenparallel(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, indx=indx, N=N, coords=coords, fit.loc=fit.loc, D=D, longlat=longlat, mode=mode, mode.select=mode.select, shrink=shrink, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwglmnet.fit.nenparallel(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, indx=indx, N=N, coords=coords, fit.loc=fit.loc, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             } else {
-                res[['model']] = gwglmnet.fit.nen(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode=mode, mode.select=mode.select, shrink=shrink, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwglmnet.fit.nen(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             }
         } else if (method=='knn') {
             if (parallel) {
-                res[['model']] = gwglmnet.fit.knnparallel(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode=mode, mode.select=mode.select, shrink=shrink, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwglmnet.fit.knnparallel(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             } else {
-                res[['model']] = gwglmnet.fit.knn(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode=mode, mode.select=mode.select, shrink=shrink, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
+                res[['model']] = gwglmnet.fit.knn(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition)
             }
         }
     }
@@ -91,7 +91,6 @@ gwglmnet <- function(formula, data, family, weights=NULL, coords, fit.loc=NULL, 
         res[['method']] = method
         res[['adapt']] = adapt
         res[['precondition']] = precondition
-        res[['shrink']] = shrink
         res[['s']] = s
         res[['mode.select']] = mode.select
     }
