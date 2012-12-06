@@ -1,5 +1,5 @@
 library(gwselect)
-registerCores(n=7)
+registerCores(n=3)
 
 library(gridExtra)
 
@@ -49,7 +49,7 @@ pov2 = data.frame(pov2)
 pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)
 pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
 
-pops = read.table("~/git/gwr/data/poverty/historicalpops.txt", headers=TRUE)
+pops = read.table("~/git/gwr/data/poverty/historicalpops.txt", header=TRUE)
 
 plots = list()
 model = list()

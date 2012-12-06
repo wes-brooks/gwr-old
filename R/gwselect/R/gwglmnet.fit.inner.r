@@ -177,5 +177,5 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
         return(list(loss.local=loss.local))
     } else if (predict) {
         return(list(loss.local=loss.local, coef=coefs))
-    } else {return(list(model=model, loss=loss, coef=coefs, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df2, loss.local=loss.local, sum.weights=sum(w), N=N)) }#, resid=resid, intercept=intercept, intlist=int.list))
+    } else { return(list(model=model, loss=loss, coef=coefs, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df2, loss.local=loss.local, sum.weights=sum(w), N=N)) }
 }
