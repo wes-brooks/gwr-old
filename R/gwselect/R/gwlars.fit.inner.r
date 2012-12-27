@@ -35,7 +35,6 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
     xx = xx[weighted,]
     yy = as.matrix(yy[weighted])
     w = w[weighted]
-    colocated = which(gwr.weights[weighted]==1)
 
     int.list = list()
     coef.list = list()
@@ -49,12 +48,13 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             permutation = sample(1:n.weighted, replace=TRUE)
         }
 
+        colocated = which(gwr.weights[weighted][permutation]==1)
         sqrt.w <- diag(1/sqrt(w[permutation]))        
         yyy = sqrt.w %*% yy[permutation,]
         meany = mean(yyy)
         yyy = yyy - meany   
-        normy = sqrt(sum(yyy**2))
-        yyy = yyy / normy
+        #normy = sqrt(sum(yyy**2))
+        #yyy = yyy / normy
      
         xxx = sqrt.w %*% xx[permutation,]
 
@@ -133,12 +133,29 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             vars = apply(as.matrix(predict(model, type='coef')[['coefficients']]), 1, function(x) {which(abs(x)>0)})
             df = sapply(vars, length) + 1
 
-            if (sum(w[permutation]) > nsteps) {               
+            if (n.weighted > ncol(x)) {               
                 coefs = cbind("(Intercept)"=meany, coef(model))
                 fitted = predict(model, newx=fitx, type="fit", mode="step")[["fit"]]
+
+                #Mimics how lm() finds the error variance for weighted least squares, but uses sum(w) instead of n for the number of observations.
+                mod = lm(fity~fitx)                
+                r = mod$residuals / sqrt(w[permutation])
+                f = mod$fitted
+                wm = sum(w[permutation] * f)/sum(w)
+                mss = sum(w[permutation] * (f-wm)**2)
+                rss = sum(w[permutation] * r**2)                
+                s2 = rss / (sum(w[permutation]) - nsteps - 1)    
                 #s2 = sum(lsfit(y=fity, x=fitx)$residuals**2) / (sum(w[permutation]) - nsteps - 1)     
-                s2 = summary(lm(yy[permutation]~xx[permutation,], weights=w[permutation]))$sigma**2
-                loss = as.vector(apply(fitted, 2, function(z) {sum(((z - fity)**2)[permutation])})/s2 + 2*df)
+                #s2 = summary(lm(yy[permutation]~xx[permutation,], weights=w[permutation]))$sigma**2
+
+                #use wlars
+                m2 = wlars(x=x, y=y, W=W)
+                sm2 = summary(m2)
+                sm2$Rss / rev(sm2$Rss)[1] + 2*sm2$Df
+
+
+                loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - fity)**2)})/s2 + 2*df)
+                #loss = as.vector(apply(fitted, 2, function(z) {normy**2 * sum(w[permutation]*(z - fity)**2)})/s2 + 2*df)
                 k = which.min(loss)
 
                 if (k > 1) {
@@ -161,8 +178,8 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 }
                 
                 if (length(colocated)>0) {
-                    loss.local = as.vector(apply(fitted, 2, function(z) {sum(((z - fity)**2)[colocated])})/s2 + log(s2) + 2*df/sum(w[permutation])) 
-                    #loss.local = as.vector(apply(fitted, 2, function(z) {sum((w*(z - (yy-meany)/normy)**2)[colocated])})/s2 + log(s2) + 2*df/sum(w[permutation]))
+                    loss.local = as.vector(apply(fitted, 2, function(z) {sum(((z - fity)**2)[colocated])})/s2 + log(s2) + 2*df/sum(w[permutation]))
+                    #loss.local = as.vector(apply(fitted, 2, function(z) {normy**2 * sum((w*(z - fity)**2)[colocated])})/s2 + 2*log(normy) + log(s2) + 2*df/sum(w[permutation])) 
                 } else {
                     loss.local = rep(NA, length(loss))
                 }                     

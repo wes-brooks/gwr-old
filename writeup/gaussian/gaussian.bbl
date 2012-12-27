@@ -1,5 +1,17 @@
 \begin{thebibliography}{}
 
+\bibitem[\protect\citeauthoryear{Antoniadas, Gijbels, and
+  Verhasselt}{Antoniadas et~al.}{2012}]{Antoniadis:2011}
+Antoniadas, A., I.~Gijbels, and A.~Verhasselt (2012).
+\newblock Variable selection in varying-coefficient models using p-splines.
+\newblock {\em Journal of Computational and Graphical Statistics\/}~{\em
+  21\/}(3), 638--661.
+
+\bibitem[\protect\citeauthoryear{Breiman}{Breiman}{1995}]{Breiman:1995}
+Breiman, L. (1995).
+\newblock Better subset wregression using the nonnegative garrote.
+\newblock {\em Technometrics\/}~{\em 51}, 373--384.
+
 \bibitem[\protect\citeauthoryear{Efron and Tibshirani}{Efron and
   Tibshirani}{1986}]{Efron:1986}
 Efron, B. and R.~Tibshirani (1986).
@@ -7,12 +19,32 @@ Efron, B. and R.~Tibshirani (1986).
   other measures of statistical accuracy.
 \newblock {\em Statistical Science\/}~{\em 1\/}(1), 54--75.
 
+\bibitem[\protect\citeauthoryear{Fan and Zhang}{Fan and Zhang}{1999}]{Fan:1999}
+Fan, J. and W.~Zhang (1999).
+\newblock Statistical estimation in varying coefficient models.
+\newblock {\em The Annals of Statistics\/}~{\em 27\/}(5), 1491--1518.
+
 \bibitem[\protect\citeauthoryear{Fotheringham, Brunsdon, and
   Charlton}{Fotheringham et~al.}{2002}]{Fotheringham:2002}
 Fotheringham, A., C.~Brunsdon, and M.~Charlton (2002).
 \newblock {\em Geographically weighted regression: the analysis of spatially
   varying relationships}.
 \newblock Wiley.
+
+\bibitem[\protect\citeauthoryear{Hastie and Tibshirani}{Hastie and
+  Tibshirani}{1993}]{Hastie:1993}
+Hastie, T. and R.~Tibshirani (1993).
+\newblock Varying-coefficient models.
+\newblock {\em Journal of the Royal Statistical Society. Series B
+  (Methodological)\/}~{\em 55\/}(4), pp. 757--796.
+
+\bibitem[\protect\citeauthoryear{Wang, Li, and Huang}{Wang
+  et~al.}{2008}]{Wang:2008}
+Wang, L., H.~Li, and J.~Z. Huang (2008).
+\newblock Variable selection in nonparametric varying-coefficient models for
+  analysis of repeated measurements.
+\newblock {\em Journal of the American Statistical Association\/}~{\em
+  103\/}(484), 1556--1569.
 
 \bibitem[\protect\citeauthoryear{Wheeler}{Wheeler}{2009}]{Wheeler:2009}
 Wheeler, D.~C. (2009).
@@ -29,7 +61,7 @@ Zou, H. (2006).
 \bibitem[\protect\citeauthoryear{Zou, Hastie, and Tibshirani}{Zou
   et~al.}{2007}]{Zou:2007}
 Zou, H., T.~Hastie, and R.~Tibshirani (2007).
-\newblock On the "degrees of freedom" of the lasso.
+\newblock On the ``degrees of freedom" of the lasso.
 \newblock {\em Annals of Statistics\/}~{\em 35\/}(5), 2173--2192.
 
 \end{thebibliography}

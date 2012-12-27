@@ -69,7 +69,7 @@ for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
     predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
     f = as.formula(paste("logitindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
     bw[[as.character(year)]] = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], weights=weights, longlat=TRUE, gweight=bisquare, mode.select='AIC', method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
-    model[[as.character(year)]] = gwlars(formula=f, data=df, N=1, coords=df[,c('x','y')], weights=weights, longlat=TRUE, gweight=bisquare, bw=bw[[as.character(year)]], mode.select='AIC', s=NULL, method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
+    model[[as.character(year)]] = gwlars(formula=f, data=df, N=1, coords=df[,c('x','y')], weights=weights, longlat=TRUE, gweight=bisquare, bw=bw[[as.character(year)]], mode.select='AIC', s=NULL, method="knn", tol=0.001, parallel=FALSE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
 
     f = as.formula(paste("pindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
     bw.logistic[[as.character(year)]] = gwglmnet.sel(formula=f, data=df, family='binomial', coords=df[,c('x','y')], weights=weights, longlat=TRUE, gweight=bisquare, mode.select='AIC', method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
@@ -90,9 +90,9 @@ for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
     }
     
     pp = plots[[as.character(year)]]
-    pdf(paste('figures/poverty/', year, '.linear.coefficients.pdf', sep=''), width=8, height=16)
+    #pdf(paste('figures/poverty/', year, '.linear.coefficients.pdf', sep=''), width=8, height=16)
     grid.arrange(pp[['pag']], pp[['pex']], pp[['pman']], pp[['potprof']], pp[['pfire']], pp[['pserve']], pp[['pwh']], pp[['pblk']], pp[['phisp']], pp[['metro']], ncol=2)
-    dev.off()
+    #dev.off()
 
     pp = plots.logistic[[as.character(year)]]
     pdf(paste('figures/poverty/', year, '.logistic.coefficients.pdf', sep=''), width=8, height=16)

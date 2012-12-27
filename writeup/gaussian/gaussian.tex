@@ -47,7 +47,10 @@
 
 
 \section{Introduction}
-	%Varying-coefficient regression is a technique used in spatial statistics to model a non-stationary process. Geographically Weighted Regression (GWR) \cite{Fotheringham:2002} is a method of fitting varying-coefficient models. 
+	Varying-coefficient regression \cite{Hastie:1993} is a technique used in spatial statistics to model a non-stationary process. Geographically Weighted Regression (GWR) \cite{Fotheringham:2002} is a method of fitting varying-coefficient regression models for spatial data that uses kernel-weighted regression with weights based on the distance between observation locations. The presentation of GWR in \cite{Fotheringham:2002} follows the development of local likelihood in \ref{Loader:1999}.\\
+	
+	The literature is sparse regarding variable selection in varying-coefficient models. \cite{Wheeler:2009} uses the LASSO for local variable selection in GWR models and \cite{Fan:1999} addresses global variable selection within spline-based varying-coefficient models for response variables that belong to an exponential-family distribution (as in the generalized linear model). \cite{Antoniadis:2011} apply the non-negative garrote of \cite{Breiman:1995} in local variable selection using P-splines, and \cite{Wang:2008} address variable selection in spline-based models with repeated measurements.\\
+	
 
 	%The goal of this project is to develop a method that can answer these questions and work out the conditions under which the answers are reliable. Variable selection is via the Adaptive-LASSO, applied independently to each local model. The LASSO for GWR models was introduced in \cite{Wheeler:2009}. That paper describes a process for model fitting that is similar to our process in the case of Gaussian data, but does not cover the Generalized Linear Model (GLM) case for non-Gaussian data that nevertheless follows an exponential-family distribution. Justification for the process in \cite{Wheeler:2009} is by simulation - the paper does not present theoretical proof of consistency of its estimators nor does it prove an oracle property for its variable selection.\\
 	
@@ -124,7 +127,7 @@
 	 \subsection{Smoothing kernel}
 	 	The bisquare kernel function is used to generate geographic weights based on the distance between observation locations. For estimating the value of the coefficient surface at location $s_i$, the weight given to the observation at location $s_{i'}$ is	
 	\begin{eqnarray}
-		w_{ii'} = \begin{cases} \left[ 1-\left( \bw^{-1} \|s_i-s_{i'}\| \right)^2 \right] & \mbox{ if } \|s_i-s_{i'}\| < \bw \\ 0 & \mbox{ if } \|s_i-s_{i'}\| \geq \bw \end{cases}
+		w_{ii'} = \begin{cases} \left[ 1-\left( \bw^{-1} \|s_i-s_{i'}\| \right)^2 \right]^2 & \mbox{ if } \|s_i-s_{i'}\| < \bw \\ 0 & \mbox{ if } \|s_i-s_{i'}\| \geq \bw \end{cases}
 	\end{eqnarray}
 	
 	where $\bw$ is the kernel bandwidth.\\
@@ -172,19 +175,24 @@
 	
 	where $\tilde{\bm{X}}_i$ is the model matrix including only those variables that are selected by GWL at location $i$.
 
+
 \section{Simulation}
 	\subsection{Simulation setup}
-	A simulation study was conducted to assess the finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[-0.5,1.5] \times [-0.5,1.5]$, which was divided into a $60 \times 60$ grid. Each of the $p=5$ covariates was simulated by a Gaussian random field with mean zero and exponential covariance $Cov \left(Z_j(s_i), Z_j(s_{i'}) \right) = \sigma^2 \exp{\left( -\tau^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma^2=1$ is the variance and $\tau$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.\\
+	A simulation study was conducted to assess the finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[-0.1,1.1] \times [-0.1,1.1]$, which was divided into a $36 \times 36$ grid. Each of the $p=5$ covariates was simulated by a Gaussian random field with mean zero and exponential covariance $Cov \left(Z_j(s_i), Z_j(s_{i'}) \right) = \sigma^2 \exp{\left( -\tau^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma^2=1$ is the variance and $\tau$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.\\
 		
-	The simulated response is $y_i = \bm{x}_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 3600$. The simulated data included the output $y$ and five covariates $x_1, \dots, x_5$. The true data-generating model used only $x_1$, so $x_2, \dots, x_5$ are included to test the variable-selection properties of GWL. Two different types of coefficient surface were tested for $\beta_1(s)$: the constant gradient $\beta_1(s) = 1-s_y$, and the ``step" function
+	The simulated response is $y_i = \bm{x}_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 1296$. The simulated data included the output $y$ and five covariates $x_1, \dots, x_5$. The true data-generating model used only $x_1$, so $x_2, \dots, x_5$ are included to test the variable-selection properties of GWL. Two different types of coefficient surface were tested for $\beta_1(s)$: the constant gradient $\beta_1(s) = 1-s_y$, and the ``step" function
 	\begin{eqnarray}
 		\beta_1(s) = \begin{cases} 0 &\mbox{ if } s_y<0.4 \\ 5(s_y-0.4) &\mbox{ if } 0.4 \leq s_y<0.6 \\ 1 &\mbox{ o.w.} \end{cases}
 	\end{eqnarray}.\\
 		
 	In order to evaluate the performance of GWL under a range of conditions, the data was simulated under 18 different settings for each type of $\beta_1$ (Table \ref{table:simulation_settings}): high (0.1) and low (0.03) levels of the autoregression range parameter $\tau$ for the Gaussian random fields used to generate the covariates $\bm{X}_1(s), \dots, \bm{X}_5(s)$; three levels (0, 0.5, 0.8) of between-covariate correlation $\rho$; and three levels (0, 0.03, 0.1) of the autoregression range parameter $\tau$ for the Gaussian random field used to generate the error term $\epsilon(s)$. Each case was simulated 100 times.\\
 		
-	The data-generating process was simulated on the full $60 \times 60$ grid spanning $[-0.5,1.5] \times [-0.5,1.5]$, but to avoid edge effects the model was only fit on the $30 \times 30$ grid spanning $[0,1] \times [0,1]$. Bootstrap confidence intervals were estimated with $n_B = 101$.
+	The data-generating process was simulated on the full $36 \times 36$ grid spanning $[-0.1,1.1] \times [-0.1,1.1]$, but to avoid edge effects the model was only fit on the $30 \times 30$ grid spanning $[0,1] \times [0,1]$. Bootstrap confidence intervals were estimated with $n_B = 101$.
+	
+	\subsection{Simulation results}
+	Results of the simulation experiment were summarized to asses the consistency in selection and estimation, as well as the coverage properties of the confidence intervals.
 		
+	\begin{comment}
 	\begin{table}[ht]
 		\caption{Simulation settings} % title of Table
 		\vspace{1mm}
@@ -457,7 +465,7 @@ gradient & 0.78 & 0.52 & 0.52 & 0.52 & 0.53 \\
 \end{center}
 \end{table}
 		
-		\begin{comment}
+		
 			\begin{figure}
 				\begin{center}
 					\subfigure[Coverage of 95\% CI for $X_1$]{
