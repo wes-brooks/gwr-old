@@ -144,17 +144,17 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 wm = sum(w[permutation] * f)/sum(w)
                 mss = sum(w[permutation] * (f-wm)**2)
                 rss = sum(w[permutation] * r**2)                
-                s2 = rss / (sum(w[permutation]) - nsteps - 1)    
+                s2 = rss / sum(w[permutation])    
                 #s2 = sum(lsfit(y=fity, x=fitx)$residuals**2) / (sum(w[permutation]) - nsteps - 1)     
                 #s2 = summary(lm(yy[permutation]~xx[permutation,], weights=w[permutation]))$sigma**2
 
                 #use wlars
-                m2 = wlars(x=x, y=y, W=W)
-                sm2 = summary(m2)
-                sm2$Rss / rev(sm2$Rss)[1] + 2*sm2$Df
+                #m2 = wlars(x=x, y=y, W=W)
+                #sm2 = summary(m2)
+                #sm2$Rss / rev(sm2$Rss)[1] + 2*sm2$Df
 
 
-                loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - fity)**2)})/s2 + 2*df)
+                loss = as.vector(apply(fitted, 2, function(z) {w[permutation]*(z - fity)**2)})/s2 + 2*df)
                 #loss = as.vector(apply(fitted, 2, function(z) {normy**2 * sum(w[permutation]*(z - fity)**2)})/s2 + 2*df)
                 k = which.min(loss)
 
@@ -164,7 +164,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                     m = lm(y~., data=modeldata, weights=w)
                     coefs.unshrunk = rep(0, ncol(x) + 1)
                     coefs.unshrunk[c(1, varset + 1)] = coef(m)
-                    s2.unshrunk = sum(m$residuals^2)/(sum(w[permutation]) - 1 - length(coef(m)))
+                    s2.unshrunk = sum(m$residuals**2)/sum(w[permutation])
 
                     se.unshrunk = rep(0, ncol(x) + 1)
                     se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']

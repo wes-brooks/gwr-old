@@ -38,8 +38,8 @@ tau = rep(c(0.03, 0.1), each=9)
 rho = rep(rep(c(0, 0.5, 0.8), each=3), times=2)
 sigma.tau = rep(c(0, 0.03, 0.1), times=6)
 b = 25
-B1 = matrix(rep(exp(b*coord - b/2) / (1+exp(b*coord - b/2)), N.full), N.full, N.full)
-#B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N.full), N.full, N.full)
+#B1 = matrix(rep(exp(b*coord - b/2) / (1+exp(b*coord - b/2)), N.full), N.full, N.full)
+B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N.full), N.full, N.full)
 
 #params = data.frame(tau, rho, sigma.tau, function.type)
 params = data.frame(tau, rho, sigma.tau)
