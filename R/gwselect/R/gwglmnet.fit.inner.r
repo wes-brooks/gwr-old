@@ -17,6 +17,25 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
     if (!is.null(indx)) {
         gwr.weights = gwr.weights[indx]
     }
+
+
+    if (interact) {
+        newnames = vector()
+        oldnames = colnames(x)
+        for (l in 1:length(oldnames)) {
+            newnames = c(newnames, paste(oldnames[l], ":", colnames(coords)[1], sep=""))
+            newnames = c(newnames, paste(oldnames[l], ":", colnames(coords)[2], sep=""))
+        }
+
+        interacted = matrix(ncol=2*ncol(x), nrow=nrow(x))
+        for (k in 1:ncol(x)) {
+            interacted[,2*(k-1)+1] = x[,k]*coords[,1]
+            interacted[,2*k] = x[,k]*coords[,2]
+        }
+        x = interacted
+        colnames(x) = newnames
+    }
+
     
     if (mode.select=='CV') { 
         xx = as.matrix(x[-colocated,])
@@ -163,6 +182,17 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
     
         coefs = coefs * c(1, adapt.weight) / c(1, normx)
         coefs[1] = coefs[1] - sum(coefs[2:length(coefs)] * meanx)
+
+        if (interact) {
+            locmat = t(as.matrix(loc))
+            cc = Matrix(0, nrow=(length(coefs)-1)/2, ncol=2)
+            cc[,1] = coefs[seq(2, length(coefs)-1, by=2)]
+            cc[,2] = coefs[seq(2, length(coefs)-1, by=2)+1]            
+            ccc = cc %*% locmat
+            coefs = Matrix(c(coefs[1], as.vector(ccc)))
+            rownames(coefs) =  c("(Intercept)", oldnames)
+        }   
+
 
         if (verbose) {print(coefs)}
         coef.list[[i]] = coefs

@@ -1,4 +1,4 @@
-gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL, gweight, D=NULL, bw=NULL, N=1, verbose=FALSE, longlat, tol, method, tuning=FALSE, predict=FALSE, simulation=FALSE, adapt=FALSE, s=NULL, mode.select="AIC", parallel=FALSE, precondition=FALSE, oracle=NULL) {
+gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL, gweight, D=NULL, bw=NULL, N=1, verbose=FALSE, longlat, tol, method, tuning=FALSE, predict=FALSE, simulation=FALSE, adapt=FALSE, s=NULL, mode.select="AIC", parallel=FALSE, precondition=FALSE, oracle=NULL, interact=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is.null(longlat) || !is.logical(longlat)) 
@@ -77,9 +77,9 @@ gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL,
             }
         } else if (method=='knn') {
             if (parallel) {
-                res[['model']] = gwlars.fit.knnparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle)
+                res[['model']] = gwlars.fit.knnparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact)
             } else {
-                res[['model']] = gwlars.fit.knn(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle)
+                res[['model']] = gwlars.fit.knn(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact)
             }
         }
     }

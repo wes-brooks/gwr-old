@@ -1,4 +1,4 @@
-gwlars.sel = function(formula, data=list(), coords, indx=NULL, fit.loc=NULL, range=NULL, adapt=FALSE, gweight=gwr.Gauss, s=NULL, N=1, mode.select="CV", method="dist", verbose=FALSE, longlat=FALSE, weights=NULL, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE, oracle=NULL) {
+gwlars.sel = function(formula, data=list(), coords, indx=NULL, fit.loc=NULL, range=NULL, adapt=FALSE, gweight=gwr.Gauss, s=NULL, N=1, mode.select="CV", method="dist", verbose=FALSE, longlat=FALSE, weights=NULL, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE, oracle=NULL, interact=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is.null(longlat) || !is.logical(longlat)) 
@@ -29,7 +29,7 @@ gwlars.sel = function(formula, data=list(), coords, indx=NULL, fit.loc=NULL, ran
     opt <- optimize(gwlars.cv.f, lower=beta1, upper=beta2, 
         maximum=FALSE, formula=formula, coords=coords, indx=indx, s=s, N=N, mode.select=mode.select,
         gweight=gweight, verbose=verbose, longlat=longlat, data=data, method=method, fit.loc=fit.loc,
-        weights=weights, tol=tol, adapt=adapt, parallel=parallel, precondition=precondition, oracle=oracle)
+        weights=weights, tol=tol, adapt=adapt, parallel=parallel, precondition=precondition, oracle=oracle, interact=interact)
 
     bdwt <- opt$minimum
     res <- bdwt
