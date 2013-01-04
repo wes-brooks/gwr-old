@@ -1,4 +1,4 @@
-gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, predict=FALSE, dist=NULL, indx=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, mode.select, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, N) {
+gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, predict=FALSE, dist=NULL, indx=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, mode.select, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, N=1, interact=FALSE) {
     if (!is.null(indx)) {
         colocated = which(coords[indx,1]==as.numeric(loc[1]) & coords[indx,2]==as.numeric(loc[2]))
     }
