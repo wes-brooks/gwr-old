@@ -1,4 +1,4 @@
-gwglmnet.sel = function(formula, data=list(), family, range=NULL, weights=NULL, coords, indx=NULL, adapt=FALSE, gweight=gwr.Gauss, s=NULL, method="dist", mode.select='AIC', verbose=FALSE, longlat=FALSE, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE) {
+gwglmnet.sel = function(formula, data=list(), family, range=NULL, weights=NULL, coords, indx=NULL, adapt=FALSE, gweight=gwr.Gauss, s=NULL, method="dist", mode.select='AIC', verbose=FALSE, longlat=FALSE, tol=.Machine$double.eps^0.25, parallel=FALSE, precondition=FALSE, interact=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is.null(longlat) || !is.logical(longlat)) 
@@ -30,7 +30,7 @@ gwglmnet.sel = function(formula, data=list(), family, range=NULL, weights=NULL, 
     opt <- optimize(gwglmnet.cv.f, lower=beta1, upper=beta2, 
         maximum=FALSE, formula=formula, indx=indx, coords=coords, s=s, family=family, mode.select=mode.select,
         gweight=gweight, verbose=verbose, longlat=longlat, data=data, method=method,
-        weights=weights, tol=tol, adapt=adapt, parallel=parallel, precondition=precondition, N=1)
+        weights=weights, tol=tol, adapt=adapt, parallel=parallel, precondition=precondition, N=1, interact)
 
     bdwt <- opt$minimum
     res <- bdwt

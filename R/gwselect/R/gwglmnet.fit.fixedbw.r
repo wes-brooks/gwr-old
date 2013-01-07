@@ -1,4 +1,4 @@
-gwglmnet.fit.fixedbw = function(x, y, family, coords, bw, D=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE) {
+gwglmnet.fit.fixedbw = function(x, y, family, coords, bw, D=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, interact, N) {
     if (!is.null(fit.loc)) {
         coords.unique = fit.loc
     } else {
@@ -23,7 +23,7 @@ gwglmnet.fit.fixedbw = function(x, y, family, coords, bw, D=NULL, s=NULL, verbos
         loc = coords.unique[i,]
         gw = gweights[[i]]
 
-        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, s=s, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition)
+        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, s=s, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, interact=interact, N=N)
     }
 
     gwglmnet.object[['models']] = models

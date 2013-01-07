@@ -196,30 +196,13 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 coefs = cbind("(Intercept)"=meany, coef(model))
                 fitted = predict(model, newx=predx, type="fit", mode="step")[["fit"]]
 
-                #Mimics how lm() finds the error variance for weighted least squares, but uses sum(w) instead of n for the number of observations.
-                #mod = lm(fity~fitx)                
-                #r = mod$residuals / sqrt(w[permutation])
-                #f = mod$fitted
-                #wm = sum(w[permutation] * f)/sum(w)
-                #mss = sum(w[permutation] * (f-wm)**2)
-                #rss = sum(w[permutation] * r**2)                
-                #s2 = rss / sum(w[permutation])    
-                s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w[permutation])  
-                #s2 = summary(lm(yy[permutation]~xx[permutation,], weights=w[permutation]))$sigma**2
-
-                #use wlars:
-                #m2 = wlars(x=x, y=y, W=W)
-                #sm2 = summary(m2)
-                #sm2$Rss / rev(sm2$Rss)[1] + 2*sm2$Df
-
                 loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + 2*df)
-                #loss = as.vector(apply(fitted, 2, function(z) {normy**2 * sum(w[permutation]*(z - fity)**2)})/s2 + 2*df)
                 k = which.min(loss)
 
                 if (k > 1) {
                     varset = vars[[k]]
                     modeldata = data.frame(y=yy[permutation], xx[permutation,varset])
-                    m = lm(y~., data=modeldata, weights=w)
+                    m = glm(y~., data=modeldata, weights=w, family=family)
                     coefs.unshrunk = rep(0, ncol(x) + 1)
                     coefs.unshrunk[c(1, varset + 1)] = coef(m)
                     s2.unshrunk = sum(m$residuals^2)/(sum(w[permutation]) - 1 - length(coef(m)))
@@ -328,19 +311,6 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 ccc = cc %*% locmat
                 coefs.unshrunk = Matrix(c(coefs.unshrunk[1], as.vector(ccc)))
                 rownames(coefs.unshrunk) =  c("(Intercept)", oldnames)
-            }     
-    
-            se.unshrunk = Matrix(se.unshrunk, ncol=1)
-            rownames(se.unshrunk) = c("(Intercept)", colnames(xx))
-            
-            if (interact) {
-                locmat = t(as.matrix(loc**2))
-                cc = Matrix(0, nrow=(length(se.unshrunk)-1)/2, ncol=2)
-                cc[,1] = se.unshrunk[seq(2, length(se.unshrunk)-1, by=2)]**2
-                cc[,2] = se.unshrunk[seq(2, length(se.unshrunk)-1, by=2)+1]**2           
-                ccc = sqrt(cc %*% locmat)
-                se.unshrunk = Matrix(c(se.unshrunk[1], as.vector(ccc)))
-                rownames(se.unshrunk) =  c("(Intercept)", oldnames)
             }     
     
             coef.unshrunk.list[[i]] = coefs.unshrunk

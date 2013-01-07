@@ -1,4 +1,4 @@
-gwglmnet.fit.knn = function(x, y, family, coords, fit.loc, D, s, verbose, prior.weights, tuning, predict, indx, gweight, mode.select, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE, N) {
+gwglmnet.fit.knn = function(x, y, family, coords, fit.loc, D, s, verbose, prior.weights, tuning, predict, indx, gweight, mode.select, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE, N, interact) {
     if (!is.null(fit.loc)) {
         coords.unique = unique(fit.loc)
     } else {
@@ -23,7 +23,7 @@ gwglmnet.fit.knn = function(x, y, family, coords, fit.loc, D, s, verbose, prior.
             prior.weights=prior.weights, target=target)
         bandwidth = opt$minimum
 
-        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, tuning=tuning, predict=predict, indx=indx, bw=bandwidth, dist=dist, s=s, verbose=verbose, mode.select=mode.select, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N)
+        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, tuning=tuning, predict=predict, indx=indx, bw=bandwidth, dist=dist, s=s, verbose=verbose, mode.select=mode.select, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N, interact=interact)
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ", loss=", models[[i]][['loss.local']], ".\n", sep=''))
     }
 

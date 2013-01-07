@@ -97,6 +97,7 @@ gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL,
         res[['precondition']] = precondition
         res[['s']] = s
         res[['mode.select']] = mode.select
+        res[['interact']] = interact
     }
     class(res) = "gwselect"
     

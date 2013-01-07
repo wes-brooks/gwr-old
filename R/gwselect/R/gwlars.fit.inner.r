@@ -153,26 +153,9 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
 
             if (n.weighted > ncol(x)) {               
                 coefs = cbind("(Intercept)"=meany, coef(model))
-                fitted = predict(model, newx=predx, type="fit", mode="step")[["fit"]]
-
-                #Mimics how lm() finds the error variance for weighted least squares, but uses sum(w) instead of n for the number of observations.
-                #mod = lm(fity~fitx)                
-                #r = mod$residuals / sqrt(w[permutation])
-                #f = mod$fitted
-                #wm = sum(w[permutation] * f)/sum(w)
-                #mss = sum(w[permutation] * (f-wm)**2)
-                #rss = sum(w[permutation] * r**2)                
-                #s2 = rss / sum(w[permutation])    
+                fitted = predict(model, newx=predx, type="fit", mode="step")[["fit"]]   
                 s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w[permutation])  
-                #s2 = summary(lm(yy[permutation]~xx[permutation,], weights=w[permutation]))$sigma**2
-
-                #use wlars:
-                #m2 = wlars(x=x, y=y, W=W)
-                #sm2 = summary(m2)
-                #sm2$Rss / rev(sm2$Rss)[1] + 2*sm2$Df
-
                 loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + 2*df)
-                #loss = as.vector(apply(fitted, 2, function(z) {normy**2 * sum(w[permutation]*(z - fity)**2)})/s2 + 2*df)
                 k = which.min(loss)
 
                 if (k > 1) {
@@ -181,7 +164,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                     m = lm(y~., data=modeldata, weights=w)
                     coefs.unshrunk = rep(0, ncol(x) + 1)
                     coefs.unshrunk[c(1, varset + 1)] = coef(m)
-                    s2.unshrunk = sum(m$residuals^2)/(sum(w[permutation]) - 1 - length(coef(m)))
+                    s2.unshrunk = sum(m$residuals**2)/sum(w[permutation])
 
                     se.unshrunk = rep(0, ncol(x) + 1)
                     se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']
@@ -189,9 +172,9 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                     coefs.unshrunk = rep(0, ncol(xx) + 1)
                     coefs.unshrunk[1] = meany
                     
-                    s2.unshrunk = sum(fity**2)/(sum(w[permutation]) - 1)
+                    s2.unshrunk = sum(fity**2)/sum(w[permutation])
                     se.unshrunk = rep(0, ncol(xx) + 1)
-                    se.unshrunk[1] = sqrt(s2.unshrunk / sum(w[permutation]))
+                    se.unshrunk[1] = sqrt(s2.unshrunk)
                 }
                 
                 if (length(colocated)>0) {
@@ -207,7 +190,8 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             }
 
         } else if (mode.select=='BIC') {
-            #predx = t(apply(xx, 1, function(X) {(X-meanx) * adapt.weight / normx}))
+            predx = t(apply(xx[permutation,], 1, function(X) {(X-meanx) * adapt.weight / normx}))
+            predy = as.matrix(yy[permutation])
             vars = apply(as.matrix(predict(model, type='coef')[['coefficients']]), 1, function(x) {which(abs(x)>0)})
             df = sapply(vars, length) + 1
 
