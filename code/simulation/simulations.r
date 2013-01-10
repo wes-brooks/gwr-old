@@ -18,10 +18,10 @@ library(splancs, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 library(RandomFields, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 library(geoR, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 
-library(geoR)
-library(gwselect)
-library(doMC)
-registerCores(n=3)
+#library(geoR)
+#library(gwselect)
+#library(doMC)
+#registerCores(n=3)
 
 seeds = read.csv("seeds.csv")$x
 B = 100
@@ -41,18 +41,18 @@ rho = rep(rep(c(0, 0.5, 0.8), each=3), times=2)
 sigma.tau = rep(c(0, 0.03, 0.1), times=6)
 b = 25
 #B1 = matrix(rep(exp(b*coord - b/2) / (1+exp(b*coord - b/2)), N.full), N.full, N.full)
-#B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N.full), N.full, N.full)
-B1 = matrix(rep(coord, N), N, N)
+B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)
+#B1 = matrix(rep(coord, N), N, N)
 
 #params = data.frame(tau, rho, sigma.tau, function.type)
 params = data.frame(tau, rho, sigma.tau)
 
 #Read command-line parameters
-#args = commandArgs(trailingOnly=TRUE)
-#cluster = as.integer(args[1])
-#process = as.integer(args[2]) + 1
-cluster=NA
-process=2
+args = commandArgs(trailingOnly=TRUE)
+cluster = as.integer(args[1])
+process = as.integer(args[2]) + 1
+#cluster=NA
+#process=2
 
 #Simulation parameters are based on the value of process
 setting = process %/% B + 1
@@ -113,13 +113,12 @@ for (i in 1:N**2) {
 
 #Find the optimal bandwidth and use it to generate a model:   
 #registerDoMC(cores=3)
-#bw = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, s=NULL, method='knn', adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE)
-#model = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='AIC', bw=bw, gweight=bisquare, tol=0.01, s=NULL, method='knn', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE)
+bw = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
+model = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=101, mode.select='AIC', bw=bw, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
 
 #registerDoMC(cores=3)
-#bw.oracular = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, method='knn', parallel=FALSE, interact=TRUE)
-bw.oracular=1
-model.oracular = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='AIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='knn', simulation=TRUE, parallel=FALSE, interact=TRUE)
+bw.oracular = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=TRUE)
+model.oracular = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=101, mode.select='AIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE)
 
 
 #Write the results to some files:

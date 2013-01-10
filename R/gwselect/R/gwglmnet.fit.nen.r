@@ -16,7 +16,7 @@ gwglmnet.fit.nen = function(x, y, family, coords, D, s, verbose, prior.weights, 
             prior.weights=prior.weights, target=target, precondition=precondition)
         bandwidth = opt$minimum
 
-        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N interact=interact)
+        models[[i]] = 1 #gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N interact=interact)
 
         cat(paste("For i=", i, ", target:", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
     }

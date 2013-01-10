@@ -1,0 +1,24 @@
+#
+# Submit file for a master/worker set up where the master runs
+# on the submitting machine (via the local universe) and a number
+# of workers run on remote machines (via vanilla universe). We
+# tell the workers the hostname of the master
+#
+#################################################################
+# Comparability Computations
+#################################################################
+
+universe = vanilla
+#log = logs/comp_$(Cluster).log
+#error = logs/comp_$(Cluster)_$(Process).err
+#output = output/out_$(Cluster)_$(Process).out
+executable = condor/worker.sh
+arguments = $(Cluster) $(Process)
+requirements = (Target.OpSys=="LINUX" && regexp("stat", Machine))
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT_OR_EVICT
+transfer_input_files = code, R, condor, seeds.csv
+transfer_output_files = output
+notification = Never
+queue 1800
+
