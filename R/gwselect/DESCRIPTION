@@ -7,4 +7,4 @@ Author: Wesley Brooks
 Maintainer: Wesley Brooks <wbrooks2@wisc.edu>
 Description: Several variable selection techniques for GWR models
 License: GPL-3
-Depends: R (>= 2.15.1), sp, plotrix, fossil, glmnet, lars, maps, ggplot2, doMC
+Depends: R (>= 2.15.1), sp, plotrix, fossil, glmnet, lars, maps, ggplot2, doMC, scales

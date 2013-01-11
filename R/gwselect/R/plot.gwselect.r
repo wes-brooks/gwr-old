@@ -31,7 +31,7 @@ plot.gwselect = function(model, var=NULL, type='fitted', locs=NULL, polygons=NUL
         #if (mean(mergedata$output, na.rm=TRUE)<=0) {       
         #    map <- map + scale_fill_gradient(low='red', high='white', limits=range(mergedata$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
         #} else {
-            map <- map + scale_fill_gradient(low='white', high='red', limits=range(mergedata$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
+            map <- map + scale_fill_gradient2(low = muted("blue"), mid = "white", high = "orange", limits=range(mergedata$output, na.rm=TRUE), name='coef') + coord_map(project='globular')
         #}
     
         map <- map + opts(panel.background=theme_rect(fill='green', colour='red'))
