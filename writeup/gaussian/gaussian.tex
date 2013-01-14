@@ -49,6 +49,8 @@
 \section{Introduction}
 	Varying-coefficient regression \cite{Hastie:1993} is a technique used in spatial statistics to model a non-stationary process. Geographically Weighted Regression (GWR) \cite{Fotheringham:2002} is a method of fitting varying-coefficient regression models for spatial data that uses kernel-weighted regression with weights based on the distance between observation locations. The presentation of GWR in \cite{Fotheringham:2002} follows the development of local likelihood in \ref{Loader:1999}.\\
 	
+	---Connection between the developments of GWR and nonparametric regression (including kernel smoothing vs local regression). GWR as a kernel-smoother working on the computed coefficients rather than the raw data. Local regression considered better than kernel smoothing (at least on grounds of consistency), adjusting GWR to become a local-regression problem rather than a kernel smoothing problem by focusing on covariate-by-coordinate interactions. Examine the literature of variable selection within local regression models (probably not much, since most local regression is univariate - e.g. LOESS).---
+	
 	The literature is sparse regarding variable selection in varying-coefficient models. \cite{Wheeler:2009} uses the LASSO for local variable selection in GWR models and \cite{Fan:1999} addresses global variable selection within spline-based varying-coefficient models for response variables that belong to an exponential-family distribution (as in the generalized linear model). \cite{Antoniadis:2011} apply the non-negative garrote of \cite{Breiman:1995} in local variable selection using P-splines, and \cite{Wang:2008} address variable selection in spline-based models with repeated measurements.\\
 	
 

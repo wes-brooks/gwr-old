@@ -1,34 +1,35 @@
 library(plotrix)
 
 vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
-params = c('bw', 'sigma2', 'loss.local', 's', 'sum.weights')
+params = c('bw', 'sigma2', 'loss.local', 's')
 
-source('code/matplot.r')
+#source('code/matplot.r')
 
 args = commandArgs(trailingOnly=TRUE)
 #cluster = as.integer(args[1])
-cluster = 'NA'
+#cluster = 'NA'
+cluster=22
 
 B = 100
 N = 30
 coord = seq(0, 1, length.out=N)
 
 #Establish the simulation parameters
-tau = rep(c(0.1, 0.8), each=18)
-rho = rep(rep(c(0, 0.5, 0.8), each=6), times=2)
-sigma.tau = rep(rep(c(0, 0.1, 0.8), each=2), times=6)
-function.type = rep(c("step", "gradient"), times=18)
-params = data.frame(tau, rho, sigma.tau, function.type)
-
+tau = rep(c(0.03, 0.1), each=9)
+rho = rep(rep(c(0, 0.5, 0.8), each=3), times=2)
+sigma.tau = rep(c(0, 0.03, 0.1), times=6)
+#function.type = rep(c("step", "gradient"), times=18)
+#params = data.frame(tau, rho, sigma.tau, function.type)
+params = data.frame(tau, rho, sigma.tau)
 
 N = 30
 B = list()
-settings = 2
+settings = 1:4
 b=25
 
 coord = seq(0, 1, length.out=N)
 B[['(Intercept)']] = rep(0, N**2)
-B[['X1']] = as.vector(matrix(rep(exp(b*coord - b/2) / (1+exp(b*coord - b/2)), N), N, N))
+B[['X1']] = as.vector(matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N))
 B[['X2']] = rep(0, N**2)
 B[['X3']] = rep(0, N**2)
 B[['X4']] = rep(0, N**2)
@@ -63,13 +64,10 @@ for (setting in settings) {
 
     vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
 
-        
-
-
-    nsims = ifelse(setting<36,100,99)
-    nsims = 1
-    for (k in c(3)) { #1:nsims) {
-        sim = (setting-1)*100 + k
+    #nsims = ifelse(setting<36,100,99)
+    nsims = 100
+    for (k in 0:(nsims-1)) {
+        sim = (setting-1)*100 + k + 1
 
         #Import our coefficient estimates
         filename = paste("output/CoefEstimates.", cluster, ".", sim, ".csv", sep="")
@@ -110,7 +108,7 @@ for (setting in settings) {
 
             CI.oracular.b = t(apply(oracularBootstraps, 1, function(x) {sort(x)[c(4, 98)]}))
             CI.oracular.se = cbind(estimates.oracular[,v]-1.96*estimates.se.oracular[,v], estimates.oracular[,v]+1.96*estimates.se.oracular[,v])
-            k=0
+            
             if (k==0) {
                 coverage.bootstrap[[v]] = as.matrix(ifelse(B[[v]] < CI.b[,1] | B[[v]] > CI.b[,2],0,1))
             } else {
@@ -182,20 +180,20 @@ for (setting in settings) {
         cbo[[v]] = apply(coverage.oracular.bootstrap[[v]], 1, sum) / ncol(coverage.oracular.bootstrap[[v]])
         cso[[v]] = apply(coverage.oracular.se[[v]], 1, sum) / ncol(coverage.oracular.se[[v]])       
 
-        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".unshrunk_bootstrap_coverage.pdf", sep=""))
-        gwr.matplot(matrix(cub[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
-        #title(main=paste("Coverage of 95% CI for ", v, sep=""))
-        dev.off()
+#        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".unshrunk_bootstrap_coverage.pdf", sep=""))
+#        gwr.matplot(matrix(cub[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
+#        #title(main=paste("Coverage of 95% CI for ", v, sep=""))
+#        dev.off()
 
-        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".oracular_bootstrap_coverage.pdf", sep=""))
-        gwr.matplot(matrix(cbo[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
-        #title(main=paste("Coverage of 95% CI for ", v, sep=""))
-        dev.off()
+#        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".oracular_bootstrap_coverage.pdf", sep=""))
+#        gwr.matplot(matrix(cbo[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
+#        #title(main=paste("Coverage of 95% CI for ", v, sep=""))
+#        dev.off()
 
-        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".oracular_se_coverage.pdf", sep=""))
-        gwr.matplot(matrix(cso[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
-        #title(main=paste("Coverage of 95% CI for ", v, sep=""))
-        dev.off()
+#        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".oracular_se_coverage.pdf", sep=""))
+#        gwr.matplot(matrix(cso[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
+#        #title(main=paste("Coverage of 95% CI for ", v, sep=""))
+#        dev.off()
         
 #         pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".bootstrap_coverage.pdf", sep=""))
 #         gwr.matplot(matrix(cb[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
@@ -336,27 +334,42 @@ for (setting in settings) {
 #colnames(mean.coverage.oracular.se) = vars
 
 t.x = list()
-t.x[[1]] = 1:16
-t.x[[2]] = 17:36
+#t.x[[1]] = 1:16
+#t.x[[2]] = 17:36
+#t.x[[1]] = 1:9
+#t.x[[2]] = 10:18
+t.x[[1]] = 1:4
+#t.x[[2]] = 10:18
 
 rho = list()
-rho[[1]] = c(1:6, 19:24)
-rho[[2]] = c(7:12, 25:30)
-rho[[3]] = c(13:18, 31:36)
+#rho[[1]] = c(1:6, 19:24)
+#rho[[2]] = c(7:12, 25:30)
+#rho[[3]] = c(13:18, 31:36)
+#rho[[1]] = c(1:6)
+#rho[[2]] = c(7:12)
+#rho[[3]] = c(13:18)
+rho[[1]] = c(1:4)
 
 t.e = list()
-t.e[[1]] = c(1:2, 7:8, 13:14, 19:20, 25:26, 31:32)
-t.e[[2]] = c(3:4, 9:10, 15:16, 21:22, 27:28, 33:34)
-t.e[[3]] = c(5:6, 11:12, 17:18, 23:24, 29:30, 35:36)
+#t.e[[1]] = c(1:2, 7:8, 13:14, 19:20, 25:26, 31:32)
+#t.e[[2]] = c(3:4, 9:10, 15:16, 21:22, 27:28, 33:34)
+#t.e[[3]] = c(5:6, 11:12, 17:18, 23:24, 29:30, 35:36)
+#t.e[[1]] = c(1:2, 7:8, 13:14)
+#t.e[[2]] = c(3:4, 9:10, 15:16)
+#t.e[[3]] = c(5:6, 11:12, 17:18)
+t.e[[1]] = c(1:2)
+t.e[[2]] = c(3:4)
 
 function.type = list()
-function.type[['step']] = (1:18)*2 - 1
+function.type[['step']] = (1:18) - 1
 function.type[['gradient']] = (1:18)*2
 
 
-contrasts = c("t.x", "rho", "t.e", "function.type")
+#contrasts = c("t.x", "rho", "t.e", "function.type")
+contrasts = c("t.x", "rho", "t.e")
 for (contrast in contrasts) {
     contr = get(contrast)
+    dev.new()
     #pdf(paste("figures/simulation/", cluster, ".", contrast, ".profile_bootstrap_coverage.pdf", sep=""))
     for (i in 1:length(contr)) {
         element = contr[[i]]
@@ -369,7 +382,7 @@ for (contrast in contrasts) {
 
         boxplot(plotdata, col=i)
     }
-}
+
         plot(apply(matrix(cs[['X1']], 30, 30),1,mean), type='l', lty=1, bty='n', xlim=xx, ylim=yy, xlab="location", ylab="95% CI coverage frequency")
 
 
