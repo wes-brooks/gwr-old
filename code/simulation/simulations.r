@@ -142,7 +142,7 @@ for (k in 1:6) {
     write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".unshrunk-bootstrap.csv", sep=""), sep=',', row.names=FALSE)
 }
 
-coefs = t(sapply(1:N**2, function(y) {as.vector(model[['model']][['models']][[y]][['coefs.unshrunk']])}))
+coefs = t(sapply(1:N**2, function(y) {as.vector(model[['model']][['models']][[y]][['coef.unshrunk']])}))
 write.table(coefs, file=paste("output/CoefEstimatesUnshrunk.", cluster, ".", process, ".csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
 
 ses = t(sapply(1:N**2, function(y) {as.vector(model[['model']][['models']][[y]][['se.unshrunk']])}))

@@ -5,9 +5,9 @@ params = c('bw', 'sigma2', 'loss.local', 's', 'sum.weights')
 
 source('code/matplot.r')
 
-args = commandArgs(trailingOnly=TRUE)
+#args = commandArgs(trailingOnly=TRUE)
 #cluster = as.integer(args[1])
-cluster = 'NA'
+cluster = 22
 
 B = 100
 N = 30
@@ -23,12 +23,12 @@ params = data.frame(tau, rho, sigma.tau, function.type)
 
 N = 30
 B = list()
-settings = 2
+settings = 1:18
 b=25
 
 coord = seq(0, 1, length.out=N)
 B[['(Intercept)']] = rep(0, N**2)
-B[['X1']] = as.vector(matrix(rep(exp(b*coord - b/2) / (1+exp(b*coord - b/2)), N), N, N))
+B[['X1']] = as.vector(matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N))
 B[['X2']] = rep(0, N**2)
 B[['X3']] = rep(0, N**2)
 B[['X4']] = rep(0, N**2)
@@ -63,21 +63,17 @@ for (setting in settings) {
 
     vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
 
-        
-
-
-    nsims = ifelse(setting<36,100,99)
-    nsims = 1
-    for (k in c(3)) { #1:nsims) {
+    nsims = 100
+    for (k in 1:nsims) {
         sim = (setting-1)*100 + k
 
         #Import our coefficient estimates
-        filename = paste("output/CoefEstimates.", cluster, ".", sim, ".csv", sep="")
-        filenameUnshrunk = paste("output/CoefEstimatesUnshrunk.", cluster, ".", sim, ".csv", sep="")
-        filenameSEs = paste("output/CoefSEsUnshrunk.", cluster, ".", sim, ".csv", sep="")
+        filename = paste("output/output/CoefEstimates.", cluster, ".", sim, ".csv", sep="")
+        filenameUnshrunk = paste("output/output/CoefEstimatesUnshrunk.", cluster, ".", sim, ".csv", sep="")
+        filenameSEs = paste("output/output/CoefSEsUnshrunk.", cluster, ".", sim, ".csv", sep="")
 
-        filenameCoefsOracular = paste("output/CoefEstimatesOracular.", cluster, ".", sim, ".csv", sep="")
-        filenameSEsOracular = paste("output/CoefSEsOracular.", cluster, ".", sim, ".csv", sep="")
+        filenameCoefsOracular = paste("output/output/CoefEstimatesOracular.", cluster, ".", sim, ".csv", sep="")
+        filenameSEsOracular = paste("output/output/CoefSEsOracular.", cluster, ".", sim, ".csv", sep="")
 
         estimates = read.csv(filename, header=TRUE)
         estimates.unshrunk = read.csv(filenameUnshrunk, header=TRUE)
@@ -95,13 +91,13 @@ for (setting in settings) {
     
         for (v in vars) {
             #Calculate the coverage of each 95% CI 
-            filename = paste("output/", v, ".", cluster, ".", sim, ".bootstrap.csv", sep="")
+            filename = paste("output/output/", v, ".", cluster, ".", sim, ".bootstrap.csv", sep="")
             bootstraps = as.matrix(read.csv(filename, header=TRUE))
             
-            filename2 = paste("output/", v, ".", cluster, ".", sim, ".unshrunk-bootstrap.csv", sep="")
+            filename2 = paste("output/output/", v, ".", cluster, ".", sim, ".unshrunk-bootstrap.csv", sep="")
             unshrunk.bootstraps = as.matrix(read.csv(filename2, header=TRUE))
 
-            filename = paste("output/", v, ".", cluster, ".", sim, ".OracularBootstrap.csv", sep="")
+            filename = paste("output/output/", v, ".", cluster, ".", sim, ".OracularBootstrap.csv", sep="")
             oracularBootstraps = as.matrix(read.csv(filename, header=TRUE))
             
             CI.ub = t(apply(unshrunk.bootstraps, 1, function(x) {sort(x)[c(4, 98)]}))
@@ -110,20 +106,20 @@ for (setting in settings) {
 
             CI.oracular.b = t(apply(oracularBootstraps, 1, function(x) {sort(x)[c(4, 98)]}))
             CI.oracular.se = cbind(estimates.oracular[,v]-1.96*estimates.se.oracular[,v], estimates.oracular[,v]+1.96*estimates.se.oracular[,v])
-            k=0
-            if (k==0) {
+            
+            if (k==1) {
                 coverage.bootstrap[[v]] = as.matrix(ifelse(B[[v]] < CI.b[,1] | B[[v]] > CI.b[,2],0,1))
             } else {
                 coverage.bootstrap[[v]] = cbind(coverage.bootstrap[[v]], as.matrix(ifelse(B[[v]] < CI.b[,1] | B[[v]] > CI.b[,2],0,1)))
             }
 
-            if (k==0) {
+            if (k==1) {
                 coverage.unshrunk.bootstrap[[v]] = as.matrix(ifelse(B[[v]] < CI.ub[,1] | B[[v]] > CI.ub[,2],0,1))
             } else {
                 coverage.unshrunk.bootstrap[[v]] = cbind(coverage.unshrunk.bootstrap[[v]], as.matrix(ifelse(B[[v]] < CI.ub[,1] | B[[v]] > CI.ub[,2],0,1)))
             }
     
-            if (k==0) {
+            if (k==1) {
                 coverage.se[[v]] = as.matrix(ifelse(B[[v]] < CI.se[,1] | B[[v]] > CI.se[,2],0,1))
             } else {
                 coverage.se[[v]] = cbind(coverage.se[[v]], as.matrix(ifelse(B[[v]] < CI.se[,1] | B[[v]] > CI.se[,2],0,1)))
@@ -131,29 +127,25 @@ for (setting in settings) {
 
 
 
-            if (k==0) {
+            if (k==1) {
                 coverage.oracular.bootstrap[[v]] = as.matrix(ifelse(B[[v]] < CI.oracular.b[,1] | B[[v]] > CI.oracular.b[,2],0,1))
             } else {
                 coverage.bootstrap[[v]] = cbind(coverage.oracular.bootstrap[[v]], as.matrix(ifelse(B[[v]] < CI.oracular.b[,1] | B[[v]] > CI.oracular.b[,2],0,1)))
             }
-
-            #print(B[[v]])
     
-            if (k==0) {
+            if (k==1) {
                 coverage.oracular.se[[v]] = as.matrix(ifelse(B[[v]] < CI.oracular.se[,1] | B[[v]] > CI.oracular.se[,2],0,1))
             } else {
                 coverage.oracular.se[[v]] = cbind(coverage.oracular.se[[v]], as.matrix(ifelse(B[[v]] < CI.oracular.se[,1] | B[[v]] > CI.oracular.se[,2],0,1)))
             }
 
-
             #Calculate how often each variable was selected for inclusion in the local models
             col = which(colnames(estimates) == v)
-            if (k==0) {
+            if (k==1) {
                 selection[[v]] = as.matrix(ifelse(estimates[,col]==0, 0, 1))
             } else {
                 selection[[v]] = cbind(selection[[v]], as.matrix(ifelse(estimates[,col]==0, 0, 1)))
-            }        
-            k=3
+            }
         }
     }
 
@@ -173,7 +165,7 @@ for (setting in settings) {
     coverage.oracular.b.aggregate[[setting]] = list()
     coverage.oracular.se.aggregate[[setting]] = list()
 
-    for (v in vars) {
+    for (v in c("X1")) { #vars) {
         cb[[v]] = apply(coverage.bootstrap[[v]], 1, sum) / ncol(coverage.bootstrap[[v]])
         cub[[v]] = apply(coverage.unshrunk.bootstrap[[v]], 1, sum) / ncol(coverage.unshrunk.bootstrap[[v]])
         cs[[v]] = apply(coverage.se[[v]], 1, sum) / ncol(coverage.se[[v]])
@@ -197,15 +189,15 @@ for (setting in settings) {
         #title(main=paste("Coverage of 95% CI for ", v, sep=""))
         dev.off()
         
-#         pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".bootstrap_coverage.pdf", sep=""))
-#         gwr.matplot(matrix(cb[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
-#         #title(main=paste("Coverage of 95% CI for ", v, sep=""))
-#         dev.off()
+         pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".bootstrap_coverage.pdf", sep=""))
+         gwr.matplot(matrix(cb[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
+         #title(main=paste("Coverage of 95% CI for ", v, sep=""))
+         dev.off()
 #     
-#         pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".se_coverage.pdf", sep=""))
-#         gwr.matplot(matrix(cs[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
-#         #title(main=paste("Coverage of 95% CI for ", v, sep=""))
-#         dev.off()
+        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".se_coverage.pdf", sep=""))
+        gwr.matplot(matrix(cs[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
+        #title(main=paste("Coverage of 95% CI for ", v, sep=""))
+        dev.off()
 # 
 #         pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".selection.pdf", sep=""))
 #         gwr.matplot(matrix(ss[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
@@ -297,6 +289,7 @@ for (setting in settings) {
 
 }
 
+#e.g. plot(x=seq(0,1,length.out=30), y=apply(matrix(coverage.ub.aggregate[[15]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', xlab="row", ylab="coverage")
 
 #    pdf(paste("figures/simulation/", cluster, ".profile_unshrunk_bootstrap_coverage.pdf", sep=""))
 #    vars = c("X1", "X2", "X3", "X4", "X5", "(Intercept)")
