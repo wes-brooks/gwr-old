@@ -107,8 +107,8 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
                 return(return(list(loss.local=Inf, resid=Inf)))
             }
     
-            beta.glm = glm.step$coeff[2:(m+1)]                    # mle except for intercept
-            adapt.weight = abs(beta.glm)                        # weights for adaptive lasso
+            beta.glm = glm.step$coeff[-1]                    # mle except for intercept
+            adapt.weight = abs(beta.glm)                     # weights for adaptive lasso
             for (k in 1:dim(x.centered)[2]) {
                 if (!is.na(adapt.weight[k])) {
                     xs[,k] = xs[,k] * adapt.weight[k]

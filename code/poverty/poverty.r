@@ -70,15 +70,10 @@ for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
     #Define which variables we'll use as predictors of poverty:
     predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
     f = as.formula(paste("logitindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
-<<<<<<< HEAD
-    bw[[as.character(year)]] = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode.select='AIC', method="dist", tol=0.001, precondition=FALSE, adapt=TRUE, verbose=FALSE, parallel=TRUE, interact=TRUE)
-    model[[as.character(year)]] = gwlars(formula=f, data=df, N=1, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw[[as.character(year)]], mode.select='AIC', s=NULL, method="dist", tol=0.001, precondition=FALSE, adapt=TRUE, verbose=FALSE, parallel=TRUE, interact=TRUE)
 
-=======
     bw[[as.character(year)]] = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode.select='AIC', method="knn", tol=0.001, precondition=FALSE, adapt=TRUE, verbose=FALSE, parallel=TRUE, interact=TRUE)
     model[[as.character(year)]] = gwlars(formula=f, data=df, N=1, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw[[as.character(year)]], mode.select='AIC', s=NULL, method="knn", tol=0.001, precondition=FALSE, adapt=TRUE, verbose=FALSE, parallel=TRUE, interact=TRUE)
-	
->>>>>>> 8ec5241d3342229cb9fd9c13493ddfc38ced2beb
+
     #f = as.formula(paste("pindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
     #bw.logistic[[as.character(year)]] = gwglmnet.sel(formula=f, data=df, family='binomial', coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode.select='AIC', method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
     #model.logistic[[as.character(year)]] = gwglmnet(formula=f, data=df, N=1, family='binomial', coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.logistic[[as.character(year)]], mode.select='AIC', s=NULL, method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)

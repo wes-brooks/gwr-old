@@ -69,7 +69,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
         sqrt.w <- diag(sqrt(w[permutation]))        
         yyy = sqrt.w %*% yy[permutation,]
         meany = mean(yyy)
-        yyy = yyy - meany   
+        yyy = yyy #- meany   
         #normy = sqrt(sum(yyy**2))
         #yyy = yyy / normy
      
@@ -100,14 +100,14 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 }
             }
             
-            lm.step = try(lm(yyy~xs-1))  # mle fit on standardized
+            lm.step = try(lm(yyy~xs)) #-1))  # mle fit on standardized
         
             if(class(lm.step) == "try-error") { 
                 cat(paste("Couldn't make a model for finding the SSR at location ", i, ", bandwidth ", bw, "\n", sep=""))
                 return(return(list(loss.local=Inf, resid=Inf)))
             }
             
-            beta.lm = lm.step$coeff                   # mle except for intercept
+            beta.lm = lm.step$coeff[-1]                   # mle except for intercept
             adapt.weight = abs(beta.lm)               # weights for adaptive lasso
             for (k in 1:dim(x.centered)[2]) {
                 if (!is.na(adapt.weight[k])) {
@@ -298,6 +298,6 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
     } else if (simulation) {
         return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, s=s.optimal, bw=bw, sigma2=s2, coef.unshrunk=coefs.unshrunk, s2.unshrunk=s2.unshrunk, coef.unshrunk.list=coef.unshrunk.list, se.unshrunk=se.unshrunk))
     } else {
-        return(list(model=model, loss=loss, coef=coefs, coef.unshrunk=coefs.unshrunk, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N))
+        return(list(model=model, loss=loss, coef=coefs, coef.unshrunk=coefs.unshrunk, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, meany=meany, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N, fitted=fitted))
     }
 }

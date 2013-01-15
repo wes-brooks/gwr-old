@@ -12,8 +12,7 @@ plot.gwselect = function(model, part='coef', var=NULL, type='fitted', locs=NULL,
         } else {
             #Generate the output at the given locs
             locs = unique(locs)   
-        }
-             
+        }             
 
         #Merge the polygons with the locs:
         mergedata = data.frame()

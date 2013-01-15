@@ -4,6 +4,8 @@ library(shapefiles, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 library(plotrix, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 library(fossil, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 library(ggplot2, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+library(RandomFields, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+library(scales, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 
 library(foreach, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 library(iterators, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
@@ -27,7 +29,6 @@ seeds = read.csv("seeds.csv")$x
 B = 100
 N = 30
 N.full = 30
-#coord = (-3:32)/29
 coord = seq(0, 1, length.out=N)
 
 #Establish the simulation parameters

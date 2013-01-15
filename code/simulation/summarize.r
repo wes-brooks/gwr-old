@@ -7,12 +7,8 @@ params = c('bw', 'sigma2', 'loss.local', 's')
 
 #args = commandArgs(trailingOnly=TRUE)
 #cluster = as.integer(args[1])
-<<<<<<< HEAD
 #cluster = 'NA'
-cluster=22
-=======
 cluster = 22
->>>>>>> 8ec5241d3342229cb9fd9c13493ddfc38ced2beb
 
 B = 100
 N = 30
@@ -28,12 +24,7 @@ params = data.frame(tau, rho, sigma.tau)
 
 N = 30
 B = list()
-<<<<<<< HEAD
-settings = 1:4
-=======
 settings = 1:18
->>>>>>> 8ec5241d3342229cb9fd9c13493ddfc38ced2beb
-b=25
 
 coord = seq(0, 1, length.out=N)
 B[['(Intercept)']] = rep(0, N**2)
@@ -72,16 +63,9 @@ for (setting in settings) {
 
     vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
 
-<<<<<<< HEAD
-    #nsims = ifelse(setting<36,100,99)
-    nsims = 100
-    for (k in 0:(nsims-1)) {
-        sim = (setting-1)*100 + k + 1
-=======
     nsims = 100
     for (k in 1:nsims) {
         sim = (setting-1)*100 + k
->>>>>>> 8ec5241d3342229cb9fd9c13493ddfc38ced2beb
 
         #Import our coefficient estimates
         filename = paste("output/output/CoefEstimates.", cluster, ".", sim, ".csv", sep="")
@@ -123,11 +107,7 @@ for (setting in settings) {
             CI.oracular.b = t(apply(oracularBootstraps, 1, function(x) {sort(x)[c(4, 98)]}))
             CI.oracular.se = cbind(estimates.oracular[,v]-1.96*estimates.se.oracular[,v], estimates.oracular[,v]+1.96*estimates.se.oracular[,v])
             
-<<<<<<< HEAD
-            if (k==0) {
-=======
             if (k==1) {
->>>>>>> 8ec5241d3342229cb9fd9c13493ddfc38ced2beb
                 coverage.bootstrap[[v]] = as.matrix(ifelse(B[[v]] < CI.b[,1] | B[[v]] > CI.b[,2],0,1))
             } else {
                 coverage.bootstrap[[v]] = cbind(coverage.bootstrap[[v]], as.matrix(ifelse(B[[v]] < CI.b[,1] | B[[v]] > CI.b[,2],0,1)))
