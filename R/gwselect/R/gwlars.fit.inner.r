@@ -29,8 +29,8 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             interacted[,2*(k-1)+1] = x[,k]*coords[,1]
             interacted[,2*k] = x[,k]*coords[,2]
         }
-        x = interacted
-        colnames(x) = newnames
+        x = cbind(x, interacted)
+        colnames(x) = c(oldnames, newnames)
     }
 
     if (mode.select=='CV') { 
@@ -251,10 +251,11 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             if (verbose) {print(coefs)}
     
             if (interact) {
-                locmat = t(as.matrix(loc))
-                cc = Matrix(0, nrow=(length(coefs)-1)/2, ncol=2)
-                cc[,1] = coefs[seq(2, length(coefs)-1, by=2)]
-                cc[,2] = coefs[seq(2, length(coefs)-1, by=2)+1]            
+                locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
+                cc = Matrix(0, nrow=(length(coefs)-1-length(oldnames))/2, ncol=3)
+                cc[,1] = coefs[seq(2, 1+length(oldnames))]
+                cc[,2] = coefs[seq(2+length(oldnames), length(coefs)-1, by=2)]
+                cc[,3] = coefs[seq(2+length(oldnames), length(coefs)-1, by=2)+1]            
                 ccc = cc %*% locmat
                 coefs = Matrix(c(coefs[1], as.vector(ccc)))
                 rownames(coefs) =  c("(Intercept)", oldnames)
@@ -264,10 +265,11 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             rownames(coefs.unshrunk) = c("(Intercept)", colnames(xx))
     
             if (interact) {
-                locmat = t(as.matrix(loc))
-                cc = Matrix(0, nrow=(length(coefs.unshrunk)-1)/2, ncol=2)
-                cc[,1] = coefs.unshrunk[seq(2, length(coefs.unshrunk)-1, by=2)]
-                cc[,2] = coefs.unshrunk[seq(2, length(coefs.unshrunk)-1, by=2)+1]            
+                locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
+                cc = Matrix(0, nrow=(length(coefs.unshrunk)-1-length(oldnames))/2, ncol=3)
+                cc[,1] = coefs.unshrunk[seq(2, 1+length(oldnames))]
+                cc[,2] = coefs.unshrunk[seq(2+length(oldnames), length(coefs.unshrunk)-1, by=2)]
+                cc[,3] = coefs.unshrunk[seq(2+length(oldnames), length(coefs.unshrunk)-1, by=2)+1]            
                 ccc = cc %*% locmat
                 coefs.unshrunk = Matrix(c(coefs.unshrunk[1], as.vector(ccc)))
                 rownames(coefs.unshrunk) =  c("(Intercept)", oldnames)
@@ -277,10 +279,11 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             rownames(se.unshrunk) = c("(Intercept)", colnames(xx))
             
             if (interact) {
-                locmat = t(as.matrix(loc**2))
-                cc = Matrix(0, nrow=(length(se.unshrunk)-1)/2, ncol=2)
-                cc[,1] = se.unshrunk[seq(2, length(se.unshrunk)-1, by=2)]**2
-                cc[,2] = se.unshrunk[seq(2, length(se.unshrunk)-1, by=2)+1]**2           
+                locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
+                cc = Matrix(0, nrow=(length(se.unshrunk)-1-length(oldnames))/2, ncol=3)
+                cc[,1] = se.unshrunk[seq(2, 1+length(oldnames))]**2
+                cc[,2] = se.unshrunk[seq(2+length(oldnames), length(se.unshrunk)-1, by=2)]**2
+                cc[,3] = se.unshrunk[seq(2+length(oldnames), length(se.unshrunk)-1, by=2)+1]**2           
                 ccc = sqrt(cc %*% locmat)
                 se.unshrunk = Matrix(c(se.unshrunk[1], as.vector(ccc)))
                 rownames(se.unshrunk) =  c("(Intercept)", oldnames)

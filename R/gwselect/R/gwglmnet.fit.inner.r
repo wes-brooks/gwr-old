@@ -32,8 +32,8 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
             interacted[,2*(k-1)+1] = x[,k]*coords[,1]
             interacted[,2*k] = x[,k]*coords[,2]
         }
-        x = interacted
-        colnames(x) = newnames
+        x = cbind(x, interacted)
+        colnames(x) = c(oldnames, newnames)
     }
 
     
@@ -142,25 +142,36 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
                 predx = t(apply(xx, 1, function(X) {(X-meanx) * adapt.weight / normx}))
                 vars = apply(predict(model, type='coef'), 2, function(x) {which(abs(x)>0)})
                 df2 = sapply(vars, length)
-                            
+
                 if (sum(w[permutation]) > ncol(x)+1) {                    
                     coefs = t(as.matrix(coef(model)))
                     fitted = predict(model, newx=predx, type='response')
-                    #s2 = sum((w*(fitted[,nsteps] - as.matrix(yy)))[permutation]**2) / sum(w[permutation])
-                    #s2 = sum(lsfit(y=yfit, x=xfit)$residuals**2) / (sum(w[permutation]) - nsteps - 1)
-                    loss = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy)**2/(z*(1-z)))[permutation])}) + 2*df2/sum(w[permutation]))                                   
+                    loss = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy)**2/(z*(1-z)))[permutation])}) + 2*df2/sum(w[permutation]))
+                    s.optimal = which.min(loss)
                     
+                    if (k > 1) {
+                        varset = vars[[k]]
+                        modeldata = data.frame(y=yy[permutation], xx[permutation,varset])
+                        m = glm(y~., data=modeldata, weights=w, family=family)
+                        coefs.unshrunk = rep(0, ncol(x) + 1)
+                        coefs.unshrunk[c(1, varset + 1)] = coef(m)
+                        s2.unshrunk = sum(m$residuals**2)/sum(w[permutation])
+    
+                        se.unshrunk = rep(0, ncol(x) + 1)
+                        se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']
+                    }
+
                     if (length(colocated)>0) {
                         loss.local = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy)**2 / (z*(1-z)))[colocated])}) + 2*df2/sum(w[permutation]))
                     } else {
                         loss.local = rep(NA, length(loss))
                     }                    
+                    loss.local = loss.local[s.optimal]
                 } else {
                     s2 = 0
                     loss = Inf
                     loss.local = c(Inf)   
-                }
-    
+                }    
             }
     
         } else if (family=='poisson') {
@@ -172,8 +183,7 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
         }
 
         #Get the tuning parameter to minimize the loss:
-        s.optimal = which.min(loss)
-        loss.local = loss.local[s.optimal]
+        
 
         #Get the coefficients:
         coefs = coefs[s.optimal,] #predict(model, type='coefficients', s=s.optimal, mode='step')[['coefficients']]
@@ -184,15 +194,15 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
         coefs[1] = coefs[1] - sum(coefs[2:length(coefs)] * meanx)
 
         if (interact) {
-            locmat = t(as.matrix(loc))
-            cc = Matrix(0, nrow=(length(coefs)-1)/2, ncol=2)
-            cc[,1] = coefs[seq(2, length(coefs)-1, by=2)]
-            cc[,2] = coefs[seq(2, length(coefs)-1, by=2)+1]            
+            locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
+            cc = Matrix(0, nrow=(length(coefs)-1-length(oldnames))/2, ncol=3)
+            cc[,1] = coefs[seq(2, 1+length(oldnames))]
+            cc[,2] = coefs[seq(2+length(oldnames), length(coefs)-1, by=2)]
+            cc[,3] = coefs[seq(2+length(oldnames), length(coefs)-1, by=2)+1]            
             ccc = cc %*% locmat
             coefs = Matrix(c(coefs[1], as.vector(ccc)))
             rownames(coefs) =  c("(Intercept)", oldnames)
-        }   
-
+        }     
 
         if (verbose) {print(coefs)}
         coef.list[[i]] = coefs

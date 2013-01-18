@@ -39,13 +39,14 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, o
             interacted[,2*(k-1)+1] = x[,k]*coords[,1]
             interacted[,2*k] = x[,k]*coords[,2]
         }
-        x = interacted
-        colnames(x) = newnames
+        x = cbind(x, interacted)
+        colnames(x) = c(oldnames, newnames)
         
         wo = vector()
         for (l in 1:length(which.oracle)) {
-            wo = c(wo, 2*(which.oracle-1) + 1)
-            wo = c(wo, 2*which.oracle)
+            wo = c(wo, which.oracle[l])
+            wo = c(wo, length(oldnames) + 2*(which.oracle[l]-1) + 1)
+            wo = c(wo, length(oldnames) + 2*which.oracle[l])
         }
         which.oracle = wo
         oracle = colnames(x)[which.oracle]
@@ -93,15 +94,15 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, o
         rownames(coefs) = c("(Intercept)", colnames(x))
 
         if (interact) {
-            locmat = t(as.matrix(loc))
-            cc = Matrix(0, nrow=(length(coefs)-1)/2, ncol=2)
-            cc[,1] = coefs[seq(2, length(coefs)-1, by=2)]
-            cc[,2] = coefs[seq(2, length(coefs)-1, by=2)+1]         
+            locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
+            cc = Matrix(0, nrow=(length(coefs)-1-length(oldnames))/2, ncol=3)
+            cc[,1] = coefs[seq(2, 1+length(oldnames))]
+            cc[,2] = coefs[seq(2+length(oldnames), length(coefs)-1, by=2)]
+            cc[,3] = coefs[seq(2+length(oldnames), length(coefs)-1, by=2)+1]            
             ccc = cc %*% locmat
-            coefs = Matrix(c(coefs[1], as.vector(ccc)), ncol=1)
+            coefs = Matrix(c(coefs[1], as.vector(ccc)))
             rownames(coefs) =  c("(Intercept)", oldnames)
-        }
-
+        }   
 
         coef.list[[i]] = coefs
         if (verbose) {print(coefs)}
@@ -115,16 +116,17 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, o
             se.coef = Matrix(se.coef, ncol=1)
             rownames(se.coef) = c("(Intercept)", colnames(x))
             
+
             if (interact) {
-                locmat = t(as.matrix(loc**2))
-                cc = Matrix(0, nrow=(length(se.coef)-1)/2, ncol=2)
-                cc[,1] = se.coef[seq(2, length(se.coef)-1, by=2)]**2
-                cc[,2] = se.coef[seq(2, length(se.coef)-1, by=2)+1]**2           
+                locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
+                cc = Matrix(0, nrow=(length(se.coef)-1-length(oldnames))/2, ncol=3)
+                cc[,1] = se.coef[seq(2, 1+length(oldnames))]**2
+                cc[,2] = se.coef[seq(2+length(oldnames), length(se.coef)-1, by=2)]**2
+                cc[,3] = se.coef[seq(2+length(oldnames), length(se.coef)-1, by=2)+1]**2           
                 ccc = sqrt(cc %*% locmat)
-                se.coef = Matrix(c(se.coef[1], as.vector(ccc)), ncol=1)
+                se.coef = Matrix(c(se.coef[1], as.vector(ccc)))
                 rownames(se.coef) =  c("(Intercept)", oldnames)
-            } 
-            
+            }  
     
             #Find the local loss (for tuning bw)
             if (mode.select=='CV') {
