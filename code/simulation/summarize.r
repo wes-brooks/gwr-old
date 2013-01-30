@@ -3,12 +3,12 @@ library(plotrix)
 vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
 params = c('bw', 'sigma2', 'loss.local', 's')
 
-#source('code/matplot.r')
+source('code/matplot.r')
 
 #args = commandArgs(trailingOnly=TRUE)
 #cluster = as.integer(args[1])
 #cluster = 'NA'
-cluster = 22
+cluster = 28
 
 B = 100
 N = 30
