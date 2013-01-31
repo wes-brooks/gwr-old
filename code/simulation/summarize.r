@@ -24,7 +24,7 @@ params = data.frame(tau, rho, sigma.tau)
 
 N = 30
 B = list()
-settings = 1:18
+settings = 1:5
 
 coord = seq(0, 1, length.out=N)
 B[['(Intercept)']] = rep(0, N**2)
@@ -130,7 +130,7 @@ for (setting in settings) {
             if (k==1) {
                 coverage.oracular.bootstrap[[v]] = as.matrix(ifelse(B[[v]] < CI.oracular.b[,1] | B[[v]] > CI.oracular.b[,2],0,1))
             } else {
-                coverage.bootstrap[[v]] = cbind(coverage.oracular.bootstrap[[v]], as.matrix(ifelse(B[[v]] < CI.oracular.b[,1] | B[[v]] > CI.oracular.b[,2],0,1)))
+                coverage.oracular.bootstrap[[v]] = cbind(coverage.oracular.bootstrap[[v]], as.matrix(ifelse(B[[v]] < CI.oracular.b[,1] | B[[v]] > CI.oracular.b[,2],0,1)))
             }
     
             if (k==1) {
@@ -189,15 +189,15 @@ for (setting in settings) {
 #        #title(main=paste("Coverage of 95% CI for ", v, sep=""))
 #        dev.off()
         
-         pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".bootstrap_coverage.pdf", sep=""))
-         gwr.matplot(matrix(cb[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
-         #title(main=paste("Coverage of 95% CI for ", v, sep=""))
-         dev.off()
+#         pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".bootstrap_coverage.pdf", sep=""))
+#         gwr.matplot(matrix(cb[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
+#         #title(main=paste("Coverage of 95% CI for ", v, sep=""))
+#         dev.off()
 #     
-        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".se_coverage.pdf", sep=""))
-        gwr.matplot(matrix(cs[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
-        #title(main=paste("Coverage of 95% CI for ", v, sep=""))
-        dev.off()
+#        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".se_coverage.pdf", sep=""))
+#        gwr.matplot(matrix(cs[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
+#        #title(main=paste("Coverage of 95% CI for ", v, sep=""))
+#        dev.off()
 # 
 #         pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".selection.pdf", sep=""))
 #         gwr.matplot(matrix(ss[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
@@ -289,7 +289,23 @@ for (setting in settings) {
 
 }
 
-#e.g. plot(x=seq(0,1,length.out=30), y=apply(matrix(coverage.ub.aggregate[[15]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', xlab="row", ylab="coverage")
+for (i in settings) {
+    #pdf(paste("figures/simulation/28-", i, "-profile-coverage.pdf", sep=''))
+    dev.new()
+    plot(x=seq(0,1,length.out=30), y=apply(matrix(coverage.b.aggregate[[i]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=1, xlab="Y-location", ylab="coverage")
+    par(new=TRUE)
+    plot(x=seq(0,1,length.out=30), y=apply(matrix(coverage.ub.aggregate[[i]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=2, ann=F, xaxt='n', yaxt='n')
+    par(new=TRUE)
+    plot(x=seq(0,1,length.out=30), y=apply(matrix(coverage.se.aggregate[[i]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=3, ann=F, xaxt='n', yaxt='n')
+    par(new=TRUE)
+    plot(x=seq(0,1,length.out=30), y=apply(matrix(coverage.oracular.b.aggregate[[i]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=4, ann=F, xaxt='n', yaxt='n')
+    par(new=TRUE)
+    plot(x=seq(0,1,length.out=30), y=apply(matrix(coverage.oracular.se.aggregate[[i]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=5, ann=F, xaxt='n', yaxt='n')
+    legend(legend=c("LASSO/bootstrap", "LASSO/unshrunk bootstrap", "LASSO/SE", "Oracular/bootstrap", "Oracular/SE"), lty=1:5, x="bottomright", bty='n')
+    abline(h=0.95, lty=3, col='red')
+    title(paste("Simulation setting ", i, sep=""))
+    #dev.off()
+}
 
 #    pdf(paste("figures/simulation/", cluster, ".profile_unshrunk_bootstrap_coverage.pdf", sep=""))
 #    vars = c("X1", "X2", "X3", "X4", "X5", "(Intercept)")

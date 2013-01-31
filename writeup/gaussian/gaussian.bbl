@@ -31,20 +31,38 @@ Fotheringham, A., C.~Brunsdon, and M.~Charlton (2002).
   varying relationships}.
 \newblock Wiley.
 
+\bibitem[\protect\citeauthoryear{Hastie and Loader}{Hastie and
+  Loader}{1993}]{Hastie:1993b}
+Hastie, T. and C.~Loader (1993).
+\newblock Local regression: automatic kernel carpentry.
+\newblock {\em Statistical Science\/}~{\em 8\/}(2), 120--143.
+
 \bibitem[\protect\citeauthoryear{Hastie and Tibshirani}{Hastie and
-  Tibshirani}{1993}]{Hastie:1993}
+  Tibshirani}{1993}]{Hastie:1993a}
 Hastie, T. and R.~Tibshirani (1993).
 \newblock Varying-coefficient models.
 \newblock {\em Journal of the Royal Statistical Society. Series B
   (Methodological)\/}~{\em 55\/}(4), pp. 757--796.
 
+\bibitem[\protect\citeauthoryear{Loader}{Loader}{1999}]{Loader:1999}
+Loader, C. (1999).
+\newblock {\em Local regression and likelihood}.
+\newblock Springer New York.
+
 \bibitem[\protect\citeauthoryear{Wang, Li, and Huang}{Wang
-  et~al.}{2008}]{Wang:2008}
+  et~al.}{2008}]{Wang:2008a}
 Wang, L., H.~Li, and J.~Z. Huang (2008).
 \newblock Variable selection in nonparametric varying-coefficient models for
   analysis of repeated measurements.
 \newblock {\em Journal of the American Statistical Association\/}~{\em
   103\/}(484), 1556--1569.
+
+\bibitem[\protect\citeauthoryear{Wang, Mei, and Yan}{Wang
+  et~al.}{2008}]{Wang:2008b}
+Wang, N., C.-L. Mei, and X.-D. Yan (2008).
+\newblock Local linear estimation of spatially varying coefficient models: an
+  improvement on the geographically weighted regression technique.
+\newblock {\em Environment and Planning A\/}~{\em 40}, 986--1005.
 
 \bibitem[\protect\citeauthoryear{Wheeler}{Wheeler}{2009}]{Wheeler:2009}
 Wheeler, D.~C. (2009).
