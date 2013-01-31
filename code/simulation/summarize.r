@@ -24,7 +24,7 @@ params = data.frame(tau, rho, sigma.tau)
 
 N = 30
 B = list()
-settings = 1:5
+settings = 1:18
 
 coord = seq(0, 1, length.out=N)
 B[['(Intercept)']] = rep(0, N**2)
@@ -61,9 +61,10 @@ for (setting in settings) {
     coverage.oracular.bootstrap = list()
     coverage.oracular.se = list()
 
-    vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
+    #vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
+    vars = c("X1")
 
-    nsims = 100
+    nsims = ifelse(setting==18,99,100)
     for (k in 1:nsims) {
         sim = (setting-1)*100 + k
 
@@ -290,8 +291,8 @@ for (setting in settings) {
 }
 
 for (i in settings) {
-    #pdf(paste("figures/simulation/28-", i, "-profile-coverage.pdf", sep=''))
-    dev.new()
+    pdf(paste("figures/simulation/28-", i, "-profile-coverage.pdf", sep=''))
+    #dev.new()
     plot(x=seq(0,1,length.out=30), y=apply(matrix(coverage.b.aggregate[[i]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=1, xlab="Y-location", ylab="coverage")
     par(new=TRUE)
     plot(x=seq(0,1,length.out=30), y=apply(matrix(coverage.ub.aggregate[[i]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=2, ann=F, xaxt='n', yaxt='n')
@@ -303,6 +304,24 @@ for (i in settings) {
     plot(x=seq(0,1,length.out=30), y=apply(matrix(coverage.oracular.se.aggregate[[i]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=5, ann=F, xaxt='n', yaxt='n')
     legend(legend=c("LASSO/bootstrap", "LASSO/unshrunk bootstrap", "LASSO/SE", "Oracular/bootstrap", "Oracular/SE"), lty=1:5, x="bottomright", bty='n')
     abline(h=0.95, lty=3, col='red')
+    title(paste("Simulation setting ", i, sep=""))
+    dev.off()
+}
+
+for (i in settings) {
+    #pdf(paste("figures/simulation/28-", i, "-profile-selection.pdf", sep=''))
+    dev.new()
+    plot(x=seq(0,1,length.out=30), y=apply(matrix(selection.aggregate[[i]][['X1']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=1, xlab="Y-location", ylab="selection frequency")
+    par(new=TRUE)
+    plot(x=seq(0,1,length.out=30), y=apply(matrix(selection.aggregate[[i]][['X2']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=2, ann=F, xaxt='n', yaxt='n')
+    par(new=TRUE)
+    plot(x=seq(0,1,length.out=30), y=apply(matrix(selection.aggregate[[i]][['X3']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=3, ann=F, xaxt='n', yaxt='n')
+    par(new=TRUE)
+    plot(x=seq(0,1,length.out=30), y=apply(matrix(selection.aggregate[[i]][['X4']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=4, ann=F, xaxt='n', yaxt='n')
+    par(new=TRUE)
+    plot(x=seq(0,1,length.out=30), y=apply(matrix(selection.aggregate[[i]][['X5']],ncol=30,nrow=30), 1, mean), type='l', xlim=c(0,1), ylim=c(0,1), bty='n', lty=5, ann=F, xaxt='n', yaxt='n')
+    legend(legend=c("X1", "X2", "LASSO/SE", "X3", "X4"), lty=1:5, x="topleft", bty='n')
+    #abline(h=0.95, lty=3, col='red')
     title(paste("Simulation setting ", i, sep=""))
     #dev.off()
 }

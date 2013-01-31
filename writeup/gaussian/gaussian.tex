@@ -20,7 +20,8 @@
 \usepackage{verbatim}
 
 \usepackage{relsize}
-\usepackage{subfigure}
+\usepackage{caption}
+\usepackage{subcaption}
 %\usepackage{fullpage}
 \usepackage{booktabs}
 
@@ -51,9 +52,9 @@
 	
 	GWR can be thought of as a kernel smoother for regression coefficients, and hence GWR coefficient estimates are likely to exhibit bias near the boundary of the region being modeled \citep{Hastie:1993b}. Modeling the coefficient surface as locally linear rather than locally constant (by including coefficient-by-geographic-location interactions) can reduce this boundary-effect bias \citep{Hastie:1993b}. Adding these interactions to the GWR model is analogous to a transition from kernel smoothing to local regression, and was introduced in \cite{Wang:2008b}.\\
 	
-	Some recent research has focused on variable selection in varying-coefficients models. In the context of varying-coefficients regression models, global variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero everywhere against the hypothesis that the coefficient is nonzero somewhere) is distinguished from local variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero at a given location against the hypothesis that the coefficient at that location is nonzero). Global variable selection for models where the varying coefficients are estimated using splines is addressed in \cite{Fan:1999} for response variables that belong to an exponential-family distribution (as in the generalized linear model), and in \cite{Wang:2008a} for models with repeated measurements. \cite{Antoniadis:2011} estimates the coefficient functions with P-splines, and then uses the nonnegative garrote of \cite{Breiman:1995} to do local variable selection by selecting P-spline bases.\\
+	Some recent research has focused on variable selection in varying-coefficients models. In the context of varying-coefficients regression models, global variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero everywhere against the hypothesis that the coefficient is nonzero somewhere) is distinguished from local variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero at a given location against the hypothesis that the coefficient at that location is nonzero). Global variable selection for models where the varying coefficients are estimated using splines is addressed in \cite{Fan:1999} for response variables that belong to an exponential-family distribution (as in the generalized linear model), and in \cite{Wang:2008a} for models with repeated measurements. \cite{Antoniadis:2012a} estimates the coefficient functions with P-splines, and then uses the nonnegative garrote of \cite{Breiman:1995} to do local variable selection by selecting P-spline bases.\\
 	
-	The geographically-weighted LASSO of \cite{Wheeler:2009} is used for local variable selection in GWR models. The method of \cite{Wheeler} tunes the \\
+	The geographically-weighted LASSO of \cite{Wheeler:2009} is used for local variable selection in GWR models. \\
 
 	
 \section{Geographically-weighted regression models \label{section:GWR}}
@@ -78,24 +79,28 @@
 		\epsilon_i \sim \mathcal{N} \left( 0,\sigma_i^2 \right)
 	\end{eqnarray}
 	
-	Assume that, given the covariates $\bm{X}$, observations of the output at different locations are statistically independent of each other. Then the log-likelihood of the observed data is the sum of the log-likelihood of each individual observation.
+	Assume that, given the covariates $\bm{X}$, observations of the output at different locations are statistically independent of each other. Then the total log-likelihood of the observed data is the sum of the log-likelihood of each individual observation.
 	 \begin{eqnarray}
 	 	\ell\left( \bm{\beta} \right) = - \frac{1}{2} \sum_{i=1}^n \left[  \log \left( 2 \pi \sigma^2_i\right) +  \sigma^{-2}_i  \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2  \right]
 	\end{eqnarray}
 	
-	With $n$ observations and $n \times (p+1)$ free parameters, the model is overdetermined. To effectively reduce the number of parameters, assume that the spatially-varying coefficients $\bm{\beta}(s)$ are \emph{smoothly} varying, and use a kernel smoother to make pointwise estimates of the coefficients. In the setting of spatial data and with a kernel smoother based on the physical distance between observation locations, this method is called geographically-weighted regression (GWR).
+	With $n$ observations and $n \times (p+1)$ free parameters, the model is overdetermined so it is not possible to directly maximize the total likelihood. To effectively reduce the number of parameters, assume that the spatially-varying coefficients $\bm{\beta}(s)$ are \emph{smoothly} varying, and use a kernel smoother to make pointwise estimates of the coefficients by maximizing the local likelihood. In the setting of spatial data and with the kernel smoother based on the physical distance between observation locations, this method is called geographically-weighted regression (GWR).
 		
 	\subsection{Geographically-weighted regression}
-	Geographically-weighted regression estimates the value of the coefficient surface $\bm{\beta}(s)$ at each location $s_i$. Assume for now that there are known weights $w_{ii'}$ based on the distance $\|s_i  -s_{i'}\|$ between locations $s_i$ and $s_{i'}$ for all $i, i' \in \left\{1, \dots, n\right\}$.
+	Geographically-weighted regression estimates the value of the coefficient surface $\bm{\beta}(s)$ at each location $s_i$. Assume for now that there are known weights $w_{ii'}$ based on the distance $\|s_i  -s_{i'}\|$ between locations $s_i$ and $s_{i'}$ for all $i, i'$.
 	
-	Coefficient estimation is done by maximizing the local (log-)likelihood at each location \citep{Fotheringham:2002}.	
+	Coefficient estimation is done by maximizing the local likelihood at each location \citep{Fotheringham:2002}.	
 	\begin{eqnarray}
-		\ell_i\left(\bm{\beta}_i\right) &=& - \frac{1}{2} \sum_{i'=1}^n \left\{ \log{\left(2 \pi\right)}  + \log{\left(\sigma^2_i w^{-1}_{ii'} \right)}  +  w_{ii'} \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}
+		L_i\left(\bm{\beta}_i\right) &=& \prod_{i'=1}^n \left\{ \left(2 \pi \sigma^2_i  \right)^{-\frac{1}{2}}  \exp\left(-\frac{1}{2} \sigma^{-2}_i  \left[y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right]^2 \right) \right\} ^ {w_{ii'}}
+	\end{eqnarray}
+			
+	\begin{eqnarray}
+		\ell_i\left(\bm{\beta}_i\right) &\propto& - \frac{1}{2} \sum_{i'=1}^n w_{ii'} \left\{ \log{\sigma^2_i}  + \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}
 	\end{eqnarray}
 	
 	The first and second derivatives of the local log-likelihood are
 	\begin{eqnarray}
-		\frac{\partial \ell_i}{\partial \bm{\beta}_i} =   \sum_{i'=1}^n \left[ x_{i'j} w_{ii'} \sigma^{-2}_i \left( y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right) \right] \\
+		\left\{\frac{\partial \ell_i}{\partial \bm{\beta}_i} \right\}_j =   \sum_{i'=1}^n \left\{ x_{i'j} w_{ii'} \sigma^{-2}_i \left( y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right) \right\} \\
 		\left\{\frac{\partial^2 \ell_i}{\partial \bm{\beta}_i \partial \bm{\beta}'_i} \right\}_{j,k} = -\sum_{i'=1}^n \left\{ x_{i'j} x_{i'k} w_{ii'} \sigma^{-2}_i \right\}
 	\end{eqnarray}
 	
@@ -106,7 +111,7 @@
 		&=& \sigma^{-2}_i \sum_{i'=1}^n w_{ii'} \bm{x}_{i'} \bm{x}'_{i'}
 	\end{eqnarray}	
 	
-	The form of the observed Fisher information suggests that the information in the data $\bm{x}_{i'}$ about the coefficients at location $s_i$ is proportional to the weight $w_{ii'}$
+	The form of the observed Fisher information suggests that the information in the data $\bm{x}_{i'}$ about the coefficients at location $s_i$ is proportional to the weight $w_{ii'}$.
 	
 	At each location $s_i$, the ordinary geographically-weighted regression estimator minimizes the objective function:
 	\begin{eqnarray}
@@ -127,7 +132,7 @@
 	 \subsection{Smoothing kernel}
 	 	The bisquare kernel function is used to generate geographic weights based on the distance between observation locations. For estimating the value of the coefficient surface at location $s_i$, the weight given to the observation at location $s_{i'}$ is	
 	\begin{eqnarray}
-		w_{ii'} = \begin{cases} \left[ 1-\left( \bw^{-1} \|s_i-s_{i'}\| \right)^2 \right]^2 & \mbox{ if } \|s_i-s_{i'}\| < \bw \\ 0 & \mbox{ if } \|s_i-s_{i'}\| \geq \bw \end{cases}
+		w_{ii'} = \begin{cases} \left( 1-\left[ \bw^{-1} \|s_i-s_{i'}\| \right]^2 \right)^2 & \mbox{ if } \|s_i-s_{i'}\| < \bw \\ 0 & \mbox{ if } \|s_i-s_{i'}\| \geq \bw \end{cases}
 	\end{eqnarray}
 	
 	where $\bw$ is the kernel bandwidth.\\
@@ -135,7 +140,7 @@
 \section{Model selection and shrinkage \label{section:method}}
 	In traditional GWR, the model coefficients are calculated by weighted least squares, so model selection must be done \emph{a priori}. In some settings, the Adaptive LASSO \citep{Zou:2006} has the ``oracle" property of asymptotically selecting exactly the correct variables for inclusion in a regression model.\\
 
-	Applying the Adaptive LASSO in the setting of a GWR model requires that a tuning parameter be selected at each location where the coefficients are to be estimated. In \cite{Wheeler:2009}, the tuning parameter for the LASSO at location $s_i$ is selected to minimize the absolute jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$, which means that the coefficients can only be estimated at the locations where data has been observed. On the other hand, using the local AIC to select the tuning parameter allows coefficients to be estimated at any location where the local likelihood can be calculated. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$ playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.\\
+	Applying the Adaptive LASSO in the setting of a GWR model requires that a tuning parameter be selected at each location where the coefficients are to be estimated. \cite{Wheeler:2009} proposed selecting the tuning parameter for the LASSO at location $s_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$, which means that the coefficients can only be estimated at the locations where data has been observed. On the other hand, using the local AIC to select the tuning parameter allows coefficients to be estimated at any location where the local likelihood can be calculated. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$ playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.\\
 
 	\subsection{Tuning parameter selection}
 	The objective minimized by the geographically-weighted lasso (GWL) is:	
@@ -143,7 +148,7 @@
 		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \sum_{j=1}^p \lambda_{ij} \beta_{ij}
 	\end{eqnarray}
 	
-	Where $\lambda_{ij}, j \in \{1, \dots, p\}$ are penalties from the Adaptive LASSO \citep{Zou:2006}. Taking the derivatives with respect to $\beta$ and setting to zero, we see that
+	Where $\lambda_{ij}, j =1, \dots, p$ are penalties from the Adaptive LASSO \citep{Zou:2006}. Taking the derivatives with respect to $\beta$ and setting to zero, we see that
 	\begin{eqnarray}
 		\hat{\bm{\beta}}_{i, \mbox{GWL}} &=& \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i\\
 		\hat{y}_i = \bm{x}_i \hat{\bm{\beta}}_{i, \mbox{GWL}} &=&  \bm{x}_i \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \bm{x}_i \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i
@@ -153,10 +158,15 @@
 	\begin{eqnarray}
 		\mbox{AIC}_{\mbox{loc}} = \sum_{i'=1}^n w_{ii'} \hat{\sigma}_i^{-2} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + 2 \mbox{df}_i
 	\end{eqnarray}	
-	Where the estimated local variance $\hat{\sigma}_i^2$ is the variance estimate from the unpenalized local model (i.e. the ordinary GWR model) \citep{Zou:2007}.\\
+	Where the estimated local variance $\hat{\sigma}_i^2$ is the variance estimate from the unpenalized local model \citep{Zou:2007}. The Maximum-Likelihood Estimate (MLE) of $\sigma_i^2$ is found by differentiating the local likelihood with respect to $\sigma_i^2$:\\
+	
+	\begin{eqnarray}
+		\frac{\partial \ell_i}{\partial \sigma_i^2} \bigg|_{\hat{\beta}_i} &=& -\frac{1}{2} \sum_{i'=1}^n w_{ii'} \left\{ \left(\sigma_i^{2}\right)^{-1} - \left(\sigma_i^{2}\right)^{-2} \left( y_i - \bm{x}_i'\bm{\hat{\beta}}_i \right)^2 \right\} \\
+		\hat{\sigma}_i^2 &=& \left(\sum_{i'=1}^n w_{ii'}\right)^{-1} \sum_{i'=1}^n \left(y_i - \bm{x}_i'\bm{\beta}_i\right)
+	\end{eqnarray}
 	 
 	\subsection{Bandwidth selection}
-	The bandwidth is selected to minimize the total AIC ($\mbox{AIC}_{\mbox{tot}}$). Because of the kernel weights and the application of the lasso, the sample size and degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:		
+	The bandwidth is selected to minimize the total AIC ($\mbox{AIC}_{\mbox{tot}}$). Because of the kernel weights and the application of the Adaptive LASSO, the sample size and degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:		
 	\begin{eqnarray}
 		\mbox{AIC}_{\mbox{tot}} = \sum_{i=1}^n \left\{ \hat{\sigma}_i^{-2} \left( y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \log \hat{\sigma}_i^2 + 2 \mbox{df}_i \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \right\}
 	\end{eqnarray}
@@ -229,41 +239,338 @@
 	
 	\subsection{Figures}
 	\begin{figure}
-		\begin{center}
-			\includegraphics[height=3.5in]{../../figures/simulation/28-1-profile-coverage.pdf}
-			\caption{Profile coverage of bootstrap-based 95\% CI for GW-LASSO and oracular GWR estimates of $\beta_1$.\label{fig:simulation-1-coverage}}
-		\end{center}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
+			%\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
 	\end{figure}
-
+	
+	
 	\begin{figure}
-		\begin{center}
-			\includegraphics[height=3.5in]{../../figures/simulation/28-2-profile-coverage.pdf}
-			\caption{Profile coverage of bootstrap-based 95\% CI for GW-LASSO and oracular GWR estimates of $\beta_1$.\label{fig:simulation-2-coverage}}
-		\end{center}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-4-profile-coverage.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-5-profile-coverage.pdf}
+			%\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-6-profile-coverage.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
 	\end{figure}
+	
 	
 	\begin{figure}
-		\begin{center}
-			\includegraphics[height=3.5in]{../../figures/simulation/28-3-profile-coverage.pdf}
-			\caption{Profile coverage of bootstrap-based 95\% CI for GW-LASSO and oracular GWR estimates of $\beta_1$.\label{fig:simulation-3-coverage}}
-		\end{center}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-7-profile-coverage.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-8-profile-coverage.pdf}
+			\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-9-profile-coverage.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
 	\end{figure}
+	\begin{figure}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-10-profile-coverage.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-11-profile-coverage.pdf}
+			%\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-12-profile-coverage.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
+	\end{figure}
+	
 	
 	\begin{figure}
-		\begin{center}
-			\includegraphics[height=3.5in]{../../figures/simulation/28-4-profile-coverage.pdf}
-			\caption{Profile coverage of bootstrap-based 95\% CI for GW-LASSO and oracular GWR estimates of $\beta_1$.\label{fig:simulation-4-coverage}}
-		\end{center}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-13-profile-coverage.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-14-profile-coverage.pdf}
+			%\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-15-profile-coverage.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
 	\end{figure}
+	
 	
 	\begin{figure}
-		\begin{center}
-			\includegraphics[height=3.5in]{../../figures/simulation/28-5-profile-coverage.pdf}
-			\caption{Profile coverage of bootstrap-based 95\% CI for GW-LASSO and oracular GWR estimates of $\beta_1$.\label{fig:simulation-5-coverage}}
-		\end{center}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-16-profile-coverage.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-17-profile-coverage.pdf}
+			%\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-18-profile-coverage.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
+	\end{figure}	
+	
+	
+	
+	
+	
+	\begin{figure}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-selection.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-selection.pdf}
+			%\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-selection.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
 	\end{figure}
 	
 	
+	\begin{figure}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-4-profile-selection.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-5-profile-selection.pdf}
+			%\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-6-profile-selection.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
+	\end{figure}
+	
+	
+	\begin{figure}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-7-profile-selection.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-8-profile-selection.pdf}
+			\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-9-profile-selection.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-10-profile-selection.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-11-profile-selection.pdf}
+			%\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-12-profile-selection.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
+	\end{figure}
+	
+	
+	\begin{figure}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-13-profile-selection.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-14-profile-selection.pdf}
+			%\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-15-profile-selection.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
+	\end{figure}
+	
+	
+	\begin{figure}
+		\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-16-profile-selection.pdf}
+			%\caption{A gull}
+			\label{fig:gull}
+		\end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-17-profile-selection.pdf}
+			%\caption{A tiger}
+			\label{fig:tiger}
+		\end{subfigure}
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+		\begin{subfigure}[b]{0.3\textwidth}
+			\centering
+			\includegraphics[width=\textwidth]{../../figures/simulation/28-18-profile-selection.pdf}
+			%\caption{A mouse}
+			\label{fig:mouse}
+		\end{subfigure}
+		%\caption{Pictures of animals}\label{fig:animals}
+	\end{figure}	
 		
 \section{Data analysis}
 	\subsection{Census poverty data}
