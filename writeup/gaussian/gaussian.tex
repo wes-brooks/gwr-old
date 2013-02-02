@@ -9,7 +9,7 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
-
+\usepackage{mathabx}
 \usepackage{bm}
 
 %\geometry{landscape}                % Activate for for rotated page geometry
@@ -34,7 +34,7 @@
 \newcommand{\E}{\mathop{\mathbb E}}
 
 
-\title{GW-SELECT}
+\title{Meet this GAL: Geographically weighted regression with the Adaptive LASSO}
 \author{Wesley Brooks}
 \date{}                                           % Activate to display a given date or no date
 
@@ -138,11 +138,27 @@
 	where $\bw$ is the kernel bandwidth.\\
 	
 \section{Model selection and shrinkage \label{section:method}}
-	In traditional GWR, the model coefficients are calculated by weighted least squares, so model selection must be done \emph{a priori}. In some settings, the Adaptive LASSO \citep{Zou:2006} has the ``oracle" property of asymptotically selecting exactly the correct variables for inclusion in a regression model.\\
-
-	Applying the Adaptive LASSO in the setting of a GWR model requires that a tuning parameter be selected at each location where the coefficients are to be estimated. \cite{Wheeler:2009} proposed selecting the tuning parameter for the LASSO at location $s_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$, which means that the coefficients can only be estimated at the locations where data has been observed. On the other hand, using the local AIC to select the tuning parameter allows coefficients to be estimated at any location where the local likelihood can be calculated. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$ playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.\\
+	Traditional GWR relies on \emph{a priori} model selection to decide which variables should be included in the model. In the context of ordinary least squares regression, regularization methods such as the Adaptive LASSO \citep{Zou:2006} have been shown to have appealing properties for automating variable selection, sometimes including the ``oracle" property of asymptotically selecting exactly the correct variables for inclusion in a regression model.\\
+	
+	The Adaptive LASSO is applied to GWR by first multiplying the design matrix $\bm{X}$ by $\bm{W}_i$, the diagonal matrix of geographic weights centered at $s_i$. Since some of the weights $w_{ii'}$ may be zero, the matrix $\bm{W}_i\bm{X}$ is not of full rank. The matrices $\bm{Y}_i^*$, $\bm{X}_i^*$, and $\bm{W}_i^*$ are formed by dropping the rows of $\bm{X}$  and $\bm{W}_i$ that correspond to observations with zero weight in the regression model at location $s_i$. Now, letting $\bm{U}_i^* = \bm{W}_i^* \bm{X}_i^*$ and $\bm{V}_i^* = \bm{W}_i^* \bm{Y}_i^*$, we seek the coefficients $\bm{\beta}_i$ of the regression model:
+	
+	\begin{eqnarray}
+		\bm{V}_i^* = \bm{U}_i^* \bm{\beta}_i + \epsilon
+	\end{eqnarray}
+	
+	To apply the Adaptive LASSO for estimating these regression coefficients, each column of $\bm{U}_i^*$ is centered around zero and rescaled to have an $\mbox{L}_2$-norm of one. Let $\widetilde{\bm{U}}_i^*$ be the centered-and-scaled version of $\bm{U}_i^*$. Adaptive weights are calculated using the OLS regression coefficients $\bm{\gamma}_i^*$ via ordinary least squares (OLS):
+	
+	\begin{eqnarray}\label{eq:adaptive-weights-regression}
+		\bm{\gamma}_i^* = \left( \widetilde{\bm{U}}_i^{*'} \widetilde{\bm{U}}_i^* \right)^{-1} \widetilde{\bm{U}}_i^{*'} \bm{V}_i^*
+	\end{eqnarray}
+	
+	Now a final scaling step is done: for $j=1, \dots, p$, the $j^{\mbox{th}}$ column of $\tilde{\bm{U}}_i^*$ is multiplied by $\left(\gamma_i^*\right)_j$, the corresponding coefficient from the regression equation in (\ref{eq:adaptive-weights-regression}). Call this rescaled matrix $\widecheck{\bm{U}}_i^*$.\\
+	
+	Finally, the Adaptive LASSO coefficient estimates at location $s_i$ are found by using the \verb!lars! algorithm to model $\bm{V}_i^*$ as a function of $\widecheck{\bm{U}}_i^*$
 
 	\subsection{Tuning parameter selection}
+	The final task is to select the LASSO tuning parameter. \cite{Wheeler:2009} proposed selecting the tuning parameter for the LASSO at location $s_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$, which means that the coefficients can only be estimated at the locations where data has been observed. we propose to use the local AIC to select the tuning parameter, which allows coefficients to be estimated at any location where the local likelihood can be calculated. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$ playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.\\
+	
 	The objective minimized by the geographically-weighted lasso (GWL) is:	
 	\begin{eqnarray}
 		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \sum_{j=1}^p \lambda_{ij} \beta_{ij}
@@ -162,28 +178,35 @@
 	
 	\begin{eqnarray}
 		\frac{\partial \ell_i}{\partial \sigma_i^2} \bigg|_{\hat{\beta}_i} &=& -\frac{1}{2} \sum_{i'=1}^n w_{ii'} \left\{ \left(\sigma_i^{2}\right)^{-1} - \left(\sigma_i^{2}\right)^{-2} \left( y_i - \bm{x}_i'\bm{\hat{\beta}}_i \right)^2 \right\} \\
-		\hat{\sigma}_i^2 &=& \left(\sum_{i'=1}^n w_{ii'}\right)^{-1} \sum_{i'=1}^n \left(y_i - \bm{x}_i'\bm{\beta}_i\right)
+		\hat{\sigma}_i^2 &=& \left(\sum_{i'=1}^n w_{ii'}\right)^{-1} \sum_{i'=1}^n \left(y_i - \bm{x}_i'\hat{\bm{\beta}}_i\right)
 	\end{eqnarray}
 	 
 	\subsection{Bandwidth selection}
 	The bandwidth is selected to minimize the total AIC ($\mbox{AIC}_{\mbox{tot}}$). Because of the kernel weights and the application of the Adaptive LASSO, the sample size and degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:		
-	\begin{eqnarray}
+	\begin{eqnarray}\label{eq:total-AIC}
 		\mbox{AIC}_{\mbox{tot}} = \sum_{i=1}^n \left\{ \hat{\sigma}_i^{-2} \left( y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \log \hat{\sigma}_i^2 + 2 \mbox{df}_i \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \right\}
 	\end{eqnarray}
 			
-	The bandwidth that minimizes $\mbox{AIC}_{\mbox{tot}}$ is found by a line search.\\
+	This is different from the formulas for the AIC as proposed in \ref{Fotheringham:2002} and \ref{Loader:1999}. The reason is that the basic GWR estimator is linear, so the degrees of freedom can be approximated using the trace of the ``hat" matrix. The GAL, though, is not a linear estimator so some...\
 	
-	\subsection{Confidence interval estimation}
-	 Confidence intervals for the coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by using the variables selected by the Adaptive LASSO in a weighted least squares model. To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
+	The bandwidth that minimizes (\ref{eq:total-AIC}) is found by a line search.\\
+	
+	\subsection{Confidence interval estimation}	
+	Confidence intervals for the GAL's coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by using the variables selected by the Adaptive LASSO in a weighted least squares model. To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
 	 
+	 	\subsubsection{Normal approximation-based confidence interval}
+		A third way to estimate the coefficient confidence intervals is to use the GWL for variable selection only and then to use GWR to calculate a confidence interval based on the assumption of an independent, identically distributed, Gaussian error structure. In this case, the standard error of the regression coefficients is 
+		\begin{eqnarray}
+			\hat{\mbox{se}}_{\beta_i} &=& \left( \tilde{\bm{X}}_i'\bm{W}_i \tilde{\bm{X}}_i \right)^{-1}  \tilde{\bm{X}}_i'\bm{W}_i\bm{Y}
+		\end{eqnarray}
+	
+		where $\tilde{\bm{X}}_i$ is the model matrix including only those variables that are selected by GWL at location $i$.
+		
+		\subsubsection{Bootstrap confidence interval}
+		
 	 Unshrunk coefficient estimates are found by using the GWL at each location for variable selection only and then estimating the coefficients for the selected variables by GWR. An unshrunk bootstrap confidence interval is found by estimating the unshrunk coefficients for each of the $n_B$ bootstrap replicates and then calculating the percentiles as above.\\
 	 
-	 A third way to estimate the coefficient confidence intervals is to use the GWL for variable selection only and then to use GWR to calculate a confidence interval based on the assumption of an independent, identically distributed, Gaussian error structure. In this case, the standard error of the regression coefficients is 
-	 \begin{eqnarray}
-		\hat{\mbox{se}}_{\beta_i} &=& \left( \tilde{\bm{X}}_i'\bm{W}_i \tilde{\bm{X}}_i \right)^{-1}  \tilde{\bm{X}}_i'\bm{W}_i\bm{Y}
-	\end{eqnarray}
-	
-	where $\tilde{\bm{X}}_i$ is the model matrix including only those variables that are selected by GWL at location $i$.
+
 
 
 \section{Simulation}

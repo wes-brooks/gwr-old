@@ -88,11 +88,11 @@ for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
     #Make a map using polygons provided to the plot function.              
     #Put the county names into a form that can be matched.
     county = map_data('county')
-    
+
     plots[[as.character(year)]] = list()
     plots.unshrunk[[as.character(year)]] = list()
     for (v in predictors) {
-        plots[[as.character(year)]][[v]] = plot.gwselect(model[[as.character(year)]], var=v, polygons=county, title=v) + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
+        plots[[as.character(year)]][[v]] = plot.gwselect(model[[as.character(year)]], var=v, polygons=county, title=v, col.bg=0) + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
         plots.unshrunk[[as.character(year)]][[v]] = plot.gwselect(model[[as.character(year)]], part='coef.unshrunk', var=v, polygons=county, title=v) + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
     }
 
@@ -102,11 +102,13 @@ for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
     #}
     
     pp = plots[[as.character(year)]]
+    #dev.new()
     pdf(paste('figures/poverty/', year, '.linear.coefficients.pdf', sep=''), width=8, height=16)
     grid.arrange(pp[['pag']], pp[['pex']], pp[['pman']], pp[['potprof']], pp[['pfire']], pp[['pserve']], pp[['pwh']], pp[['pblk']], pp[['phisp']], pp[['metro']], ncol=2)
     dev.off()
 
     pp = plots.unshrunk[[as.character(year)]]
+    #dev.new()
     pdf(paste('figures/poverty/', year, '.linear.coefficients.unshrunk.pdf', sep=''), width=8, height=16)
     grid.arrange(pp[['pag']], pp[['pex']], pp[['pman']], pp[['potprof']], pp[['pfire']], pp[['pserve']], pp[['pwh']], pp[['pblk']], pp[['phisp']], pp[['metro']], ncol=2)
     dev.off()
