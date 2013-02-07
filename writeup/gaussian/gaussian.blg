@@ -3,44 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: gaussian.aux
 The style file: chicago.bst
 Database file #1: ../../references/gwr.bib
-You've used 13 entries,
+You've used 14 entries,
             2861 wiz_defined-function locations,
-            709 strings with 6997 characters,
-and the built_in function-call counts, 8845 in all, are:
-= -- 733
-> -- 617
+            716 strings with 7126 characters,
+and the built_in function-call counts, 9679 in all, are:
+= -- 796
+> -- 695
 < -- 0
-+ -- 180
-- -- 210
-* -- 810
-:= -- 1611
-add.period$ -- 39
-call.type$ -- 13
-change.case$ -- 90
-chr.to.int$ -- 13
-cite$ -- 13
-duplicate$ -- 231
-empty$ -- 565
-format.name$ -- 246
-if$ -- 1653
++ -- 204
+- -- 234
+* -- 901
+:= -- 1762
+add.period$ -- 42
+call.type$ -- 14
+change.case$ -- 99
+chr.to.int$ -- 14
+cite$ -- 14
+duplicate$ -- 249
+empty$ -- 609
+format.name$ -- 274
+if$ -- 1810
 int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 15
-newline$ -- 68
-num.names$ -- 130
-pop$ -- 61
+missing$ -- 16
+newline$ -- 73
+num.names$ -- 140
+pop$ -- 67
 preamble$ -- 1
-purify$ -- 170
+purify$ -- 185
 quote$ -- 0
-skip$ -- 244
+skip$ -- 261
 stack$ -- 0
-substring$ -- 526
-swap$ -- 73
+substring$ -- 567
+swap$ -- 79
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 240
+type$ -- 260
 warning$ -- 0
-while$ -- 121
+while$ -- 128
 width$ -- 0
-write$ -- 171
+write$ -- 184

@@ -12,6 +12,12 @@ Breiman, L. (1995).
 \newblock Better subset wregression using the nonnegative garrote.
 \newblock {\em Technometrics\/}~{\em 51}, 373--384.
 
+\bibitem[\protect\citeauthoryear{Efron, Hastie, Johnstone, and
+  Tibshirani}{Efron et~al.}{2004}]{Efron:2004b}
+Efron, B., T.~Hastie, I.~Johnstone, and R.~Tibshirani (2004).
+\newblock Least angle regression.
+\newblock {\em Annals of Statistics\/}~{\em 32\/}(2), 407--499.
+
 \bibitem[\protect\citeauthoryear{Efron and Tibshirani}{Efron and
   Tibshirani}{1986}]{Efron:1986}
 Efron, B. and R.~Tibshirani (1986).
