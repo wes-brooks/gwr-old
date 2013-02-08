@@ -1,5 +1,11 @@
 \begin{thebibliography}{}
 
+\bibitem[\protect\citeauthoryear{Akaike}{Akaike}{1974}]{Akaike:1974}
+Akaike, H. (1974).
+\newblock A new look at the statistical model identification.
+\newblock {\em IEEE Transactions on Automatic Control\/}~{\em 19\/}(6),
+  716--723.
+
 \bibitem[\protect\citeauthoryear{Antoniadas, Gijbels, and
   Verhasselt}{Antoniadas et~al.}{2012}]{Antoniadis:2012a}
 Antoniadas, A., I.~Gijbels, and A.~Verhasselt (2012).

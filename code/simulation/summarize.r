@@ -51,15 +51,22 @@ selection.aggregate = list()
 coverage.oracular.b.aggregate = list()
 coverage.oracular.se.aggregate = list()
 
+coverage.bootstrap = list()
+coverage.unshrunk.bootstrap = list()
+coverage.se = list()
+selection = list()
+
+coverage.oracular.bootstrap = list()
+coverage.oracular.se = list()
 
 for (setting in settings) {
-    coverage.bootstrap = list()
-    coverage.unshrunk.bootstrap = list()
-    coverage.se = list()
-    selection = list()
+    coverage.bootstrap[[setting]] = list()
+    coverage.unshrunk.bootstrap[[setting]] = list()
+    coverage.se[[setting]] = list()
+    selection[[setting]] = list()
 
-    coverage.oracular.bootstrap = list()
-    coverage.oracular.se = list()
+    coverage.oracular.bootstrap[[setting]] = list()
+    coverage.oracular.se[[setting]] = list()
 
     #vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
     vars = c("X1")
@@ -109,43 +116,43 @@ for (setting in settings) {
             CI.oracular.se = cbind(estimates.oracular[,v]-1.96*estimates.se.oracular[,v], estimates.oracular[,v]+1.96*estimates.se.oracular[,v])
             
             if (k==1) {
-                coverage.bootstrap[[v]] = as.matrix(ifelse(B[[v]] < CI.b[,1] | B[[v]] > CI.b[,2],0,1))
+                coverage.bootstrap[[setting]][[v]] = as.matrix(ifelse(B[[v]] < CI.b[,1] | B[[v]] > CI.b[,2],0,1))
             } else {
-                coverage.bootstrap[[v]] = cbind(coverage.bootstrap[[v]], as.matrix(ifelse(B[[v]] < CI.b[,1] | B[[v]] > CI.b[,2],0,1)))
+                coverage.bootstrap[[setting]][[v]] = cbind(coverage.bootstrap[[setting]][[v]], as.matrix(ifelse(B[[v]] < CI.b[,1] | B[[v]] > CI.b[,2],0,1)))
             }
 
             if (k==1) {
-                coverage.unshrunk.bootstrap[[v]] = as.matrix(ifelse(B[[v]] < CI.ub[,1] | B[[v]] > CI.ub[,2],0,1))
+                coverage.unshrunk.bootstrap[[setting]][[v]] = as.matrix(ifelse(B[[v]] < CI.ub[,1] | B[[v]] > CI.ub[,2],0,1))
             } else {
-                coverage.unshrunk.bootstrap[[v]] = cbind(coverage.unshrunk.bootstrap[[v]], as.matrix(ifelse(B[[v]] < CI.ub[,1] | B[[v]] > CI.ub[,2],0,1)))
-            }
-    
-            if (k==1) {
-                coverage.se[[v]] = as.matrix(ifelse(B[[v]] < CI.se[,1] | B[[v]] > CI.se[,2],0,1))
-            } else {
-                coverage.se[[v]] = cbind(coverage.se[[v]], as.matrix(ifelse(B[[v]] < CI.se[,1] | B[[v]] > CI.se[,2],0,1)))
-            }
-
-
-
-            if (k==1) {
-                coverage.oracular.bootstrap[[v]] = as.matrix(ifelse(B[[v]] < CI.oracular.b[,1] | B[[v]] > CI.oracular.b[,2],0,1))
-            } else {
-                coverage.oracular.bootstrap[[v]] = cbind(coverage.oracular.bootstrap[[v]], as.matrix(ifelse(B[[v]] < CI.oracular.b[,1] | B[[v]] > CI.oracular.b[,2],0,1)))
+                coverage.unshrunk.bootstrap[[setting]][[v]] = cbind(coverage.unshrunk.bootstrap[[setting]][[v]], as.matrix(ifelse(B[[v]] < CI.ub[,1] | B[[v]] > CI.ub[,2],0,1)))
             }
     
             if (k==1) {
-                coverage.oracular.se[[v]] = as.matrix(ifelse(B[[v]] < CI.oracular.se[,1] | B[[v]] > CI.oracular.se[,2],0,1))
+                coverage.se[[setting]][[v]] = as.matrix(ifelse(B[[v]] < CI.se[,1] | B[[v]] > CI.se[,2],0,1))
             } else {
-                coverage.oracular.se[[v]] = cbind(coverage.oracular.se[[v]], as.matrix(ifelse(B[[v]] < CI.oracular.se[,1] | B[[v]] > CI.oracular.se[,2],0,1)))
+                coverage.se[[setting]][[v]] = cbind(coverage.se[[setting]][[v]], as.matrix(ifelse(B[[v]] < CI.se[,1] | B[[v]] > CI.se[,2],0,1)))
+            }
+
+
+
+            if (k==1) {
+                coverage.oracular.bootstrap[[setting]][[v]] = as.matrix(ifelse(B[[v]] < CI.oracular.b[,1] | B[[v]] > CI.oracular.b[,2],0,1))
+            } else {
+                coverage.oracular.bootstrap[[setting]][[v]] = cbind(coverage.oracular.bootstrap[[setting]][[v]], as.matrix(ifelse(B[[v]] < CI.oracular.b[,1] | B[[v]] > CI.oracular.b[,2],0,1)))
+            }
+    
+            if (k==1) {
+                coverage.oracular.se[[setting]][[v]] = as.matrix(ifelse(B[[v]] < CI.oracular.se[,1] | B[[v]] > CI.oracular.se[,2],0,1))
+            } else {
+                coverage.oracular.se[[setting]][[v]] = cbind(coverage.oracular.se[[setting]][[v]], as.matrix(ifelse(B[[v]] < CI.oracular.se[,1] | B[[v]] > CI.oracular.se[,2],0,1)))
             }
 
             #Calculate how often each variable was selected for inclusion in the local models
             col = which(colnames(estimates) == v)
             if (k==1) {
-                selection[[v]] = as.matrix(ifelse(estimates[,col]==0, 0, 1))
+                selection[[setting]][[v]] = as.matrix(ifelse(estimates[,col]==0, 0, 1))
             } else {
-                selection[[v]] = cbind(selection[[v]], as.matrix(ifelse(estimates[,col]==0, 0, 1)))
+                selection[[setting]][[v]] = cbind(selection[[setting]][[v]], as.matrix(ifelse(estimates[,col]==0, 0, 1)))
             }
         }
     }
@@ -167,13 +174,13 @@ for (setting in settings) {
     coverage.oracular.se.aggregate[[setting]] = list()
 
     for (v in c("X1")) { #vars) {
-        cb[[v]] = apply(coverage.bootstrap[[v]], 1, sum) / ncol(coverage.bootstrap[[v]])
-        cub[[v]] = apply(coverage.unshrunk.bootstrap[[v]], 1, sum) / ncol(coverage.unshrunk.bootstrap[[v]])
-        cs[[v]] = apply(coverage.se[[v]], 1, sum) / ncol(coverage.se[[v]])
-        ss[[v]] = apply(selection[[v]], 1, sum) / ncol(selection[[v]])
+        cb[[v]] = apply(coverage.bootstrap[[setting]][[v]], 1, sum) / ncol(coverage.bootstrap[[setting]][[v]])
+        cub[[v]] = apply(coverage.unshrunk.bootstrap[[setting]][[v]], 1, sum) / ncol(coverage.unshrunk.bootstrap[[setting]][[v]])
+        cs[[v]] = apply(coverage.se[[setting]][[v]], 1, sum) / ncol(coverage.se[[setting]][[v]])
+        ss[[v]] = apply(selection[[setting]][[v]], 1, sum) / ncol(selection[[setting]][[v]])
 
-        cbo[[v]] = apply(coverage.oracular.bootstrap[[v]], 1, sum) / ncol(coverage.oracular.bootstrap[[v]])
-        cso[[v]] = apply(coverage.oracular.se[[v]], 1, sum) / ncol(coverage.oracular.se[[v]])       
+        cbo[[v]] = apply(coverage.oracular.bootstrap[[setting]][[v]], 1, sum) / ncol(coverage.oracular.bootstrap[[setting]][[v]])
+        cso[[v]] = apply(coverage.oracular.se[[setting]][[v]], 1, sum) / ncol(coverage.oracular.se[[setting]][[v]])       
 
 #        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".unshrunk_bootstrap_coverage.pdf", sep=""))
 #        gwr.matplot(matrix(cub[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))

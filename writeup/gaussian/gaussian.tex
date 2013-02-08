@@ -140,7 +140,7 @@
 \section{Model selection and shrinkage \label{section:method}}
 	Traditional GWR relies on \emph{a priori} model selection to decide which variables should be included in the model. In the context of ordinary least squares regression, regularization methods such as the Adaptive LASSO \citep{Zou:2006} have been shown to have appealing properties for automating variable selection, sometimes including the ``oracle" property of asymptotically selecting exactly the correct variables for inclusion in a regression model.\\
 	
-	The Adaptive LASSO is applied to GWR by first multiplying the design matrix $\bm{X}$ by $\bm{W}_i^{\frac{1}{2}}$, the diagonal matrix of geographic weights centered at $s_i$. Since some of the weights $w_{ii'}$ may be zero, the matrix $\bm{W}_i^{\frac{1}{2}}\bm{X}$ is not of full rank. The matrices $\bm{Y}_i^*$, $\bm{X}_i^*$, and $\bm{W}_i^*$ are formed by dropping the rows of $\bm{X}$  and $\bm{W}_i$ that correspond to observations with zero weight in the regression model at location $s_i$. Now, letting $\bm{U}_i^* = \bm{W}_i^{*\frac{1}{2}} \bm{X}_i^*$ and $\bm{V}_i^* = \bm{W}_i^{*\frac{1}{2}} \bm{Y}_i^*$, we seek the coefficients $\bm{\beta}_i$ of the regression model:
+	The Adaptive LASSO is applied to GWR by first multiplying the design matrix $\bm{X}$ by $\bm{W}_i^{1/2}$, the diagonal matrix of geographic weights centered at $s_i$. Since some of the weights $w_{ii'}$ may be zero, the matrix $\bm{W}_i^{1/2}\bm{X}$ is not of full rank. The matrices $\bm{Y}_i^*$, $\bm{X}_i^*$, and $\bm{W}_i^*$ are formed by dropping the rows of $\bm{X}$  and $\bm{W}_i$ that correspond to observations with zero weight in the regression model at location $s_i$. Now, letting $\bm{U}_i^* = \bm{W}_i^{*1/2} \bm{X}_i^*$ and $\bm{V}_i^* = \bm{W}_i^{*1/2} \bm{Y}_i^*$, we seek the coefficients $\bm{\beta}_i$ of the regression model:
 	
 	\begin{eqnarray}
 		\bm{V}_i^* = \bm{U}_i^* \bm{\beta}_i + \epsilon
@@ -152,12 +152,12 @@
 		\bm{\gamma}_i^* = \left( \widetilde{\bm{U}}_i^{*'} \widetilde{\bm{U}}_i^* \right)^{-1} \widetilde{\bm{U}}_i^{*'} \bm{V}_i^*
 	\end{eqnarray}
 	
-	Now a final scaling step is done: for $j=1, \dots, p$, the $j^{\mbox{th}}$ column of $\tilde{\bm{U}}_i^*$ is multiplied by $\left(\gamma_i^*\right)_j$, the corresponding coefficient from the regression equation in (\ref{eq:adaptive-weights-regression}). Call this rescaled matrix $\widecheck{\bm{U}}_i^*$.\\
+	Now a final scaling step is done: for $j=1, \dots, p$, the $j$th column of $\tilde{\bm{U}}_i^*$ is multiplied by $\left(\gamma_i^*\right)_j$, the corresponding coefficient from the regression equation in (\ref{eq:adaptive-weights-regression}). Call this rescaled matrix $\widecheck{\bm{U}}_i^*$.\\
 	
 	Finally, the Adaptive LASSO coefficient estimates at location $s_i$ are found by using the \verb!lars! algorithm \citep{Efron:2004b} to model $\bm{V}_i^*$ as a function of $\widecheck{\bm{U}}_i^*$.
 
 	\subsection{Tuning parameter selection}
-	The final task is to select the LASSO tuning parameter. \cite{Wheeler:2009} proposed selecting the tuning parameter for the LASSO at location $s_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$, but this choice restricts coefficient estimation to occur at the locations where data has been observed. We instead propose to use the local AIC \citep{Akaike:1974} to select the tuning parameter, which allows coefficients to be estimated at any location where the local likelihood can be calculated. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$, playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.\\
+	The final task is to select the LASSO tuning parameter. \cite{Wheeler:2009} proposed selecting the tuning parameter for the LASSO at location $s_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$, but this choice restricts coefficient estimation to occur at the locations where data has been observed. We instead propose to use a locally-weighted version of the Akaike Information Criterion (AIC \citep{Akaike:1974}) to select the tuning parameter. The local AIC allows coefficients to be estimated at any location where the local likelihood can be calculated. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$, playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.\\
 	
 	The objective minimized by the geographically-weighted lasso (GWL) is:	
 	\begin{eqnarray}
@@ -170,26 +170,45 @@
 		\hat{y}_i = \bm{x}_i \hat{\bm{\beta}}_{i, \mbox{GWL}} &=&  \bm{x}_i \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \bm{x}_i \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i
 	\end{eqnarray}
 	
-	So unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GWL is not a linear smoother the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}. The local AIC ($\mbox{AIC}_{\mbox{loc}}$) is minimized to select the adaptive lasso tuning parameter.
+	Unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GWL is not a linear smoother the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}. The local AIC ($\mbox{AIC}_{\mbox{loc}}$) is minimized to select the adaptive lasso tuning parameter.
 	\begin{eqnarray}
-		\mbox{AIC}_{\mbox{loc}} = \sum_{i'=1}^n w_{ii'} \hat{\sigma}_i^{-2} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + 2 \mbox{df}_i
+		\mbox{AIC}_{\mbox{loc}, i} &=& -2 \sum_{i'=1}^n \ell_{ii'}  + 2 \mbox{df}_i\\
+		&=& -2 \times \sum_{i'=1}^n \log \left\{ \left(2 \pi \hat{\sigma}_i^2\right)^{-\frac{1}{2}} \exp \left[-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right] \right\}^{w_{ii'}} + 2\mbox{df}_i\\
+		&=& \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} + 2\mbox{df}_i \\
+		&=& \hat{\sigma}_i^{-2} \sum_{i'=1}^n w_{ii'} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + 2 \mbox{df}_i + C_i
 	\end{eqnarray}	
-	Where the estimated local variance $\hat{\sigma}_i^2$ is the variance estimate from the unpenalized local model \citep{Zou:2007}. The Maximum-Likelihood Estimate (MLE) of $\sigma_i^2$ is found by differentiating the local likelihood with respect to $\sigma_i^2$:\\
+	Where the estimated local variance $\hat{\sigma}_i^2$ is the variance estimate from the unpenalized local model \citep{Zou:2007}, so $C_i$ does not depend on the choice of tuning parameter and can be ignored. The Maximum-Likelihood Estimate (MLE) of $\sigma_i^2$ is found by differentiating the local likelihood with respect to $\sigma_i^2$:
 	
 	\begin{eqnarray}
 		\frac{\partial \ell_i}{\partial \sigma_i^2} \bigg|_{\hat{\beta}_i} &=& -\frac{1}{2} \sum_{i'=1}^n w_{ii'} \left\{ \left(\sigma_i^{2}\right)^{-1} - \left(\sigma_i^{2}\right)^{-2} \left( y_i - \bm{x}_i'\bm{\hat{\beta}}_i \right)^2 \right\} \\
-		\hat{\sigma}_i^2 &=& \left(\sum_{i'=1}^n w_{ii'}\right)^{-1} \sum_{i'=1}^n \left(y_i - \bm{x}_i'\hat{\bm{\beta}}_i\right)
+		\hat{\sigma}_i^2 &=& \left(\sum_{i'=1}^n w_{ii'}\right)^{-1} \sum_{i'=1}^n w_{ii'} \left(y_i - \bm{x}_i'\hat{\bm{\beta}}_i\right)
 	\end{eqnarray}
 	 
 	\subsection{Bandwidth selection}
-	The bandwidth is selected to minimize the total AIC ($\mbox{AIC}_{\mbox{tot}}$). Because of the kernel weights and the application of the Adaptive LASSO, the sample size and degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:		
-	\begin{eqnarray}\label{eq:total-AIC}
-		\mbox{AIC}_{\mbox{tot}} = \sum_{i=1}^n \left\{ \hat{\sigma}_i^{-2} \left( y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \log \hat{\sigma}_i^2 + 2 \mbox{df}_i \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \right\}
+	The bandwidth is selected to minimize the total AIC ($\mbox{AIC}_{\mbox{tot}}$). Because of the kernel weights and the application of the Adaptive LASSO, the sample size and degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:	
+		
+	\begin{eqnarray}
+		\mbox{AIC}_{\mbox{tot}} &=& -2 \times \sum_{i=1}^n \ell_i + 2 \times \mbox{df}\\
+		&=& \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}_i' \hat{\bm{\beta}}_i \right)^2 \right\} + 2 \times \mbox{df}\label{eq:total-AIC1}
+	\end{eqnarray}	
+	
+	What remains is to calculate $\mbox{df}$, the number of degrees of freedom used by the model. Classical GWR, as developed in \cite{Loader:1999} and \cite{Fotheringham:2002} calculates $\mbox{df}$ using the trace of the ``hat" matrix, but because the GAL is not a linear smoother, there is no ``hat" matrix associated with GWR. Instead, notice that $\mbox{df}$ can be pulled into the summation in \ref{eq:total-AIC1}:
+		
+	%This is different from the formulas for the AIC as proposed in \cite{Fotheringham:2002} and \cite{Loader:1999}. The reason is that the basic GWR estimator is linear, so the degrees of freedom can be approximated using the trace of the ``hat" matrix. The GAL, though, is not a linear estimator so some...\ However, since the GAL does local variable selection, the model may use a different number of parameters at each location $s_i$. 
+			
+	\begin{eqnarray}
+		\mbox{df} &=& \sum_{i=1}^n \left( n^{-1} \mbox{df} \right)
+	\end{eqnarray}
+	
+	Now, because we are considering the sum of local weights to be the sample size for the local models, we estimate $\mbox{df}$ by $\sum_{i=1}^n \left\{ \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \mbox{df}_i \right\}$, and the total AIC is then:
+	
+	\begin{eqnarray}\label{eq:total-AIC2}
+		\mbox{AIC}_{\mbox{tot}} &=& \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + 2 \times \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \mbox{df}_i \right\}
 	\end{eqnarray}
 			
-	This is different from the formulas for the AIC as proposed in \ref{Fotheringham:2002} and \ref{Loader:1999}. The reason is that the basic GWR estimator is linear, so the degrees of freedom can be approximated using the trace of the ``hat" matrix. The GAL, though, is not a linear estimator so some...\
 	
-	The bandwidth that minimizes (\ref{eq:total-AIC}) is found by a line search.\\
+	
+	The bandwidth that minimizes (\ref{eq:total-AIC2}) is found by a line search.\\
 	
 	\subsection{Confidence interval estimation}	
 	Confidence intervals for the GAL's coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by using the variables selected by the Adaptive LASSO in a weighted least squares model. To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
@@ -259,342 +278,176 @@
 	
 	\subsection{Simulation results}
 	Results of the simulation experiment were summarized to asses the consistency in selection and estimation, as well as the coverage properties of the confidence intervals.
-	
 	\subsection{Figures}
 	\begin{figure}
 		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
-			%\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
+		\includegraphics[width=\textwidth]{../../figures/X1-28-1.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
+		\caption{Setting 1}
+		\label{fig:gull}
 	\end{figure}
-	
-	
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-4-profile-coverage.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-5-profile-coverage.pdf}
-			%\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-6-profile-coverage.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}
-	
-	
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-7-profile-coverage.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-8-profile-coverage.pdf}
-			\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-9-profile-coverage.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-10-profile-coverage.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-11-profile-coverage.pdf}
-			%\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-12-profile-coverage.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}
-	
-	
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-13-profile-coverage.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-14-profile-coverage.pdf}
-			%\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-15-profile-coverage.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}
-	
-	
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-16-profile-coverage.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-17-profile-coverage.pdf}
-			%\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-18-profile-coverage.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}	
-	
-	
-	
-	
-	
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-selection.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-selection.pdf}
-			%\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-selection.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}
-	
-	
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-4-profile-selection.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-5-profile-selection.pdf}
-			%\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-6-profile-selection.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}
-	
-	
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-7-profile-selection.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-8-profile-selection.pdf}
-			\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-9-profile-selection.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-10-profile-selection.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-11-profile-selection.pdf}
-			%\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-12-profile-selection.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}
-	
-	
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-13-profile-selection.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-14-profile-selection.pdf}
-			%\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-15-profile-selection.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}
-	
-	
-	\begin{figure}
-		\centering
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-16-profile-selection.pdf}
-			%\caption{A gull}
-			\label{fig:gull}
-		\end{subfigure}%
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-17-profile-selection.pdf}
-			%\caption{A tiger}
-			\label{fig:tiger}
-		\end{subfigure}
-        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
-          %(or a blank line to force the subfigure onto a new line)
-		\begin{subfigure}[b]{0.3\textwidth}
-			\centering
-			\includegraphics[width=\textwidth]{../../figures/simulation/28-18-profile-selection.pdf}
-			%\caption{A mouse}
-			\label{fig:mouse}
-		\end{subfigure}
-		%\caption{Pictures of animals}\label{fig:animals}
-	\end{figure}	
 		
+	\vspace{-30mm}
+        
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-2.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
+		\caption{Setting 2}
+		\label{fig:tiger}
+	\end{figure}
+	
+	\vspace{-30mm}
+	
+	\begin{center}
+		\includegraphics[width=\textwidth]{../../figures/X1-28-3.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
+		\captionof{figure}{Setting 3}
+		\label{fig:mouse}
+	\end{center}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-4.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
+		\caption{Setting 4}
+		\label{fig:gull}
+	\end{figure}
+		
+	\vspace{-30mm}
+        
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-5.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
+		\caption{Setting 5}
+		\label{fig:tiger}
+	\end{figure}
+	
+	\vspace{-30mm}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-6.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
+		\caption{Setting 6}
+		\label{fig:mouse}
+	\end{figure}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-7.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
+		\caption{Setting 7}
+		\label{fig:gull}
+	\end{figure}
+		
+	\vspace{-30mm}
+        
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-8.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
+		\caption{Setting 8}
+		\label{fig:tiger}
+	\end{figure}
+	
+	\vspace{-30mm}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-9.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
+		\caption{Setting 9}
+		\label{fig:mouse}
+	\end{figure}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-10.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
+		\caption{Setting 10}
+		\label{fig:gull}
+	\end{figure}
+		
+	\vspace{-30mm}
+        
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-11.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
+		\caption{Setting 11}
+		\label{fig:tiger}
+	\end{figure}
+	
+	\vspace{-30mm}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-12.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
+		\caption{Setting 12}
+		\label{fig:mouse}
+	\end{figure}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-13.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
+		\caption{Setting 13}
+		\label{fig:gull}
+	\end{figure}
+		
+	\vspace{-30mm}
+        
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-14.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
+		\caption{Setting 14}
+		\label{fig:tiger}
+	\end{figure}
+	
+	\vspace{-30mm}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-15.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
+		\caption{Setting 15}
+		\label{fig:mouse}
+	\end{figure}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-16.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
+		\caption{Setting 16}
+		\label{fig:gull}
+	\end{figure}
+		
+	\vspace{-30mm}
+        
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-17.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
+		\caption{Setting 18}
+		\label{fig:tiger}
+	\end{figure}
+	
+	\vspace{-30mm}
+	
+	\begin{figure}
+		\centering
+		\includegraphics[width=\textwidth]{../../figures/X1-28-18.pdf}
+		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
+		\caption{Setting 18}
+		\label{fig:mouse}
+	\end{figure}
+	
+
+			
 \section{Data analysis}
 	\subsection{Census poverty data}
 	Data for this example comes from the U.S. Census Bureau's decennial census from 1960-2000, and from its American Community Survey in 2006. The variable being modeled is the logit of poverty rate by county in the states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. A GWR model was fit to the data based on the predictors \verb!pag!, \verb!pex!, \verb!pman!, \verb!pserve!, \verb!pfire!, \verb!potprof!, \verb!pwh!, \verb!pblk!, \verb!phisp!, and \verb!metro!. One model was fit to the data from each census.
