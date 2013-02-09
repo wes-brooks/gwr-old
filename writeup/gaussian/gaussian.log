@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  7 FEB 2013 16:56
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  8 FEB 2013 13:30
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -854,7 +854,110 @@ Underfull \hbox (badness 10000) in paragraph at lines 240--241
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 File: ../../figures/X1-28-1.pdf Graphic file (type QTm)
-<use  "../../figures/X1-28-1.pdf" >
+<use  "../../figures/X1-28-1.pdf" > [11]
 File: ../../figures/X1-28-2.pdf Graphic file (type QTm)
  <use  "../../figures/X1-28-2.pdf" >
-File: ../../figures/X1-28-3.pdf Graphic file (typ
+[12]
+File: ../../figures/X1-28-3.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-3.pdf" >
+File: ../../figures/X1-28-4.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-4.pdf" >
+[13]
+File: ../../figures/X1-28-5.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-5.pdf" >
+File: ../../figures/X1-28-6.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-6.pdf" >
+File: ../../figures/X1-28-7.pdf Graphic file (type QTm)
+
+<use  "../../figures/X1-28-7.pdf" > [14]
+File: ../../figures/X1-28-8.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-8.pdf" >
+File: ../../figures/X1-28-9.pdf Graphic file (type QTm)
+
+<use  "../../figures/X1-28-9.pdf" > [15]
+File: ../../figures/X1-28-10.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-10.pdf" >
+File: ../../figures/X1-28-11.pdf Graphic file (type QTm)
+
+<use  "../../figures/X1-28-11.pdf" >
+File: ../../figures/X1-28-12.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-12.pdf" >
+[16]
+File: ../../figures/X1-28-13.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-13.pdf" >
+File: ../../figures/X1-28-14.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-14.pdf" >
+[17]
+File: ../../figures/X1-28-15.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-15.pdf" >
+File: ../../figures/X1-28-16.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-16.pdf" >
+File: ../../figures/X1-28-17.pdf Graphic file (type QTm)
+
+<use  "../../figures/X1-28-17.pdf" > [18]
+File: ../../figures/X1-28-18.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-18.pdf" >
+[19]
+File: ../../figures/poverty/1960.linear.coefficients.pdf Graphic file (type QTm
+)
+ <use  "../../figures/poverty/1960.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 60.35974pt on input line 440.
+
+File: ../../figures/poverty/1970.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/1970.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 60.35974pt on input line 447.
+
+File: ../../figures/poverty/1980.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/1980.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 60.35974pt on input line 454.
+
+File: ../../figures/poverty/1990.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/1990.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 60.35974pt on input line 461.
+
+File: ../../figures/poverty/2000.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/2000.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 60.35974pt on input line 468.
+
+File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/2006.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 60.35974pt on input line 475.
+
+(./gaussian.bbl [20] [21] [22] [23] [24] [25] [26])
+
+Package natbib Warning: There were undefined citations.
+
+[27] (./gaussian.aux
+
+Package natbib Warning: Citation(s) may have changed.
+(natbib)                Rerun to get citations correct.
+
+)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 4340 strings out of 494004
+ 60945 string characters out of 3150890
+ 124779 words of memory out of 3000000
+ 7475 multiletter control sequences out of 15000+200000
+ 16343 words of font info for 57 fonts, out of 3000000 for 9000
+ 1144 hyphenation exceptions out of 8191
+ 42i,15n,38p,1099b,330s stack positions out of 5000i,500n,10000p,200000b,50000s
+
+Output written on gaussian.pdf (27 pages).
