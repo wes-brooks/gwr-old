@@ -34,7 +34,7 @@
 \newcommand{\E}{\mathop{\mathbb E}}
 
 
-\title{Meet this GAL: Geographically weighted regression with the Adaptive LASSO}
+\title{Local variable selection for varying-coefficients models in the context of geographically-weighted regression}
 \author{Wesley Brooks}
 \date{}                                           % Activate to display a given date or no date
 
@@ -48,14 +48,15 @@
 
 
 \section{Introduction}
-	Varying-coefficients regression \citep{Hastie:1993a} is a technique used in spatial statistics to model a non-stationary process. Geographically Weighted Regression (GWR) \citep{Fotheringham:2002} is a method of fitting varying-coefficients regression models for spatial data that uses kernel-weighted regression with weights based on the distance between observation locations. The presentation of GWR in \cite{Fotheringham:2002} follows the development of local likelihood in \cite{Loader:1999}.\\
+	Varying-coefficients regression \citep{Hastie:1993a} is a technique used in spatial statistics to model a non-stationary process. Geographically Weighted Regression (GWR) \citep{Fotheringham:2002} is a method of fitting varying-coefficients regression models for spatial data that uses kernel-weighted regression with weights based on the distance between observation locations. The presentation of GWR in \cite{Fotheringham:2002} follows the development of local likelihood in \cite{Loader:1999}.
 	
-	GWR can be thought of as a kernel smoother for regression coefficients, and hence GWR coefficient estimates are likely to exhibit bias near the boundary of the region being modeled \citep{Hastie:1993b}. Modeling the coefficient surface as locally linear rather than locally constant (by including coefficient-by-geographic-location interactions) can reduce this boundary-effect bias \citep{Hastie:1993b}. Adding these interactions to the GWR model is analogous to a transition from kernel smoothing to local regression, and was introduced in \cite{Wang:2008b}.\\
+	GWR can be thought of as a kernel smoother for regression coefficients, and hence GWR coefficient estimates are likely to exhibit bias near the boundary of the region being modeled \citep{Hastie:1993b}. Modeling the coefficient surface as locally linear rather than locally constant (by including coefficient-by-location interactions) can reduce this boundary-effect bias \citep{Hastie:1993b}. Adding these interactions to the GWR model is analogous to a transition from kernel smoothing to local regression, and was introduced in \cite{Wang:2008b}.
 	
-	Some recent research has focused on variable selection in varying-coefficients models. In the context of varying-coefficients regression models, global variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero everywhere against the hypothesis that the coefficient is nonzero somewhere) is distinguished from local variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero at a given location against the hypothesis that the coefficient at that location is nonzero). Global variable selection for models where the varying coefficients are estimated using splines is addressed in \cite{Fan:1999} for response variables that belong to an exponential-family distribution (as in the generalized linear model), and in \cite{Wang:2008a} for models with repeated measurements. \cite{Antoniadis:2012a} estimates the coefficient functions with P-splines, and then uses the nonnegative garrote of \cite{Breiman:1995} to do local variable selection by selecting P-spline bases.\\
+	There is interest among practitioners of GWR not only in estimating the spatially-varying coefficient surface, but in doing variable selection to estimate which covariates are important predictors of the output variable, and in what regions they are important (citations?).
 	
-	The geographically-weighted LASSO of \cite{Wheeler:2009} is used for local variable selection in GWR models. \\
-
+	Some recent research has focused on variable selection in varying-coefficients models. In the context of varying-coefficients regression models, global variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero everywhere against the hypothesis that the coefficient is nonzero somewhere) is distinguished from local variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero at a given location against the hypothesis that the coefficient at that location is nonzero). Global variable selection for models where the varying coefficients are estimated using splines is addressed in \cite{Fan:1999} for response variables that belong to an exponential-family distribution (as in the generalized linear model), and in \cite{Wang:2008a} for models with repeated measurements. \cite{Antoniadis:2012a} estimates the coefficient functions with P-splines, and then uses the nonnegative garrote of \cite{Breiman:1995} to do local variable selection by selecting P-spline bases.
+	
+	Here we discuss a method of local variable selection in GWR models using the adaptive lasso of \cite{Zou:2006}. The idea first appears in the literature as the geographically-weighted LASSO (GWL) of \cite{Wheeler:2009}, which uses a jackknife criterion for selection of the lasso tuning parameters. Because the jackknife criterion can only be computed at locations where the response variable is observed, the GWL cannot be used for imputation of missing data nor for interpolation between observation locations. We avoid this limitation of the GWL by using a penalized-likelihood criterion to select the lasso tuning parameters (specifically the AIC, but in principle one could use the BIC, \emph{et cetera}). The AIC allows us to easily adapt our method to the setting of a generalized linear model. The local AIC presented here is based on an \emph{ad hoc} calculation of the degrees of freedom used to estimate the spatially-varying coefficient surfaces.
 	
 \section{Geographically-weighted regression models \label{section:GWR}}
 
@@ -73,7 +74,7 @@
 	\label{eq:err}
 	\end{eqnarray}
 	
-	In order to simplify the notation, let subscripts denote the values of data or parameters at the locations where data is observed. Thus, $\bm{x}(s_i) \equiv \bm{x}_i \equiv \left( 1, x_{i1}, \dots, x_{ip} \right)'$, $\bm{\beta}(s_i) \equiv \bm{\beta}_i \equiv \left(\beta_{i0}, \beta_{i1}, \dots, \beta_{ip} \right)'$, $y(s_i) \equiv y_i$, and $\sigma^2(s_i) \equiv \sigma^2_i$. Let $\bm{X} = \left( \bm{x}_1, \dots, \bm{x}_n \right)'$ and $\bm{Y} = \left( y_1, \dots, y_n \right)'$. Now equations \ref{eq:lm(s)} - \ref{eq:err} can be rewritten
+	In order to simplify the notation, let subscripts denote the values of data or parameters at the locations where data is observed. Thus, $\bm{x}(s_i) \equiv \bm{x}_i \equiv \left( 1, x_{i1}, \dots, x_{ip} \right)'$, $\bm{\beta}(s_i) \equiv \bm{\beta}_i \equiv \left(\beta_{i0}, \beta_{i1}, \dots, \beta_{ip} \right)'$, $y(s_i) \equiv y_i$, and $\sigma^2(s_i) \equiv \sigma^2_i$. Let $\bm{X} = \left( \bm{x}_1, \dots, \bm{x}_n \right)'$ and $\bm{Y} = \left( y_1, \dots, y_n \right)'$. Now (\ref{eq:lm(s)}) - (\ref{eq:err}) can be rewritten
 	\begin{eqnarray}
 		y_i = \bm{x}'_i \bm{\beta}_i + \epsilon_i\\
 		\epsilon_i \sim \mathcal{N} \left( 0,\sigma_i^2 \right)
@@ -81,7 +82,7 @@
 	
 	Assume that, given the covariates $\bm{X}$, observations of the output at different locations are statistically independent of each other. Then the total log-likelihood of the observed data is the sum of the log-likelihood of each individual observation.
 	 \begin{eqnarray}
-	 	\ell\left( \bm{\beta} \right) = - \frac{1}{2} \sum_{i=1}^n \left[  \log \left( 2 \pi \sigma^2_i\right) +  \sigma^{-2}_i  \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2  \right]
+	 	\ell\left( \bm{\beta} \right) = - \frac{1}{2} \sum_{i=1}^n \left\{  \log \left( 2 \pi \sigma^2_i\right) +  \sigma^{-2}_i  \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2  \right\}
 	\end{eqnarray}
 	
 	With $n$ observations and $n \times (p+1)$ free parameters, the model is overdetermined so it is not possible to directly maximize the total likelihood. To effectively reduce the number of parameters, assume that the spatially-varying coefficients $\bm{\beta}(s)$ are \emph{smoothly} varying, and use a kernel smoother to make pointwise estimates of the coefficients by maximizing the local likelihood. In the setting of spatial data and with the kernel smoother based on the physical distance between observation locations, this method is called geographically-weighted regression (GWR).
@@ -91,7 +92,7 @@
 	
 	Coefficient estimation is done by maximizing the local likelihood at each location \citep{Fotheringham:2002}.	
 	\begin{eqnarray}
-		L_i\left(\bm{\beta}_i\right) &=& \prod_{i'=1}^n \left\{ \left(2 \pi \sigma^2_i  \right)^{-\frac{1}{2}}  \exp\left(-\frac{1}{2} \sigma^{-2}_i  \left[y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right]^2 \right) \right\} ^ {w_{ii'}}
+		L_i\left(\bm{\beta}_i\right) &=& \prod_{i'=1}^n \left\{ \left(2 \pi \sigma^2_i  \right)^{-1/2}  \exp\left[-\frac{1}{2} \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right] \right\} ^ {w_{ii'}}
 	\end{eqnarray}
 			
 	\begin{eqnarray}
@@ -125,14 +126,14 @@
 	
 	estimation of the ordinary geographically-weighted regression coefficient surface is by weighted least squares:	
 	\begin{eqnarray}
-		\hat{\bm{\beta}}_{i, \mbox{GWR}} = \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{X}'\bm{W}_i\bm{Y}
+		\hat{\bm{\beta}}_{i, \text{GWR}} = \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{X}'\bm{W}_i\bm{Y}
 	\end{eqnarray}
 	
 	 
 	 \subsection{Smoothing kernel}
 	 	The bisquare kernel function is used to generate geographic weights based on the distance between observation locations. For estimating the value of the coefficient surface at location $s_i$, the weight given to the observation at location $s_{i'}$ is	
 	\begin{eqnarray}
-		w_{ii'} = \begin{cases} \left( 1-\left[ \bw^{-1} \|s_i-s_{i'}\| \right]^2 \right)^2 & \mbox{ if } \|s_i-s_{i'}\| < \bw \\ 0 & \mbox{ if } \|s_i-s_{i'}\| \geq \bw \end{cases}
+		w_{ii'} = \begin{cases} \left[ 1-\left( \bw^{-1} \|s_i-s_{i'}\| \right)^2 \right]^2 & \mbox{ if } \|s_i-s_{i'}\| < \bw \\ 0 & \mbox{ if } \|s_i-s_{i'}\| \geq \bw \end{cases}
 	\end{eqnarray}
 	
 	where $\bw$ is the kernel bandwidth.\\
@@ -152,28 +153,28 @@
 		\bm{\gamma}_i^* = \left( \widetilde{\bm{U}}_i^{*'} \widetilde{\bm{U}}_i^* \right)^{-1} \widetilde{\bm{U}}_i^{*'} \bm{V}_i^*
 	\end{eqnarray}
 	
-	Now a final scaling step is done: for $j=1, \dots, p$, the $j$th column of $\tilde{\bm{U}}_i^*$ is multiplied by $\left(\gamma_i^*\right)_j$, the corresponding coefficient from the regression equation in (\ref{eq:adaptive-weights-regression}). Call this rescaled matrix $\widecheck{\bm{U}}_i^*$.\\
+	Now a final scaling step is done: for $j=1, \dots, p$, the $j$th column of $\tilde{\bm{U}}_i^*$ is multiplied by $\left(\gamma_i^*\right)_j$, the corresponding coefficient from (\ref{eq:adaptive-weights-regression}). Call this rescaled matrix $\widecheck{\bm{U}}_i^*$.\\
 	
 	Finally, the Adaptive LASSO coefficient estimates at location $s_i$ are found by using the \verb!lars! algorithm \citep{Efron:2004b} to model $\bm{V}_i^*$ as a function of $\widecheck{\bm{U}}_i^*$.
 
 	\subsection{Tuning parameter selection}
 	The final task is to select the LASSO tuning parameter. \cite{Wheeler:2009} proposed selecting the tuning parameter for the LASSO at location $s_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$, but this choice restricts coefficient estimation to occur at the locations where data has been observed. We instead propose to use a locally-weighted version of the Akaike Information Criterion (AIC \citep{Akaike:1974}) to select the tuning parameter. The local AIC allows coefficients to be estimated at any location where the local likelihood can be calculated. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$, playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.\\
 	
-	The objective minimized by the geographically-weighted lasso (GWL) is:	
+	The objective minimized by the geographically-weighted adaptive lasso (GAL) is:	
 	\begin{eqnarray}
 		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \sum_{j=1}^p \lambda_{ij} \beta_{ij}
 	\end{eqnarray}
 	
 	Where $\lambda_{ij}, j =1, \dots, p$ are penalties from the Adaptive LASSO \citep{Zou:2006}. Taking the derivatives with respect to $\beta$ and setting to zero, we see that
 	\begin{eqnarray}
-		\hat{\bm{\beta}}_{i, \mbox{GWL}} &=& \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i\\
-		\hat{y}_i = \bm{x}_i \hat{\bm{\beta}}_{i, \mbox{GWL}} &=&  \bm{x}_i \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \bm{x}_i \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i
+		\hat{\bm{\beta}}_{i, \text{GAL}} &=& \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i\\
+		\hat{y}_i = \bm{x}_i \hat{\bm{\beta}}_{i, \text{GAL}} &=&  \bm{x}_i \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \bm{x}_i \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i
 	\end{eqnarray}
 	
-	Unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GWL is not a linear smoother the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}. The local AIC ($\mbox{AIC}_{\mbox{loc}}$) is minimized to select the adaptive lasso tuning parameter.
+	Unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GAL is not a linear smoother the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GAL \citep{Zou:2006}. The local AIC ($\mbox{AIC}_{\mbox{loc}}$) is minimized to select the adaptive lasso tuning parameter.
 	\begin{eqnarray}
 		\mbox{AIC}_{\mbox{loc}, i} &=& -2 \sum_{i'=1}^n \ell_{ii'}  + 2 \mbox{df}_i\\
-		&=& -2 \times \sum_{i'=1}^n \log \left\{ \left(2 \pi \hat{\sigma}_i^2\right)^{-\frac{1}{2}} \exp \left[-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right] \right\}^{w_{ii'}} + 2\mbox{df}_i\\
+		&=& -2 \times \sum_{i'=1}^n \log \left\{ \left(2 \pi \hat{\sigma}_i^2\right)^{-1/2} \exp \left[-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right] \right\}^{w_{ii'}} + 2\mbox{df}_i\\
 		&=& \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} + 2\mbox{df}_i \\
 		&=& \hat{\sigma}_i^{-2} \sum_{i'=1}^n w_{ii'} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + 2 \mbox{df}_i + C_i
 	\end{eqnarray}	
@@ -192,7 +193,7 @@
 		&=& \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}_i' \hat{\bm{\beta}}_i \right)^2 \right\} + 2 \times \mbox{df}\label{eq:total-AIC1}
 	\end{eqnarray}	
 	
-	What remains is to calculate $\mbox{df}$, the number of degrees of freedom used by the model. Classical GWR, as developed in \cite{Loader:1999} and \cite{Fotheringham:2002} calculates $\mbox{df}$ using the trace of the ``hat" matrix, but because the GAL is not a linear smoother, there is no ``hat" matrix associated with GWR. Instead, notice that $\mbox{df}$ can be pulled into the summation in \ref{eq:total-AIC1}:
+	What remains is to calculate $\mbox{df}$, the number of degrees of freedom used by the model. Classical GWR, as developed in \cite{Loader:1999} and \cite{Fotheringham:2002} calculates $\mbox{df}$ using the trace of the ``hat" matrix, but because the GAL is not a linear smoother, there is no ``hat" matrix associated with GWR. Instead, notice that $\mbox{df}$ can be pulled into the summation in (\ref{eq:total-AIC1}):
 		
 	%This is different from the formulas for the AIC as proposed in \cite{Fotheringham:2002} and \cite{Loader:1999}. The reason is that the basic GWR estimator is linear, so the degrees of freedom can be approximated using the trace of the ``hat" matrix. The GAL, though, is not a linear estimator so some...\ However, since the GAL does local variable selection, the model may use a different number of parameters at each location $s_i$. 
 			
@@ -206,109 +207,107 @@
 		\mbox{AIC}_{\mbox{tot}} &=& \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + 2 \times \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \mbox{df}_i \right\}
 	\end{eqnarray}
 			
-	
-	
 	The bandwidth that minimizes (\ref{eq:total-AIC2}) is found by a line search.\\
 	
-	\subsection{Confidence interval estimation}	
-	Confidence intervals for the GAL's coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by using the variables selected by the Adaptive LASSO in a weighted least squares model. To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
+	\subsection{Confidence interval construction}	
+	Confidence intervals for the GAL's coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by exploiting an assumption of normally-distributed residuals. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
 	 
+	 	\subsubsection{Bootstrap confidence interval}
+		To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GAL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. Since the GAL is applied independently to each bootstrap replicate, the variables selected by GAL may be different for each replicate.
+	
+		 Unshrunk coefficient estimates are found by using the GAL at each location for variable selection only and then estimating the coefficients for the selected variables by GWR. An unshrunk bootstrap confidence interval is found by estimating the unshrunk coefficients for each of the $n_B$ bootstrap replicates and then calculating the percentiles as above.\\
+	 
+		
 	 	\subsubsection{Normal approximation-based confidence interval}
-		A third way to estimate the coefficient confidence intervals is to use the GWL for variable selection only and then to use GWR to calculate a confidence interval based on the assumption of an independent, identically distributed, Gaussian error structure. In this case, the standard error of the regression coefficients is 
+		A third way to estimate the coefficient confidence intervals is to use the GAL for variable selection only and then to use GWR to calculate a confidence interval based on the assumption of an independent, identically distributed, Gaussian error structure. In this case, the standard error of the regression coefficients is 
 		\begin{eqnarray}
 			\hat{\mbox{se}}_{\beta_i} &=& \left( \tilde{\bm{X}}_i'\bm{W}_i \tilde{\bm{X}}_i \right)^{-1}  \tilde{\bm{X}}_i'\bm{W}_i\bm{Y}
 		\end{eqnarray}
 	
-		where $\tilde{\bm{X}}_i$ is the model matrix including only those variables that are selected by GWL at location $i$.
-		
-		\subsubsection{Bootstrap confidence interval}
-		
-	 Unshrunk coefficient estimates are found by using the GWL at each location for variable selection only and then estimating the coefficients for the selected variables by GWR. An unshrunk bootstrap confidence interval is found by estimating the unshrunk coefficients for each of the $n_B$ bootstrap replicates and then calculating the percentiles as above.\\
-	 
+		where $\tilde{\bm{X}}_i$ is the model matrix including only those variables that are selected by GAL at location $i$.
 
 
 
 \section{Simulation}
 	\subsection{Simulation setup}
-	A simulation study was conducted to assess the finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[0,1] \times [0,1]$, which was divided into a $30 \times 30$ grid. Each of the $p=5$ covariates was simulated by a Gaussian random field with mean zero and exponential covariance $Cov \left(Z_j(s_i), Z_j(s_{i'}) \right) = \sigma^2 \exp{\left( -\tau^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma^2=1$ is the variance and $\tau$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.\\
+	A simulation study was conducted to assess the finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[0,1] \times [0,1]$, which was divided into a $30 \times 30$ grid. Each of $p=5$ covariates $Z_1, \dots, Z_p$ was simulated by a Gaussian random field (GRF) with mean zero and exponential spatial covariance $Cov \left(Z_{ji}, Z_{ji'} \right) = \sigma_z^2 \exp{\left( -\tau_z^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma_z^2=1$ is the variance and $\tau_z$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by $\bm{R}$, where $\bm{R}$ is the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix $\bm{\Sigma}$ is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.
 		
-	The simulated response is $y_i = \bm{x}_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 900$. The simulated data included the output $y$ and five covariates $x_1, \dots, x_5$. The true data-generating model used only $x_1$, so $x_2, \dots, x_5$ are included to test the variable-selection properties of GWL. The coefficient surface of $\beta_1$ is described by the ``step" function:
+	The simulated response is $y_i = \bm{z}'_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 900$ where the vector of additive errors $\bm{\epsilon}$ is generated from a GRF with spatial covariance $Cov \left(\epsilon_{i}, \epsilon_{i'} \right) = \sigma_{\epsilon}^2 \exp{\left( -\tau_{\epsilon}^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma_{\epsilon}^2=1$.
+	
+	The simulated data include the output $y$ and five covariates $Z_1, \dots, Z_5$. The true data-generating model uses only $Z_1$, so $Z_2, \dots, Z_5$ are included to test the variable-selection properties of GAL. The coefficient surface of $\beta_1$ is described by the ``step" function:
 	\begin{eqnarray}
 		\beta_1(s) = \begin{cases} 0 &\mbox{ if } s_y<0.4 \\ 5(s_y-0.4) &\mbox{ if } 0.4 \leq s_y<0.6 \\ 1 &\mbox{ o.w.} \end{cases}
 	\end{eqnarray}.\\
 		
-	In order to evaluate the performance of GWL under a range of conditions, the data was simulated under 18 different settings for each type of $\beta_1$ (Table \ref{table:simulation_settings}): high (0.1) and low (0.03) levels of the autoregression range parameter $\tau$ for the Gaussian random fields used to generate the covariates $\bm{X}_1(s), \dots, \bm{X}_5(s)$; three levels (0, 0.5, 0.8) of between-covariate correlation $\rho$; and three levels (0, 0.03, 0.1) of the autoregression range parameter $\tau$ for the Gaussian random field used to generate the error term $\epsilon(s)$. Each case was simulated 100 times.\\
+	In order to evaluate the performance of GAL under a range of conditions, the data was simulated under 18 different settings (Table \ref{table:simulation_settings}): high (0.1) and low (0.03) levels of $\tau_z$, the autoregression range parameter for the covariate GRFs $Z_1, \dots, Z_5$; three levels (0, 0.5, 0.8) of between-covariate correlation $\rho$; and three levels (0, 0.03, 0.1) of the autoregression range parameter $\tau_{\epsilon}$ for the error-term GRF $\bm{\epsilon}$. Each case was simulated 100 times.
 	
-	\subsection{Simulation results}
-	Results of the simulation experiment were summarized to asses the consistency in selection and estimation, as well as the coverage properties of the confidence intervals.
-			
-	The data-generating process was simulated on the $30 \times 30$ grid spanning $[0,1] \times [0,1]$. Bootstrap confidence intervals were estimated with $n_B = 101$.
+	For measuring performance, we look at the pointwise selection frequency of $\beta_1, \dots, \beta_5$ and the coverage frequency of $\beta_1$ (for a nominal 95\% confidence interval).
+	
+	As a baseline, ordinary GWR was used to estimate the coefficients using the same data but under an ``oracle" setting (oracular GWR, or O-GWR), meaning that GWR was provided with the exactly correct set of predictors as used in the data-generating process. The ratio of the coverage frequency of the GAL to the coverage frequency of O-GWR is called the relative efficiency of the GAL.\\
 	
 	% latex table generated in R 2.15.1 by xtable 1.7-0 package
 % Fri Jan 18 10:19:47 2013
 \begin{table}[h!]
-\begin{center}
-\begin{tabular}{rrrr}
-  \hline
- & tau & rho & sigma.tau \\ 
-  \hline
-  1 & 0.03 & 0.00 & 0.00 \\ 
-  2 & 0.03 & 0.00 & 0.03 \\ 
-  3 & 0.03 & 0.00 & 0.10 \\ 
-  4 & 0.03 & 0.50 & 0.00 \\ 
-  5 & 0.03 & 0.50 & 0.03 \\ 
-  6 & 0.03 & 0.50 & 0.10 \\ 
-  7 & 0.03 & 0.80 & 0.00 \\ 
-  8 & 0.03 & 0.80 & 0.03 \\ 
-  9 & 0.03 & 0.80 & 0.10 \\ 
-  10 & 0.10 & 0.00 & 0.00 \\ 
-  11 & 0.10 & 0.00 & 0.03 \\ 
-  12 & 0.10 & 0.00 & 0.10 \\ 
-  13 & 0.10 & 0.50 & 0.00 \\ 
-  14 & 0.10 & 0.50 & 0.03 \\ 
-  15 & 0.10 & 0.50 & 0.10 \\ 
-  16 & 0.10 & 0.80 & 0.00 \\ 
-  17 & 0.10 & 0.80 & 0.03 \\ 
-  18 & 0.10 & 0.80 & 0.10 \\ 
-  \hline
-\end{tabular}
-\end{center}
-\caption{Simulation parameters for each setting.}
+	\begin{center}
+	\begin{tabular}{rrrr}
+		\hline
+		& $\tau_z$ & $\rho$ & $\tau_{\epsilon}$ \\ 
+		\hline
+		1 & 0.03 & 0.00 & 0.00 \\ 
+		2 & 0.03 & 0.00 & 0.03 \\ 
+		3 & 0.03 & 0.00 & 0.10 \\ 
+		4 & 0.03 & 0.50 & 0.00 \\ 
+		5 & 0.03 & 0.50 & 0.03 \\ 
+		6 & 0.03 & 0.50 & 0.10 \\ 
+		7 & 0.03 & 0.80 & 0.00 \\ 
+		8 & 0.03 & 0.80 & 0.03 \\ 
+		9 & 0.03 & 0.80 & 0.10 \\ 
+		10 & 0.10 & 0.00 & 0.00 \\ 
+		11 & 0.10 & 0.00 & 0.03 \\ 
+		12 & 0.10 & 0.00 & 0.10 \\ 
+		13 & 0.10 & 0.50 & 0.00 \\ 
+		14 & 0.10 & 0.50 & 0.03 \\ 
+		15 & 0.10 & 0.50 & 0.10 \\ 
+		16 & 0.10 & 0.80 & 0.00 \\ 
+		17 & 0.10 & 0.80 & 0.03 \\ 
+		18 & 0.10 & 0.80 & 0.10
+	\end{tabular}
+	\end{center}
+	\caption{Simulation parameters for each setting.\label{table:simulation_settings}}
 \end{table}
 	
 	\subsection{Simulation results}
-	Results of the simulation experiment were summarized to asses the consistency in selection and estimation, as well as the coverage properties of the confidence intervals.
+	Results of the simulation experiment were summarized to asses the consistency in selection and estimation, as well as the coverage properties of the confidence intervals. The confidence intervals based on the bootstrap (without shrinkage) were used for the GAL because they seemed to uniformly outperform the other options.\\
+	
 	\subsection{Figures}
+	Figures \ref{fig:coveragemap1} - \ref{fig:coveragemap18} show the frequency with which the true value of the parameter $\beta_1$ was covered by the 95\% confidence intervals at each location under each simulation setting. The left column shows the coverage frequency of the 95\% CI of the GAL using the unshrunk-bootstrap method of CI construction. The middle column is the coverage frequency of the 95\% CI the O-GWR using the bootstrap to generate the CI. The right column is the relative efficiency of the GAL to O-GWR. In the first two columns, the color white is used to indicate areas where the nominal coverage frequency of 95\% is achieved, while blue codes areas that exceeded 95\% coverage and orange codes areas that fell short of 95\% coverage. In the third column, the color white indicates areas where the relative efficiency is unity, while orange indicates areas where the relative efficiency was less than unity and blue indicates areas where the relative efficiency exceeded unity.\\	
+	
 	\begin{center}
 		%\centering
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-1.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
-		\captionof{figure}{Coverage frequency of 95\% CIs: setting 1}
-		\label{fig:gull}
+		\captionof{figure}{Coverage frequency of 95\% CIs: setting 1\label{fig:coveragemap1}}
 	\end{center}
         
 	\begin{center}
 		%\centering
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-2.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
-		\captionof{figure}{Coverage frequency of 95\% CIs: setting 2}
-		\label{fig:tiger}
+		\captionof{figure}{Coverage frequency of 95\% CIs: setting 2\label{fig:coveragemap2}}
 	\end{center}
 	
 	\begin{center}
 		%\centering
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-3.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
-		\captionof{figure}{Coverage frequency of 95\% CIs: setting 3}
-		\label{fig:mouse}
+		\captionof{figure}{Coverage frequency of 95\% CIs: setting 3\label{fig:coveragemap3}}
 	\end{center}
 	
 	\begin{center}
 		%\centering
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-4.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
-		\captionof{figure}{Coverage frequency of 95\% CIs: setting 4}
-		\label{fig:gull}
+		\captionof{figure}{Coverage frequency of 95\% CIs: setting 4\label{fig:coveragemap4}}
 	\end{center}
         
 	\begin{center}
@@ -340,7 +339,7 @@
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-8.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
 		\captionof{figure}{Coverage frequency of 95\% CIs: setting 8}
-		\label{fig:tiger}
+		\label{fig:coveragemap8}
 	\end{center}
 	
 	\begin{center}
@@ -348,7 +347,7 @@
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-9.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
 		\captionof{figure}{Coverage frequency of 95\% CIs: setting 9}
-		\label{fig:mouse}
+		\label{fig:coveragemap9}
 	\end{center}
 	
 	\begin{center}
@@ -356,7 +355,7 @@
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-10.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
 		\captionof{figure}{Coverage frequency of 95\% CIs: setting 10}
-		\label{fig:gull}
+		\label{fig:coveragemap10}
 	\end{center}
         
 	\begin{center}
@@ -364,7 +363,7 @@
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-11.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
 		\captionof{figure}{Coverage frequency of 95\% CIs: setting 11}
-		\label{fig:tiger}
+		\label{fig:coveragemap11}
 	\end{center}
 	
 	\begin{center}
@@ -372,7 +371,7 @@
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-12.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
 		\captionof{figure}{Coverage frequency of 95\% CIs: setting 12}
-		\label{fig:mouse}
+		\label{fig:coveragemap12}
 	\end{center}
 	
 	\begin{center}
@@ -380,7 +379,7 @@
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-13.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
 		\captionof{figure}{Coverage frequency of 95\% CIs: setting 13}
-		\label{fig:gull}
+		\label{fig:coveragemap13}
 	\end{center}
         
 	\begin{center}
@@ -388,31 +387,31 @@
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-14.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
 		\captionof{figure}{Coverage frequency of 95\% CIs: setting 14}
-		\label{fig:tiger}
+		\label{fig:coveragemap14}
 	\end{center}
 	
 	\begin{center}
 		%\centering
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-15.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
-		captionof{figure}{Coverage frequency of 95\% CIs: setting 15}
-		\label{fig:mouse}
+		\captionof{figure}{Coverage frequency of 95\% CIs: setting 15}
+		\label{fig:coveragemap15}
 	\end{center}
 	
 	\begin{center}
 		%\centering
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-16.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-1-profile-coverage.pdf}
-		\captionof{figure}{figure}{Coverage frequency of 95\% CIs: setting 16}
-		\label{fig:gull}
+		\captionof{figure}{Coverage frequency of 95\% CIs: setting 16}
+		\label{fig:coveragemap16}
 	\end{center}
         
 	\begin{center}
 		%\centering
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-17.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-2-profile-coverage.pdf}
-		\captionof{figure}{figure}{Coverage frequency of 95\% CIs: setting 18}
-		\label{fig:tiger}
+		\captionof{figure}{Coverage frequency of 95\% CIs: setting 17}
+		\label{fig:coveragemap17}
 	\end{center}
 	
 	\begin{center}
@@ -420,7 +419,7 @@
 		\includegraphics[width=0.99\textwidth]{../../figures/X1-28-18.pdf}
 		%\includegraphics[width=\textwidth]{../../figures/simulation/28-3-profile-coverage.pdf}
 		\captionof{figure}{Coverage frequency of 95\% CIs: setting 18}
-		\label{fig:mouse}
+		\label{fig:coveragemap18}
 	\end{center}
 	
 	%\begin{comment}
@@ -429,48 +428,70 @@
 			
 \section{Data analysis}
 	\subsection{Census poverty data}
-	Data for this example comes from the U.S. Census Bureau's decennial census from 1960-2000, and from its American Community Survey in 2006. The variable being modeled is the logit of poverty rate by county in the states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. A GWR model was fit to the data based on the predictors \verb!pag!, \verb!pex!, \verb!pman!, \verb!pserve!, \verb!pfire!, \verb!potprof!, \verb!pwh!, \verb!pblk!, \verb!phisp!, and \verb!metro!. One model was fit to the data from each census.
+	We present the following analysis to demonstrate one possible application of the geographically-weighted lasso in a linear regression context. We use county-level data from the US Census Bureau to select the social and demographic variables that are important predictors of the county-level poverty rate in the upper midwest, and to estimate the coefficients associated with these predictors. Data are from six censuses - the decennial censuses from 1960 to 2000, and from the American Community Survey in 2006. Selection and estimation are done for each census individually (no attempt is made here to borrow strength across years). The outcome of interest (poverty rate) is a proportion and so takes values on $[0,1]$, but to demonstrate the GAL in a linear regression context, we model the logit-transformed poverty rate. Our data set covers all counties in the states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. The potential predictors are described in Table \ref{table:census-vars}.\\
+	
+	\begin{table}
+		\begin{center}
+		\begin{tabular}{ll}
+			Variable name & Description \\
+			\hline
+			\verb!pag! & Proportion working in agriculture\\
+			\verb!pex! &  Proportion working in extraction (mining)\\
+			\verb!pman! & Proportion working in manufacturing \\
+			\verb!pserve! & Proportion working in services \\
+			\verb!pfire! & Proportion working in finance, insurance, and real estate \\
+			\verb!potprof! & Proportion working in other professions \\
+			\verb!pwh! & Proportion who are white \\
+			\verb!pblk! & Proportion who are black \\
+			\verb!phisp! & Proportion who are hispanic \\
+			\verb!metro! & Is the county in a metropolitan area?\\
+		\end{tabular}
+		\caption{Description of the variables used in the census-data example\label{table:census-vars}}
+		\end{center}		
+	\end{table}
 	
 	\subsection{Figures}
+	The coefficient estimates are plotted on maps of the upper midwest in Figures \ref{fig:census-coefs-1960} - \ref{fig:census-coefs-2006}. It is immediately apparent that the estimated coefficient surfaces are non-constant for most variables.\\
+		
 	\begin{figure}
 		\begin{center}
 			\includegraphics[height=8in]{../../figures/poverty/1960.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 1960 census.\label{fig:1960}}
-		\end{center}
+			\caption{Estimated coefficient surfaces for the 1960 census.\label{fig:census-coefs-1960}}
+		\end{center}		
 	\end{figure}
 
 	\begin{figure}
 		\begin{center}
 			\includegraphics[height=8in]{../../figures/poverty/1970.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 1970 census.\label{fig:1970}}
+			\caption{Estimated coefficient surfaces for the 1970 census.\label{fig:census-coefs-1970}}
 		\end{center}
 	\end{figure}
 	
 	\begin{figure}
 		\begin{center}
 			\includegraphics[height=8in]{../../figures/poverty/1980.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 1980 census.\label{fig:1980}}
+			\caption{Estimated coefficient surfaces for the 1980 census.\label{fig:census-coefs-1980}}
 		\end{center}
 	\end{figure}
 	
 	\begin{figure}
 		\begin{center}
 			\includegraphics[height=8in]{../../figures/poverty/1990.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 1990 census.\label{fig:1990}}
+			\caption{Estimated coefficient surfaces for the 1990 census.\label{fig:census-coefs-1990}}
 		\end{center}
 	\end{figure}
 	
 	\begin{figure}
 		\begin{center}
 			\includegraphics[height=8in]{../../figures/poverty/2000.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 2000 census.\label{fig:2000}}
+			\caption{Estimated coefficient surfaces for the 2000 census.\label{fig:census-coefs-2000}}
 		\end{center}
 	\end{figure}
-	
+
 	\begin{figure}
 		\begin{center}
 			\includegraphics[height=8in]{../../figures/poverty/2006.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 2006 census.\label{fig:2006}}
+			\caption{Estimated coefficient surfaces for the 2006 census.\label{fig:census-coefs-2006}}
 		\end{center}
 	\end{figure}
 			

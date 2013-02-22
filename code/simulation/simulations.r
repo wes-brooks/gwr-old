@@ -1,34 +1,35 @@
-library(sp, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(maps, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(shapefiles, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(plotrix, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(fossil, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(ggplot2, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(RandomFields, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(scales, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(sp, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(maps, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(shapefiles, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(plotrix, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(fossil, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(ggplot2, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(RandomFields, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(scales, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 
-library(foreach, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(iterators, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(multicore, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(doMC, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(foreach, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(iterators, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(multicore, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(doMC, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 
-library(lars, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(glmnet, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(gwselect, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(lars, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(glmnet, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(gwselect, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 
-library(splancs, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(RandomFields, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
-library(geoR, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(splancs, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(RandomFields, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
+#library(geoR, lib.loc=c('R', 'R/x86_64-redhat-linux-gnu-library/2.15'))
 
-#library(geoR)
-#library(gwselect)
-#library(doMC)
-#registerCores(n=3)
+library(geoR)
+library(gwselect)
+library(doMC)
+registerCores(n=3)
 
-seeds = read.csv("seeds.csv")$x
+seeds = as.vector(read.csv("seeds.csv", header=FALSE)[,1])
 B = 100
 N = 30
 N.full = 30
+#coord = (-3:32)/29
 coord = seq(0, 1, length.out=N)
 
 #Establish the simulation parameters
@@ -51,7 +52,7 @@ params = data.frame(tau, rho, sigma.tau)
 #Read command-line parameters
 args = commandArgs(trailingOnly=TRUE)
 cluster = as.integer(args[1])
-process = as.integer(args[2]) + 1
+process = as.integer(args[2])
 #cluster=NA
 #process=2
 
@@ -60,7 +61,7 @@ setting = process %/% B + 1
 parameters = params[setting,]
 
 #Get two (independent) Gaussian random fields:
-set.seed(seeds[process])
+set.seed(seeds[process+1])
 d1 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
 d2 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
 d3 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
@@ -96,12 +97,9 @@ if (parameters[['sigma.tau']] > 0) {epsilon = grf(n=N.full**2, grid='reg', cov.m
 mu = X1*B1
 Y = mu + epsilon
 
-#
-#loc.x = rep(coord, each=N.full)
-#loc.y = rep(coord, times=N.full)
 sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), X3=as.vector(X3), X4=as.vector(X4), X5=as.vector(X5), loc.x, loc.y)
 fitloc = cbind(rep(seq(0,1, length.out=N), each=N), rep(seq(0,1, length.out=N), times=N))
-#vars = as.vector(B1[4:33,4:33]!=0)
+
 vars = as.vector(B1!=0)
 oracle = list()
 for (i in 1:N**2) { 
@@ -114,12 +112,12 @@ for (i in 1:N**2) {
 
 #Find the optimal bandwidth and use it to generate a model:   
 #registerDoMC(cores=3)
-bw = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
-model = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=101, mode.select='AIC', bw=bw, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
+bw = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,0.5), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=TRUE, parallel=FALSE, interact=TRUE)
+model = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=101, mode.select='AIC', bw=bw, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=TRUE, parallel=FALSE, interact=TRUE)
 
 #registerDoMC(cores=3)
-bw.oracular = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=TRUE)
-model.oracular = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=101, mode.select='AIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE)
+#bw.oracular = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,0.5), gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=TRUE)
+#model.oracular = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=101, mode.select='AIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE)
 
 
 #Write the results to some files:
