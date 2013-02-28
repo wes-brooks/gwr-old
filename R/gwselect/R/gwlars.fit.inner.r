@@ -179,7 +179,6 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 
                 if (length(colocated)>0) {
                     loss.local = as.vector(apply(fitted, 2, function(z) {sum((w[permutation]*(z - yy[permutation])**2)[colocated])})/s2 + log(s2) + 2*df/sum(w[permutation]))
-                    #loss.local = as.vector(apply(fitted, 2, function(z) {normy**2 * sum((w*(z - fity)**2)[colocated])})/s2 + 2*log(normy) + log(s2) + 2*df/sum(w[permutation])) 
                 } else {
                     loss.local = rep(NA, length(loss))
                 }                     
@@ -299,7 +298,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
     } else if (predict) {
         return(list(loss.local=loss.local, coef=coefs))
     } else if (simulation) {
-        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, s=s.optimal, bw=bw, sigma2=s2, coef.unshrunk=coefs.unshrunk, s2.unshrunk=s2.unshrunk, coef.unshrunk.list=coef.unshrunk.list, se.unshrunk=se.unshrunk))
+        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, s=s.optimal, bw=bw, sigma2=s2, coef.unshrunk=coefs.unshrunk, s2.unshrunk=s2.unshrunk, coef.unshrunk.list=coef.unshrunk.list, se.unshrunk=se.unshrunk, fitted=fitted[colocated,s.optimal][1]))
     } else {
         return(list(model=model, loss=loss, coef=coefs, coef.unshrunk=coefs.unshrunk, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, meany=meany, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N, fitted=fitted))
     }

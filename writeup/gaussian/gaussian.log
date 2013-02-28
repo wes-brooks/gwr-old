@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  21 FEB 2013 13:57
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  28 FEB 2013 15:29
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -17,8 +17,8 @@ kurmanji, latin, latvian, lithuanian, mongolian, mongolianlmc, bokmal, nynorsk,
  polish, portuguese, romanian, romansh, russian, sanskrit, serbian, serbianc, s
 lovak, slovenian, spanish, swedish, turkish, turkmen, ukrainian, uppersorbian, 
 welsh, loaded.
-(/usr/local/texlive/2012/texmf-dist/tex/latex/elsarticle/elsarticle.cls
-Document Class: elsarticle 2009/09/17, 1.2.0: Elsevier Ltd
+(./elsarticle.cls
+Document Class: elsarticle 2008/05/22, 1.0.1: Elsevier Science
 \@bls=\dimen102
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
@@ -699,116 +699,113 @@ Underfull \hbox (badness 10000) in paragraph at lines 280--281
  []
 
 [12]
-Underfull \hbox (badness 10000) in paragraph at lines 283--284
+Underfull \hbox (badness 10000) in paragraph at lines 375--376
 
  []
 
+[13]
 File: ../../figures/X1-28-1.pdf Graphic file (type QTm)
-<use  "../../figures/X1-28-1.pdf" > [13]
+ <use  "../../figures/X1-28-1.pdf" > [14]
 File: ../../figures/X1-28-2.pdf Graphic file (type QTm)
- <use  "../../figures/X1-28-2.pdf" >
+
+<use  "../../figures/X1-28-2.pdf" > [15]
 File: ../../figures/X1-28-3.pdf Graphic file (type QTm)
-
-<use  "../../figures/X1-28-3.pdf" > [14]
+ <use  "../../figures/X1-28-3.pdf" >
 File: ../../figures/X1-28-4.pdf Graphic file (type QTm)
- <use  "../../figures/X1-28-4.pdf" >
-File: ../../figures/X1-28-5.pdf Graphic file (type QTm)
 
-<use  "../../figures/X1-28-5.pdf" >
+<use  "../../figures/X1-28-4.pdf" > [16]
+File: ../../figures/X1-28-5.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-5.pdf" >
 File: ../../figures/X1-28-6.pdf Graphic file (type QTm)
- <use  "../../figures/X1-28-6.pdf" >
-[15]
+
+<use  "../../figures/X1-28-6.pdf" >
 File: ../../figures/X1-28-7.pdf Graphic file (type QTm)
  <use  "../../figures/X1-28-7.pdf" >
+[17]
 File: ../../figures/X1-28-8.pdf Graphic file (type QTm)
  <use  "../../figures/X1-28-8.pdf" >
-[16]
 File: ../../figures/X1-28-9.pdf Graphic file (type QTm)
  <use  "../../figures/X1-28-9.pdf" >
+[18]
 File: ../../figures/X1-28-10.pdf Graphic file (type QTm)
  <use  "../../figures/X1-28-10.pdf" >
 File: ../../figures/X1-28-11.pdf Graphic file (type QTm)
-
-<use  "../../figures/X1-28-11.pdf" > [17]
+ <use  "../../figures/X1-28-11.pdf" >
 File: ../../figures/X1-28-12.pdf Graphic file (type QTm)
- <use  "../../figures/X1-28-12.pdf" >
+
+<use  "../../figures/X1-28-12.pdf" > [19]
 File: ../../figures/X1-28-13.pdf Graphic file (type QTm)
-
-<use  "../../figures/X1-28-13.pdf" > [18]
+ <use  "../../figures/X1-28-13.pdf" >
 File: ../../figures/X1-28-14.pdf Graphic file (type QTm)
- <use  "../../figures/X1-28-14.pdf" >
-File: ../../figures/X1-28-15.pdf Graphic file (type QTm)
 
-<use  "../../figures/X1-28-15.pdf" >
+<use  "../../figures/X1-28-14.pdf" > [20]
+File: ../../figures/X1-28-15.pdf Graphic file (type QTm)
+ <use  "../../figures/X1-28-15.pdf" >
 File: ../../figures/X1-28-16.pdf Graphic file (type QTm)
- <use  "../../figures/X1-28-16.pdf" >
-[19]
+
+<use  "../../figures/X1-28-16.pdf" >
 File: ../../figures/X1-28-17.pdf Graphic file (type QTm)
  <use  "../../figures/X1-28-17.pdf" >
+[21]
 File: ../../figures/X1-28-18.pdf Graphic file (type QTm)
  <use  "../../figures/X1-28-18.pdf" >
-[20]
-Underfull \hbox (badness 10000) in paragraph at lines 431--432
+Underfull \hbox (badness 10000) in paragraph at lines 523--524
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 454--455
+[22]
+Underfull \hbox (badness 10000) in paragraph at lines 546--547
 
  []
 
-[21]
 File: ../../figures/poverty/1960.linear.coefficients.pdf Graphic file (type QTm
 )
- <use  "../../figures/poverty/1960.linear.coefficients.pdf" >
+<use  "../../figures/poverty/1960.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 461.
+LaTeX Warning: Float too large for page by 60.35974pt on input line 553.
 
 File: ../../figures/poverty/1970.linear.coefficients.pdf Graphic file (type QTm
 )
 <use  "../../figures/poverty/1970.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 468.
+LaTeX Warning: Float too large for page by 60.35974pt on input line 560.
 
 File: ../../figures/poverty/1980.linear.coefficients.pdf Graphic file (type QTm
 )
 <use  "../../figures/poverty/1980.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 475.
+LaTeX Warning: Float too large for page by 60.35974pt on input line 567.
 
 File: ../../figures/poverty/1990.linear.coefficients.pdf Graphic file (type QTm
 )
 <use  "../../figures/poverty/1990.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 482.
+LaTeX Warning: Float too large for page by 60.35974pt on input line 574.
 
 File: ../../figures/poverty/2000.linear.coefficients.pdf Graphic file (type QTm
 )
 <use  "../../figures/poverty/2000.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 489.
+LaTeX Warning: Float too large for page by 60.35974pt on input line 581.
 
 File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
 )
 <use  "../../figures/poverty/2006.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 496.
+LaTeX Warning: Float too large for page by 60.35974pt on input line 588.
 
-(./gaussian.bbl [22] [23] [24] [25] [26] [27] [28]) [29] (./gaussian.aux)
+(./gaussian.bbl [23] [24] [25] [26] [27] [28] [29] [30]) [31] (./gaussian.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 4353 strings out of 494004
- 61289 string characters out of 3150890
- 124779 words of memory out of 3000000
- 7488 multiletter control sequences out of 15000+200000
+ 4341 strings out of 494004
+ 61013 string characters out of 3150890
+ 131017 words of memory out of 3000000
+ 7477 multiletter control sequences out of 15000+200000
  16343 words of font info for 57 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
  42i,15n,38p,1097b,328s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (29 pages).
+Output written on gaussian.pdf (31 pages).

@@ -2,7 +2,7 @@ gwr.matplot <- function (x, cs1 = c(0, 1), cs2 = c(0, 1), cs3 = c(0, 1), extreme
     cellcolors = NA, show.legend = FALSE, nslices = 10, xlab = "Column", 
     ylab = "Row", do.hex = FALSE, axes = TRUE, show.values = FALSE, 
     vcol = NA, vcex = 1, border = "black", na.color = NA, xrange = NULL, 
-    color.spec = "rgb", yrev = TRUE, xat = NULL, yat = NULL, 
+    color.spec = "rgb", yrev = TRUE, xat = NULL, yat = NULL, xcrit=NULL, col.crit=NULL,
     Hinton = FALSE, ...) 
 {
     if (is.matrix(x) || is.data.frame(x))
@@ -59,7 +59,19 @@ gwr.matplot <- function (x, cs1 = c(0, 1), cs2 = c(0, 1), cs3 = c(0, 1), extreme
             }
 
 
-            else cellcolors <- color.scale(x, cs1, cs2, cs3, extremes=extremes, na.color=na.color, color.spec=color.spec, xrange=xrange)
+            else
+            {
+            	if (is.null(xcrit) || is.null(col.crit)) cellcolors <- color.scale(x, cs1, cs2, cs3, extremes=extremes, na.color=na.color, color.spec=color.spec, xrange=xrange)
+            	else
+            	{
+            		cellcolors = rep(NA, length(x))
+            		indx = which(x <= xcrit)
+            		cellcolors[indx] = color.scale(x[indx], c(cs1[1], col.crit[1]), c(cs2[1], col.crit[2]), c(cs3[1], col.crit[3]), extremes=extremes, na.color=na.color, color.spec=color.spec, xrange=c(xrange[1], xcrit))
+            		
+            		indx = which(x > xcrit)
+            		cellcolors[indx] = color.scale(x[indx], c(col.crit[1], cs1[2]), c(col.crit[2], cs2[2]), c(col.crit[3], cs3[2]), extremes=extremes, na.color=na.color, color.spec=color.spec, xrange=c(xcrit, xrange[2]))
+            	}            	
+            }
         }
         if (is.na(vcol)) 
             vcol <- ifelse(colSums(col2rgb(cellcolors) * c(1, 
@@ -133,7 +145,19 @@ gwr.matplot <- function (x, cs1 = c(0, 1), cs2 = c(0, 1), cs3 = c(0, 1), extreme
             cs3 <- colmat[3, ]/255
             color.spec <- "rgb"
         }
-        rect.col <- color.scale(1:nslices, cs1, cs2, cs3, color.spec = color.spec)
+        
+		if (is.null(xcrit) || is.null(col.crit)) rect.col <- color.scale(1:nslices, cs1, cs2, cs3, color.spec = color.spec)
+		else
+		{
+			rect.col = rep(NA, nslices)
+			crit = ((nslices * (xcrit - xrange[1])/(xrange[2]-xrange[1])) %/% 1)
+			indx = 1:crit
+			rect.col[indx] = color.scale(indx, c(cs1[1], col.crit[1]), c(cs2[1], col.crit[2]), c(cs3[1], col.crit[3]), color.spec=color.spec)
+			
+			indx = (crit+1):nslices
+			rect.col[indx] = color.scale(indx, c(col.crit[1], cs1[2]), c(col.crit[2], cs2[2]), c(col.crit[3], cs3[2]), color.spec=color.spec)
+		}  
+        
         if (show.legend) 
             color.legend(grx1, gry1, grx2, gry2, round(xrange, show.legend), rect.col=rect.col)
         par(oldpar)

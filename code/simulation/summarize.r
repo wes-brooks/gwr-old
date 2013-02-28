@@ -8,7 +8,7 @@ source('code/matplot.r')
 #args = commandArgs(trailingOnly=TRUE)
 #cluster = as.integer(args[1])
 #cluster = 'NA'
-cluster = 28
+cluster = 43
 
 B = 100
 N = 30
@@ -25,6 +25,7 @@ params = data.frame(tau, rho, sigma.tau)
 N = 30
 B = list()
 settings = 1:18
+nsims = 100
 
 coord = seq(0, 1, length.out=N)
 B[['(Intercept)']] = rep(0, N**2)
@@ -43,10 +44,27 @@ mean.coverage.oracular.b = data.frame()
 mean.coverage.oracular.se = data.frame()
 
 
+Y.err = list()
+Y.err.oracular = list()
+Y.err.precon = list()
+Y.err.unshrunk = list()
+Y.err.unshrunk.precon = list()
+
+X1.err = list()
+X1.err.oracular = list()
+X1.err.precon = list()
+X1.err.unshrunk = list()
+X1.err.unshrunk.precon = list()
+
 coverage.ub.aggregate = list()
 coverage.b.aggregate = list()
 coverage.se.aggregate = list()
 selection.aggregate = list()
+
+coverage.ub.precon.aggregate = list()
+coverage.b.precon.aggregate = list()
+coverage.se.precon.aggregate = list()
+selection.precon.aggregate = list()
 
 coverage.oracular.b.aggregate = list()
 coverage.oracular.se.aggregate = list()
@@ -56,36 +74,80 @@ coverage.unshrunk.bootstrap = list()
 coverage.se = list()
 selection = list()
 
+coverage.bootstrap.precon = list()
+coverage.unshrunk.bootstrap.precon = list()
+coverage.se.precon = list()
+selection.precon = list()
+
 coverage.oracular.bootstrap = list()
 coverage.oracular.se = list()
 
 for (setting in settings) {
+	cat(paste("Begin setting ", setting, ".\n", sep=""))
     coverage.bootstrap[[setting]] = list()
     coverage.unshrunk.bootstrap[[setting]] = list()
     coverage.se[[setting]] = list()
     selection[[setting]] = list()
+    
+    Y.err[[setting]] = list()
+    Y.err.oracular[[setting]] = list()
+    Y.err.precon[[setting]] = list()
+	Y.err.unshrunk[[setting]] = list()
+    Y.err.unshrunk.precon[[setting]] = list()
+    
+    X1.err[[setting]] = list()
+    X1.err.oracular[[setting]] = list()
+    X1.err.precon[[setting]] = list()
+    X1.err.unshrunk[[setting]] = list()
+    X1.err.unshrunk.precon[[setting]] = list()
+
+	selection.precon[[setting]] = list()
+	coverage.se.precon[[setting]] = list()
+    coverage.bootstrap.precon[[setting]] = list()
+    coverage.unshrunk.bootstrap.precon[[setting]] = list()
 
     coverage.oracular.bootstrap[[setting]] = list()
     coverage.oracular.se[[setting]] = list()
 
-    #vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
-    vars = c("X1")
+    vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
+    vv = c("X1")
 
-    nsims = ifelse(setting==18,99,100)
     for (k in 1:nsims) {
-        sim = (setting-1)*100 + k
+        sim = (setting-1)*100 + k - 1
+        cat(paste("Begin simulation ", sim, ".\n", sep=""))
 
+        #Get the raw data
+        filename = paste("output/Data.", cluster, ".", sim, ".csv", sep="")
+        raw = read.csv(filename, header=TRUE)
+        
+        #Get the parameters and fitted values
+        filename = paste("output/MiscParams.", cluster, ".", sim, ".csv", sep="")
+        filenameOracular = paste("output/MiscParamsOracular.", cluster, ".", sim, ".csv", sep="")
+        filenamePrecon = paste("output/MiscParams.", cluster, ".", sim, ".precon.csv", sep="")
+        params = read.csv(filename, header=TRUE)
+        paramsOracular = read.csv(filenameOracular, header=TRUE)
+        paramsPrecon = read.csv(filenamePrecon, header=TRUE)
+        
+        
         #Import our coefficient estimates
-        filename = paste("output/output/CoefEstimates.", cluster, ".", sim, ".csv", sep="")
-        filenameUnshrunk = paste("output/output/CoefEstimatesUnshrunk.", cluster, ".", sim, ".csv", sep="")
-        filenameSEs = paste("output/output/CoefSEsUnshrunk.", cluster, ".", sim, ".csv", sep="")
+        filename = paste("output/CoefEstimates.", cluster, ".", sim, ".csv", sep="")
+        filenameUnshrunk = paste("output/CoefEstimatesUnshrunk.", cluster, ".", sim, ".csv", sep="")
+        filenameSEs = paste("output/CoefSEsUnshrunk.", cluster, ".", sim, ".csv", sep="")
+        
+        filename.precon = paste("output/CoefEstimates.", cluster, ".", sim, ".precon.csv", sep="")
+        filenameUnshrunk.precon = paste("output/CoefEstimatesUnshrunk.", cluster, ".", sim, ".precon.csv", sep="")
+        filenameSEs.precon = paste("output/CoefSEsUnshrunk.", cluster, ".", sim, ".precon.csv", sep="")
 
-        filenameCoefsOracular = paste("output/output/CoefEstimatesOracular.", cluster, ".", sim, ".csv", sep="")
-        filenameSEsOracular = paste("output/output/CoefSEsOracular.", cluster, ".", sim, ".csv", sep="")
+        filenameCoefsOracular = paste("output/CoefEstimatesOracular.", cluster, ".", sim, ".csv", sep="")
+        filenameSEsOracular = paste("output/CoefSEsOracular.", cluster, ".", sim, ".csv", sep="")
 
         estimates = read.csv(filename, header=TRUE)
         estimates.unshrunk = read.csv(filenameUnshrunk, header=TRUE)
         estimates.se = read.csv(filenameSEs, header=TRUE)
+        
+		estimates.precon = read.csv(filename.precon, header=TRUE)
+        estimates.unshrunk.precon = read.csv(filenameUnshrunk.precon, header=TRUE)
+        estimates.se.precon = read.csv(filenameSEs.precon, header=TRUE)
 
         estimates.oracular = read.csv(filenameCoefsOracular, header=TRUE)
         estimates.se.oracular = read.csv(filenameSEsOracular, header=TRUE)
@@ -96,21 +158,48 @@ for (setting in settings) {
 
         colnames(estimates.oracular) = vars
         colnames(estimates.se.oracular) = vars
+        
+        fitted.unshrunk = diag(as.matrix(estimates.unshrunk) %*% t(as.matrix(cbind(rep(1,N**2), raw[,c('X1','X2','X3','X4','X5')]))))
+        fitted.unshrunk.precon = diag(as.matrix(estimates.unshrunk.precon) %*% t(as.matrix(cbind(rep(1,N**2), raw[,c('X1','X2','X3','X4','X5')]))))
+        
+		Y.err[[setting]][[k]] = as.vector(raw$Y - params$fitted)
+    	Y.err.oracular[[setting]][[k]] = as.vector(raw$Y - paramsOracular$fitted)
+    	Y.err.precon[[setting]][[k]] = as.vector(raw$Y - paramsPrecon$fitted)
+		Y.err.unshrunk[[setting]][[k]] = as.vector(raw$Y - fitted.unshrunk)
+    	Y.err.unshrunk.precon[[setting]][[k]] = as.vector(raw$Y - fitted.unshrunk.precon)
+    	
+		X1.err[[setting]][[k]] = as.vector(B[['X1']] - estimates$X1)
+    	X1.err.oracular[[setting]][[k]] = as.vector(B[['X1']] - estimates.oracular$X1)
+    	X1.err.precon[[setting]][[k]] = as.vector(B[['X1']] - estimates.precon$X1)
+		X1.err.unshrunk[[setting]][[k]] = as.vector(B[['X1']] - estimates.unshrunk$X1)
+    	X1.err.unshrunk.precon[[setting]][[k]] = as.vector(B[['X1']] - estimates.unshrunk.precon$X1) 
     
-        for (v in vars) {
+        for (v in vv) {
+        	cat(paste("Begin variable ", v, "\n", sep=""))
             #Calculate the coverage of each 95% CI 
-            filename = paste("output/output/", v, ".", cluster, ".", sim, ".bootstrap.csv", sep="")
+            filename = paste("output/", v, ".", cluster, ".", sim, ".bootstrap.csv", sep="")
             bootstraps = as.matrix(read.csv(filename, header=TRUE))
             
-            filename2 = paste("output/output/", v, ".", cluster, ".", sim, ".unshrunk-bootstrap.csv", sep="")
+            filename2 = paste("output/", v, ".", cluster, ".", sim, ".unshrunk-bootstrap.csv", sep="")
             unshrunk.bootstraps = as.matrix(read.csv(filename2, header=TRUE))
+            
+			#Calculate the coverage of each 95% CI 
+            filename = paste("output/", v, ".", cluster, ".", sim, ".precon.bootstrap.csv", sep="")
+            bootstraps.precon = as.matrix(read.csv(filename, header=TRUE))
+            
+            filename2 = paste("output/", v, ".", cluster, ".", sim, ".precon.unshrunk-bootstrap.csv", sep="")
+            unshrunk.bootstraps.precon = as.matrix(read.csv(filename2, header=TRUE))
 
-            filename = paste("output/output/", v, ".", cluster, ".", sim, ".OracularBootstrap.csv", sep="")
+            filename = paste("output/", v, ".", cluster, ".", sim, ".OracularBootstrap.csv", sep="")
             oracularBootstraps = as.matrix(read.csv(filename, header=TRUE))
             
             CI.ub = t(apply(unshrunk.bootstraps, 1, function(x) {sort(x)[c(4, 98)]}))
             CI.b = t(apply(bootstraps, 1, function(x) {sort(x)[c(4, 98)]}))
             CI.se = cbind(estimates.unshrunk[,v]-1.96*estimates.se[,v], estimates.unshrunk[,v]+1.96*estimates.se[,v])
+            
+			CI.ub.precon = t(apply(unshrunk.bootstraps.precon, 1, function(x) {sort(x)[c(4, 98)]}))
+            CI.b.precon = t(apply(bootstraps.precon, 1, function(x) {sort(x)[c(4, 98)]}))
+            CI.se.precon = cbind(estimates.unshrunk.precon[,v]-1.96*estimates.se.precon[,v], estimates.unshrunk.precon[,v]+1.96*estimates.se.precon[,v])
 
             CI.oracular.b = t(apply(oracularBootstraps, 1, function(x) {sort(x)[c(4, 98)]}))
             CI.oracular.se = cbind(estimates.oracular[,v]-1.96*estimates.se.oracular[,v], estimates.oracular[,v]+1.96*estimates.se.oracular[,v])
@@ -125,12 +214,32 @@ for (setting in settings) {
                 coverage.unshrunk.bootstrap[[setting]][[v]] = as.matrix(ifelse(B[[v]] < CI.ub[,1] | B[[v]] > CI.ub[,2],0,1))
             } else {
                 coverage.unshrunk.bootstrap[[setting]][[v]] = cbind(coverage.unshrunk.bootstrap[[setting]][[v]], as.matrix(ifelse(B[[v]] < CI.ub[,1] | B[[v]] > CI.ub[,2],0,1)))
-            }
+            }            
     
             if (k==1) {
                 coverage.se[[setting]][[v]] = as.matrix(ifelse(B[[v]] < CI.se[,1] | B[[v]] > CI.se[,2],0,1))
             } else {
                 coverage.se[[setting]][[v]] = cbind(coverage.se[[setting]][[v]], as.matrix(ifelse(B[[v]] < CI.se[,1] | B[[v]] > CI.se[,2],0,1)))
+            }
+
+
+
+            if (k==1) {
+                coverage.bootstrap.precon[[setting]][[v]] = as.matrix(ifelse(B[[v]] < CI.b.precon[,1] | B[[v]] > CI.b.precon[,2],0,1))
+            } else {
+                coverage.bootstrap.precon[[setting]][[v]] = cbind(coverage.bootstrap.precon[[setting]][[v]], as.matrix(ifelse(B[[v]] < CI.b.precon[,1] | B[[v]] > CI.b.precon[,2],0,1)))
+            }
+
+            if (k==1) {
+                coverage.unshrunk.bootstrap.precon[[setting]][[v]] = as.matrix(ifelse(B[[v]] < CI.ub.precon[,1] | B[[v]] > CI.ub.precon[,2],0,1))
+            } else {
+                coverage.unshrunk.bootstrap.precon[[setting]][[v]] = cbind(coverage.unshrunk.bootstrap.precon[[setting]][[v]], as.matrix(ifelse(B[[v]] < CI.ub.precon[,1] | B[[v]] > CI.ub.precon[,2],0,1)))
+            }
+    
+            if (k==1) {
+                coverage.se.precon[[setting]][[v]] = as.matrix(ifelse(B[[v]] < CI.se.precon[,1] | B[[v]] > CI.se.precon[,2],0,1))
+            } else {
+                coverage.se.precon[[setting]][[v]] = cbind(coverage.se.precon[[setting]][[v]], as.matrix(ifelse(B[[v]] < CI.se.precon[,1] | B[[v]] > CI.se.precon[,2],0,1)))
             }
 
 
@@ -154,16 +263,36 @@ for (setting in settings) {
             } else {
                 selection[[setting]][[v]] = cbind(selection[[setting]][[v]], as.matrix(ifelse(estimates[,col]==0, 0, 1)))
             }
+            
+            #Calculate how often each variable was selected for inclusion in the local models
+            col = which(colnames(estimates.precon) == v)
+            if (k==1) {
+                selection.precon[[setting]][[v]] = as.matrix(ifelse(estimates.precon[,col]==0, 0, 1))
+            } else {
+                selection.precon[[setting]][[v]] = cbind(selection.precon[[setting]][[v]], as.matrix(ifelse(estimates.precon[,col]==0, 0, 1)))
+            }
         }
     }
+}
 
+	cat(paste("Now aggregate.\n", sep=""))
     cb = list()
     cub = list()
     cs = list()
     ss = list()
+    
+	cbp = list()
+    cubp = list()
+    csp = list()
+    ssp = list()
 
     cbo = list()
     cso = list()
+
+    coverage.ub.precon.aggregate[[setting]] = list()
+    coverage.b.precon.aggregate[[setting]] = list()
+    coverage.se.precon.aggregate[[setting]] = list()
+    selection.precon.aggregate[[setting]] = list()
 
     coverage.ub.aggregate[[setting]] = list()
     coverage.b.aggregate[[setting]] = list()
@@ -174,13 +303,19 @@ for (setting in settings) {
     coverage.oracular.se.aggregate[[setting]] = list()
 
     for (v in c("X1")) { #vars) {
+    	cat(paste("Aggregating ", v, ".\n", sep=""))
         cb[[v]] = apply(coverage.bootstrap[[setting]][[v]], 1, sum) / ncol(coverage.bootstrap[[setting]][[v]])
         cub[[v]] = apply(coverage.unshrunk.bootstrap[[setting]][[v]], 1, sum) / ncol(coverage.unshrunk.bootstrap[[setting]][[v]])
         cs[[v]] = apply(coverage.se[[setting]][[v]], 1, sum) / ncol(coverage.se[[setting]][[v]])
         ss[[v]] = apply(selection[[setting]][[v]], 1, sum) / ncol(selection[[setting]][[v]])
+        
+        cbp[[v]] = apply(coverage.bootstrap.precon[[setting]][[v]], 1, sum) / ncol(coverage.bootstrap.precon[[setting]][[v]])
+        cubp[[v]] = apply(coverage.unshrunk.bootstrap.precon[[setting]][[v]], 1, sum) / ncol(coverage.unshrunk.bootstrap.precon[[setting]][[v]])
+        csp[[v]] = apply(coverage.se.precon[[setting]][[v]], 1, sum) / ncol(coverage.se.precon[[setting]][[v]])
+        ssp[[v]] = apply(selection.precon[[setting]][[v]], 1, sum) / ncol(selection.precon[[setting]][[v]])
 
         cbo[[v]] = apply(coverage.oracular.bootstrap[[setting]][[v]], 1, sum) / ncol(coverage.oracular.bootstrap[[setting]][[v]])
-        cso[[v]] = apply(coverage.oracular.se[[setting]][[v]], 1, sum) / ncol(coverage.oracular.se[[setting]][[v]])       
+        cso[[v]] = apply(coverage.oracular.se[[setting]][[v]], 1, sum) / ncol(coverage.oracular.se[[setting]][[v]])      
 
 #        pdf(paste("figures/simulation/", v, ".", cluster, ".", setting, ".unshrunk_bootstrap_coverage.pdf", sep=""))
 #        gwr.matplot(matrix(cub[[v]], N, N), c(0,1), c(0,1), c(0,1), border=NA, show.legend=T, yrev=F, axes=F, ann=F, xrange=c(0,1))
@@ -216,6 +351,11 @@ for (setting in settings) {
         coverage.b.aggregate[[setting]][[v]] = cb[[v]]
         coverage.se.aggregate[[setting]][[v]] = cs[[v]]
         selection.aggregate[[setting]][[v]] = ss[[v]]
+        
+		coverage.ub.precon.aggregate[[setting]][[v]] = cubp[[v]]
+        coverage.b.precon.aggregate[[setting]][[v]] = cbp[[v]]
+        coverage.se.precon.aggregate[[setting]][[v]] = csp[[v]]
+        selection.precon.aggregate[[setting]][[v]] = ssp[[v]]
     
         coverage.oracular.b.aggregate[[setting]][[v]] = cbo[[v]]
         coverage.oracular.se.aggregate[[setting]][[v]] = cso[[v]]
@@ -371,35 +511,23 @@ for (i in settings) {
 #colnames(mean.coverage.oracular.se) = vars
 
 t.x = list()
-#t.x[[1]] = 1:16
-#t.x[[2]] = 17:36
-#t.x[[1]] = 1:9
-#t.x[[2]] = 10:18
-t.x[[1]] = 1:4
-#t.x[[2]] = 10:18
+t.x[[1]] = 1:9
+t.x[[2]] = 10:18
+
 
 rho = list()
-#rho[[1]] = c(1:6, 19:24)
-#rho[[2]] = c(7:12, 25:30)
-#rho[[3]] = c(13:18, 31:36)
-#rho[[1]] = c(1:6)
-#rho[[2]] = c(7:12)
-#rho[[3]] = c(13:18)
-rho[[1]] = c(1:4)
+rho[[1]] = c(1:3, 10:12)
+rho[[2]] = c(4:6, 13:15)
+rho[[3]] = c(7:9, 16:18)
 
 t.e = list()
-#t.e[[1]] = c(1:2, 7:8, 13:14, 19:20, 25:26, 31:32)
-#t.e[[2]] = c(3:4, 9:10, 15:16, 21:22, 27:28, 33:34)
-#t.e[[3]] = c(5:6, 11:12, 17:18, 23:24, 29:30, 35:36)
-#t.e[[1]] = c(1:2, 7:8, 13:14)
-#t.e[[2]] = c(3:4, 9:10, 15:16)
-#t.e[[3]] = c(5:6, 11:12, 17:18)
-t.e[[1]] = c(1:2)
-t.e[[2]] = c(3:4)
+t.e[[1]] = c(1,4,7,10,13,16)
+t.e[[2]] = c(2,5,8,11,14,17)
+t.e[[3]] = c(3,6,9,12,15,18)
 
-function.type = list()
-function.type[['step']] = (1:18) - 1
-function.type[['gradient']] = (1:18)*2
+
+
+
 
 
 #contrasts = c("t.x", "rho", "t.e", "function.type")
