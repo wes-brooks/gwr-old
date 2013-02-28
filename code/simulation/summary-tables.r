@@ -1,7 +1,3 @@
-mse = vector()
-for (i in 1:900) { mse = c(mse, mean(sapply(Y.err[[1]], function(x) {x[i]**2}))) }
-mm = matrix(mse, nrow=30, ncol=30)
-
 
 
 
@@ -45,6 +41,97 @@ mseybold = matrix(FALSE, nrow=dim(msey)[1], ncol=dim(msey)[2])
 for (i in 1:(dim(msey)[1])) {mseybold[i,order(msey[i,])[1]] = TRUE}
 
 xtable.printbold(xtable(msey, digits=3), which=mseybold)
+
+
+
+
+b2 = vector()
+b2.oracular = vector()
+b2.precon = vector()
+b2.unshrunk = vector()
+b2.unshrunk.precon = vector()
+for (s in 1:18) {
+	b2 = c(b2, mean(sapply(Map(function(z) {mean(sapply(X1.err[[s]], function(x) {x[z]}))**2}, 1:900), identity)))
+	b2.oracular = c(b2.oracular, mean(sapply(Map(function(z) {mean(sapply(X1.err.oracular[[s]], function(x) {x[z]}))**2}, 1:900), identity)))
+	b2.precon = c(b2.precon, mean(sapply(Map(function(z) {mean(sapply(X1.err.precon[[s]], function(x) {x[z]}))**2}, 1:900), identity)))
+	b2.unshrunk = c(b2.unshrunk, mean(sapply(Map(function(z) {mean(sapply(X1.err.unshrunk[[s]], function(x) {x[z]}))**2}, 1:900), identity)))
+	b2.unshrunk.precon = c(b2.unshrunk.precon, mean(sapply(Map(function(z) {mean(sapply(X1.err.unshrunk.precon[[s]], function(x) {x[z]}))**2}, 1:900), identity)))
+}
+b2 = cbind(b2, b2.unshrunk, b2.precon, b2.unshrunk.precon, b2.oracular)
+colnames(b2) = c("AL", "AL-Unshrunk", "AL-Precon", "AL-Precon-Unshrunk", "Oracle")
+
+b2bold = matrix(FALSE, nrow=dim(b2)[1], ncol=dim(b2)[2])
+for (i in 1:(dim(b2)[1])) {b2bold[i,order(b2[i,])[1]] = TRUE}
+
+xtable.printbold(xtable(b2, digits=4), which=b2bold)
+
+
+
+by2 = vector()
+by2.oracular = vector()
+by2.precon = vector()
+by2.unshrunk = vector()
+by2.unshrunk.precon = vector()
+for (s in 1:18) {
+	by2 = c(by2, mean(sapply(Map(function(z) {mean(sapply(Y.err[[s]], function(x) {x[z]}))**2}, 1:900), identity)))
+	by2.oracular = c(by2.oracular, mean(sapply(Map(function(z) {mean(sapply(Y.err.oracular[[s]], function(x) {x[z]}))**2}, 1:900), identity)))
+	by2.precon = c(by2.precon, mean(sapply(Map(function(z) {mean(sapply(Y.err.precon[[s]], function(x) {x[z]}))**2}, 1:900), identity)))
+	by2.unshrunk = c(by2.unshrunk, mean(sapply(Map(function(z) {mean(sapply(Y.err.unshrunk[[s]], function(x) {x[z]}))**2}, 1:900), identity)))
+	by2.unshrunk.precon = c(by2.unshrunk.precon, mean(sapply(Map(function(z) {mean(sapply(Y.err.unshrunk.precon[[s]], function(x) {x[z]}))**2}, 1:900), identity)))
+}
+by2 = cbind(by2, by2.unshrunk, by2.precon, by2.unshrunk.precon, by2.oracular)
+colnames(by2) = c("AL", "AL-Unshrunk", "AL-Precon", "AL-Precon-Unshrunk", "Oracle")
+
+by2bold = matrix(FALSE, nrow=dim(by2)[1], ncol=dim(by2)[2])
+for (i in 1:(dim(by2)[1])) {by2bold[i,order(by2[i,])[1]] = TRUE}
+
+xtable.printbold(xtable(by2, digits=4), which=by2bold)
+
+
+
+varx = vector()
+varx.oracular = vector()
+varx.precon = vector()
+varx.unshrunk = vector()
+varx.unshrunk.precon = vector()
+for (s in 1:18) {
+	varx = c(varx, mean(sapply(Map(function(z) {var(sapply(X1.err[[s]], function(x) {x[z]}))}, 1:900), identity)))
+	varx.oracular = c(varx.oracular, mean(sapply(Map(function(z) {var(sapply(X1.err.oracular[[s]], function(x) {x[z]}))}, 1:900), identity)))
+	varx.precon = c(varx.precon, mean(sapply(Map(function(z) {var(sapply(X1.err.precon[[s]], function(x) {x[z]}))}, 1:900), identity)))
+	varx.unshrunk = c(varx.unshrunk, mean(sapply(Map(function(z) {var(sapply(X1.err.unshrunk[[s]], function(x) {x[z]}))}, 1:900), identity)))
+	varx.unshrunk.precon = c(varx.unshrunk.precon, mean(sapply(Map(function(z) {var(sapply(X1.err.unshrunk.precon[[s]], function(x) {x[z]}))}, 1:900), identity)))
+}
+varx = cbind(varx, varx.unshrunk, varx.precon, varx.unshrunk.precon, varx.oracular)
+colnames(varx) = c("AL", "AL-Unshrunk", "AL-Precon", "AL-Precon-Unshrunk", "Oracle")
+
+varxbold = matrix(FALSE, nrow=dim(varx)[1], ncol=dim(varx)[2])
+for (i in 1:(dim(varx)[1])) {varxbold[i,order(varx[i,])[1]] = TRUE}
+
+xtable.printbold(xtable(varx, digits=4), which=varxbold)
+
+
+
+vary = vector()
+vary.oracular = vector()
+vary.precon = vector()
+vary.unshrunk = vector()
+vary.unshrunk.precon = vector()
+for (s in 1:18) {
+	vary = c(vary, mean(sapply(Map(function(z) {var(sapply(Y.err[[s]], function(x) {x[z]}))}, 1:900), identity)))
+	vary.oracular = c(vary.oracular, mean(sapply(Map(function(z) {var(sapply(Y.err.oracular[[s]], function(x) {x[z]}))}, 1:900), identity)))
+	vary.precon = c(vary.precon, mean(sapply(Map(function(z) {var(sapply(Y.err.precon[[s]], function(x) {x[z]}))}, 1:900), identity)))
+	vary.unshrunk = c(vary.unshrunk, mean(sapply(Map(function(z) {var(sapply(Y.err.unshrunk[[s]], function(x) {x[z]}))}, 1:900), identity)))
+	vary.unshrunk.precon = c(vary.unshrunk.precon, mean(sapply(Map(function(z) {var(sapply(Y.err.unshrunk.precon[[s]], function(x) {x[z]}))}, 1:900), identity)))
+}
+vary = cbind(vary, vary.unshrunk, vary.precon, vary.unshrunk.precon, vary.oracular)
+colnames(by2) = c("AL", "AL-Unshrunk", "AL-Precon", "AL-Precon-Unshrunk", "Oracle")
+
+varybold = matrix(FALSE, nrow=dim(vary)[1], ncol=dim(vary)[2])
+for (i in 1:(dim(vary)[1])) {varybold[i,order(vary[i,])[1]] = TRUE}
+
+xtable.printbold(xtable(vary, digits=4), which=varybold)
+
+
 
 
 
