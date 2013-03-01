@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  28 FEB 2013 15:29
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  28 FEB 2013 18:49
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -802,7 +802,7 @@ LaTeX Warning: There were undefined references.
 Here is how much of TeX's memory you used:
  4341 strings out of 494004
  61013 string characters out of 3150890
- 131017 words of memory out of 3000000
+ 130017 words of memory out of 3000000
  7477 multiletter control sequences out of 15000+200000
  16343 words of font info for 57 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191

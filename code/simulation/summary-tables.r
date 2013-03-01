@@ -19,7 +19,10 @@ colnames(mse) = c("AL", "AL-Unshrunk", "AL-Precon", "AL-Precon-Unshrunk", "Oracl
 msebold = matrix(FALSE, nrow=dim(mse)[1], ncol=dim(mse)[2])
 for (i in 1:(dim(mse)[1])) {msebold[i,order(mse[i,])[1]] = TRUE}
 
-xtable.printbold(xtable(mse, digits=3), which=msebold)
+mseital = matrix(FALSE, nrow=dim(mse)[1], ncol=dim(mse)[2])
+for (i in 1:(dim(mse)[1])) {mseital[i,order(mse[i,])[2]] = TRUE}
+
+xtable.printbold(xtable(mse, digits=3, align=c('c','c','c','c','c','c')), which.bold=msebold, which.ital=mseital, include.rownames=FALSE)
 
 
 msey = vector()
@@ -40,7 +43,10 @@ colnames(msey) = c("AL", "AL-Unshrunk", "AL-Precon", "AL-Precon-Unshrunk", "Orac
 mseybold = matrix(FALSE, nrow=dim(msey)[1], ncol=dim(msey)[2])
 for (i in 1:(dim(msey)[1])) {mseybold[i,order(msey[i,])[1]] = TRUE}
 
-xtable.printbold(xtable(msey, digits=3), which=mseybold)
+mseyital = matrix(FALSE, nrow=dim(msey)[1], ncol=dim(msey)[2])
+for (i in 1:(dim(msey)[1])) {mseyital[i,order(msey[i,])[2]] = TRUE}
+
+xtable.printbold(xtable(msey, digits=3), which.bold=mseybold, which.ital=mseyital, include.rownames=FALSE)
 
 
 
@@ -63,7 +69,10 @@ colnames(b2) = c("AL", "AL-Unshrunk", "AL-Precon", "AL-Precon-Unshrunk", "Oracle
 b2bold = matrix(FALSE, nrow=dim(b2)[1], ncol=dim(b2)[2])
 for (i in 1:(dim(b2)[1])) {b2bold[i,order(b2[i,])[1]] = TRUE}
 
-xtable.printbold(xtable(b2, digits=4), which=b2bold)
+b2ital = matrix(FALSE, nrow=dim(b2)[1], ncol=dim(b2)[2])
+for (i in 1:(dim(b2)[1])) {b2ital[i,order(b2[i,])[1]] = TRUE}
+
+xtable.printbold(xtable(b2, digits=4), which.bold=b2bold, which.ital=b2ital, include.rownames=FALSE)
 
 
 
@@ -85,7 +94,10 @@ colnames(by2) = c("AL", "AL-Unshrunk", "AL-Precon", "AL-Precon-Unshrunk", "Oracl
 by2bold = matrix(FALSE, nrow=dim(by2)[1], ncol=dim(by2)[2])
 for (i in 1:(dim(by2)[1])) {by2bold[i,order(by2[i,])[1]] = TRUE}
 
-xtable.printbold(xtable(by2, digits=4), which=by2bold)
+by2ital = matrix(FALSE, nrow=dim(by2)[1], ncol=dim(by2)[2])
+for (i in 1:(dim(by2)[1])) {by2ital[i,order(by2[i,])[2]] = TRUE}
+
+xtable.printbold(xtable(by2, digits=4), which.bold=by2bold, which.ital=by2ital, include.rownames=FALSE)
 
 
 
@@ -107,7 +119,10 @@ colnames(varx) = c("AL", "AL-Unshrunk", "AL-Precon", "AL-Precon-Unshrunk", "Orac
 varxbold = matrix(FALSE, nrow=dim(varx)[1], ncol=dim(varx)[2])
 for (i in 1:(dim(varx)[1])) {varxbold[i,order(varx[i,])[1]] = TRUE}
 
-xtable.printbold(xtable(varx, digits=4), which=varxbold)
+varxital = matrix(FALSE, nrow=dim(varx)[1], ncol=dim(varx)[2])
+for (i in 1:(dim(varx)[1])) {varxital[i,order(varx[i,])[2]] = TRUE}
+
+xtable.printbold(xtable(varx, digits=4), which.bold=varxbold, which.ital=varxital, include.rownames=FALSE)
 
 
 
@@ -129,7 +144,10 @@ colnames(by2) = c("AL", "AL-Unshrunk", "AL-Precon", "AL-Precon-Unshrunk", "Oracl
 varybold = matrix(FALSE, nrow=dim(vary)[1], ncol=dim(vary)[2])
 for (i in 1:(dim(vary)[1])) {varybold[i,order(vary[i,])[1]] = TRUE}
 
-xtable.printbold(xtable(vary, digits=4), which=varybold)
+varyital = matrix(FALSE, nrow=dim(vary)[1], ncol=dim(vary)[2])
+for (i in 1:(dim(vary)[1])) {varyital[i,order(vary[i,])[2]] = TRUE}
+
+xtable.printbold(xtable(vary, digits=4), which.bold=varybold, which.ital=vary.ital, include.rownames=FALSE)
 
 
 
@@ -164,28 +182,9 @@ colnames(perfect.selection) = c("original", "preconditioned")
 selectbold = matrix(FALSE, nrow=dim(perfect.selection)[1], ncol=dim(perfect.selection)[2])
 for (i in 1:(dim(perfect.selection)[1])) {selectbold[i,order(perfect.selection[i,], decreasing=TRUE)[1]] = TRUE}
 
-xtable.printbold(xtable(perfect.selection, digits=3), which=selectbold)
+
+xtable.printbold(xtable(perfect.selection, digits=3), which.bold=selectbold, include.rownames=FALSE)
 
 
 
-b = vector()
-b.oracular = vector()
-b.precon = vector()
-b.unshrunk = vector()
-b.unshrunk.precon = vector()
-for (s in 1:18) {
-	b = c(b, mean(sapply(X1.err[[s]], function(x) {mean(x**2)})))
-	b.oracular = c(b.oracular, mean(sapply(X1.err.oracular[[s]], function(x) {mean(x**2)})))
-	b.precon = c(b.precon, mean(sapply(X1.err.precon[[s]], function(x) {mean(x**2)})))
-	b.unshrunk = c(b.unshrunk, mean(sapply(X1.err.unshrunk[[s]], function(x) {mean(x**2)})))
-	b.unshrunk.precon = c(b.unshrunk.precon, mean(sapply(X1.err.unshrunk.precon[[s]], function(x) {mean(x**2)})))
-}
-
-
-
-for s in 1:18 {
-	b = vector()
-	for (i in 1:900) { b = c(b, mean(sapply(X1.err[[s]], function(x) {x[i]}))) }
-	bb = matrix(b, nrow=30, ncol=30)
-}
 
