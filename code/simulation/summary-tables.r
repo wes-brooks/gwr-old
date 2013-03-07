@@ -622,7 +622,6 @@ bold.varx[['t.e']] = matrix(FALSE, 3, 4)
 for (i in 1:3) {bold.varx[['t.e']][i,1+which.min(varx.table[['t.e']][i,2:4])] = TRUE}
 bold.varx[['rho']] = matrix(FALSE, 3, 4)
 for (i in 1:3) {bold.varx[['rho']][i,1+which.min(varx.table[['rho']][i,2:4])] = TRUE}
-
 xtable.printbold(xtable(varx.table[['t.x']], digits=c(0,2,3,3,3), caption="Variance of the estimate of $\\beta_1$ for different settings of $\\tau_x$."), include.rownames=FALSE, hline.after=c(0), which.bold=bold.varx[['t.x']], sanitize.colnames.function=function(x){x})
 xtable.printbold(xtable(varx.table[['t.e']], digits=c(0,2,3,3,3), caption="Variance of the estimate of $\\beta_1$ for different settings of $\\tau_\\sigma$."), include.rownames=FALSE, hline.after=c(0), which.bold=bold.varx[['t.e']], sanitize.colnames.function=function(x){x})
 xtable.printbold(xtable(varx.table[['rho']], digits=c(0,2,3,3,3), caption="Variance of the estimate of $\\beta_1$ for different settings of $\\rho$."), include.rownames=FALSE, hline.after=c(0), which.bold=bold.varx[['rho']], sanitize.colnames.function=function(x){x})

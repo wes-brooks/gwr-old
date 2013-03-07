@@ -1,46 +1,3 @@
-\documentclass[authoryear, review, 11pt]{elsarticle}
-
-\setlength{\textwidth}{6.5in}
-%\setlength{\textheight}{9in}
-\setlength{\topmargin}{0in}
-\setlength{\oddsidemargin}{0in}
-\setlength{\evensidemargin}{0in}
-
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{mathabx}
-\usepackage{bm}
-\usepackage{multirow}
-
-%\geometry{landscape}                % Activate for for rotated page geometry
-\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
-\usepackage{graphicx}
-\usepackage{epstopdf}
-\usepackage{natbib}
-\usepackage{verbatim}
-
-\usepackage{relsize}
-\usepackage{caption}
-\usepackage{subcaption}
-%\usepackage{fullpage}
-\usepackage{booktabs}
-
-\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
-\DeclareMathOperator*{\argmin}{\arg\!\min}
-\DeclareMathOperator*{\argmax}{\arg\!\max}
-\DeclareMathOperator*{\bw}{\mbox{bw}}
-\DeclareMathOperator*{\df}{\mbox{df}}
-\newcommand{\vect}[1]{\bm{#1}}
-\newcommand{\E}{\mathop{\mathbb E}}
-
-
-\title{Local variable selection for varying-coefficients models in the context of geographically-weighted regression}
-\author{Wesley Brooks}
-\date{}                                           % Activate to display a given date or no date
-
-\begin{document}
-
 % latex table generated in R 2.15.2 by xtable 1.7-0 package
 % Wed Mar  6 10:10:26 2013
 \begin{table}[ht]
@@ -70,17 +27,3 @@ $\tau_x$ & $\rho$ & $\tau_\sigma$ &  GWL & GWL-U & GWL-P & GWL-P-U & Oracle \\
 \caption{Variance of estimates for $Y$ at location 5 (\textbf{minimum}, \emph{next best}).}
 \end{center}
 \end{table}
-
-
-\section{Figures}
-
-
-
-
-
-
-\section{References}
-\bibliographystyle{chicago}
-\bibliography{../../references/gwr}
-
-\end{document}  
