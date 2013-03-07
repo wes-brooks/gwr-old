@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  6 MAR 2013 19:01
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  6 MAR 2013 19:30
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -637,12 +637,12 @@ LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 42.
 LaTeX Font Info:    ... okay on input line 42.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 48.
+LaTeX Font Info:    Try loading font information for U+msa on input line 50.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 48.
+LaTeX Font Info:    Try loading font information for U+msb on input line 50.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
@@ -650,14 +650,18 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 No file preconditioning.bbl.
 [1
 
-] (./preconditioning.aux) ) 
+] [2] [3] (./preconditioning.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 4214 strings out of 494004
- 58750 string characters out of 3150890
- 124985 words of memory out of 3000000
- 7384 multiletter control sequences out of 15000+200000
+ 4217 strings out of 494004
+ 58768 string characters out of 3150890
+ 138985 words of memory out of 3000000
+ 7387 multiletter control sequences out of 15000+200000
  15233 words of font info for 53 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,9n,38p,328b,352s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,9n,38p,328b,328s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on preconditioning.pdf (1 page).
+Output written on preconditioning.pdf (3 pages).

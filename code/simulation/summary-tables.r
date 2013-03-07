@@ -82,7 +82,7 @@ msebold = matrix(FALSE, nrow=dim(mse.table)[1], ncol=dim(mse.table)[2])
 for (i in 1:(dim(mse.table)[1])) {msebold[i,order(mse.table[i,])[1]] = TRUE}
 mseital = matrix(FALSE, nrow=dim(mse.table)[1], ncol=dim(mse.table)[2])
 for (i in 1:(dim(mse.table)[1])) {mseital[i,order(mse.table[i,])[2]] = TRUE}
-xtable.printbold(xtable(mse.table, digits=3, align=c('c','c','c','c','c','c'), caption="Mean squared error of estimates for $\\beta_1$ (\\textbf{minimum}, \\emph{next best}).\\label{MSEX-nonzero}"), which.bold=msebold, which.ital=mseital, include.rownames=FALSE, hline.after=c(0))
+xtable.printbold(xtable(mse.table, digits=3, align=c('c','c','c','c','c','c'), caption="Mean squared error of estimates for $\\beta_1$ (\\textbf{minimum}, \\emph{next best}).\\label{MSEX}"), which.bold=msebold, which.ital=mseital, include.rownames=FALSE, hline.after=c(0))
 
 mse.nonzero.table = cbind(mse.nonzero, mse.unshrunk.nonzero, mse.precon.nonzero, mse.unshrunk.precon.nonzero, mse.oracular.nonzero)
 colnames(mse.nonzero.table) = c("GWL", "GWL-U", "GWL-P", "GWL-P-U", "Oracle")
@@ -218,7 +218,7 @@ b22bold = matrix(FALSE, nrow=dim(b22.table)[1], ncol=dim(b22.table)[2])
 for (i in 1:(dim(b22.table)[1])) {b22bold[i,order(b22.table[i,])[1]] = TRUE}
 b22ital = matrix(FALSE, nrow=dim(b22.table)[1], ncol=dim(b22.table)[2])
 for (i in 1:(dim(b22.table)[1])) {b22ital[i,order(b22.table[i,])[2]] = TRUE}
-xtable.printbold(xtable(b22.table, digits=4, caption="Squared bias of estimates for $\beta_1$ (\\textbf{minimum}, \\emph{next best}).\\label{bias}"), which.bold=b22bold, which.ital=b22ital, include.rownames=FALSE)
+xtable.printbold(xtable(b22.table, digits=4, align=c('c','c','c','c','c','c'), caption="Squared bias of estimates for $\\beta_1$ (\\textbf{minimum}, \\emph{next best}).\\label{bias}"), which.bold=b22bold, which.ital=b22ital, include.rownames=FALSE)
 
 b22.nonzero.table = cbind(b2.nonzero, b2.unshrunk.nonzero, b2.oracular.nonzero)
 colnames(b22.nonzero.table) = c("GWL", "GWL-U", "Oracle")
@@ -226,7 +226,7 @@ b22bold.nonzero = matrix(FALSE, nrow=dim(b22.nonzero.table)[1], ncol=dim(b22.non
 for (i in 1:(dim(b22.nonzero.table)[1])) {b22bold.nonzero[i,order(b22.nonzero.table[i,])[1]] = TRUE}
 b22ital.nonzero = matrix(FALSE, nrow=dim(b22.nonzero.table)[1], ncol=dim(b22.nonzero.table)[2])
 for (i in 1:(dim(b22.nonzero.table)[1])) {b22ital.nonzero[i,order(b22.nonzero.table[i,])[2]] = TRUE}
-xtable.printbold(xtable(b22.nonzero.table, digits=4, caption="Squared bias of estimates for $\beta_1$ at locations where $\beta_1 != 0$ (\\textbf{minimum}, \\emph{next best}).\\label{bias-nonzero}"), which.bold=b22bold.nonzero, which.ital=b22ital.nonzero, include.rownames=FALSE)
+xtable.printbold(xtable(b22.nonzero.table, digits=4, align=c('c','c','c','c','c','c'), caption="Squared bias of estimates for $\\beta_1$ at locations where $\beta_1 != 0$ (\\textbf{minimum}, \\emph{next best}).\\label{bias-nonzero}"), which.bold=b22bold.nonzero, which.ital=b22ital.nonzero, include.rownames=FALSE)
 
 
 b2.table = cbind(b2, b2.unshrunk, b2.precon, b2.unshrunk.precon, b2.oracular)
@@ -235,7 +235,7 @@ b2bold = matrix(FALSE, nrow=dim(b2.table)[1], ncol=dim(b2.table)[2])
 for (i in 1:(dim(b2.table)[1])) {b2bold[i,order(b2.table[i,])[1]] = TRUE}
 b2ital = matrix(FALSE, nrow=dim(b2.table)[1], ncol=dim(b2.table)[2])
 for (i in 1:(dim(b2.table)[1])) {b2ital[i,order(b2.table[i,])[2]] = TRUE}
-xtable.printbold(xtable(b2.table, digits=4), which.bold=b2bold, which.ital=b2ital, include.rownames=FALSE)
+xtable.printbold(xtable(b2.table, digits=4, align=c('c','c','c','c','c','c'), caption="Squared bias of estimates for $\\beta_1$ (\\textbf{minimum}, \\emph{next best}).\\label{bias}"), which.bold=b2bold, which.ital=b2ital, include.rownames=FALSE, hline.after=c(0))
 
 b2.nonzero.table = cbind(b2.nonzero, b2.unshrunk.nonzero, b2.precon.nonzero, b2.unshrunk.precon.nonzero, b2.oracular.nonzero)
 colnames(b2.nonzero.table) = c("GWL", "GWL-U", "GWL-P", "GWL-P-U", "Oracle")
@@ -243,7 +243,7 @@ b2bold.nonzero = matrix(FALSE, nrow=dim(b2.nonzero.table)[1], ncol=dim(b2.nonzer
 for (i in 1:(dim(b2.nonzero.table)[1])) {b2bold.nonzero[i,order(b2.nonzero.table[i,])[1]] = TRUE}
 b2ital.nonzero = matrix(FALSE, nrow=dim(b2.nonzero.table)[1], ncol=dim(b2.nonzero.table)[2])
 for (i in 1:(dim(b2.nonzero.table)[1])) {b2ital.nonzero[i,order(b2.nonzero.table[i,])[2]] = TRUE}
-xtable.printbold(xtable(b2.nonzero.table, digits=4), which.bold=b2bold.nonzero, which.ital=b2ital.nonzero, include.rownames=FALSE, hline.after=c(0))
+xtable.printbold(xtable(b2.nonzero.table, digits=4, align=c('c','c','c','c','c','c')), which.bold=b2bold.nonzero, which.ital=b2ital.nonzero, include.rownames=FALSE)
 
 bx.loc.table = list()
 for (l in 1:length(locs)) {
@@ -372,7 +372,7 @@ varx2bold = matrix(FALSE, nrow=dim(varx2.table)[1], ncol=dim(varx2.table)[2])
 for (i in 1:(dim(varx2.table)[1])) {varx2bold[i,order(varx2.table[i,])[1]] = TRUE}
 varx2ital = matrix(FALSE, nrow=dim(varx2.table)[1], ncol=dim(varx2.table)[2])
 for (i in 1:(dim(varx2.table)[1])) {varx2ital[i,order(varx2.table[i,])[2]] = TRUE}
-xtable.printbold(xtable(varx2.table, digits=4, caption="Variance of estimates for $\beta_1$ (\\textbf{minimum}, \\emph{next best}).\\label{varx}"), which.bold=varx2bold, which.ital=varx2ital, include.rownames=FALSE)
+xtable.printbold(xtable(varx2.table, digits=4, align=c('c','c','c','c'), caption="Variance of estimates for $\\beta_1$ (\\textbf{minimum}, \\emph{next best}).\\label{varx}"), which.bold=varx2bold, which.ital=varx2ital, include.rownames=FALSE)
 
 varx2.nonzero.table = cbind(varx.nonzero, varx.unshrunk.nonzero, varx.oracular.nonzero)
 colnames(varx2.nonzero.table) = c("GWL", "GWL-U", "Oracle")
@@ -380,7 +380,7 @@ varx2bold.nonzero = matrix(FALSE, nrow=dim(varx2.nonzero.table)[1], ncol=dim(var
 for (i in 1:(dim(varx2.nonzero.table)[1])) {varx2bold.nonzero[i,order(varx2.nonzero.table[i,])[1]] = TRUE}
 varx2ital.nonzero = matrix(FALSE, nrow=dim(varx2.nonzero.table)[1], ncol=dim(varx2.nonzero.table)[2])
 for (i in 1:(dim(varx2.nonzero.table)[1])) {varx2ital.nonzero[i,order(varx2.nonzero.table[i,])[2]] = TRUE}
-xtable.printbold(xtable(varx2.nonzero.table, digits=4, caption="Variance of estimates for $\beta_1$ at locations where $\beta_1 != 0$ (\\textbf{minimum}, \\emph{next best}).\\label{varx-nonzero}"), which.bold=varx2bold.nonzero, which.ital=varx2ital.nonzero, include.rownames=FALSE)
+xtable.printbold(xtable(varx2.nonzero.table, digits=4, align=c('c','c','c','c'), caption="Variance of estimates for $\\beta_1$ at locations where $\beta_1 != 0$ (\\textbf{minimum}, \\emph{next best}).\\label{varx-nonzero}"), which.bold=varx2bold.nonzero, which.ital=varx2ital.nonzero, include.rownames=FALSE)
 
 
 varx.table = cbind(varx, varx.unshrunk, varx.precon, varx.unshrunk.precon, varx.oracular)
@@ -389,7 +389,7 @@ varxbold = matrix(FALSE, nrow=dim(varx.table)[1], ncol=dim(varx.table)[2])
 for (i in 1:(dim(varx.table)[1])) {varxbold[i,order(varx.table[i,])[1]] = TRUE}
 varxital = matrix(FALSE, nrow=dim(varx.table)[1], ncol=dim(varx.table)[2])
 for (i in 1:(dim(varx.table)[1])) {varxital[i,order(varx.table[i,])[2]] = TRUE}
-xtable.printbold(xtable(varx.table, digits=4), which.bold=varxbold, which.ital=varxital, include.rownames=FALSE)
+xtable.printbold(xtable(varx.table, digits=4, align=c('c','c','c','c','c','c'), caption="Variance of estimates for $\\beta_1$ (\\textbf{minimum}, \\emph{next best}).\\label{varx}"), which.bold=varxbold, which.ital=varxital, include.rownames=FALSE, hline.after=c(0))
 
 varx.nonzero.table = cbind(varx.nonzero, varx.unshrunk.nonzero, varx.precon.nonzero, varx.unshrunk.precon.nonzero, varx.oracular.nonzero)
 colnames(varx.nonzero.table) = c("GWL", "GWL-U", "GWL-P", "GWL-P-U", "Oracle")
@@ -397,7 +397,7 @@ varxbold.nonzero = matrix(FALSE, nrow=dim(varx.nonzero.table)[1], ncol=dim(varx.
 for (i in 1:(dim(varx.nonzero.table)[1])) {varxbold.nonzero[i,order(varx.nonzero.table[i,])[1]] = TRUE}
 varxital.nonzero = matrix(FALSE, nrow=dim(varx.nonzero.table)[1], ncol=dim(varx.nonzero.table)[2])
 for (i in 1:(dim(varx.nonzero.table)[1])) {varxital.nonzero[i,order(varx.nonzero.table[i,])[2]] = TRUE}
-xtable.printbold(xtable(varx.nonzero.table, digits=4), which.bold=varxbold.nonzero, which.ital=varxital.nonzero, include.rownames=FALSE, hline.after=c(0))
+xtable.printbold(xtable(varx.nonzero.table, digits=4, align=c('c','c','c','c','c','c')), which.bold=varxbold.nonzero, which.ital=varxital.nonzero, include.rownames=FALSE, hline.after=c(0))
 
 varx.loc.table = list()
 for (l in 1:length(locs)) {
