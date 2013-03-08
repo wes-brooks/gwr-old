@@ -15,7 +15,7 @@ Antoniadas, A., I.~Gijbels, and A.~Verhasselt (2012).
 
 \bibitem[\protect\citeauthoryear{Breiman}{Breiman}{1995}]{Breiman:1995}
 Breiman, L. (1995).
-\newblock Better subset wregression using the nonnegative garrote.
+\newblock Better subset regression using the nonnegative garrote.
 \newblock {\em Technometrics\/}~{\em 51}, 373--384.
 
 \bibitem[\protect\citeauthoryear{Efron, Hastie, Johnstone, and
@@ -81,6 +81,11 @@ Wheeler, D.~C. (2009).
 \newblock Simultaneous coefficient penalization and model selection in
   geographically weighted regression: the geographically weighted lasso.
 \newblock {\em Environment and Planning A\/}~{\em 41}, 722--742.
+
+\bibitem[\protect\citeauthoryear{Wood}{Wood}{2006}]{Wood:2006}
+Wood, S. (2006).
+\newblock {\em Generalized additive models: an introduction with R}.
+\newblock Texts in statistical science. Chapman \& Hall/CRC.
 
 \bibitem[\protect\citeauthoryear{Zou}{Zou}{2006}]{Zou:2006}
 Zou, H. (2006).

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  1 MAR 2013 14:02
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  7 MAR 2013 13:26
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -22,8 +22,8 @@ Document Class: elsarticle 2008/05/22, 1.0.1: Elsevier Science
 \@bls=\dimen102
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/size11.clo
-File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count80
 \c@section=\count81
@@ -492,6 +492,9 @@ Package: bm 2004/02/26 v1.1c Bold Symbol Support (DPC/FMi)
 LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 138.
 LaTeX Info: Redefining \bm on input line 204.
 )
+(/usr/local/texlive/2012/texmf-dist/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen119
+)
 (/usr/local/texlive/2012/texmf-dist/tex/latex/parskip/parskip.sty
 Package: parskip 2001/04/09 non-zero parskip adjustments
 )
@@ -557,14 +560,14 @@ Package: verbatim 2003/08/22 v1.5q LaTeX2e package for verbatim enhancements
 (/usr/local/texlive/2012/texmf-dist/tex/latex/relsize/relsize.sty
 Package: relsize 2011/09/21 ver 4.0
 
-Examine \normalsize starts \@setfontsize size may be \@xipt. 
-Examine \small starts \@setfontsize size may be \@xpt. 
-Examine \footnotesize starts \@setfontsize size may be \@ixpt. 
+Examine \normalsize starts \@setfontsize size may be \@xpt. 
+Examine \small starts \@setfontsize size may be \@ixpt. 
+Examine \footnotesize starts \@setfontsize size may be \@viiipt. 
 Examine \large starts \@setfontsize size may be \@xiipt. 
 Examine \Large starts \@setfontsize size may be \@xivpt. 
 Examine \LARGE starts \@setfontsize size may be \@xviipt. 
-Examine \scriptsize starts \@setfontsize size may be \@viiipt. 
-Examine \tiny starts \@setfontsize size may be \@vipt. 
+Examine \scriptsize starts \@setfontsize size may be \@viipt. 
+Examine \tiny starts \@setfontsize size may be \@vpt. 
 Examine \huge starts \@setfontsize size may be \@xxpt. 
 Examine \Huge starts \@setfontsize size may be \@xxvpt. )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/caption/caption.sty
@@ -572,12 +575,12 @@ Package: caption 2012/02/19 v3.2f Customizing captions (AR)
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2012/01/12 v1.4b caption3 kernel (AR)
-\captionmargin=\dimen119
-\captionmargin@=\dimen120
-\captionwidth=\dimen121
-\caption@indent=\dimen122
-\caption@parindent=\dimen123
-\caption@hangindent=\dimen124
+\captionmargin=\dimen120
+\captionmargin@=\dimen121
+\captionwidth=\dimen122
+\caption@indent=\dimen123
+\caption@parindent=\dimen124
+\caption@hangindent=\dimen125
 Package caption Info: Unknown document class (or package),
 (caption)             standard defaults will be used.
 )
@@ -598,103 +601,92 @@ Package: subcaption 2012/01/12 v1.1d Sub-captions (AR)
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2005/04/14 v1.61803 publication quality tables
-\heavyrulewidth=\dimen125
-\lightrulewidth=\dimen126
-\cmidrulewidth=\dimen127
-\belowrulesep=\dimen128
-\belowbottomsep=\dimen129
-\aboverulesep=\dimen130
-\abovetopsep=\dimen131
-\cmidrulesep=\dimen132
-\cmidrulekern=\dimen133
-\defaultaddspace=\dimen134
+\heavyrulewidth=\dimen126
+\lightrulewidth=\dimen127
+\cmidrulewidth=\dimen128
+\belowrulesep=\dimen129
+\belowbottomsep=\dimen130
+\aboverulesep=\dimen131
+\abovetopsep=\dimen132
+\cmidrulesep=\dimen133
+\cmidrulekern=\dimen134
+\defaultaddspace=\dimen135
 \@cmidla=\count114
 \@cmidlb=\count115
-\@aboverulesep=\dimen135
-\@belowrulesep=\dimen136
+\@aboverulesep=\dimen136
+\@belowrulesep=\dimen137
 \@thisruleclass=\count116
 \@lastruleclass=\count117
-\@thisrulewidth=\dimen137
+\@thisrulewidth=\dimen138
 )
 (./gaussian.aux)
 \openout1 = `gaussian.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 42.
+LaTeX Font Info:    ... okay on input line 42.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 42.
+LaTeX Font Info:    Try loading font information for U+msa on input line 43.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 42.
+LaTeX Font Info:    Try loading font information for U+msb on input line 43.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
-)
-
-Package natbib Warning: Citation `Wood:2006' on page 1 undefined on input line 
-52.
-
-[1
+) [1
 
 
-] [2] [3]
-Underfull \hbox (badness 10000) in paragraph at lines 101--102
+] [2]
+Underfull \hbox (badness 10000) in paragraph at lines 102--103
+
+ []
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 159--160
 
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 158--159
-
- []
-
-[5]
-Underfull \hbox (badness 10000) in paragraph at lines 172--173
+Underfull \hbox (badness 10000) in paragraph at lines 173--174
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 177--178
+Underfull \hbox (badness 10000) in paragraph at lines 178--179
 
  []
 
-[6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 223--224
+[5] [6]
+Underfull \hbox (badness 10000) in paragraph at lines 224--225
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 226--227
+Underfull \hbox (badness 10000) in paragraph at lines 227--228
 
  []
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 232--233
+
+ []
+
+
+LaTeX Warning: Reference `section:model' on page 8 undefined on input line 247.
+
 
 [8]
-Underfull \hbox (badness 10000) in paragraph at lines 231--232
-
- []
-
-[9]
-
-LaTeX Warning: Reference `section:model' on page 10 undefined on input line 246
-.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 253--254
-
- []
-
-[10]
-Underfull \hbox (badness 10000) in paragraph at lines 259--260
+Underfull \hbox (badness 10000) in paragraph at lines 254--255
 
  []
 
@@ -702,29 +694,77 @@ Underfull \hbox (badness 10000) in paragraph at lines 259--260
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 293--294
+LaTeX Warning: Reference `fig:coveragemap1' on page 9 undefined on input line 4
+53.
+
+
+LaTeX Warning: Reference `fig:coveragemap18' on page 9 undefined on input line 
+453.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 453--454
 
  []
 
-(./gaussian.bbl [11] [12] [13] [14])
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 462--463
 
-Package natbib Warning: There were undefined citations.
+ []
 
-[15] [16] [17] (./gaussian.aux)
+[10]
+Underfull \hbox (badness 10000) in paragraph at lines 485--486
+
+ []
+
+File: ../../figures/poverty/1960.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/1960.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 50.15999pt on input line 492.
+
+File: ../../figures/poverty/1970.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/1970.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 50.15999pt on input line 499.
+
+File: ../../figures/poverty/1980.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/1980.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 50.15999pt on input line 506.
+
+File: ../../figures/poverty/1990.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/1990.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 50.15999pt on input line 513.
+
+File: ../../figures/poverty/2000.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/2000.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 50.15999pt on input line 520.
+
+File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
+)
+<use  "../../figures/poverty/2006.linear.coefficients.pdf" >
+
+LaTeX Warning: Float too large for page by 50.15999pt on input line 527.
+
+(./gaussian.bbl [11] [12] [13] [14] [15] [16] [17] [18] [19]) [20] [21]
+(./gaussian.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 4260 strings out of 494004
- 59325 string characters out of 3150890
- 139017 words of memory out of 3000000
- 7429 multiletter control sequences out of 15000+200000
- 16343 words of font info for 57 fonts, out of 3000000 for 9000
+ 4289 strings out of 494004
+ 60195 string characters out of 3150890
+ 179199 words of memory out of 3000000
+ 7445 multiletter control sequences out of 15000+200000
+ 13387 words of font info for 47 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,15n,38p,1097b,328s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,15n,38p,1097b,330s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (17 pages).
+Output written on gaussian.pdf (21 pages).

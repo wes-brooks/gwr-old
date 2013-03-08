@@ -11,6 +11,7 @@
 \usepackage{amssymb}
 \usepackage{mathabx}
 \usepackage{bm}
+\usepackage{multirow}
 
 %\geometry{landscape}                % Activate for for rotated page geometry
 \usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
@@ -34,7 +35,7 @@
 \newcommand{\E}{\mathop{\mathbb E}}
 
 
-\title{Local variable selection for varying-coefficients models in the context of geographically-weighted regression}
+\title{Local variable selection and coefficient estimation for spatially-varying-coefficients models in the context of geographically-weighted regression using regularization}
 \author{Wesley Brooks}
 \date{}                                           % Activate to display a given date or no date
 
@@ -49,13 +50,13 @@
 
 \section{Introduction}
 	%Varying-coefficients regression
-	Varying-coefficients regression (VCR) \citep{Hastie:1993a} is a technique used in spatial statistics to model processes with non-constant coefficients. Methods for VCR are typically divided between spline-based \citep{Wood:2006} and kernel-based \citep{Hastie:1993b, Loader:1999} methods. 
+	Varying-coefficients regression (VCR) \citep{Hastie:1993a} is a technique used to model nonstationary regression processes. Whereas the coefficients in ordinary least squares (OLS) regression are scalar constants, the coefficients in VCR are functions - often \emph{smooth} functions - of some effect-modifying parameter.  Methods for estimating the coefficient functions of VCR are typically divided between spline-based \citep{Wood:2006} and kernel-based \citep{Hastie:1993b, Loader:1999} methods. 
 	
 	%Spatial VCR
-	In the setting of spatial data, VCR can be used to 
+	A spatial VCR model typically uses the spatial location as an effect-modifying parameter. 
 	
 	%Kernel smoothing
-	Geographically weighted regression (GWR) \citep{Fotheringham:2002} is a method of fitting varying-coefficients regression models for spatial data that uses kernel-weighted regression with weights based on the distance between observation locations. The presentation of GWR in \cite{Fotheringham:2002} follows the development of local likelihood in \cite{Loader:1999}.
+	Geographically weighted regression (GWR) \citep{Fotheringham:2002} is a method of estimating the coefficients of a VCR model for spatial data. GWR uses kernel-weighted regression with weights based on the distance between observation locations. The presentation of GWR in \cite{Fotheringham:2002} follows the development of local likelihood in \cite{Loader:1999}.
 	
 	%Local regression
 	GWR can be thought of as a kernel smoother for regression coefficients, and hence GWR coefficient estimates are likely to exhibit bias near the boundary of the region being modeled \citep{Hastie:1993b}. Modeling the coefficient surface as locally linear rather than locally constant (by including coefficient-by-location interactions) can reduce this boundary-effect bias \citep{Hastie:1993b}. Adding these interactions to the GWR model is analogous to a transition from kernel smoothing to local regression, and was introduced in \cite{Wang:2008b}.
@@ -94,7 +95,7 @@
 	 	\ell\left( \bm{\beta} \right) = - 1/2 \sum_{i=1}^n \left\{  \log \left( 2 \pi \sigma^2_i\right) +  \sigma^{-2}_i  \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2  \right\}
 	\end{eqnarray}
 	
-	With $n$ observations and $n \times (p+1)$ free parameters, the model is not identifiable so it is not possible to directly maximize the total likelihood. One way to effectively reduce the number of parameters is to assume that the spatially-varying coefficients $\bm{\beta}(\bm{s})$ are \emph{smoothly} varying, and use a kernel smoother to make pointwise estimates of the coefficients by maximizing the local likelihood. In the setting of spatial data and with the kernel smoother based on the physical distance between observation locations, this method is called geographically-weighted regression (GWR).
+	With $n$ observations and $n \times (p+1)$ free parameters, the model is not identifiable so it is not possible to directly maximize the total likelihood. One way to effectively reduce the number of parameters is to assume that the spatially-varying coefficients $\bm{\beta}(\bm{s})$ are smoothly varying, and use a kernel smoother to make pointwise estimates of the coefficients by maximizing the local likelihood. In the setting of spatial data and with the kernel smoother based on the physical distance between observation locations, this method is called geographically-weighted regression (GWR).
 		
 	\subsection{Estimation}
 		
@@ -183,11 +184,11 @@
 	
 	Where $\lambda_{ij}, j =1, \dots, p$ are penalties from the adaptive LASSO \citep{Zou:2006}. Taking the derivatives with respect to $\beta$ and setting to zero, we see that
 	\begin{eqnarray}
-		\hat{\bm{\beta}}_{i, \text{GAL}} &=& \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i\\
-		\hat{y}_i = \bm{x}_i' \hat{\bm{\beta}}_{i, \text{GAL}} &=&  \bm{x}_i' \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \bm{x}_i' \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i
+		\hat{\bm{\beta}}_{i, \text{GWL}} &=& \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i\\
+		\hat{y}_i = \bm{x}_i' \hat{\bm{\beta}}_{i, \text{GWL}} &=&  \bm{x}_i' \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \bm{x}_i' \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i
 	\end{eqnarray}
 	
-	Unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GAL is not a linear smoother the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GAL \citep{Zou:2006}. The local AIC at location $\bm{s}_i$($\mbox{AIC}_{\text{loc}, i}$) is minimized to select the adaptive lasso tuning parameter.
+	Unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GWL is not a linear smoother the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}. The local AIC at location $\bm{s}_i$($\mbox{AIC}_{\text{loc}, i}$) is minimized to select the adaptive lasso tuning parameter.
 	\begin{eqnarray}
 		\mbox{AIC}_{\text{loc}, i} &=& -2 \sum_{i'=1}^n \ell_{ii'}  + 2 \mbox{df}_i\\
 		&=& -2 \times \sum_{i'=1}^n \log \left\{ \left(2 \pi \hat{\sigma}_i^2\right)^{-1/2} \exp \left[-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right] \right\}^{w_{ii'}} + 2\mbox{df}_i\\
@@ -206,9 +207,9 @@
 		&=& \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}_i' \hat{\bm{\beta}}_i \right)^2 \right\} + 2 \times \mbox{df}\label{eq:total-AIC1}
 	\end{eqnarray}	
 	
-	What remains is to calculate $\mbox{df}$, the number of degrees of freedom used by the model. Classical GWR, as developed in \cite{Loader:1999} and \cite{Fotheringham:2002} calculates $\mbox{df}$ using the trace of the ``hat" matrix, but because the GAL is not a linear smoother, there is no ``hat" matrix associated with GWR. Instead, notice that $\mbox{df}$ can be pulled into the summation in (\ref{eq:total-AIC1}):
+	What remains is to calculate $\mbox{df}$, the number of degrees of freedom used by the model. Classical GWR, as developed in \cite{Loader:1999} and \cite{Fotheringham:2002} calculates $\mbox{df}$ using the trace of the ``hat" matrix, but because the GWL is not a linear smoother, there is no ``hat" matrix associated with GWR. Instead, notice that $\mbox{df}$ can be pulled into the summation in (\ref{eq:total-AIC1}):
 		
-	%This is different from the formulas for the AIC as proposed in \cite{Fotheringham:2002} and \cite{Loader:1999}. The reason is that the basic GWR estimator is linear, so the degrees of freedom can be approximated using the trace of the ``hat" matrix. The GAL, though, is not a linear estimator so some...\ However, since the GAL does local variable selection, the model may use a different number of parameters at each location $s_i$. 
+	%This is different from the formulas for the AIC as proposed in \cite{Fotheringham:2002} and \cite{Loader:1999}. The reason is that the basic GWR estimator is linear, so the degrees of freedom can be approximated using the trace of the ``hat" matrix. The GWL, though, is not a linear estimator so some...\ However, since the GWL does local variable selection, the model may use a different number of parameters at each location $s_i$. 
 			
 	\begin{eqnarray}
 		\mbox{df} &=& \sum_{i=1}^n \left( n^{-1} \mbox{df} \right)
@@ -223,40 +224,40 @@
 	The bandwidth that minimizes (\ref{eq:total-AIC2}) is found by a line search.\\
 	
 	\subsection{Confidence interval construction}	
-	Confidence intervals for the GAL's coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by exploiting an assumption of normally-distributed residuals. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
+	Confidence intervals for the GWL's coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by exploiting an assumption of normally-distributed residuals. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
 	 
 	 	\subsubsection{Bootstrap confidence interval}
-		To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GAL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. Since the GAL is applied independently to each bootstrap replicate, the variables selected by GAL may be different for each replicate.
+		To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate.
 	
-		 Unshrunk coefficient estimates are found by using the GAL at each location for variable selection only and then estimating the coefficients for the selected variables by GWR. An unshrunk bootstrap confidence interval is found by estimating the unshrunk coefficients for each of the $n_B$ bootstrap replicates and then calculating the percentiles as above.\\
+		 Unshrunk coefficient estimates are found by using the GWL at each location for variable selection only and then estimating the coefficients for the selected variables by GWR. An unshrunk bootstrap confidence interval is found by estimating the unshrunk coefficients for each of the $n_B$ bootstrap replicates and then calculating the percentiles as above.\\
 	 
 		
 	 	\subsubsection{Normal approximation-based confidence interval}
-		A third way to estimate the coefficient confidence intervals is to use the GAL for variable selection only and then to use GWR to calculate a confidence interval based on the assumption of an independent, identically distributed, Gaussian error structure. In this case, the standard error of the regression coefficients is 
+		A third way to estimate the coefficient confidence intervals is to use the GWL for variable selection only and then to use GWR to calculate a confidence interval based on the assumption of an independent, identically distributed, Gaussian error structure. In this case, the standard error of the regression coefficients is 
 		\begin{eqnarray}
 			\hat{\mbox{se}}_{\beta_i} &=& \left( \tilde{\bm{X}}_i'\bm{W}_i \tilde{\bm{X}}_i \right)^{-1}  \tilde{\bm{X}}_i'\bm{W}_i\bm{Y}
 		\end{eqnarray}
 	
-		where $\tilde{\bm{X}}_i$ is the model matrix including only those variables that are selected by GAL at location $i$.
+		where $\tilde{\bm{X}}_i$ is the model matrix including only those variables that are selected by GWL at location $i$.
 
 
 
 \section{Simulation}
 	\subsection{Simulation setup}
-	A simulation study was conducted to assess the finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[0,1] \times [0,1]$, which was divided into a $30 \times 30$ grid. Each of $p=5$ covariates $Z_1, \dots, Z_p$ was simulated by a Gaussian random field (GRF) with mean zero and exponential spatial covariance $Cov \left(Z_{ji}, Z_{ji'} \right) = \sigma_z^2 \exp{\left( -\tau_z^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma_z^2=1$ is the variance and $\tau_z$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by $\bm{R}$, where $\bm{R}$ is the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix $\bm{\Sigma}$ is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.
+	A simulation study was conducted to assess some finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[0,1] \times [0,1]$, which was divided into a $30 \times 30$ grid. Each of $p=5$ covariates $Z_1, \dots, Z_p$ was simulated by a Gaussian random field (GRF) with mean zero and exponential spatial covariance $Cov \left(Z_{ji}, Z_{ji'} \right) = \sigma_z^2 \exp{\left( -\tau_z^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma_z^2=1$ is the variance and $\tau_z$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by $\bm{R}$, where $\bm{R}$ is the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix $\bm{\Sigma}$ is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.
 		
 	The simulated response is $y_i = \bm{z}'_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 900$ where the vector of additive errors $\bm{\epsilon}$ is generated from a GRF with spatial covariance $Cov \left(\epsilon_{i}, \epsilon_{i'} \right) = \sigma_{\epsilon}^2 \exp{\left( -\tau_{\epsilon}^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma_{\epsilon}^2=1$.
 	
-	The simulated data include the output $y$ and five covariates $Z_1, \dots, Z_5$. The true data-generating model uses only $Z_1$, so $Z_2, \dots, Z_5$ are included to test the variable-selection properties of GAL. The coefficient surface of $\beta_1$ is described by the ``step" function:
+	The simulated data include the output $y$ and five covariates $Z_1, \dots, Z_5$. The true data-generating model uses only $Z_1$, so $Z_2, \dots, Z_5$ are included to test the variable-selection properties of GWL. The coefficient surface of $\beta_1$ is described by the ``step" function:
 	\begin{eqnarray}
 		\beta_1(s) = \begin{cases} 0 &\mbox{ if } s_y<0.4 \\ 5(s_y-0.4) &\mbox{ if } 0.4 \leq s_y<0.6 \\ 1 &\mbox{ o.w.} \end{cases}
 	\end{eqnarray}.\\
 		
-	In order to evaluate the performance of GAL under a range of conditions, the data was simulated under 18 different settings (Table \ref{table:simulation_settings}): high (0.1) and low (0.03) levels of $\tau_z$, the autoregression range parameter for the covariate GRFs $Z_1, \dots, Z_5$; three levels (0, 0.5, 0.8) of between-covariate correlation $\rho$; and three levels (0, 0.03, 0.1) of the autoregression range parameter $\tau_{\epsilon}$ for the error-term GRF $\bm{\epsilon}$. Each case was simulated 100 times.
+	In order to evaluate the performance of GWL under a range of conditions, the data was simulated under 18 different settings (Table \ref{table:simulation_settings}): high (0.1) and low (0.03) levels of $\tau_z$, the autoregression range parameter for the covariate GRFs $Z_1, \dots, Z_5$; three levels (0, 0.5, 0.8) of between-covariate correlation $\rho$; and three levels (0, 0.03, 0.1) of the autoregression range parameter $\tau_{\epsilon}$ for the error-term GRF $\bm{\epsilon}$. Each case was simulated 100 times.
 	
-	For measuring performance, we look at the pointwise selection frequency of $\beta_1, \dots, \beta_5$ and the coverage frequency of $\beta_1$ (for a nominal 95\% confidence interval).
+	%For measuring performance, we look at the pointwise selection frequency of $\beta_1, \dots, \beta_5$ and the coverage frequency of $\beta_1$ (for a nominal 95\% confidence interval).
 	
-	As a baseline, ordinary GWR was used to estimate the coefficients using the same data but under an ``oracle" setting (oracular GWR, or O-GWR), meaning that GWR was provided with the exactly correct set of predictors as used in the data-generating process. The ratio of the coverage frequency of the GAL to the coverage frequency of O-GWR is called the relative efficiency of the GAL.\\
+	%As a baseline, ordinary GWR was used to estimate the coefficients using the same data but under an ``oracle" setting (O-GWR), meaning that GWR was provided with the exactly correct set of predictors as used in the data-generating process. The ratio of the coverage frequency of the GWL to the coverage frequency of O-GWR is called the relative efficiency of the GWL.\\
 	
 	% latex table generated in R 2.15.1 by xtable 1.7-0 package
 % Fri Jan 18 10:19:47 2013
@@ -289,248 +290,245 @@
 	\caption{Simulation parameters for each setting.\label{table:simulation_settings}}
 \end{table}
 	
-	\subsection{Simulation results}
-	Results of the simulation experiment were summarized to asses the consistency in selection and estimation, as well as the coverage properties of the confidence intervals. The confidence intervals based on the bootstrap (without shrinkage) were used for the GAL because they seemed to uniformly outperform the other options.\\
+	\subsection{Results}
+	Results from the simulation were summarized at five locations on the simulated grid. The five key locations were chosen because they represent interesting regions of the $\beta_1$ coefficient surface.
+	%Results of the simulation experiment were summarized to asses the consistency in selection and estimation, as well as the coverage properties of the confidence intervals. The confidence intervals based on the bootstrap (without shrinkage) were used for the GWL because they seemed to uniformly outperform the other options.\\
 	
+	\subsection{Tables}
 % latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 14:01:39 2013
+% Thu Mar  7 11:23:54 2013
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{ccc}
- GWL & GWL-U & Oracle \\ 
-  \hline
-0.023 & \emph{0.017} & \textbf{0.012} \\ 
-  \emph{0.029} & \textbf{0.023} & 0.031 \\ 
-  \emph{0.027} & \textbf{0.023} & 0.056 \\ 
-  0.028 & \emph{0.023} & \textbf{0.012} \\ 
-  0.038 & \emph{0.034} & \textbf{0.029} \\ 
-  \emph{0.032} & \textbf{0.028} & 0.057 \\ 
-  0.041 & \emph{0.039} & \textbf{0.012} \\ 
-  \emph{0.077} & 0.081 & \textbf{0.030} \\ 
-  0.062 & \emph{0.060} & \textbf{0.055} \\ 
-  0.026 & \emph{0.023} & \textbf{0.016} \\ 
-  \emph{0.040} & \textbf{0.039} & 0.061 \\ 
-  \emph{0.057} & \textbf{0.050} & 0.125 \\ 
-  0.029 & \emph{0.026} & \textbf{0.016} \\ 
-  \textbf{0.055} & \emph{0.056} & 0.059 \\ 
-  \emph{0.078} & \textbf{0.074} & 0.130 \\ 
-  \emph{0.046} & 0.046 & \textbf{0.016} \\ 
-  \emph{0.119} & 0.134 & \textbf{0.063} \\ 
-  0.167 & \emph{0.161} & \textbf{0.125} \\ 
+\begin{tabular}{ccc | ccc | ccc | ccc }
+&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
+\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & 0.048 & 0.122 & 0.034 & \textbf{0.030} & \emph{0.002} & \textbf{0.030} & \emph{0.032} & \textbf{-0.001} & \emph{0.032} \\ 
+ &  & 0.03 &   \emph{0.071} & 0.090 & \textbf{0.063} & \textbf{0.064} & \textbf{-0.015} & \emph{0.064} & 0.138 & \emph{-0.039} & 0.138 \\ 
+ &  & 0.1 &   \emph{0.044} & 0.084 & \emph{0.038} & \textbf{0.028} & \textbf{0.006} & \textbf{0.028} & 0.258 & \emph{0.032} & 0.259 \\ \cline{2-12}
+ & \multirow{3}{*}{0.5} & 0 &   0.067 & 0.158 & 0.042 & \emph{0.042} & \emph{0.055} & \emph{0.039} & \textbf{0.033} & \textbf{-0.008} & \textbf{0.033} \\ 
+ &  & 0.03 &   \emph{0.105} & 0.151 & \textbf{0.083} & \textbf{0.085} & \textbf{0.029} & \emph{0.085} & 0.110 & \emph{-0.036} & 0.110 \\ 
+ &  & 0.1 &   \emph{0.062} & 0.098 & \emph{0.053} & \textbf{0.045} & \emph{0.028} & \textbf{0.045} & 0.285 & \textbf{0.015} & 0.288 \\ \cline{2-12}
+ & \multirow{3}{*}{0.8} & 0 &   0.128 & 0.220 & \emph{0.080} & \emph{0.116} & \emph{0.147} & 0.095 & \textbf{0.031} & \textbf{0.015} & \textbf{0.031} \\ 
+ &  & 0.03 &   \emph{0.255} & 0.198 & \emph{0.218} & 0.270 & \emph{0.096} & 0.263 & \textbf{0.097} & \textbf{-0.026} & \textbf{0.097} \\ 
+ &  & 0.1 &   \emph{0.131} & 0.122 & \textbf{0.117} & \textbf{0.127} & \textbf{0.049} & \emph{0.125} & 0.273 & \emph{-0.100} & 0.266 \\ \cline{1-12}
+\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   0.049 & 0.119 & \emph{0.035} & \textbf{0.027} & \textbf{-0.001} & \textbf{0.027} & \emph{0.041} & \emph{-0.009} & 0.041 \\ 
+ &  & 0.03 &   \emph{0.088} & 0.120 & \textbf{0.074} & \textbf{0.083} & \emph{-0.004} & \emph{0.084} & 0.221 & \textbf{0.000} & 0.223 \\ 
+ &  & 0.1 &   \emph{0.109} & \emph{0.081} & \emph{0.104} & \textbf{0.093} & \textbf{0.027} & \textbf{0.093} & 0.508 & 0.089 & 0.505 \\ \cline{2-12}
+ & \multirow{3}{*}{0.5} & 0 &   \emph{0.059} & 0.147 & \textbf{0.038} & \textbf{0.046} & \emph{0.052} & \emph{0.044} & 0.074 & \textbf{0.029} & 0.074 \\ 
+ &  & 0.03 &   \emph{0.134} & 0.161 & \textbf{0.109} & \textbf{0.123} & \emph{0.058} & \emph{0.121} & 0.208 & \textbf{-0.043} & 0.209 \\ 
+ &  & 0.1 &   \emph{0.140} & 0.061 & \emph{0.138} & \textbf{0.114} & \textbf{0.005} & \textbf{0.115} & 0.620 & \emph{-0.044} & 0.624 \\ \cline{2-12}
+ & \multirow{3}{*}{0.8} & 0 &   \emph{0.117} & 0.208 & \emph{0.074} & 0.119 & \emph{0.132} & 0.103 & \textbf{0.042} & \textbf{0.016} & \textbf{0.042} \\ 
+ &  & 0.03 &   \emph{0.424} & 0.133 & \emph{0.411} & 0.521 & \emph{0.044} & 0.524 & \textbf{0.212} & \textbf{-0.013} & \textbf{0.214} \\ 
+ &  & 0.1 &   \textbf{0.290} & \emph{0.033} & \textbf{0.291} & \emph{0.300} & \textbf{0.009} & \emph{0.303} & 0.680 & 0.083 & 0.680 \\ 
   \end{tabular}
-\caption{Mean squared error of estimates for $\beta_1$ (\textbf{minimum}, \emph{next best}).\label{MSEX}}
+\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 1 (\textbf{minimum}, \emph{next best}).}
 \end{center}
 \end{table}
 
 
 % latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 14:01:39 2013
+% Thu Mar  7 11:23:54 2013
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{ccc}
- GWL & GWL-U & Oracle \\ 
-  \hline
-0.036 & \emph{0.023} & \textbf{0.020} \\ 
-  \emph{0.043} & \textbf{0.030} & 0.052 \\ 
-  \emph{0.037} & \textbf{0.028} & 0.093 \\ 
-  0.043 & \emph{0.032} & \textbf{0.020} \\ 
-  0.057 & \textbf{0.046} & \emph{0.049} \\ 
-  \emph{0.043} & \textbf{0.034} & 0.095 \\ 
-  0.064 & \emph{0.057} & \textbf{0.020} \\ 
-  0.113 & \emph{0.110} & \textbf{0.050} \\ 
-  \emph{0.083} & \textbf{0.075} & 0.092 \\ 
-  0.038 & \emph{0.028} & \textbf{0.026} \\ 
-  \emph{0.056} & \textbf{0.049} & 0.102 \\ 
-  \emph{0.067} & \textbf{0.054} & 0.208 \\ 
-  0.043 & \emph{0.035} & \textbf{0.026} \\ 
-  \emph{0.078} & \textbf{0.071} & 0.099 \\ 
-  \emph{0.092} & \textbf{0.082} & 0.217 \\ 
-  0.071 & \emph{0.068} & \textbf{0.027} \\ 
-  \emph{0.166} & 0.177 & \textbf{0.105} \\ 
-  \emph{0.191} & \textbf{0.184} & 0.208 \\ 
+\begin{tabular}{ccc | ccc | ccc | ccc }
+&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
+\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & 0.083 & 0.265 & 0.013 & \emph{0.048} & \emph{0.190} & \emph{0.013} & \textbf{0.042} & \textbf{0.171} & \textbf{0.013} \\ 
+ &  & 0.03 &   0.081 & 0.244 & \emph{0.022} & \textbf{0.042} & \emph{0.146} & \textbf{0.021} & \emph{0.052} & \textbf{0.052} & 0.049 \\ 
+ &  & 0.1 &   \emph{0.089} & 0.280 & \emph{0.011} & \textbf{0.062} & \emph{0.227} & \textbf{0.011} & 0.097 & \textbf{0.048} & 0.096 \\ \cline{2-12}
+ & \multirow{3}{*}{0.5} & 0 &   0.102 & 0.292 & 0.016 & \emph{0.065} & \emph{0.221} & \emph{0.016} & \textbf{0.045} & \textbf{0.177} & \textbf{0.014} \\ 
+ &  & 0.03 &   0.093 & 0.252 & \textbf{0.029} & \emph{0.064} & \emph{0.169} & \emph{0.036} & \textbf{0.043} & \textbf{0.072} & 0.038 \\ 
+ &  & 0.1 &   0.104 & 0.280 & \emph{0.025} & \textbf{0.075} & \emph{0.227} & \textbf{0.024} & \emph{0.076} & \textbf{-0.002} & 0.077 \\ \cline{2-12}
+ & \multirow{3}{*}{0.8} & 0 &   0.126 & 0.322 & \emph{0.023} & \emph{0.094} & \emph{0.255} & 0.030 & \textbf{0.041} & \textbf{0.172} & \textbf{0.011} \\ 
+ &  & 0.03 &   0.166 & 0.317 & \emph{0.066} & \emph{0.137} & \emph{0.255} & 0.073 & \textbf{0.047} & \textbf{0.106} & \textbf{0.036} \\ 
+ &  & 0.1 &   0.117 & 0.286 & \textbf{0.035} & \emph{0.098} & \emph{0.240} & \emph{0.041} & \textbf{0.074} & \textbf{0.026} & 0.074 \\ \cline{1-12}
+\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   0.087 & 0.277 & \emph{0.011} & \emph{0.060} & \emph{0.223} & \textbf{0.011} & \textbf{0.053} & \textbf{0.192} & 0.016 \\ 
+ &  & 0.03 &   \emph{0.103} & 0.262 & \textbf{0.035} & \textbf{0.071} & \emph{0.188} & \emph{0.036} & 0.105 & \textbf{0.098} & 0.097 \\ 
+ &  & 0.1 &   \emph{0.095} & 0.234 & \emph{0.041} & \textbf{0.071} & \emph{0.197} & \textbf{0.032} & 0.134 & \textbf{0.013} & 0.135 \\ \cline{2-12}
+ & \multirow{3}{*}{0.5} & 0 &   0.110 & 0.307 & \textbf{0.016} & \emph{0.082} & \emph{0.255} & 0.017 & \textbf{0.059} & \textbf{0.206} & \emph{0.016} \\ 
+ &  & 0.03 &   0.115 & 0.262 & \textbf{0.048} & \textbf{0.092} & \emph{0.204} & \emph{0.051} & \emph{0.104} & \textbf{0.090} & 0.097 \\ 
+ &  & 0.1 &   \emph{0.093} & 0.187 & \textbf{0.059} & \textbf{0.087} & \emph{0.162} & \emph{0.061} & 0.218 & \textbf{0.057} & 0.217 \\ \cline{2-12}
+ & \multirow{3}{*}{0.8} & 0 &   0.132 & 0.319 & \emph{0.031} & \emph{0.120} & \emph{0.283} & 0.040 & \textbf{0.049} & \textbf{0.172} & \textbf{0.019} \\ 
+ &  & 0.03 &   \emph{0.212} & 0.349 & \emph{0.091} & 0.216 & \emph{0.303} & 0.125 & \textbf{0.097} & \textbf{0.114} & \textbf{0.085} \\ 
+ &  & 0.1 &   0.207 & 0.272 & \textbf{0.135} & \emph{0.203} & \emph{0.228} & \emph{0.153} & \textbf{0.168} & \textbf{0.072} & 0.164 \\ 
   \end{tabular}
-\caption{Mean squared error of estimates for $\beta_1$ at locations where $\beta_1 != 0$ (\textbf{minimum}, \emph{next best}).\label{MSEX-nonzero}}
+\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 2 (\textbf{minimum}, \emph{next best}).}
 \end{center}
 \end{table}
+
 
 
 % latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:23:38 2013
+% Thu Mar  7 11:23:54 2013
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{rr}
- $\tau_x$ & Frequency \\ 
-  \hline
-0.03 & 0.41 \\ 
-  0.10 & 0.29 \\ 
+\begin{tabular}{ccc | ccc | ccc | ccc }
+&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
+\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & 0.028 & 0.102 & 0.018 & \textbf{0.014} & \emph{0.003} & \textbf{0.014} & \emph{0.015} & \textbf{-0.001} & \emph{0.015} \\ 
+ &  & 0.03 &   \emph{0.042} & 0.095 & \emph{0.033} & \textbf{0.030} & \textbf{0.001} & \textbf{0.030} & 0.093 & \emph{0.023} & 0.094 \\ 
+ &  & 0.1 &   \emph{0.034} & 0.071 & \emph{0.029} & \textbf{0.019} & \emph{0.013} & \textbf{0.019} & 0.168 & \textbf{-0.004} & 0.169 \\ \cline{2-12}
+ & \multirow{3}{*}{0.5} & 0 &   0.036 & 0.125 & \emph{0.021} & \emph{0.028} & \emph{0.044} & 0.026 & \textbf{0.018} & \textbf{0.002} & \textbf{0.018} \\ 
+ &  & 0.03 &   \emph{0.071} & 0.149 & \textbf{0.049} & \textbf{0.053} & \emph{0.060} & \emph{0.050} & 0.074 & \textbf{0.034} & 0.073 \\ 
+ &  & 0.1 &   \emph{0.036} & 0.070 & \emph{0.031} & \textbf{0.026} & \textbf{0.017} & \textbf{0.026} & 0.173 & \emph{0.023} & 0.174 \\ \cline{2-12}
+ & \multirow{3}{*}{0.8} & 0 &   0.073 & 0.182 & \emph{0.041} & \emph{0.062} & \emph{0.132} & 0.045 & \textbf{0.015} & \textbf{0.032} & \textbf{0.014} \\ 
+ &  & 0.03 &   0.162 & 0.206 & \emph{0.120} & \emph{0.152} & \emph{0.116} & 0.140 & \textbf{0.075} & \textbf{-0.010} & \textbf{0.076} \\ 
+ &  & 0.1 &   \emph{0.091} & 0.086 & \emph{0.084} & \textbf{0.079} & \emph{0.036} & \textbf{0.078} & 0.146 & \textbf{-0.028} & 0.147 \\ \cline{1-12}
+\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   \emph{0.022} & 0.075 & \emph{0.017} & \textbf{0.016} & \textbf{-0.012} & \textbf{0.016} & 0.023 & \emph{-0.018} & 0.023 \\ 
+ &  & 0.03 &   \emph{0.083} & 0.113 & \textbf{0.071} & \textbf{0.078} & \textbf{0.022} & \emph{0.078} & 0.157 & \emph{-0.037} & 0.157 \\ 
+ &  & 0.1 &   \emph{0.078} & 0.080 & \emph{0.073} & \textbf{0.049} & \textbf{0.004} & \textbf{0.049} & 0.250 & \emph{0.064} & 0.248 \\ \cline{2-12}
+ & \multirow{3}{*}{0.5} & 0 &   0.023 & 0.101 & \textbf{0.013} & \textbf{0.017} & \emph{0.033} & \emph{0.016} & \emph{0.020} & \textbf{-0.005} & 0.020 \\ 
+ &  & 0.03 &   \emph{0.108} & 0.133 & \textbf{0.091} & \textbf{0.104} & \textbf{0.045} & \emph{0.103} & 0.148 & \emph{0.064} & 0.146 \\ 
+ &  & 0.1 &   \emph{0.101} & \textbf{0.010} & \emph{0.102} & \textbf{0.094} & -0.023 & \textbf{0.094} & 0.469 & \emph{0.017} & 0.474 \\ \cline{2-12}
+ & \multirow{3}{*}{0.8} & 0 &   \emph{0.057} & 0.132 & \emph{0.040} & 0.061 & \emph{0.086} & 0.054 & \textbf{0.019} & \textbf{-0.023} & \textbf{0.019} \\ 
+ &  & 0.03 &   \emph{0.182} & 0.205 & \emph{0.141} & 0.185 & \emph{0.102} & 0.177 & \textbf{0.128} & \textbf{-0.027} & \textbf{0.129} \\ 
+ &  & 0.1 &   \emph{0.216} & 0.050 & \emph{0.216} & \textbf{0.210} & \textbf{0.012} & \textbf{0.212} & 0.326 & \emph{0.029} & 0.328 \\ 
   \end{tabular}
-\caption{Frequency of perfect selection for different settings of $\tau_x$.}
+\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 3 (\textbf{minimum}, \emph{next best}).}
 \end{center}
 \end{table}
 
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:26:38 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{rr}
- $\tau_{\sigma}$ & Frequency \\ 
-  \hline
-0.00 & 0.54 \\ 
-  0.03 & 0.35 \\ 
-  0.10 & 0.17 \\ 
-  \end{tabular}
-\caption{Frequency of perfect selection for different settings of $\tau_{\sigma}$.}
-\end{center}
-\end{table}
-
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:27:49 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{rr}
- $\rho$ & Frequency \\ 
-  \hline
-0.00 & 0.38 \\ 
-  0.50 & 0.36 \\ 
-  0.80 & 0.32 \\ 
-  \end{tabular}
-\caption{Frequency of perfect selection for different settings of $\rho$.}
-\end{center}
-\end{table}
 
 
 % latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:46:39 2013
+% Thu Mar  7 11:23:54 2013
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{rrrr}
-$\tau_x$ & GWL & GWL-U & Oracle \\ 
-  \hline
-0.03 & 0.040 & 0.037 & \textbf{0.033} \\ 
-  0.10 & 0.068 & \textbf{0.068} & 0.068 \\ 
+\begin{tabular}{ccc | ccc | ccc | ccc }
+&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
+\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & \textbf{0.024} & \textbf{-0.101} & \emph{0.014} & 0.044 & \emph{-0.155} & 0.020 & \emph{0.037} & -0.159 & \textbf{0.012} \\ 
+ &  & 0.03 &   \textbf{0.023} & \emph{-0.060} & \textbf{0.020} & \emph{0.036} & -0.094 & \emph{0.028} & 0.046 & \textbf{-0.038} & 0.045 \\ 
+ &  & 0.1 &   \textbf{0.032} & \emph{-0.136} & \textbf{0.014} & \emph{0.047} & -0.176 & \emph{0.017} & 0.091 & \textbf{-0.005} & 0.092 \\ \cline{2-12}
+ & \multirow{3}{*}{0.5} & 0 &   \textbf{0.023} & \textbf{-0.087} & \emph{0.015} & 0.040 & \emph{-0.130} & 0.023 & \emph{0.038} & -0.161 & \textbf{0.012} \\ 
+ &  & 0.03 &   \textbf{0.024} & \textbf{-0.061} & \textbf{0.021} & \emph{0.039} & -0.093 & \emph{0.031} & 0.041 & \emph{-0.085} & 0.035 \\ 
+ &  & 0.1 &   \textbf{0.037} & \emph{-0.128} & \textbf{0.021} & \emph{0.052} & -0.165 & \emph{0.025} & 0.059 & \textbf{-0.023} & 0.059 \\ \cline{2-12}
+ & \multirow{3}{*}{0.8} & 0 &   \textbf{0.024} & \textbf{-0.089} & \emph{0.016} & \emph{0.036} & \emph{-0.118} & 0.022 & 0.041 & -0.178 & \textbf{0.009} \\ 
+ &  & 0.03 &   \textbf{0.025} & \textbf{-0.014} & \textbf{0.025} & 0.047 & -0.041 & 0.045 & \emph{0.038} & \emph{-0.037} & \emph{0.038} \\ 
+ &  & 0.1 &   \textbf{0.031} & \emph{-0.101} & \textbf{0.021} & \emph{0.050} & -0.142 & \emph{0.030} & 0.079 & \textbf{-0.040} & 0.078 \\ \cline{1-12}
+\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   \textbf{0.042} & \textbf{-0.162} & \emph{0.015} & 0.065 & -0.220 & 0.017 & \emph{0.049} & \emph{-0.188} & \textbf{0.013} \\ 
+ &  & 0.03 &   \textbf{0.031} & \emph{-0.114} & \textbf{0.019} & \emph{0.057} & -0.161 & \emph{0.031} & 0.100 & \textbf{-0.061} & 0.097 \\ 
+ &  & 0.1 &   \textbf{0.055} & \emph{-0.157} & \textbf{0.031} & \emph{0.064} & -0.180 & \emph{0.031} & 0.210 & \textbf{-0.042} & 0.210 \\ \cline{2-12}
+ & \multirow{3}{*}{0.5} & 0 &   \textbf{0.041} & \textbf{-0.151} & \emph{0.018} & 0.067 & -0.208 & 0.024 & \emph{0.055} & \emph{-0.198} & \textbf{0.016} \\ 
+ &  & 0.03 &   \textbf{0.046} & \emph{-0.095} & \textbf{0.037} & \emph{0.063} & -0.124 & \emph{0.048} & 0.090 & \textbf{-0.058} & 0.088 \\ 
+ &  & 0.1 &   \textbf{0.078} & \emph{-0.137} & \textbf{0.060} & \emph{0.089} & -0.149 & \emph{0.068} & 0.153 & \textbf{0.038} & 0.153 \\ \cline{2-12}
+ & \multirow{3}{*}{0.8} & 0 &   \textbf{0.044} & \textbf{-0.148} & \emph{0.023} & 0.062 & \emph{-0.186} & 0.027 & \emph{0.055} & -0.200 & \textbf{0.015} \\ 
+ &  & 0.03 &   \textbf{0.056} & \textbf{-0.042} & \textbf{0.055} & 0.101 & \emph{-0.066} & 0.097 & \emph{0.081} & -0.069 & \emph{0.077} \\ 
+ &  & 0.1 &   \emph{0.157} & \emph{-0.188} & \textbf{0.122} & 0.168 & -0.215 & \emph{0.123} & \textbf{0.155} & \textbf{-0.028} & 0.156 \\ 
   \end{tabular}
-\caption{Mean squared error of the estimate of $\beta_1$ for different settings of $\tau_x$.}
+\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 4 (\textbf{minimum}, \emph{next best}).}
 \end{center}
 \end{table}
 
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:48:03 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{rrrr}
- $\tau_\sigma$ & GWL & GWL-U & Oracle \\ 
-  \hline
-0.00 & 0.032 & 0.029 & \textbf{0.014} \\ 
-  0.03 & 0.060 & 0.061 & \textbf{0.046} \\ 
-  0.10 & 0.070 & \textbf{0.066} & 0.091 \\ 
-  \end{tabular}
-\caption{Mean squared error of the estimate of $\beta_1$ for different settings of $\tau_\sigma$.}
-\end{center}
-\end{table}
-
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:48:03 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{rrrr}
- $\rho$ & GWL & GWL-U & Oracle \\ 
-  \hline
-0.00 & 0.034 & \textbf{0.029} & 0.050 \\ 
-  0.50 & 0.043 & \textbf{0.040} & 0.051 \\ 
-  0.80 & 0.085 & 0.087 & \textbf{0.050} \\ 
-  \end{tabular}
-\caption{Mean squared error of the estimate of $\beta_1$ for different settings of $\rho$.}
-\end{center}
-\end{table}
-
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:51:50 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{rrrr}
- $\tau_x$ & GWL & GWL-U & Oracle \\ 
-  \hline
-0.03 & \textbf{0.025} & 0.028 & 0.031 \\ 
-  0.10 & \textbf{0.053} & 0.058 & 0.066 \\ 
-  \end{tabular}
-\caption{Variance of the estimate of $\beta_1$ for different settings of $\tau_x$.}
-\end{center}
-\end{table}
-
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:51:51 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{rrrr}
- $\tau_\sigma$ & GWL & GWL-U & Oracle \\ 
-  \hline
-0.00 & 0.014 & 0.018 & \textbf{0.009} \\ 
-  0.03 & \textbf{0.044} & 0.053 & 0.045 \\ 
-  0.10 & 0.058 & \textbf{0.058} & 0.091 \\ 
-  \end{tabular}
-\caption{Variance of the estimate of $\beta_1$ for different settings of $\tau_\sigma$.}
-\end{center}
-\end{table}
-
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:51:51 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{rrrr}
- $\rho$ & GWL & GWL-U & Oracle \\ 
-  \hline
-0.00 & \textbf{0.022} & 0.023 & 0.048 \\ 
-  0.50 & \textbf{0.030} & 0.032 & 0.049 \\ 
-  0.80 & 0.065 & 0.074 & \textbf{0.048} \\ 
-  \end{tabular}
-\caption{Variance of the estimate of $\beta_1$ for different settings of $\rho$.}
-\end{center}
-\end{table}
 
 
 % latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:59:40 2013
+% Thu Mar  7 11:23:54 2013
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{rrrr}
- $\tau_x$ & GWL & GWL-U & Oracle \\ 
-  \hline
-0.03 & 0.016 & 0.008 & \textbf{0.002} \\ 
-  0.10 & 0.016 & 0.011 & \textbf{0.003} \\ 
+\begin{tabular}{ccc | ccc | ccc | ccc }
+&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
+\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & \emph{0.002} & \emph{0.003} & \emph{0.002} & 0.004 & 0.004 & 0.004 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.03 &   \emph{0.029} & 0.024 & \emph{0.029} & 0.035 & \emph{0.024} & 0.035 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.1 &   \emph{0.017} & 0.008 & \emph{0.017} & 0.018 & \emph{0.003} & 0.018 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
+ & \multirow{3}{*}{0.5} & 0 &   \emph{0.010} & -0.010 & \emph{0.010} & 0.016 & \emph{-0.009} & 0.016 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.03 &   \emph{0.022} & \emph{0.021} & \emph{0.022} & 0.035 & 0.024 & 0.035 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.1 &   0.025 & \emph{0.017} & 0.025 & \emph{0.024} & 0.026 & \emph{0.023} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
+ & \multirow{3}{*}{0.8} & 0 &   \emph{0.007} & \emph{-0.004} & \emph{0.008} & 0.025 & -0.008 & 0.026 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.03 &   \emph{0.041} & \emph{-0.024} & \emph{0.040} & 0.053 & -0.038 & 0.052 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.1 &   \emph{0.059} & \emph{-0.001} & \emph{0.059} & 0.065 & -0.008 & 0.066 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{1-12}
+\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   \emph{0.002} & \emph{-0.003} & \emph{0.002} & 0.005 & -0.004 & 0.005 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.03 &   \emph{0.039} & -0.007 & \emph{0.040} & 0.054 & \emph{0.000} & 0.054 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.1 &   0.079 & 0.061 & 0.076 & \emph{0.069} & \emph{0.059} & \emph{0.066} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
+ & \multirow{3}{*}{0.5} & 0 &   \emph{0.008} & \emph{-0.018} & \emph{0.007} & 0.018 & -0.029 & 0.018 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.03 &   \emph{0.030} & \emph{0.000} & \emph{0.030} & 0.040 & 0.011 & 0.040 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.1 &   0.057 & -0.036 & 0.057 & \emph{0.057} & \emph{-0.034} & \emph{0.056} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
+ & \multirow{3}{*}{0.8} & 0 &   \emph{0.004} & 0.003 & \emph{0.004} & 0.008 & \emph{0.002} & 0.008 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.03 &   \emph{0.116} & \emph{-0.035} & \emph{0.116} & 0.173 & -0.056 & 0.172 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+ &  & 0.1 &   0.160 & 0.069 & 0.157 & \emph{0.132} & \emph{0.028} & \emph{0.133} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
   \end{tabular}
-\caption{Squared bias of the estimate of $\beta_1$ for different settings of $\tau_x$.}
+\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 5 (\textbf{minimum}, \emph{next best}).}
 \end{center}
 \end{table}
 
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:59:40 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{rrrr}
- $\tau_\sigma$ & GWL & GWL-U & Oracle \\ 
-  \hline
-0.00 & 0.018 & 0.011 & \textbf{0.005} \\ 
-  0.03 & 0.016 & 0.008 & \textbf{0.001} \\ 
-  0.10 & 0.013 & 0.009 & \textbf{0.001} \\ 
-  \end{tabular}
-\caption{Squared bias of the estimate of $\beta_1$ for different settings of $\tau_\sigma$.}
-\end{center}
-\end{table}
 
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Fri Mar  1 13:59:40 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{rrrr}
- $\rho$ & GWL & GWL-U & Oracle \\ 
-  \hline
-0.00 & 0.012 & 0.007 & \textbf{0.002} \\ 
-  0.50 & 0.014 & 0.008 & \textbf{0.002} \\ 
-  0.80 & 0.021 & 0.014 & \textbf{0.002} \\ 
-  \end{tabular}
-\caption{Squared bias of the estimate of $\beta_1$ for different settings of $\rho$.}
-\end{center}
-\end{table}
+
+	\subsection{Figures}
+	The plots of bias demonstrate that GWL tended to ``fill the valleys" and ``trim the peaks" of the coefficient surface for $\beta_1$, which is not unexpected for a smoother like GWR. 
+	
+	Figures \ref{fig:coveragemap1} - \ref{fig:coveragemap18} show the frequency with which the true value of the parameter $\beta_1$ was covered by the 95\% confidence intervals at each location under each simulation setting. The left column shows the coverage frequency of the 95\% CI of the GWL using the unshrunk-bootstrap method of CI construction. The middle column is the coverage frequency of the 95\% CI the O-GWR using the bootstrap to generate the CI. The right column is the relative efficiency of the GWL to O-GWR. In the first two columns, the color white is used to indicate areas where the nominal coverage frequency of 95\% is achieved, while blue codes areas that exceeded 95\% coverage and orange codes areas that fell short of 95\% coverage. In the third column, the color white indicates areas where the relative efficiency is unity, while orange indicates areas where the relative efficiency was less than unity and blue indicates areas where the relative efficiency exceeded unity.\\	
+	
+	
+
+
+
+			
+\section{Data analysis}
+	\subsection{Census poverty data}
+	We present the following analysis to demonstrate one possible application of the geographically-weighted lasso in a linear regression context. We use county-level data from the US Census Bureau to select the social and demographic variables that are important predictors of the county-level poverty rate in the upper midwest, and to estimate the coefficients associated with these predictors. Data are from six censuses - the decennial censuses from 1960 to 2000, and from the American Community Survey in 2006. Selection and estimation are done for each census individually (no attempt is made here to borrow strength across years). The outcome of interest (poverty rate) is a proportion and so takes values on $[0,1]$, but to demonstrate the GWL in a linear regression context, we model the logit-transformed poverty rate. Our data set covers all counties in the states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. The potential predictors are described in Table \ref{table:census-vars}.\\
+	
+	\begin{table}
+		\begin{center}
+		\begin{tabular}{ll}
+			Variable name & Description \\
+			\hline
+			\verb!pag! & Proportion working in agriculture\\
+			\verb!pex! &  Proportion working in extraction (mining)\\
+			\verb!pman! & Proportion working in manufacturing \\
+			\verb!pserve! & Proportion working in services \\
+			\verb!pfire! & Proportion working in finance, insurance, and real estate \\
+			\verb!potprof! & Proportion working in other professions \\
+			\verb!pwh! & Proportion who are white \\
+			\verb!pblk! & Proportion who are black \\
+			\verb!phisp! & Proportion who are hispanic \\
+			\verb!metro! & Is the county in a metropolitan area?\\
+		\end{tabular}
+		\caption{Description of the variables used in the census-data example\label{table:census-vars}}
+		\end{center}		
+	\end{table}
+	
+	\subsection{Figures}
+	The coefficient estimates are plotted on maps of the upper midwest in Figures \ref{fig:census-coefs-1960} - \ref{fig:census-coefs-2006}. It is immediately apparent that the estimated coefficient surfaces are non-constant for most variables.\\
+		
+	\begin{figure}
+		\begin{center}
+			\includegraphics[height=8in]{../../figures/poverty/1960.linear.coefficients.pdf}
+			\caption{Estimated coefficient surfaces for the 1960 census.\label{fig:census-coefs-1960}}
+		\end{center}		
+	\end{figure}
+
+	\begin{figure}
+		\begin{center}
+			\includegraphics[height=8in]{../../figures/poverty/1970.linear.coefficients.pdf}
+			\caption{Estimated coefficient surfaces for the 1970 census.\label{fig:census-coefs-1970}}
+		\end{center}
+	\end{figure}
+	
+	\begin{figure}
+		\begin{center}
+			\includegraphics[height=8in]{../../figures/poverty/1980.linear.coefficients.pdf}
+			\caption{Estimated coefficient surfaces for the 1980 census.\label{fig:census-coefs-1980}}
+		\end{center}
+	\end{figure}
+	
+	\begin{figure}
+		\begin{center}
+			\includegraphics[height=8in]{../../figures/poverty/1990.linear.coefficients.pdf}
+			\caption{Estimated coefficient surfaces for the 1990 census.\label{fig:census-coefs-1990}}
+		\end{center}
+	\end{figure}
+	
+	\begin{figure}
+		\begin{center}
+			\includegraphics[height=8in]{../../figures/poverty/2000.linear.coefficients.pdf}
+			\caption{Estimated coefficient surfaces for the 2000 census.\label{fig:census-coefs-2000}}
+		\end{center}
+	\end{figure}
+
+	\begin{figure}
+		\begin{center}
+			\includegraphics[height=8in]{../../figures/poverty/2006.linear.coefficients.pdf}
+			\caption{Estimated coefficient surfaces for the 2006 census.\label{fig:census-coefs-2006}}
+		\end{center}
+	\end{figure}
+			
+
 
 
 

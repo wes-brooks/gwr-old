@@ -474,28 +474,70 @@ for (l in 1:length(locs)) {
 
 
 
+
 vv = c('X1', 'X2', 'X3', 'X4', 'X5')
-errs.zeros.denom = rep(0, N**2)
-errs.nonzeros.denom = rep(0, N**2)
-for (v in vv) {
-    errs.zeros.denom = errs.zeros.denom + ifelse(B[[v]]==0, 1, 0)
-    errs.nonzeros.denom = errs.nonzeros.denom + ifelse(B[[v]]!=0, 1, 0)
-}
-
-errs.zeros = list()
-errs.nonzeros = list()
-for (s in 1:18) {
-    err.z = rep(0, N**2)
-    err.nz = rep(0, N**2)
-
-    for (v in vv) {
-	    err.z = err.z + apply( selection[[s]][[v]], 2, function(x) {ifelse(B[[v]]==0, x, 0)})
-        err.nz = err.nz + apply( selection[[s]][[v]], 2, function(x) {ifelse(B[[v]]!=0, 1-x, 0)})
+locs = c(30, 318, 450, 613, 871)
+selected = list()
+for (l in 1:length(locs)) {   
+    selected[[l]] = list()
+    for (x in vv) {        
+        selected[[l]][[x]] = list()
+        selected[[l]][[x]][['GWL']] = vector()
+        selected[[l]][[x]][['precon']] = vector()
     }
-
-	errs.zeros[[s]] = rowSums(err.z)
-    errs.nonzeros[[s]] = rowSums(err.nz)
 }
+
+covers = list()
+for (l in 1:length(locs)) {  
+    covers[[l]] = list()
+        
+    for (x in vv) {
+        covers[[l]][[x]] = list() 
+        covers[[l]][[x]][['GWL']] = vector()
+        covers[[l]][[x]][['oracular']] = vector()
+        covers[[l]][[x]][['precon']] = vector()
+        covers[[l]][[x]][['unshrunk']] = vector()
+        covers[[l]][[x]][['unshrunk-precon']] = vector()
+    }
+}
+
+for (s in 1:18) {
+    for (j in 1:length(locs)) {
+        for (v in vv) {
+            selected[[j]][[v]][['GWL']] = c(selected[[j]][[v]][['GWL']], mean(apply(selection[[s]][[v]], 2, function(x) {ifelse(x[locs[j]]==0,0,1)})))
+            selected[[j]][[v]][['precon']] = c(selected[[j]][[v]][['precon']], mean(apply(selection.precon[[s]][[v]], 2, function(x) {ifelse(x[locs[j]]==0,0,1)})))
+        }
+
+        for (v in c('X1')) {
+            covers[[j]][[v]][['GWL']] = c(covers[[j]][[v]][['GWL']], mean(apply(coverage.bootstrap[[s]][[v]], 2, function(x) {ifelse(x[locs[j]]==0,0,1)})))
+            covers[[j]][[v]][['oracular']] = c(covers[[j]][[v]][['oracular']], mean(apply(coverage.oracular.bootstrap[[s]][[v]], 2, function(x) {ifelse(x[locs[j]]==0,0,1)})))
+            covers[[j]][[v]][['precon']] = c(covers[[j]][[v]][['precon']], mean(apply(coverage.bootstrap.precon[[s]][[v]], 2, function(x) {ifelse(x[locs[j]]==0,0,1)})))
+            covers[[j]][[v]][['unshrunk']] = c(covers[[j]][[v]][['unshrunk']], mean(apply(coverage.unshrunk.bootstrap[[s]][[v]], 2, function(x) {ifelse(x[locs[j]]==0,0,1)})))
+            covers[[j]][[v]][['unshrunk-precon']] = c(covers[[j]][[v]][['unshrunk-precon']], mean(apply(coverage.unshrunk.bootstrap.precon[[s]][[v]], 2, function(x) {ifelse(x[locs[j]]==0,0,1)})))
+        }
+    }
+}
+selection.table = list()
+for (j in 1:length(locs)) {
+    selection.table[[j]] = cbind(selected[[j]][['X1']][['GWL']], rowMeans(sapply(vv[-1], function(x) {selected[[j]][[x]][['GWL']]})))
+    colnames(selection.table[[j]]) = c("$\\beta_1$", "$\\beta_2$ - $\\beta_5$")    
+    print(xtable(selection.table[[j]], digits=2, align=c('c','c','c'), caption=paste("Selection frequency for the indicated variables at location ", j, sep="")), sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0))
+}
+
+selection.table.precon = list()
+for (j in 1:length(locs)) {
+    selection.table.precon[[j]] = cbind(selected[[j]][['X1']][['GWL']], rowMeans(sapply(vv[-1], function(x) {selected[[j]][[x]][['GWL']]})), selected[[j]][['X1']][['precon']], rowMeans(sapply(vv[-1], function(x) {selected[[j]][[x]][['precon']]})))
+    colnames(selection.table.precon[[j]]) = rep(c("$\\beta_1$", "$\\beta_2$ - $\\beta_5$") , 2)   
+    print(xtable(selection.table.precon[[j]], digits=2, align=c('c','c','c','c','c'), caption=paste("Selection frequency for the indicated variables at location ", j, sep="")), sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0))
+}
+
+colnames(selection.table) = c("original", "preconditioned")
+selectbold = matrix(FALSE, nrow=dim(perfect.selection)[1], ncol=dim(perfect.selection)[2])
+for (i in 1:(dim(perfect.selection)[1])) {selectbold[i,order(perfect.selection[i,], decreasing=TRUE)[1]] = TRUE}
+xtable.printbold(xtable(perfect.selection, digits=3), which.bold=selectbold, include.rownames=FALSE)
+
+
+
 
 errs.zeros.precon = list()
 errs.nonzeros.precon = list()
@@ -672,3 +714,79 @@ xtable.printbold(xtable(by.table[['rho']], digits=c(0,2,3,3,3), caption="Squared
 
 
 
+
+
+locs = c(30, 318, 450, 613, 871)
+comprehensive.loc = list()
+for (l in 1:length(locs)) {    
+    comprehensive.loc[[l]] = list()
+    comprehensive.loc[[l]][['GWL']] = vector()
+    comprehensive.loc[[l]][['oracular']] = vector()
+    comprehensive.loc[[l]][['precon']] = vector()
+    comprehensive.loc[[l]][['unshrunk']] = vector()
+    comprehensive.loc[[l]][['unshrunk-precon']] = vector()
+}
+
+for (s in 1:18) {
+    for (l in 1:length(locs)) {
+        varx.loc[[l]][['GWL']] = c(varx.loc[[l]][['GWL']], var(sapply(X1.err[[s]], function(x) {x[locs[l]]})))
+        varx.loc[[l]][['oracular']] = c(varx.loc[[l]][['oracular']], var(sapply(X1.err.oracular[[s]], function(x) {x[locs[l]]})))
+        varx.loc[[l]][['precon']] = c(varx.loc[[l]][['precon']], var(sapply(X1.err.precon[[s]], function(x) {x[locs[l]]})))
+        varx.loc[[l]][['unshrunk']] = c(varx.loc[[l]][['unshrunk']], var(sapply(X1.err.unshrunk[[s]], function(x) {x[locs[l]]})))
+        varx.loc[[l]][['unshrunk-precon']] = c(varx.loc[[l]][['unshrunk-precon']], var(sapply(X1.err.unshrunk.precon[[s]], function(x) {x[locs[l]]})))
+    }
+}
+
+comprehensive.loc.table = list()
+for (l in 1:length(locs)) {
+    comprehensive.loc.table[[l]] = cbind(mse.loc[[l]][['GWL']], bx.loc[[l]][['GWL']], varx.loc[[l]][['GWL']], mse.loc[[l]][['unshrunk']], bx.loc[[l]][['unshrunk']], varx.loc[[l]][['unshrunk']], mse.loc[[l]][['oracular']], bx.loc[[l]][['oracular']], varx.loc[[l]][['oracular']])
+    colnames(comprehensive.loc.table[[l]]) = c(rep("GWL", 3), rep("GWL-U", 3), rep("Oracle", 3))
+    compbold = matrix(FALSE, nrow=dim(comprehensive.loc.table[[l]])[1], ncol=dim(comprehensive.loc.table[[l]])[2])
+    for (j in 1:3) {
+        cols = dim(comprehensive.loc.table[[l]])[2]
+        indx = which((1:cols - 1) %% 3 + 1 == j)        
+        for (i in 1:(dim(comprehensive.loc.table[[l]])[1])) {
+            minloc = indx[order(abs(comprehensive.loc.table[[l]][i,indx]))[1]]
+            compbold[i,minloc] = TRUE
+        }
+    }
+    compital = matrix(FALSE, nrow=dim(comprehensive.loc.table[[l]])[1], ncol=dim(comprehensive.loc.table[[l]])[2])
+    for (j in 1:3) {
+        cols = dim(comprehensive.loc.table[[l]])[2]
+        indx = which((1:cols - 1) %% 3 + 1 == j)        
+        for (i in 1:(dim(comprehensive.loc.table[[l]])[1])) {
+            minloc = indx[order(abs(comprehensive.loc.table[[l]][i,indx]))[2]]
+            compital[i,minloc] = TRUE
+        }
+    }
+    xtable.printbold(xtable(comprehensive.loc.table[[l]], digits=3, align=c('c','c','c','c','c','c','c','c','c','c'), caption=paste("MSE, bias, and variance of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).", sep="")), include.rownames=FALSE, hline.after=c(0), which.bold=compbold, which.ital=compital)
+    #print(xtable(comprehensive.loc.table[[l]], digits=3, align=c('c','c','c','c','c','c','c','c','c','c'), caption=paste("MSE, bias, and variance of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).", sep="")), include.rownames=FALSE, hline.after=c(0))
+}
+
+
+
+comprehensive.loc.table2 = list()
+for (l in 1:length(locs)) {
+    comprehensive.loc.table2[[l]] = cbind(mse.loc[[l]][['GWL']], bx.loc[[l]][['GWL']], varx.loc[[l]][['GWL']], mse.loc[[l]][['unshrunk']], bx.loc[[l]][['unshrunk']], varx.loc[[l]][['unshrunk']], mse.loc[[l]][['precon']], bx.loc[[l]][['precon']], varx.loc[[l]][['precon']], mse.loc[[l]][['unshrunk-precon']], bx.loc[[l]][['unshrunk-precon']], varx.loc[[l]][['unshrunk-precon']], mse.loc[[l]][['oracular']], bx.loc[[l]][['oracular']], varx.loc[[l]][['oracular']])
+    colnames(comprehensive.loc.table2[[l]]) = c(rep("GWL", 3), rep("GWL-U", 3), rep("GWL-P", 3), rep("GWL-P-U", 3), rep("Oracle", 3))
+    compbold = matrix(FALSE, nrow=dim(comprehensive.loc.table2[[l]])[1], ncol=dim(comprehensive.loc.table2[[l]])[2])
+    for (j in 1:3) {
+        cols = dim(comprehensive.loc.table2[[l]])[2]
+        indx = which((1:cols - 1) %% 3 + 1 == j)        
+        for (i in 1:(dim(comprehensive.loc.table2[[l]])[1])) {
+            minloc = indx[order(abs(comprehensive.loc.table2[[l]][i,indx]))[1]]
+            compbold[i,minloc] = TRUE
+        }
+    }
+    compital = matrix(FALSE, nrow=dim(comprehensive.loc.table2[[l]])[1], ncol=dim(comprehensive.loc.table2[[l]])[2])
+    for (j in 1:3) {
+        cols = dim(comprehensive.loc.table2[[l]])[2]
+        indx = which((1:cols - 1) %% 3 + 1 == j)        
+        for (i in 1:(dim(comprehensive.loc.table2[[l]])[1])) {
+            minloc = indx[order(abs(comprehensive.loc.table2[[l]][i,indx]))[2]]
+            compital[i,minloc] = TRUE
+        }
+    }
+    xtable.printbold(xtable(comprehensive.loc.table2[[l]], digits=3, align=c('c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c'), caption=paste("MSE, bias, and variance of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).", sep="")), include.rownames=FALSE, hline.after=c(0), which.bold=compbold, which.ital=compital)
+    #print(xtable(comprehensive.loc.table[[l]], digits=3, align=c('c','c','c','c','c','c','c','c','c','c'), caption=paste("MSE, bias, and variance of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).", sep="")), include.rownames=FALSE, hline.after=c(0))
+}
