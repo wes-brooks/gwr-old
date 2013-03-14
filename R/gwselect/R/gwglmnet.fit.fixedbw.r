@@ -1,4 +1,4 @@
-gwglmnet.fit.fixedbw = function(x, y, family, coords, bw, D=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, interact, N) {
+gwglmnet.fit.fixedbw = function(x, y, family, coords, bw, D=NULL, s=NULL, verbose=FALSE, mode.select, gwr.weights=NULL, indx=NULL, prior.weights=NULL, tuning=FALSE, predict=FALSE, fit.loc=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, alpha, simulation, interact, N) {
     if (!is.null(fit.loc)) {
         coords.unique = fit.loc
     } else {
@@ -23,7 +23,8 @@ gwglmnet.fit.fixedbw = function(x, y, family, coords, bw, D=NULL, s=NULL, verbos
         loc = coords.unique[i,]
         gw = gweights[[i]]
 
-        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, s=s, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, interact=interact, N=N)
+        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, s=s, mode.select=mode.select, verbose=verbose, prior.weights=prior.weights, predict=predict, tuning=tuning, simulation=simulation, gwr.weights=gweights[[i]], adapt=adapt, precondition=precondition, alpha=alpha, interact=interact, N=N)
+        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", bw, "; loss=", models[[i]][['loss.local']], ".\n", sep=''))
     }
 
     gwglmnet.object[['models']] = models

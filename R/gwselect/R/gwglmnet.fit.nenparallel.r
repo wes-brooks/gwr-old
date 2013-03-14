@@ -1,4 +1,4 @@
-gwglmnet.fit.nenparallel = function(x, y, family, coords, D, s, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE, N, interact) {
+gwglmnet.fit.nenparallel = function(x, y, family, coords, D, s, mode.select, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, tuning, simulation, predict, precondition=FALSE, N, interact, alpha) {
     coords.unique = unique(coords)
     n = dim(coords.unique)[1]
     gwglmnet.object = list()
@@ -16,7 +16,7 @@ gwglmnet.fit.nenparallel = function(x, y, family, coords, D, s, verbose, prior.w
         bandwidth = opt$minimum
 
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
-        return(gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N, interact=interact))
+        return(gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, mode.select=mode.select, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, tuning=tuning, simulation-simulation, predict=predict, precondition=precondition, N=N, interact=interact, alpha=alpha))
     }
 
     gwglmnet.object[['models']] = models

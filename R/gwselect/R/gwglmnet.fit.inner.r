@@ -1,23 +1,20 @@
-gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, predict=FALSE, dist=NULL, indx=NULL, s=NULL, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, mode.select, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, N=1, interact=FALSE, tau=3) {
+gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=NULL, family, mode.select, tuning=FALSE, predict=FALSE, simulation=FALSE, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, interact=FALSE, precondition=FALSE, N=1, alpha=1, tau=3) {
     if (!is.null(indx)) {
-        colocated = which(coords[indx,1]==as.numeric(loc[1]) & coords[indx,2]==as.numeric(loc[2]))
+        colocated = which(round(coords[indx,1],5)==round(as.numeric(loc[1]),5) & round(coords[indx,2],5) == round(as.numeric(loc[2]),5))
     }
     else {
-        colocated = which(coords[,1]==as.numeric(loc[1]) & coords[,2]==as.numeric(loc[2]))
-    }    
-    reps = length(colocated)   
+        colocated = which(round(coords[,1],5) == round(as.numeric(loc[1]),5) & round(coords[,2],5) == round(as.numeric(loc[2]),5))        
+    }
+    reps = length(colocated)
 
     if (is.null(gwr.weights)) {
         gwr.weights = gweight(dist, bw)     
-    } else {
-        gwr.weights = gwr.weights
-    }      
-    gwr.weights = drop(gwr.weights)
+    } 
+    gwr.weights = drop(gwr.weights)  
 
     if (!is.null(indx)) {
         gwr.weights = gwr.weights[indx]
     }
-
 
     if (interact) {
         newnames = vector()
@@ -36,7 +33,6 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
         colnames(x) = c(oldnames, newnames)
     }
 
-    
     if (mode.select=='CV') { 
         xx = as.matrix(x[-colocated,])
         yy = as.matrix(y[-colocated])
@@ -46,23 +42,20 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
         yy = as.matrix(y)
         w <- prior.weights * gwr.weights
     }
-
+    
     if (sum(gwr.weights)==length(colocated)) { return(list(loss.local=Inf, resid=Inf)) } 
 
-    
-    m <- ncol(xx)
     n <- nrow(xx)
     weighted = which(w>0)
     n.weighted = length(weighted)
-
+    
     xx = xx[weighted,]
     yy = as.matrix(yy[weighted])
-
     w = w[weighted]
-    colocated = which(gwr.weights[weighted]==1)
 
     int.list = list()
     coef.list = list()
+    coef.unshrunk.list=list()    
 
     for (i in 1:N) {
         #Final permutation is the original ordering of the data:
@@ -70,27 +63,35 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
             permutation = 1:n.weighted
         } else {
             permutation = sample(1:n.weighted, replace=TRUE)
-        }      
-    
-        xxx = xx[permutation,] #sqrt.w %*% xx[permutation,]
-        yyy = yy[permutation,] #sqrt.w %*% yy[permutation,]
+        }
+
+        colocated = which(gwr.weights[weighted][permutation]==1)
+        sqrt.w <- diag(sqrt(w[permutation]))        
+        #yyy = sqrt.w %*% yy[permutation,]
+        yyy = yy[permutation,]
         meany = mean(yyy)
-        #yyy = yyy - meany
+        yyy = yyy #- meany   
+        #normy = sqrt(sum(yyy**2))
+        #yyy = yyy / normy
+     
+        #xxx = sqrt.w %*% xx[permutation,]
+        xxx = xx[permutation,]
 
         if (precondition==TRUE) {
             s = svd(xxx)
-            F = s$u  %*% diag(1/sqrt(s$d**2+tau))  %*%  t(s$u)
+            F = s$u  %*% diag(1/sqrt(s$d**2 + tau))  %*%  t(s$u)
             xxx = F %*% xxx
             yyy = F %*% yyy
         }
     
         if (adapt==TRUE) {
             one <- rep(1, nrow(xxx))
-            meanx <- drop(one %*% xxx)/nrow(xxx)
+            meanx <- drop(one %*% xxx) / nrow(xxx)
             x.centered <- scale(xxx, meanx, FALSE)         # first subtracts mean
-            normx <- sqrt(drop(one %*% (x.centered^2)))
+            normx <- sqrt(drop(one %*% (x.centered**2)))
             names(normx) <- NULL
             xs = x.centered
+            
             for (k in 1:dim(x.centered)[2]) {
                 if (normx[k]!=0) {
                     xs[,k] = xs[,k] / normx[k]
@@ -99,16 +100,16 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
                     normx[k] = Inf #This should allow the lambda-finding step to work.
                 }
             }
-
-            glm.step = try(glm(yyy~xs, weights=w[permutation], family=family))  # mle fit on standardized
-    
+            
+            glm.step = try(glm(yyy~xs, weights=w[permutation], family=family)) #-1))  # mle fit on standardized
+        
             if("try-error" %in% class(glm.step)) { 
                 cat(paste("Couldn't make a model for finding the SSR at location ", i, ", bandwidth ", bw, "\n", sep=""))
                 return(return(list(loss.local=Inf, resid=Inf)))
             }
-    
-            beta.glm = glm.step$coeff[-1]                    # mle except for intercept
-            adapt.weight = abs(beta.glm)                     # weights for adaptive lasso
+            
+            beta.glm = glm.step$coeff[-1]                   # mle except for intercept
+            adapt.weight = abs(beta.glm)               # weights for adaptive lasso
             for (k in 1:dim(x.centered)[2]) {
                 if (!is.na(adapt.weight[k])) {
                     xs[,k] = xs[,k] * adapt.weight[k]
@@ -117,105 +118,197 @@ gwglmnet.fit.inner = function(x, y, family, coords, loc, bw=NULL, tuning=FALSE, 
                     adapt.weight[k] = 0 #This should allow the lambda-finding step to work.
                 }
             }
-            predx = (x[colocated,] - meanx) * adapt.weight / normx       
+            predx = as.matrix((xx[permutation,] - meanx) * adapt.weight / normx)
+            
         } else {
             meanx = rep(0, ncol(x))
             adapt.weight = rep(1, ncol(x))
             normx = rep(1, ncol(x))
     
             xs=xxx
-            predx = x[colocated,]
+            predx = xx[permutation,]
         }
     
-        xfit = xs #sqrt.w %*% xs
-        yfit = yyy #sqrt.w %*% yyy
+        fitx = xs
+        fity = yyy
+
+        #Allow for the adaptive elastic net penalty:
+        if (substring(as.character(alpha), 1, 1) == 'a') {
+            cormat = abs(cor(fitx))
+            diag(cormat) = NA
+            alpha = 1 - max(cormat, na.rm=TRUE)
+        }
+
+        model = glmnet(x=fitx, y=fity, standardize=TRUE, intercept=FALSE, family=family, weights=w[permutation], alpha=alpha)
+        nsteps = length(model$lambda) + 1   
     
-        #model = glmnet(x=xfit, y=yfit, family=family, weights=w[permutation], standardize=TRUE)
-        #nsteps = length(model$lambda) + 1
+        if (mode.select=='CV') {
+            predx = matrix(xx[colocated,], reps, dim(xs)[2])    
+            vars = apply(predict(model, type='coef')[['coefficients']], 1, function(x) {which(abs(x)>0)})
+            df = sapply(vars, length) + 1                        
 
-        if (family=='binomial' && (abs(sum(yfit*w)-sum(w))<1e-4 || sum(yfit*w)<1e-4)) {
-            cat(paste("Abort. i=", i, ", weighted sum=", sum(yfit*w), ", sum of weights=", sum(w), "\n", sep=''))
-            return(list(model=NULL, cv.error=0, s=Inf, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, resid=Inf))
-        } else if (family=='binomial') {
-            if (mode.select=='AIC') {
-                model = glmnet(x=xfit, y=cbind(1-yfit,yfit), family=family, weights=w, lambda=s)
-                predx = t(apply(xx, 1, function(X) {(X-meanx) * adapt.weight / normx}))
-                vars = apply(predict(model, type='coef'), 2, function(x) {which(abs(x)>0)})
-                df2 = sapply(vars, length)
+            predictions = predict(model, newx=predx, type='fit', mode='step')[['fit']]
+            loss = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=nsteps), nrow=reps, ncol=nsteps)))                
+            s2 = sum(w*(fitted[,nsteps] - as.matrix(y))**2) / (sum(w)-df-1)
 
-                if (sum(w[permutation]) > ncol(x)+1) {                    
-                    coefs = t(as.matrix(coef(model)))
-                    fitted = predict(model, newx=predx, type='response')
-                    loss = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy)**2/(z*(1-z)))[permutation])}) + 2*df2/sum(w[permutation]))
-                    s.optimal = which.min(loss)
-                    
-                    if (k > 1) {
-                        varset = vars[[k]]
-                        modeldata = data.frame(y=yy[permutation], xx[permutation,varset])
-                        m = glm(y~., data=modeldata, weights=w, family=family)
-                        coefs.unshrunk = rep(0, ncol(x) + 1)
-                        coefs.unshrunk[c(1, varset + 1)] = coef(m)
-                        s2.unshrunk = sum(m$residuals**2)/sum(w[permutation])
-    
-                        se.unshrunk = rep(0, ncol(x) + 1)
-                        se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']
-                    }
+            loss.local = loss        
+        } else if (mode.select=='AIC') {
+            predx = t(apply(xx[permutation,], 1, function(X) {(X-meanx) * adapt.weight / normx}))
+            predy = as.matrix(yy[permutation])
+            vars = apply(as.matrix(coef(model)), 2, function(x) {which(abs(x)>0) - 1})
+            df = sapply(vars, length) + 1
 
-                    if (length(colocated)>0) {
-                        loss.local = as.vector(apply(fitted, 2, function(z) {sum((w*(z - yy)**2 / (z*(1-z)))[colocated])}) + 2*df2/sum(w[permutation]))
-                    } else {
-                        loss.local = rep(NA, length(loss))
-                    }                    
-                    loss.local = loss.local[s.optimal]
+            if (n.weighted > ncol(x)) {               
+                coefs = t(as.matrix(coef(model)))
+                coefs[,1] = meany
+                fitted = predict(model, newx=predx, type="response")   
+                s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w[permutation])  
+                loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + 2*df)
+                k = which.min(loss)
+
+                if (k > 1) {
+                    varset = vars[[k]]
+                    modeldata = data.frame(y=yy[permutation], xx[permutation,varset])
+                    m = glm(y~., data=modeldata, weights=w[permutation], family=family)
+                    coefs.unshrunk = rep(0, ncol(x) + 1)
+                    coefs.unshrunk[c(1, varset + 1)] = coef(m)
+                    s2.unshrunk = sum(m$residuals**2)/sum(w[permutation])
+
+                    se.unshrunk = rep(0, ncol(x) + 1)
+                    se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']
                 } else {
-                    s2 = 0
-                    loss = Inf
-                    loss.local = c(Inf)   
-                }    
+                    coefs.unshrunk = rep(0, ncol(xx) + 1)
+                    coefs.unshrunk[1] = meany
+                    
+                    s2.unshrunk = sum(fity**2)/sum(w[permutation])
+                    se.unshrunk = rep(0, ncol(xx) + 1)
+                    se.unshrunk[1] = sqrt(s2.unshrunk)
+                }
+                
+                if (length(colocated)>0) {
+                    loss.local = as.vector(apply(fitted, 2, function(z) {sum((w[permutation]*(z - yy[permutation])**2)[colocated])})/s2 + log(s2) + 2*df/sum(w[permutation]))
+                } else {
+                    loss.local = rep(NA, length(loss))
+                }                     
+            } else {
+                s2 = 0
+                loss = Inf
+                loss.local = c(Inf)   
             }
-    
-        } else if (family=='poisson') {
-            model = glmnet(x=xfit, y=yfit, family=family, weights=w, lambda=s)
-            predictions = predict(model, newx=predx, type='response')
-            cv.error = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=length(model[['lambda']])), nrow=reps, ncol=length(model[['lambda']]))))
-            s.optimal = model[['lambda']][which.min(cv.error)]
-            V = function(mu) {mu}
+
+        } else if (mode.select=='BIC') {
+            predx = t(apply(xx[permutation,], 1, function(X) {(X-meanx) * adapt.weight / normx}))
+            predy = as.matrix(yy[permutation])
+            vars = apply(as.matrix(coef(model)), 2, function(x) {which(abs(x)>0) - 1})
+            df = sapply(vars, length) + 1
+
+            if (sum(w[permutation]) > nsteps) {               
+                coefs = t(as.matrix(coef(model)))
+                coefs[,1] = meany
+                fitted = predict(model, newx=fitx, type="fit", mode="step")[["fit"]]
+                s2 = sum(lsfit(y=fity, x=fitx)$residuals**2) / (sum(w[permutation]) - nsteps - 1)     
+                loss = as.vector(apply(fitted, 2, function(z) {sum(((z - fity)**2)[permutation])})/s2 + log(sum(w[permutation]))*df)
+                k = which.min(loss)
+
+                if (k > 1) {
+                    varset = vars[[k]]
+                    modeldata = data.frame(y=yy[permutation], xx[permutation,varset])
+                    m = lm(y~., data=modeldata, weights=w)
+                    coefs.unshrunk = rep(0, ncol(x) + 1)
+                    coefs.unshrunk[c(1, varset + 1)] = coef(m)
+                    s2.unshrunk = sum(m$residuals^2)/(sum(w[permutation]) - 1 - length(coef(m)))
+
+                    se.unshrunk = rep(0, ncol(x) + 1)
+                    se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']
+                } else {
+                    coefs.unshrunk = rep(0, ncol(xx) + 1)
+                    coefs.unshrunk[1] = meany
+                    
+                    s2.unshrunk = sum(fity**2)/(sum(w[permutation]) - 1)
+                    se.unshrunk = rep(0, ncol(xx) + 1)
+                    se.unshrunk[1] = sqrt(s2.unshrunk / sum(w[permutation]))
+                }
+                
+                if (length(colocated)>0) {
+                    loss.local = as.vector(apply(fitted, 2, function(z) {sum(((z - fity)**2)[colocated])})/s2 + log(s2) + log(sum(w[permutation]))*df/sum(w[permutation])) 
+                    #loss.local = as.vector(apply(fitted, 2, function(z) {sum((w*(z - (yy-meany)/normy)**2)[colocated])})/s2 + log(s2) + 2*df/sum(w[permutation]))
+                } else {
+                    loss.local = rep(NA, length(loss))
+                }                     
+            } else {
+                s2 = 0
+                loss = Inf
+                loss.local = c(Inf)   
+            }
         }
 
+    
         #Get the tuning parameter to minimize the loss:
-        
+        s.optimal = which.min(loss)
+        loss.local = loss.local[s.optimal]
 
-        #Get the coefficients:
-        coefs = coefs[s.optimal,] #predict(model, type='coefficients', s=s.optimal, mode='step')[['coefficients']]
-        coefs = Matrix(coefs, ncol=1)
-        rownames(coefs) = c("(Intercept)", colnames(x))
+        #We have all we need for the tuning stage.
+        if (!tuning) {
+            #Get the coefficients:
+            coefs = coefs[s.optimal,]
+            coefs = Matrix(coefs, ncol=1)
+            rownames(coefs) = c("(Intercept)", colnames(x))   
+
+            coefs = coefs * c(1, adapt.weight) * c(1, 1/normx)
+            if (length(coefs)>1) {coefs[1] = coefs[1] - sum(coefs[2:length(coefs)] * meanx)}
+            if (verbose) {print(coefs)}
     
-        coefs = coefs * c(1, adapt.weight) / c(1, normx)
-        coefs[1] = coefs[1] - sum(coefs[2:length(coefs)] * meanx)
+            if (interact) {
+                locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
+                cc = Matrix(0, nrow=(length(coefs)-1-length(oldnames))/2, ncol=3)
+                cc[,1] = coefs[seq(2, 1+length(oldnames))]
+                cc[,2] = coefs[seq(2+length(oldnames), length(coefs)-1, by=2)]
+                cc[,3] = coefs[seq(2+length(oldnames), length(coefs)-1, by=2)+1]            
+                ccc = cc %*% locmat
+                coefs = Matrix(c(coefs[1], as.vector(ccc)))
+                rownames(coefs) =  c("(Intercept)", oldnames)
+            }   
 
-        if (interact) {
-            locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
-            cc = Matrix(0, nrow=(length(coefs)-1-length(oldnames))/2, ncol=3)
-            cc[,1] = coefs[seq(2, 1+length(oldnames))]
-            cc[,2] = coefs[seq(2+length(oldnames), length(coefs)-1, by=2)]
-            cc[,3] = coefs[seq(2+length(oldnames), length(coefs)-1, by=2)+1]            
-            ccc = cc %*% locmat
-            coefs = Matrix(c(coefs[1], as.vector(ccc)))
-            rownames(coefs) =  c("(Intercept)", oldnames)
-        }     
+            coefs.unshrunk = Matrix(coefs.unshrunk, ncol=1)
+            rownames(coefs.unshrunk) = c("(Intercept)", colnames(xx))
+       
+            if (interact) {
+                locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
+                cc = Matrix(0, nrow=(length(coefs.unshrunk)-1-length(oldnames))/2, ncol=3)
+                cc[,1] = coefs.unshrunk[seq(2, 1+length(oldnames))]
+                cc[,2] = coefs.unshrunk[seq(2+length(oldnames), length(coefs.unshrunk)-1, by=2)]
+                cc[,3] = coefs.unshrunk[seq(2+length(oldnames), length(coefs.unshrunk)-1, by=2)+1]            
+                ccc = cc %*% locmat
+                coefs.unshrunk = Matrix(c(coefs.unshrunk[1], as.vector(ccc)))
+                rownames(coefs.unshrunk) =  c("(Intercept)", oldnames)
+            }  
 
-        if (verbose) {print(coefs)}
-        coef.list[[i]] = coefs
+            se.unshrunk = Matrix(se.unshrunk, ncol=1)
+            rownames(se.unshrunk) = c("(Intercept)", colnames(xx))
+            
+            if (interact) {
+                locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
+                cc = Matrix(0, nrow=(length(se.unshrunk)-1-length(oldnames))/2, ncol=3)
+                cc[,1] = se.unshrunk[seq(2, 1+length(oldnames))]**2
+                cc[,2] = se.unshrunk[seq(2+length(oldnames), length(se.unshrunk)-1, by=2)]**2
+                cc[,3] = se.unshrunk[seq(2+length(oldnames), length(se.unshrunk)-1, by=2)+1]**2           
+                ccc = sqrt(cc %*% locmat)
+                se.unshrunk = Matrix(c(se.unshrunk[1], as.vector(ccc)))
+                rownames(se.unshrunk) =  c("(Intercept)", oldnames)
+            }     
+    
+            coef.unshrunk.list[[i]] = coefs.unshrunk
+            coef.list[[i]] = coefs
+        }
     }
-    
-        
-    #Get the residuals at this choice of s:
-    #fitted = predict(model, newx=xfit, s=s.optimal, type='fit', mode='step')[['fit']]
-    #resid = yfit - fitted
     
     if (tuning) {
         return(list(loss.local=loss.local))
     } else if (predict) {
         return(list(loss.local=loss.local, coef=coefs))
-    } else { return(list(model=model, loss=loss, coef=coefs, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, coef.scale=adapt.weight/normx, df=df2, loss.local=loss.local, sum.weights=sum(w), N=N)) }
+    } else if (simulation) {
+        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, s=s.optimal, bw=bw, sigma2=s2, coef.unshrunk=coefs.unshrunk, s2.unshrunk=s2.unshrunk, coef.unshrunk.list=coef.unshrunk.list, se.unshrunk=se.unshrunk, fitted=fitted[colocated,s.optimal][1], alpha=alpha))
+    } else {
+        return(list(model=model, loss=loss, coef=coefs, coef.unshrunk=coefs.unshrunk, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, meany=meany, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N, fitted=fitted, alpha=alpha))
+    }
 }

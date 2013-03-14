@@ -161,7 +161,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 if (k > 1) {
                     varset = vars[[k]]
                     modeldata = data.frame(y=yy[permutation], xx[permutation,varset])
-                    m = lm(y~., data=modeldata, weights=w)
+                    m = lm(y~., data=modeldata, weights=w[permutation])
                     coefs.unshrunk = rep(0, ncol(x) + 1)
                     coefs.unshrunk[c(1, varset + 1)] = coef(m)
                     s2.unshrunk = sum(m$residuals**2)/sum(w[permutation])
