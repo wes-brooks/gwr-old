@@ -20,6 +20,8 @@
 \usepackage{natbib}
 \usepackage{verbatim}
 
+\usepackage{endfloat}
+
 \usepackage{relsize}
 \usepackage{caption}
 \usepackage{subcaption}
@@ -57,10 +59,10 @@
 	Clustering is a typical form of non-stationarity in spatial data. One way to analyze clustered data is to assume a constant underlying mean with random deviations that are clustered in space. This is the structure of an autoregressive model \citep{}. If the underlying mean is not constant but is given by a regression function with constant coefficients, then a conditionally autoregressive (CAR) model \citep{} is used to simultaneously estimate regression coefficients and clustering of the residuals.
 
 	%Spatial VCR
-	Where the underlying mean is a regression function but the coefficients are not constants, a spatial VCR model is appropriate. Both spline-based \citep{} and kernel-based \citep{Fotheringham:2002} methods are available for estimating the coefficient functions. 
+	Spatially-clustered residuals may indicate that the random error component arises in a spatially-clustered way but it may also indicate oversmoothing, where the small net bias of a global estimate masks larger but offsetting local bias. In this case, smoothing methods that model the mean response as a function of the covariates can reduce or eliminate clustering of the residuals. Where the underlying mean is a regression function but the coefficients are not constants, a spatial VCR model is appropriate. Both spline-based \citep{} and kernel-based \citep{Fotheringham:2002} methods are available for estimating the coefficient functions. 
 	
 	%Kernel smoothing
-	Geographically weighted regression (GWR) \citep{Fotheringham:2002} is a method of estimating the coefficients of a VCR model for spatial data. GWR uses kernel-weighted regression with weights based on the distance between observation locations. The presentation of GWR in \cite{Fotheringham:2002} follows the development of local likelihood in \cite{Loader:1999}.
+	Geographically weighted regression (GWR) \citep{Fotheringham:2002} is a kernel-based method of estimating the coefficients of a VCR model for spatial data. GWR uses kernel-weighted regression with weights based on the distance between observation locations. The presentation of GWR in \cite{Fotheringham:2002} follows the development of local likelihood in \cite{Loader:1999}.
 	
 	%Local regression
 	GWR can be thought of as a kernel smoother for regression coefficients, and hence GWR coefficient estimates are likely to exhibit bias near the boundary of the region being modeled \citep{Hastie:1993b}. Modeling the coefficient surface as locally linear rather than locally constant (by including coefficient-by-location interactions) can reduce this boundary-effect bias \citep{Hastie:1993b}. Adding these interactions to the GWR model is analogous to a transition from kernel smoothing to local regression, and was introduced in \cite{Wang:2008b}.
@@ -72,7 +74,7 @@
 	Some recent research has focused on variable selection in varying-coefficients models. In the context of varying-coefficients regression models, global variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero everywhere against the hypothesis that the coefficient is nonzero somewhere) is distinguished from local variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero at a given location against the hypothesis that the coefficient at that location is nonzero). Global variable selection for models where the varying coefficients are estimated using splines is addressed in \cite{Fan:1999} for response variables that belong to an exponential-family distribution (as in the generalized linear model), and in \cite{Wang:2008a} for models with repeated measurements. \cite{Antoniadis:2012a} estimates the coefficient functions with P-splines, and then uses the nonnegative garrote of \cite{Breiman:1995} to do local variable selection by selecting P-spline bases.
 	
 	%Local variable selection
-	Here we discuss a method of local variable selection in GWR models using the adaptive lasso of \cite{Zou:2006}. The idea first appears in the literature as the geographically-weighted LASSO (GWL) of \cite{Wheeler:2009}, which uses a jackknife criterion for selection of the lasso tuning parameters. Because the jackknife criterion can only be computed at locations where the response variable is observed, the GWL cannot be used for imputation of missing data nor for interpolation between observation locations. We avoid this limitation of the GWL by using a penalized-likelihood criterion to select the lasso tuning parameters (specifically the AIC, but in principle one could use the BIC, \emph{et cetera}). The AIC allows us to easily adapt our method to the setting of a generalized linear model. The local AIC presented here is based on an \emph{ad hoc} calculation of the degrees of freedom used to estimate the spatially-varying coefficient surfaces.
+	Here we discuss a method of local variable selection in GWR models using the adaptive LASSO of \cite{Zou:2006}. The idea first appears in the literature as the geographically-weighted LASSO (GWL) of \cite{Wheeler:2009}, which uses a jackknife criterion for selection of the LASSO tuning parameters. Because the jackknife criterion can only be computed at locations where the response variable is observed, the GWL cannot be used for imputation of missing data nor for interpolation between observation locations. We avoid this limitation of the GWL by using a penalized-likelihood criterion to select the LASSO tuning parameters (specifically the AIC, but in principle one could use the BIC, \emph{et cetera}). The AIC allows us to easily adapt our method to the setting of a generalized linear model. The local AIC presented here is based on an \emph{ad hoc} calculation of the sample size and degrees of freedom for estimating the spatially-varying coefficient surfaces.
 	
 \section{Geographically-weighted regression \label{section:GWR}}
 
@@ -100,10 +102,9 @@
 	 	\ell\left( \bm{\beta} \right) = - 1/2 \sum_{i=1}^n \left\{  \log \left( 2 \pi \sigma^2_i\right) +  \sigma^{-2}_i  \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2  \right\}
 	\end{eqnarray}
 	
-	With $n$ observations and $n \times (p+1)$ free parameters, the model is not identifiable so it is not possible to directly maximize the total likelihood. One way to effectively reduce the number of parameters is to assume that the spatially-varying coefficients $\bm{\beta}(\bm{s})$ are smoothly varying, and use a kernel smoother to make pointwise estimates of the coefficients by maximizing the local likelihood. In the setting of spatial data and with the kernel smoother based on the physical distance between observation locations, this method is called geographically-weighted regression (GWR).
+	With $n$ observations and $n \times (p+1)$ free parameters, the model is not identifiable so it is not possible to directly maximize the total likelihood. One way to effectively reduce the number of parameters is to assume that the spatially-varying coefficients $\bm{\beta}(\bm{s})$ are smoothly varying, and use a kernel smoother to make pointwise estimates of the coefficients by maximizing the local likelihood. In the setting of spatial data and with the kernel smoother based on the physical distance between observation locations, this is ordinary GWR.
 		
-	\subsection{Estimation}
-		
+	\subsection{Estimation}		
 	Geographically-weighted regression estimates the value of the coefficient surface $\bm{\beta}(\bm{s})$ at each location $\bm{s}_i$. First calculate the euclidean distance $\delta_{ii'} \equiv \delta\left(\bm{s}_i, \bm{s}_{i'}\right) \equiv \|\bm{s}_i  -\bm{s}_{i'}\|_2$ between locations $\bm{s}_i$ and $\bm{s}_{i'}$ for all $i, i'$. A bisquare kernel is used to generate spatial weights based on the euclidean distances and a bandwidth $\phi$:\\
 	
 	\begin{eqnarray}
@@ -112,7 +113,7 @@
 	
 	For the purpose of estimation, define the local likelihood at each location \citep{Fotheringham:2002}:
 	\begin{eqnarray}
-		\cal{L}_i \left(\bm{\beta}_i \right) &=& \prod_{i'=1}^n \left\{ \left(2 \pi \sigma^2_i  \right)^{-1/2}  \exp\left[-\frac{1}{2} \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right] \right\} ^ {w_{ii'}}
+		\mathcal{L}_i \left(\bm{\beta}_i \right) &=& \prod_{i'=1}^n \left\{ \left(2 \pi \sigma^2_i  \right)^{-1/2}  \exp\left[-\frac{1}{2} \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right] \right\} ^ {w_{ii'}}
 	\end{eqnarray}
 			
 	Thus, the local log-likelihood function is:
@@ -120,7 +121,7 @@
 		\ell_i\left(\bm{\beta}_i\right) &\propto& -1/2 \sum_{i'=1}^n w_{ii'} \left\{ \log{\sigma^2_i}  + \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}
 	\end{eqnarray}
 	
-	From which it is apparent that the GWR coefficient estimates $\hat{\bm{\beta}}_{i,\text{GWR}}$, which maximize the local likelihood at location $\bm{s}_i$, can be calculated using weighted least squares. Letting the weight matrix $\bm{W}_i$ be:
+	From which it is apparent that the GWR coefficient estimates $\hat{\bm{\beta}}_{i,\text{GWR}}$, which maximize the local likelihood at location $\bm{s}_i$, can be calculated using weighted least squares. Letting the diagonal weight matrix $\bm{W}_i$ be:
 	\begin{eqnarray}
 		\bm{W}_i =  {\rm diag}\left\{w_{ii'}\right\}_{i' = 1}^n
 	\end{eqnarray}
@@ -159,7 +160,7 @@
 	
 	 
 	
-\section{Model selection \label{section:method}}
+\section{Model selection \label{section:model-selection}}
 	\subsection{Variable selection}
 	Traditional GWR relies on \emph{a priori} model selection to decide which variables should be included in the model. In the context of ordinary least squares regression, regularization methods such as the adaptive LASSO \citep{Zou:2006} have been shown to have appealing properties for automating variable selection, sometimes including the ``oracle" property of asymptotically selecting exactly the correct variables for inclusion in a regression model.\\
 	
@@ -179,10 +180,22 @@
 	
 	Finally, the adaptive LASSO coefficient estimates at location $\bm{s}_i$ are found by using the \verb!lars! algorithm \citep{Efron:2004b} to model $\bm{V}_i^*$ as a function of $\widecheck{\bm{U}}_i^*$.
 
-	\subsection{Tuning parameter selection}
-	The final task is to select the LASSO tuning parameter. We propose a locally-weighted version of the Akaike information criterion (AIC \citep{Akaike:1974}) to select the tuning parameter. The local AIC allows coefficients to be estimated at any location where the local likelihood can be calculated. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$, playing the role of the sample size and the number of nonzero coefficients in $\bm{\beta}_i$ playing the role of the ``degrees of freedom" $\left( \df_i \right)$ \citep{Zou:2007}.\\
+	\subsection{Tuning parameter selection}	
+	At each location $\bm{s}_i$, it is necessary to select the LASSO tuning parameter $\lambda_i$. To compare different values of $\lambda_i$, we propose a locally-weighted version of the Akaike information criterion (AIC \citep{Akaike:1974}) which we call the local AIC, or $\mbox{AIC}_{\text{loc}}$. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$, playing the role of the sample size and the ``degrees of freedom" $\left( \df_i \right)$ at $\bm{s}_i$ given by the number of nonzero coefficients in $\bm{\beta}_i$ \citep{Zou:2007}.\\
 	
-	The objective minimized by the geographically-weighted LASSO (GWL) is:	
+	\begin{eqnarray}
+		\mbox{AIC}_{\text{loc}, i} &=& -2 \sum_{i'=1}^n \ell_{ii'}  + 2 \mbox{df}_i\\
+		&=& -2 \times \sum_{i'=1}^n \log \left\{ \left(2 \pi \hat{\sigma}_i^2\right)^{-1/2} \exp \left[-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right] \right\}^{w_{ii'}} + 2\mbox{df}_i\\
+		&=& \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} + 2\mbox{df}_i \\
+		&=& \hat{\sigma}_i^{-2} \sum_{i'=1}^n w_{ii'} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + 2 \mbox{df}_i + C_i
+	\end{eqnarray}	
+	
+	Where the estimated local variance $\hat{\sigma}_i^2$ is the variance estimate from the unpenalized local model \citep{Zou:2007}, so $C_i$ does not depend on the choice of tuning parameter and can be ignored.
+	
+	\cite{Wheeler:2009} proposed selecting the tuning parameter for the LASSO at location $\bm{s}_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$. Because the jackknife prediction error is undefined everywhere except for at observation locations, this choice restricts coefficient estimation to occur at the locations where data has been observed. By contrast, the local AIC can be calculated at any location where we can calculate the local likelihood. As a practical matter this allows for variable selection and coefficient surface estimation to be done at locations where no data was observed (interpolation) and for imputation of missing values of the response variable.
+	 
+	\subsection{Bandwidth selection}
+	The bandwidth parameter is global and so we need a global statistic for comparing prospective bandwidths. The objective minimized by GWL is:	
 	\begin{eqnarray}
 		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \sum_{j=1}^p \lambda_{ij} \beta_{ij}
 	\end{eqnarray}
@@ -193,26 +206,14 @@
 		\hat{y}_i = \bm{x}_i' \hat{\bm{\beta}}_{i, \text{GWL}} &=&  \bm{x}_i' \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \bm{x}_i' \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i
 	\end{eqnarray}
 	
-	Unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GWL is not a linear smoother the AIC and confidence intervals as calculated in \cite{Fotheringham:2002} are not accurate for the GWL \citep{Zou:2006}. The local AIC at location $\bm{s}_i$($\mbox{AIC}_{\text{loc}, i}$) is minimized to select the adaptive lasso tuning parameter.
-	\begin{eqnarray}
-		\mbox{AIC}_{\text{loc}, i} &=& -2 \sum_{i'=1}^n \ell_{ii'}  + 2 \mbox{df}_i\\
-		&=& -2 \times \sum_{i'=1}^n \log \left\{ \left(2 \pi \hat{\sigma}_i^2\right)^{-1/2} \exp \left[-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right] \right\}^{w_{ii'}} + 2\mbox{df}_i\\
-		&=& \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} + 2\mbox{df}_i \\
-		&=& \hat{\sigma}_i^{-2} \sum_{i'=1}^n w_{ii'} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + 2 \mbox{df}_i + C_i
-	\end{eqnarray}	
-	Where the estimated local variance $\hat{\sigma}_i^2$ is the variance estimate from the unpenalized local model \citep{Zou:2007}, so $C_i$ does not depend on the choice of tuning parameter and can be ignored.
-	
-	\cite{Wheeler:2009} proposed selecting the tuning parameter for the LASSO at location $\bm{s}_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$. This choice restricts coefficient estimation to occur at the locations where data has been observed. By contrast, the local AIC can be calculated at any location within one bandwidth $\phi$ of any data point. 
-	 
-	\subsection{Bandwidth selection}
-	The bandwidth is selected to minimize the total AIC ($\mbox{AIC}_{\mbox{tot}}$). Because of the kernel weights and the application of the Adaptive LASSO, the sample size and degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:	
+	Unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GWL is not a linear smoother it is not possible to calculate the AIC as in \cite{Fotheringham:2002} \citep{Zou:2006}. We propose a statistic called the total AIC ($\mbox{AIC}_{\text{tot}}$) for the purpose of selecting the bandwidth parameter. Because of the kernel weights and the application of the adaptive LASSO, the sample size and the degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:	
 		
 	\begin{eqnarray}
 		\mbox{AIC}_{\mbox{tot}} &=& -2 \times \sum_{i=1}^n \ell_i + 2 \times \mbox{df}\\
 		&=& \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}_i' \hat{\bm{\beta}}_i \right)^2 \right\} + 2 \times \mbox{df}\label{eq:total-AIC1}
 	\end{eqnarray}	
 	
-	What remains is to calculate $\mbox{df}$, the number of degrees of freedom used by the model. Classical GWR, as developed in \cite{Loader:1999} and \cite{Fotheringham:2002} calculates $\mbox{df}$ using the trace of the ``hat" matrix, but because the GWL is not a linear smoother, there is no ``hat" matrix associated with GWR. Instead, notice that $\mbox{df}$ can be pulled into the summation in (\ref{eq:total-AIC1}):
+	What remains is to calculate $\mbox{df}$, the number of degrees of freedom used by the model. Classical GWR, as developed in \cite{Loader:1999} and \cite{Fotheringham:2002} calculates $\mbox{df}$ using the trace of the ``hat" matrix, but because the GWL is not a linear smoother, there is no ``hat" matrix associated with GWL. Instead, notice that $\mbox{df}$ can be pulled into the summation in (\ref{eq:total-AIC1}):
 		
 	%This is different from the formulas for the AIC as proposed in \cite{Fotheringham:2002} and \cite{Loader:1999}. The reason is that the basic GWR estimator is linear, so the degrees of freedom can be approximated using the trace of the ``hat" matrix. The GWL, though, is not a linear estimator so some...\ However, since the GWL does local variable selection, the model may use a different number of parameters at each location $s_i$. 
 			
@@ -229,16 +230,13 @@
 	The bandwidth that minimizes (\ref{eq:total-AIC2}) is found by a line search.\\
 	
 	\subsection{Confidence interval construction}	
-	Confidence intervals for the GWL's coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by exploiting an assumption of normally-distributed residuals. The, e.g., 95\% confidence interval for each regression coefficient is then the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
+	Confidence intervals for the GWL's coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by exploiting an assumption of normally-distributed residuals. Then the, e.g., 95\% confidence interval for each regression coefficient is defined by the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
 	 
-	 	\subsubsection{Bootstrap confidence interval}
-		To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate.
+	 	To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive LASSO tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate.\\
 	
-		 Unshrunk coefficient estimates are found by using the GWL at each location for variable selection only and then estimating the coefficients for the selected variables by GWR. An unshrunk bootstrap confidence interval is found by estimating the unshrunk coefficients for each of the $n_B$ bootstrap replicates and then calculating the percentiles as above.\\
-	 
-		
-	 	\subsubsection{Normal approximation-based confidence interval}
-		A third way to estimate the coefficient confidence intervals is to use the GWL for variable selection only and then to use GWR to calculate a confidence interval based on the assumption of an independent, identically distributed, Gaussian error structure. In this case, the standard error of the regression coefficients is 
+		 Unshrunk coefficient estimates are found by using the GWL at each location for variable selection only and then estimating the coefficients for the selected variables by weighted least squares. An unshrunk bootstrap confidence interval is found by estimating the unshrunk coefficients for each of the $n_B$ bootstrap replicates and then calculating the percentiles as above.\\
+		 
+		A third way to estimate the coefficient confidence intervals is to use the GWL for variable selection only and then to use weighted least squares for both coefficient estimation and confidence interval construction:
 		\begin{eqnarray}
 			\hat{\mbox{se}}_{\beta_i} &=& \left( \tilde{\bm{X}}_i'\bm{W}_i \tilde{\bm{X}}_i \right)^{-1}  \tilde{\bm{X}}_i'\bm{W}_i\bm{Y}
 		\end{eqnarray}
@@ -249,28 +247,26 @@
 
 \section{Simulation}
 	\subsection{Simulation setup}
-	A simulation study was conducted to assess some finite-sample properties of the method described in Sections \ref{section:model}-\ref{section:method}. Data was simulated on $[0,1] \times [0,1]$, which was divided into a $30 \times 30$ grid. Each of $p=5$ covariates $Z_1, \dots, Z_p$ was simulated by a Gaussian random field (GRF) with mean zero and exponential spatial covariance $Cov \left(Z_{ji}, Z_{ji'} \right) = \sigma_z^2 \exp{\left( -\tau_z^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma_z^2=1$ is the variance and $\tau_z$ is a range parameter. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by $\bm{R}$, where $\bm{R}$ is the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix $\bm{\Sigma}$ is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.
+	A simulation study was conducted to assess some finite-sample properties of the method described in Sections \ref{section:GWR}-\ref{section:model-selection}. Data was simulated on $[0,1] \times [0,1]$, which was divided into a $30 \times 30$ grid. Each of $p=5$ covariates $Z_1, \dots, Z_p$ was simulated by a Gaussian random field (GRF) with mean zero and exponential spatial covariance $Cov \left(Z_{ji}, Z_{ji'} \right) = \sigma_z^2 \exp{\left( -\tau_z^{-1} \delta_{ii'} \right)}$ where $\sigma_z^2=1$ is the variance, $\tau_z$ is the range parameter, and $\delta_{ii'}$ is the Euclidean distance $\|\bm{s}_i - \bm{s}_{i'}\|_2$. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by $\bm{R}$, where $\bm{R}$ is the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix $\bm{\Sigma}$ is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.
 		
-	The simulated response is $y_i = \bm{z}'_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 900$ where the vector of additive errors $\bm{\epsilon}$ is generated from a GRF with spatial covariance $Cov \left(\epsilon_{i}, \epsilon_{i'} \right) = \sigma_{\epsilon}^2 \exp{\left( -\tau_{\epsilon}^{-1} \|s_i - s_{i'} \| \right)}$ where $\sigma_{\epsilon}^2=1$.
+	The simulated response is $y_i = \bm{z}'_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 900$ where the vector of additive errors $\bm{\epsilon}$ is generated from a GRF with spatial covariance $Cov \left(\epsilon_{i}, \epsilon_{i'} \right) = \sigma_{\epsilon}^2 \exp{\left( -\tau_{\epsilon}^{-1} \delta_{ii'} \right)}$ where $\sigma_{\epsilon}^2=1$.
 	
-	The simulated data include the output $y$ and five covariates $Z_1, \dots, Z_5$. The true data-generating model uses only $Z_1$, so $Z_2, \dots, Z_5$ are included to test the variable-selection properties of GWL. The coefficient surface of $\beta_1$ is described by the ``step" function:
+	The simulated data include the output $y$ and five covariates $Z_1, \dots, Z_5$. The true data-generating model uses only $Z_1$, so $Z_2, \dots, Z_5$ are included to test the variable-selection properties of GWL. The coefficient surface of $\beta_1$ is described by the ``step" function (Figure \ref{fig:beta1-actual}):
 	\begin{eqnarray}
 		\beta_1(s) = \begin{cases} 0 &\mbox{ if } s_y<0.4 \\ 5(s_y-0.4) &\mbox{ if } 0.4 \leq s_y<0.6 \\ 1 &\mbox{ o.w.} \end{cases}
 	\end{eqnarray}.\\
 		
-	In order to evaluate the performance of GWL under a range of conditions, the data was simulated under 18 different settings (Table \ref{table:simulation_settings}): high (0.1) and low (0.03) levels of $\tau_z$, the autoregression range parameter for the covariate GRFs $Z_1, \dots, Z_5$; three levels (0, 0.5, 0.8) of between-covariate correlation $\rho$; and three levels (0, 0.03, 0.1) of the autoregression range parameter $\tau_{\epsilon}$ for the error-term GRF $\bm{\epsilon}$. Each case was simulated 100 times.
-	
-	%For measuring performance, we look at the pointwise selection frequency of $\beta_1, \dots, \beta_5$ and the coverage frequency of $\beta_1$ (for a nominal 95\% confidence interval).
-	
-	%As a baseline, ordinary GWR was used to estimate the coefficients using the same data but under an ``oracle" setting (O-GWR), meaning that GWR was provided with the exactly correct set of predictors as used in the data-generating process. The ratio of the coverage frequency of the GWL to the coverage frequency of O-GWR is called the relative efficiency of the GWL.\\
+	In order to evaluate the performance of GWL under a range of conditions, the data was simulated under 18 different settings (Table \ref{table:simulation_settings}): high (0.1) and low (0.03) levels of $\tau_z$, the autoregression range parameter for the covariate GRFs; three levels (0, 0.5, 0.8) of between-covariate correlation $\rho$; and three levels (0, 0.03, 0.1) of the autoregression range parameter $\tau_{\epsilon}$ for the error-term GRF $\bm{\epsilon}$. Each case was simulated 100 times.\\
+		
+	The performance of GWL was compared to oracular GWR (O-GWR), which is ordinary GWR with ``oracular" variable selection, meaning that exactly the correct set of predictors was used to fit the GWR model at each location in the simulation.\\
 	
 	% latex table generated in R 2.15.1 by xtable 1.7-0 package
 % Fri Jan 18 10:19:47 2013
 \begin{table}[h!]
 	\begin{center}
-	\begin{tabular}{rrrr}
+	\begin{tabular}{cccc}
 		\hline
-		& $\tau_z$ & $\rho$ & $\tau_{\epsilon}$ \\ 
+		Setting & $\tau_z$ & $\rho$ & $\tau_{\epsilon}$ \\ 
 		\hline
 		1 & 0.03 & 0.00 & 0.00 \\ 
 		2 & 0.03 & 0.00 & 0.03 \\ 
@@ -294,170 +290,342 @@
 	\end{center}
 	\caption{Simulation parameters for each setting.\label{table:simulation_settings}}
 \end{table}
+
+	\begin{figure}
+		\begin{center}
+			\includegraphics[height=3in]{../../figures/scratch/beta1-actual.pdf}
+			\caption{The actual $\beta_1$ coefficient surface used in the simulation.\label{fig:beta1-actual}}
+		\end{center}
+	\end{figure}
 	
 	\subsection{Results}
-	Results from the simulation were summarized at five locations on the simulated grid. The five key locations were chosen because they represent interesting regions of the $\beta_1$ coefficient surface.
+	Results from the simulation were summarized at five locations on the simulated grid. The five key locations were chosen because they represent interesting regions of the $\beta_1$ coefficient surface. The results of variable selection (Tables \ref{table:loc1-selection} - \ref{table:loc5-selection}) and coefficient estimation (Tables \ref{table:loc1-estimation} - \ref{table:loc5-estimation}) are presented in the tables below.
 	%Results of the simulation experiment were summarized to asses the consistency in selection and estimation, as well as the coverage properties of the confidence intervals. The confidence intervals based on the bootstrap (without shrinkage) were used for the GWL because they seemed to uniformly outperform the other options.\\
 	
 	\subsection{Tables}
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Thu Mar  7 11:23:54 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{ccc | ccc | ccc | ccc }
-&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
-\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & 0.048 & 0.122 & 0.034 & \textbf{0.030} & \emph{0.002} & \textbf{0.030} & \emph{0.032} & \textbf{-0.001} & \emph{0.032} \\ 
- &  & 0.03 &   \emph{0.071} & 0.090 & \textbf{0.063} & \textbf{0.064} & \textbf{-0.015} & \emph{0.064} & 0.138 & \emph{-0.039} & 0.138 \\ 
- &  & 0.1 &   \emph{0.044} & 0.084 & \emph{0.038} & \textbf{0.028} & \textbf{0.006} & \textbf{0.028} & 0.258 & \emph{0.032} & 0.259 \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   0.067 & 0.158 & 0.042 & \emph{0.042} & \emph{0.055} & \emph{0.039} & \textbf{0.033} & \textbf{-0.008} & \textbf{0.033} \\ 
- &  & 0.03 &   \emph{0.105} & 0.151 & \textbf{0.083} & \textbf{0.085} & \textbf{0.029} & \emph{0.085} & 0.110 & \emph{-0.036} & 0.110 \\ 
- &  & 0.1 &   \emph{0.062} & 0.098 & \emph{0.053} & \textbf{0.045} & \emph{0.028} & \textbf{0.045} & 0.285 & \textbf{0.015} & 0.288 \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   0.128 & 0.220 & \emph{0.080} & \emph{0.116} & \emph{0.147} & 0.095 & \textbf{0.031} & \textbf{0.015} & \textbf{0.031} \\ 
- &  & 0.03 &   \emph{0.255} & 0.198 & \emph{0.218} & 0.270 & \emph{0.096} & 0.263 & \textbf{0.097} & \textbf{-0.026} & \textbf{0.097} \\ 
- &  & 0.1 &   \emph{0.131} & 0.122 & \textbf{0.117} & \textbf{0.127} & \textbf{0.049} & \emph{0.125} & 0.273 & \emph{-0.100} & 0.266 \\ \cline{1-12}
-\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   0.049 & 0.119 & \emph{0.035} & \textbf{0.027} & \textbf{-0.001} & \textbf{0.027} & \emph{0.041} & \emph{-0.009} & 0.041 \\ 
- &  & 0.03 &   \emph{0.088} & 0.120 & \textbf{0.074} & \textbf{0.083} & \emph{-0.004} & \emph{0.084} & 0.221 & \textbf{0.000} & 0.223 \\ 
- &  & 0.1 &   \emph{0.109} & \emph{0.081} & \emph{0.104} & \textbf{0.093} & \textbf{0.027} & \textbf{0.093} & 0.508 & 0.089 & 0.505 \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   \emph{0.059} & 0.147 & \textbf{0.038} & \textbf{0.046} & \emph{0.052} & \emph{0.044} & 0.074 & \textbf{0.029} & 0.074 \\ 
- &  & 0.03 &   \emph{0.134} & 0.161 & \textbf{0.109} & \textbf{0.123} & \emph{0.058} & \emph{0.121} & 0.208 & \textbf{-0.043} & 0.209 \\ 
- &  & 0.1 &   \emph{0.140} & 0.061 & \emph{0.138} & \textbf{0.114} & \textbf{0.005} & \textbf{0.115} & 0.620 & \emph{-0.044} & 0.624 \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   \emph{0.117} & 0.208 & \emph{0.074} & 0.119 & \emph{0.132} & 0.103 & \textbf{0.042} & \textbf{0.016} & \textbf{0.042} \\ 
- &  & 0.03 &   \emph{0.424} & 0.133 & \emph{0.411} & 0.521 & \emph{0.044} & 0.524 & \textbf{0.212} & \textbf{-0.013} & \textbf{0.214} \\ 
- &  & 0.1 &   \textbf{0.290} & \emph{0.033} & \textbf{0.291} & \emph{0.300} & \textbf{0.009} & \emph{0.303} & 0.680 & 0.083 & 0.680 \\ 
-  \end{tabular}
-\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 1 (\textbf{minimum}, \emph{next best}).}
-\end{center}
-\end{table}
+		\subsubsection{Selection}
+		% latex table generated in R 2.15.2 by xtable 1.7-0 package
+		% Fri Mar 15 10:06:16 2013
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc|cc}
+		$\rho$ & $\tau_x$ & $\tau_\sigma$ &  $\beta_1$ & $\beta_2$ - $\beta_5$ \\ 
+		  \hline
+		\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & 1.00 & 0.21 \\ 
+		 &  & 0.03 &   0.99 & 0.34 \\ 
+		 &  & 0.1 &   1.00 & 0.44 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.20 \\ 
+		 &  & 0.03 &   0.99 & 0.38 \\ 
+		 &  & 0.1 &   0.97 & 0.59 \\ \cline{1-5}
+		\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   1.00 & 0.26 \\ 
+		 &  & 0.03 &   1.00 & 0.29 \\ 
+		 &  & 0.1 &   1.00 & 0.47 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.26 \\ 
+		 &  & 0.03 &   0.98 & 0.39 \\ 
+		 &  & 0.1 &   0.98 & 0.60 \\ \cline{1-5}
+		\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   0.99 & 0.30 \\ 
+		 &  & 0.03 &   0.94 & 0.40 \\ 
+		 &  & 0.1 &   0.98 & 0.45 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.34 \\ 
+		 &  & 0.03 &   0.93 & 0.46 \\ 
+		 &  & 0.1 &   0.94 & 0.61 \\ 
+		  \end{tabular}
+		\caption{Selection frequency for the indicated variables at location 1\label{table:loc1-selection}}
+		\end{center}
+		\end{table}
 
 
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Thu Mar  7 11:23:54 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{ccc | ccc | ccc | ccc }
-&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
-\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & 0.083 & 0.265 & 0.013 & \emph{0.048} & \emph{0.190} & \emph{0.013} & \textbf{0.042} & \textbf{0.171} & \textbf{0.013} \\ 
- &  & 0.03 &   0.081 & 0.244 & \emph{0.022} & \textbf{0.042} & \emph{0.146} & \textbf{0.021} & \emph{0.052} & \textbf{0.052} & 0.049 \\ 
- &  & 0.1 &   \emph{0.089} & 0.280 & \emph{0.011} & \textbf{0.062} & \emph{0.227} & \textbf{0.011} & 0.097 & \textbf{0.048} & 0.096 \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   0.102 & 0.292 & 0.016 & \emph{0.065} & \emph{0.221} & \emph{0.016} & \textbf{0.045} & \textbf{0.177} & \textbf{0.014} \\ 
- &  & 0.03 &   0.093 & 0.252 & \textbf{0.029} & \emph{0.064} & \emph{0.169} & \emph{0.036} & \textbf{0.043} & \textbf{0.072} & 0.038 \\ 
- &  & 0.1 &   0.104 & 0.280 & \emph{0.025} & \textbf{0.075} & \emph{0.227} & \textbf{0.024} & \emph{0.076} & \textbf{-0.002} & 0.077 \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   0.126 & 0.322 & \emph{0.023} & \emph{0.094} & \emph{0.255} & 0.030 & \textbf{0.041} & \textbf{0.172} & \textbf{0.011} \\ 
- &  & 0.03 &   0.166 & 0.317 & \emph{0.066} & \emph{0.137} & \emph{0.255} & 0.073 & \textbf{0.047} & \textbf{0.106} & \textbf{0.036} \\ 
- &  & 0.1 &   0.117 & 0.286 & \textbf{0.035} & \emph{0.098} & \emph{0.240} & \emph{0.041} & \textbf{0.074} & \textbf{0.026} & 0.074 \\ \cline{1-12}
-\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   0.087 & 0.277 & \emph{0.011} & \emph{0.060} & \emph{0.223} & \textbf{0.011} & \textbf{0.053} & \textbf{0.192} & 0.016 \\ 
- &  & 0.03 &   \emph{0.103} & 0.262 & \textbf{0.035} & \textbf{0.071} & \emph{0.188} & \emph{0.036} & 0.105 & \textbf{0.098} & 0.097 \\ 
- &  & 0.1 &   \emph{0.095} & 0.234 & \emph{0.041} & \textbf{0.071} & \emph{0.197} & \textbf{0.032} & 0.134 & \textbf{0.013} & 0.135 \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   0.110 & 0.307 & \textbf{0.016} & \emph{0.082} & \emph{0.255} & 0.017 & \textbf{0.059} & \textbf{0.206} & \emph{0.016} \\ 
- &  & 0.03 &   0.115 & 0.262 & \textbf{0.048} & \textbf{0.092} & \emph{0.204} & \emph{0.051} & \emph{0.104} & \textbf{0.090} & 0.097 \\ 
- &  & 0.1 &   \emph{0.093} & 0.187 & \textbf{0.059} & \textbf{0.087} & \emph{0.162} & \emph{0.061} & 0.218 & \textbf{0.057} & 0.217 \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   0.132 & 0.319 & \emph{0.031} & \emph{0.120} & \emph{0.283} & 0.040 & \textbf{0.049} & \textbf{0.172} & \textbf{0.019} \\ 
- &  & 0.03 &   \emph{0.212} & 0.349 & \emph{0.091} & 0.216 & \emph{0.303} & 0.125 & \textbf{0.097} & \textbf{0.114} & \textbf{0.085} \\ 
- &  & 0.1 &   0.207 & 0.272 & \textbf{0.135} & \emph{0.203} & \emph{0.228} & \emph{0.153} & \textbf{0.168} & \textbf{0.072} & 0.164 \\ 
-  \end{tabular}
-\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 2 (\textbf{minimum}, \emph{next best}).}
-\end{center}
-\end{table}
+		% latex table generated in R 2.15.2 by xtable 1.7-0 package
+		% Fri Mar 15 10:06:16 2013
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc|cc}
+		$\rho$ & $\tau_x$ & $\tau_\sigma$ &  $\beta_1$ & $\beta_2$ - $\beta_5$ \\ 
+		  \hline
+		\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & 1.00 & 0.14 \\ 
+		 &  & 0.03 &   1.00 & 0.24 \\ 
+		 &  & 0.1 &   1.00 & 0.38 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.29 \\ 
+		 &  & 0.03 &   1.00 & 0.40 \\ 
+		 &  & 0.1 &   1.00 & 0.71 \\ \cline{1-5}
+		\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   1.00 & 0.17 \\ 
+		 &  & 0.03 &   1.00 & 0.29 \\ 
+		 &  & 0.1 &   1.00 & 0.40 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.27 \\ 
+		 &  & 0.03 &   1.00 & 0.42 \\ 
+		 &  & 0.1 &   1.00 & 0.70 \\ \cline{1-5}
+		\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   1.00 & 0.19 \\ 
+		 &  & 0.03 &   0.96 & 0.33 \\ 
+		 &  & 0.1 &   1.00 & 0.40 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.37 \\ 
+		 &  & 0.03 &   0.93 & 0.42 \\ 
+		 &  & 0.1 &   0.96 & 0.63 \\ 
+		  \end{tabular}
+		\caption{Selection frequency for the indicated variables at location 2\label{table:loc2-selection}}
+		\end{center}
+		\end{table}
+		
+		
+		% latex table generated in R 2.15.2 by xtable 1.7-0 package
+		% Fri Mar 15 10:06:16 2013
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc|cc}
+		$\rho$ & $\tau_x$ & $\tau_\sigma$ &  $\beta_1$ & $\beta_2$ - $\beta_5$ \\ 
+		  \hline
+		\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & 1.00 & 0.17 \\ 
+		 &  & 0.03 &   1.00 & 0.35 \\ 
+		 &  & 0.1 &   1.00 & 0.50 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.20 \\ 
+		 &  & 0.03 &   0.97 & 0.40 \\ 
+		 &  & 0.1 &   1.00 & 0.62 \\ \cline{1-5}
+		\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   1.00 & 0.21 \\ 
+		 &  & 0.03 &   0.99 & 0.37 \\ 
+		 &  & 0.1 &   1.00 & 0.43 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.23 \\ 
+		 &  & 0.03 &   0.97 & 0.38 \\ 
+		 &  & 0.1 &   1.00 & 0.71 \\ \cline{1-5}
+		\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   0.99 & 0.27 \\ 
+		 &  & 0.03 &   0.96 & 0.32 \\ 
+		 &  & 0.1 &   1.00 & 0.48 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   0.99 & 0.29 \\ 
+		 &  & 0.03 &   0.96 & 0.42 \\ 
+		 &  & 0.1 &   0.97 & 0.70 \\ 
+		  \end{tabular}
+		\caption{Selection frequency for the indicated variables at location 3\label{table:loc3-selection}}
+		\end{center}
+		\end{table}
+		
+		
+		% latex table generated in R 2.15.2 by xtable 1.7-0 package
+		% Fri Mar 15 10:06:16 2013
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc|cc}
+		$\rho$ & $\tau_x$ & $\tau_\sigma$ &  $\beta_1$ & $\beta_2$ - $\beta_5$ \\ 
+		  \hline
+		\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & 0.77 & 0.15 \\ 
+		 &  & 0.03 &   0.54 & 0.22 \\ 
+		 &  & 0.1 &   0.85 & 0.33 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   0.90 & 0.27 \\ 
+		 &  & 0.03 &   0.74 & 0.39 \\ 
+		 &  & 0.1 &   0.80 & 0.60 \\ \cline{1-5}
+		\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   0.71 & 0.18 \\ 
+		 &  & 0.03 &   0.54 & 0.25 \\ 
+		 &  & 0.1 &   0.80 & 0.38 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   0.85 & 0.19 \\ 
+		 &  & 0.03 &   0.60 & 0.39 \\ 
+		 &  & 0.1 &   0.67 & 0.56 \\ \cline{1-5}
+		\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   0.70 & 0.21 \\ 
+		 &  & 0.03 &   0.35 & 0.17 \\ 
+		 &  & 0.1 &   0.72 & 0.35 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   0.85 & 0.26 \\ 
+		 &  & 0.03 &   0.45 & 0.33 \\ 
+		 &  & 0.1 &   0.68 & 0.61 \\ 
+		  \end{tabular}
+		\caption{Selection frequency for the indicated variables at location 4\label{table:loc4-selection}}
+		\end{center}
+		\end{table}
 
-
-
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Thu Mar  7 11:23:54 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{ccc | ccc | ccc | ccc }
-&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
-\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & 0.028 & 0.102 & 0.018 & \textbf{0.014} & \emph{0.003} & \textbf{0.014} & \emph{0.015} & \textbf{-0.001} & \emph{0.015} \\ 
- &  & 0.03 &   \emph{0.042} & 0.095 & \emph{0.033} & \textbf{0.030} & \textbf{0.001} & \textbf{0.030} & 0.093 & \emph{0.023} & 0.094 \\ 
- &  & 0.1 &   \emph{0.034} & 0.071 & \emph{0.029} & \textbf{0.019} & \emph{0.013} & \textbf{0.019} & 0.168 & \textbf{-0.004} & 0.169 \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   0.036 & 0.125 & \emph{0.021} & \emph{0.028} & \emph{0.044} & 0.026 & \textbf{0.018} & \textbf{0.002} & \textbf{0.018} \\ 
- &  & 0.03 &   \emph{0.071} & 0.149 & \textbf{0.049} & \textbf{0.053} & \emph{0.060} & \emph{0.050} & 0.074 & \textbf{0.034} & 0.073 \\ 
- &  & 0.1 &   \emph{0.036} & 0.070 & \emph{0.031} & \textbf{0.026} & \textbf{0.017} & \textbf{0.026} & 0.173 & \emph{0.023} & 0.174 \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   0.073 & 0.182 & \emph{0.041} & \emph{0.062} & \emph{0.132} & 0.045 & \textbf{0.015} & \textbf{0.032} & \textbf{0.014} \\ 
- &  & 0.03 &   0.162 & 0.206 & \emph{0.120} & \emph{0.152} & \emph{0.116} & 0.140 & \textbf{0.075} & \textbf{-0.010} & \textbf{0.076} \\ 
- &  & 0.1 &   \emph{0.091} & 0.086 & \emph{0.084} & \textbf{0.079} & \emph{0.036} & \textbf{0.078} & 0.146 & \textbf{-0.028} & 0.147 \\ \cline{1-12}
-\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   \emph{0.022} & 0.075 & \emph{0.017} & \textbf{0.016} & \textbf{-0.012} & \textbf{0.016} & 0.023 & \emph{-0.018} & 0.023 \\ 
- &  & 0.03 &   \emph{0.083} & 0.113 & \textbf{0.071} & \textbf{0.078} & \textbf{0.022} & \emph{0.078} & 0.157 & \emph{-0.037} & 0.157 \\ 
- &  & 0.1 &   \emph{0.078} & 0.080 & \emph{0.073} & \textbf{0.049} & \textbf{0.004} & \textbf{0.049} & 0.250 & \emph{0.064} & 0.248 \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   0.023 & 0.101 & \textbf{0.013} & \textbf{0.017} & \emph{0.033} & \emph{0.016} & \emph{0.020} & \textbf{-0.005} & 0.020 \\ 
- &  & 0.03 &   \emph{0.108} & 0.133 & \textbf{0.091} & \textbf{0.104} & \textbf{0.045} & \emph{0.103} & 0.148 & \emph{0.064} & 0.146 \\ 
- &  & 0.1 &   \emph{0.101} & \textbf{0.010} & \emph{0.102} & \textbf{0.094} & -0.023 & \textbf{0.094} & 0.469 & \emph{0.017} & 0.474 \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   \emph{0.057} & 0.132 & \emph{0.040} & 0.061 & \emph{0.086} & 0.054 & \textbf{0.019} & \textbf{-0.023} & \textbf{0.019} \\ 
- &  & 0.03 &   \emph{0.182} & 0.205 & \emph{0.141} & 0.185 & \emph{0.102} & 0.177 & \textbf{0.128} & \textbf{-0.027} & \textbf{0.129} \\ 
- &  & 0.1 &   \emph{0.216} & 0.050 & \emph{0.216} & \textbf{0.210} & \textbf{0.012} & \textbf{0.212} & 0.326 & \emph{0.029} & 0.328 \\ 
-  \end{tabular}
-\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 3 (\textbf{minimum}, \emph{next best}).}
-\end{center}
-\end{table}
-
-
-
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Thu Mar  7 11:23:54 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{ccc | ccc | ccc | ccc }
-&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
-\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & \textbf{0.024} & \textbf{-0.101} & \emph{0.014} & 0.044 & \emph{-0.155} & 0.020 & \emph{0.037} & -0.159 & \textbf{0.012} \\ 
- &  & 0.03 &   \textbf{0.023} & \emph{-0.060} & \textbf{0.020} & \emph{0.036} & -0.094 & \emph{0.028} & 0.046 & \textbf{-0.038} & 0.045 \\ 
- &  & 0.1 &   \textbf{0.032} & \emph{-0.136} & \textbf{0.014} & \emph{0.047} & -0.176 & \emph{0.017} & 0.091 & \textbf{-0.005} & 0.092 \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   \textbf{0.023} & \textbf{-0.087} & \emph{0.015} & 0.040 & \emph{-0.130} & 0.023 & \emph{0.038} & -0.161 & \textbf{0.012} \\ 
- &  & 0.03 &   \textbf{0.024} & \textbf{-0.061} & \textbf{0.021} & \emph{0.039} & -0.093 & \emph{0.031} & 0.041 & \emph{-0.085} & 0.035 \\ 
- &  & 0.1 &   \textbf{0.037} & \emph{-0.128} & \textbf{0.021} & \emph{0.052} & -0.165 & \emph{0.025} & 0.059 & \textbf{-0.023} & 0.059 \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   \textbf{0.024} & \textbf{-0.089} & \emph{0.016} & \emph{0.036} & \emph{-0.118} & 0.022 & 0.041 & -0.178 & \textbf{0.009} \\ 
- &  & 0.03 &   \textbf{0.025} & \textbf{-0.014} & \textbf{0.025} & 0.047 & -0.041 & 0.045 & \emph{0.038} & \emph{-0.037} & \emph{0.038} \\ 
- &  & 0.1 &   \textbf{0.031} & \emph{-0.101} & \textbf{0.021} & \emph{0.050} & -0.142 & \emph{0.030} & 0.079 & \textbf{-0.040} & 0.078 \\ \cline{1-12}
-\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   \textbf{0.042} & \textbf{-0.162} & \emph{0.015} & 0.065 & -0.220 & 0.017 & \emph{0.049} & \emph{-0.188} & \textbf{0.013} \\ 
- &  & 0.03 &   \textbf{0.031} & \emph{-0.114} & \textbf{0.019} & \emph{0.057} & -0.161 & \emph{0.031} & 0.100 & \textbf{-0.061} & 0.097 \\ 
- &  & 0.1 &   \textbf{0.055} & \emph{-0.157} & \textbf{0.031} & \emph{0.064} & -0.180 & \emph{0.031} & 0.210 & \textbf{-0.042} & 0.210 \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   \textbf{0.041} & \textbf{-0.151} & \emph{0.018} & 0.067 & -0.208 & 0.024 & \emph{0.055} & \emph{-0.198} & \textbf{0.016} \\ 
- &  & 0.03 &   \textbf{0.046} & \emph{-0.095} & \textbf{0.037} & \emph{0.063} & -0.124 & \emph{0.048} & 0.090 & \textbf{-0.058} & 0.088 \\ 
- &  & 0.1 &   \textbf{0.078} & \emph{-0.137} & \textbf{0.060} & \emph{0.089} & -0.149 & \emph{0.068} & 0.153 & \textbf{0.038} & 0.153 \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   \textbf{0.044} & \textbf{-0.148} & \emph{0.023} & 0.062 & \emph{-0.186} & 0.027 & \emph{0.055} & -0.200 & \textbf{0.015} \\ 
- &  & 0.03 &   \textbf{0.056} & \textbf{-0.042} & \textbf{0.055} & 0.101 & \emph{-0.066} & 0.097 & \emph{0.081} & -0.069 & \emph{0.077} \\ 
- &  & 0.1 &   \emph{0.157} & \emph{-0.188} & \textbf{0.122} & 0.168 & -0.215 & \emph{0.123} & \textbf{0.155} & \textbf{-0.028} & 0.156 \\ 
-  \end{tabular}
-\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 4 (\textbf{minimum}, \emph{next best}).}
-\end{center}
-\end{table}
-
-
-
-% latex table generated in R 2.15.2 by xtable 1.7-0 package
-% Thu Mar  7 11:23:54 2013
-\begin{table}[ht]
-\begin{center}
-\begin{tabular}{ccc | ccc | ccc | ccc }
-&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
-\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & \emph{0.002} & \emph{0.003} & \emph{0.002} & 0.004 & 0.004 & 0.004 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.03 &   \emph{0.029} & 0.024 & \emph{0.029} & 0.035 & \emph{0.024} & 0.035 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.1 &   \emph{0.017} & 0.008 & \emph{0.017} & 0.018 & \emph{0.003} & 0.018 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   \emph{0.010} & -0.010 & \emph{0.010} & 0.016 & \emph{-0.009} & 0.016 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.03 &   \emph{0.022} & \emph{0.021} & \emph{0.022} & 0.035 & 0.024 & 0.035 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.1 &   0.025 & \emph{0.017} & 0.025 & \emph{0.024} & 0.026 & \emph{0.023} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   \emph{0.007} & \emph{-0.004} & \emph{0.008} & 0.025 & -0.008 & 0.026 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.03 &   \emph{0.041} & \emph{-0.024} & \emph{0.040} & 0.053 & -0.038 & 0.052 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.1 &   \emph{0.059} & \emph{-0.001} & \emph{0.059} & 0.065 & -0.008 & 0.066 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{1-12}
-\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   \emph{0.002} & \emph{-0.003} & \emph{0.002} & 0.005 & -0.004 & 0.005 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.03 &   \emph{0.039} & -0.007 & \emph{0.040} & 0.054 & \emph{0.000} & 0.054 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.1 &   0.079 & 0.061 & 0.076 & \emph{0.069} & \emph{0.059} & \emph{0.066} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   \emph{0.008} & \emph{-0.018} & \emph{0.007} & 0.018 & -0.029 & 0.018 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.03 &   \emph{0.030} & \emph{0.000} & \emph{0.030} & 0.040 & 0.011 & 0.040 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.1 &   0.057 & -0.036 & 0.057 & \emph{0.057} & \emph{-0.034} & \emph{0.056} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   \emph{0.004} & 0.003 & \emph{0.004} & 0.008 & \emph{0.002} & 0.008 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.03 &   \emph{0.116} & \emph{-0.035} & \emph{0.116} & 0.173 & -0.056 & 0.172 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
- &  & 0.1 &   0.160 & 0.069 & 0.157 & \emph{0.132} & \emph{0.028} & \emph{0.133} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
-  \end{tabular}
-\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 5 (\textbf{minimum}, \emph{next best}).}
-\end{center}
-\end{table}
-
-
-
-	\subsection{Figures}
-	The plots of bias demonstrate that GWL tended to ``fill the valleys" and ``trim the peaks" of the coefficient surface for $\beta_1$, which is not unexpected for a smoother like GWR. 
 	
-	Figures \ref{fig:coveragemap1} - \ref{fig:coveragemap18} show the frequency with which the true value of the parameter $\beta_1$ was covered by the 95\% confidence intervals at each location under each simulation setting. The left column shows the coverage frequency of the 95\% CI of the GWL using the unshrunk-bootstrap method of CI construction. The middle column is the coverage frequency of the 95\% CI the O-GWR using the bootstrap to generate the CI. The right column is the relative efficiency of the GWL to O-GWR. In the first two columns, the color white is used to indicate areas where the nominal coverage frequency of 95\% is achieved, while blue codes areas that exceeded 95\% coverage and orange codes areas that fell short of 95\% coverage. In the third column, the color white indicates areas where the relative efficiency is unity, while orange indicates areas where the relative efficiency was less than unity and blue indicates areas where the relative efficiency exceeded unity.\\	
+		% latex table generated in R 2.15.2 by xtable 1.7-0 package
+		% Thu Mar  7 19:35:11 2013
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc|cc}
+		$\rho$ & $\tau_x$ & $\tau_\sigma$ &  $\beta_1$ & $\beta_2$ - $\beta_5$ \\ 
+		  \hline
+		\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & 0.05 & 0.09 \\ 
+		 &  & 0.03 &   0.19 & 0.18 \\ 
+		 &  & 0.1 &   0.35 & 0.34 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   0.05 & 0.07 \\ 
+		 &  & 0.03 &   0.26 & 0.21 \\ 
+		 &  & 0.1 &   0.55 & 0.60 \\ \cline{1-5}
+		\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   0.09 & 0.10 \\ 
+		 &  & 0.03 &   0.16 & 0.22 \\ 
+		 &  & 0.1 &   0.30 & 0.30 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   0.09 & 0.09 \\ 
+		 &  & 0.03 &   0.18 & 0.20 \\ 
+		 &  & 0.1 &   0.45 & 0.51 \\ \cline{1-5}
+		\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   0.08 & 0.05 \\ 
+		 &  & 0.03 &   0.13 & 0.21 \\ 
+		 &  & 0.1 &   0.36 & 0.33 \\ \cline{2-5}
+		 & \multirow{3}{*}{0.1} & 0 &   0.05 & 0.04 \\ 
+		 &  & 0.03 &   0.21 & 0.25 \\ 
+		 &  & 0.1 &   0.47 & 0.55 \\ 
+		  \end{tabular}
+		\caption{Selection frequency for the indicated variables at location 5\label{table:loc5-selection}}
+		\end{center}
+		\end{table}
+
+
+		\subsubsection{Estimation}
+		% latex table generated in R 2.15.2 by xtable 1.7-0 package
+		% Thu Mar  7 11:23:54 2013
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc | ccc | ccc | ccc }
+		&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\
+		$\rho$ & $\tau_x$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
+		\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & 0.048 & 0.122 & 0.034 & \textbf{0.030} & \emph{0.002} & \textbf{0.030} & \emph{0.032} & \textbf{-0.001} & \emph{0.032} \\ 
+		 &  & 0.03 &   \emph{0.071} & 0.090 & \textbf{0.063} & \textbf{0.064} & \textbf{-0.015} & \emph{0.064} & 0.138 & \emph{-0.039} & 0.138 \\ 
+		 &  & 0.1 &   \emph{0.044} & 0.084 & \emph{0.038} & \textbf{0.028} & \textbf{0.006} & \textbf{0.028} & 0.258 & \emph{0.032} & 0.259 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   0.049 & 0.119 & \emph{0.035} & \textbf{0.027} & \textbf{-0.001} & \textbf{0.027} & \emph{0.041} & \emph{-0.009} & 0.041 \\ 
+		 &  & 0.03 &   \emph{0.088} & 0.120 & \textbf{0.074} & \textbf{0.083} & \emph{-0.004} & \emph{0.084} & 0.221 & \textbf{0.000} & 0.223 \\ 
+		 &  & 0.1 &   \emph{0.109} & \emph{0.081} & \emph{0.104} & \textbf{0.093} & \textbf{0.027} & \textbf{0.093} & 0.508 & 0.089 & 0.505 \\ \cline{1-12}
+		\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   0.067 & 0.158 & 0.042 & \emph{0.042} & \emph{0.055} & \emph{0.039} & \textbf{0.033} & \textbf{-0.008} & \textbf{0.033} \\ 
+		 &  & 0.03 &   \emph{0.105} & 0.151 & \textbf{0.083} & \textbf{0.085} & \textbf{0.029} & \emph{0.085} & 0.110 & \emph{-0.036} & 0.110 \\ 
+		 &  & 0.1 &   \emph{0.062} & 0.098 & \emph{0.053} & \textbf{0.045} & \emph{0.028} & \textbf{0.045} & 0.285 & \textbf{0.015} & 0.288 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   \emph{0.059} & 0.147 & \textbf{0.038} & \textbf{0.046} & \emph{0.052} & \emph{0.044} & 0.074 & \textbf{0.029} & 0.074 \\ 
+		 &  & 0.03 &   \emph{0.134} & 0.161 & \textbf{0.109} & \textbf{0.123} & \emph{0.058} & \emph{0.121} & 0.208 & \textbf{-0.043} & 0.209 \\ 
+		 &  & 0.1 &   \emph{0.140} & 0.061 & \emph{0.138} & \textbf{0.114} & \textbf{0.005} & \textbf{0.115} & 0.620 & \emph{-0.044} & 0.624 \\ \cline{1-12}
+		\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   0.128 & 0.220 & \emph{0.080} & \emph{0.116} & \emph{0.147} & 0.095 & \textbf{0.031} & \textbf{0.015} & \textbf{0.031} \\ 
+		 &  & 0.03 &   \emph{0.255} & 0.198 & \emph{0.218} & 0.270 & \emph{0.096} & 0.263 & \textbf{0.097} & \textbf{-0.026} & \textbf{0.097} \\ 
+		 &  & 0.1 &   \emph{0.131} & 0.122 & \textbf{0.117} & \textbf{0.127} & \textbf{0.049} & \emph{0.125} & 0.273 & \emph{-0.100} & 0.266 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   \emph{0.117} & 0.208 & \emph{0.074} & 0.119 & \emph{0.132} & 0.103 & \textbf{0.042} & \textbf{0.016} & \textbf{0.042} \\ 
+		 &  & 0.03 &   \emph{0.424} & 0.133 & \emph{0.411} & 0.521 & \emph{0.044} & 0.524 & \textbf{0.212} & \textbf{-0.013} & \textbf{0.214} \\ 
+		 &  & 0.1 &   \textbf{0.290} & \emph{0.033} & \textbf{0.291} & \emph{0.300} & \textbf{0.009} & \emph{0.303} & 0.680 & 0.083 & 0.680 \\ 
+		  \end{tabular}
+		\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 1 (\textbf{minimum}, \emph{next best}).\label{table:loc1-estimation}}
+		\end{center}
+		\end{table}
+		
+		
+		% latex table generated in R 2.15.2 by xtable 1.7-0 package
+		% Thu Mar  7 11:23:54 2013
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc | ccc | ccc | ccc }
+		&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\
+		$\rho$ & $\tau_x$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
+		\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & 0.083 & 0.265 & 0.013 & \emph{0.048} & \emph{0.190} & \emph{0.013} & \textbf{0.042} & \textbf{0.171} & \textbf{0.013} \\ 
+		 &  & 0.03 &   0.081 & 0.244 & \emph{0.022} & \textbf{0.042} & \emph{0.146} & \textbf{0.021} & \emph{0.052} & \textbf{0.052} & 0.049 \\ 
+		 &  & 0.1 &   \emph{0.089} & 0.280 & \emph{0.011} & \textbf{0.062} & \emph{0.227} & \textbf{0.011} & 0.097 & \textbf{0.048} & 0.096 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   0.087 & 0.277 & \emph{0.011} & \emph{0.060} & \emph{0.223} & \textbf{0.011} & \textbf{0.053} & \textbf{0.192} & 0.016 \\ 
+		 &  & 0.03 &   \emph{0.103} & 0.262 & \textbf{0.035} & \textbf{0.071} & \emph{0.188} & \emph{0.036} & 0.105 & \textbf{0.098} & 0.097 \\ 
+		 &  & 0.1 &   \emph{0.095} & 0.234 & \emph{0.041} & \textbf{0.071} & \emph{0.197} & \textbf{0.032} & 0.134 & \textbf{0.013} & 0.135 \\ \cline{1-12}
+		\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   0.102 & 0.292 & 0.016 & \emph{0.065} & \emph{0.221} & \emph{0.016} & \textbf{0.045} & \textbf{0.177} & \textbf{0.014} \\ 
+		 &  & 0.03 &   0.093 & 0.252 & \textbf{0.029} & \emph{0.064} & \emph{0.169} & \emph{0.036} & \textbf{0.043} & \textbf{0.072} & 0.038 \\ 
+		 &  & 0.1 &   0.104 & 0.280 & \emph{0.025} & \textbf{0.075} & \emph{0.227} & \textbf{0.024} & \emph{0.076} & \textbf{-0.002} & 0.077 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   0.110 & 0.307 & \textbf{0.016} & \emph{0.082} & \emph{0.255} & 0.017 & \textbf{0.059} & \textbf{0.206} & \emph{0.016} \\ 
+		 &  & 0.03 &   0.115 & 0.262 & \textbf{0.048} & \textbf{0.092} & \emph{0.204} & \emph{0.051} & \emph{0.104} & \textbf{0.090} & 0.097 \\ 
+		 &  & 0.1 &   \emph{0.093} & 0.187 & \textbf{0.059} & \textbf{0.087} & \emph{0.162} & \emph{0.061} & 0.218 & \textbf{0.057} & 0.217 \\ \cline{1-12}
+		\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   0.126 & 0.322 & \emph{0.023} & \emph{0.094} & \emph{0.255} & 0.030 & \textbf{0.041} & \textbf{0.172} & \textbf{0.011} \\ 
+		 &  & 0.03 &   0.166 & 0.317 & \emph{0.066} & \emph{0.137} & \emph{0.255} & 0.073 & \textbf{0.047} & \textbf{0.106} & \textbf{0.036} \\ 
+		 &  & 0.1 &   0.117 & 0.286 & \textbf{0.035} & \emph{0.098} & \emph{0.240} & \emph{0.041} & \textbf{0.074} & \textbf{0.026} & 0.074 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   0.132 & 0.319 & \emph{0.031} & \emph{0.120} & \emph{0.283} & 0.040 & \textbf{0.049} & \textbf{0.172} & \textbf{0.019} \\ 
+		 &  & 0.03 &   \emph{0.212} & 0.349 & \emph{0.091} & 0.216 & \emph{0.303} & 0.125 & \textbf{0.097} & \textbf{0.114} & \textbf{0.085} \\ 
+		 &  & 0.1 &   0.207 & 0.272 & \textbf{0.135} & \emph{0.203} & \emph{0.228} & \emph{0.153} & \textbf{0.168} & \textbf{0.072} & 0.164 \\ 
+		  \end{tabular}
+		\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 2 (\textbf{minimum}, \emph{next best}).\label{table:loc2-estimation}}
+		\end{center}
+		\end{table}
+
+		
+		
+		
+		% latex table generated in R 2.15.2 by xtable 1.7-0 package
+		% Thu Mar  7 11:23:54 2013
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc | ccc | ccc | ccc }
+		&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\
+		$\rho$ & $\tau_x$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
+		\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & 0.028 & 0.102 & 0.018 & \textbf{0.014} & \emph{0.003} & \textbf{0.014} & \emph{0.015} & \textbf{-0.001} & \emph{0.015} \\ 
+		 &  & 0.03 &   \emph{0.042} & 0.095 & \emph{0.033} & \textbf{0.030} & \textbf{0.001} & \textbf{0.030} & 0.093 & \emph{0.023} & 0.094 \\ 
+		 &  & 0.1 &   \emph{0.034} & 0.071 & \emph{0.029} & \textbf{0.019} & \emph{0.013} & \textbf{0.019} & 0.168 & \textbf{-0.004} & 0.169 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   \emph{0.022} & 0.075 & \emph{0.017} & \textbf{0.016} & \textbf{-0.012} & \textbf{0.016} & 0.023 & \emph{-0.018} & 0.023 \\ 
+		 &  & 0.03 &   \emph{0.083} & 0.113 & \textbf{0.071} & \textbf{0.078} & \textbf{0.022} & \emph{0.078} & 0.157 & \emph{-0.037} & 0.157 \\ 
+		 &  & 0.1 &   \emph{0.078} & 0.080 & \emph{0.073} & \textbf{0.049} & \textbf{0.004} & \textbf{0.049} & 0.250 & \emph{0.064} & 0.248 \\ \cline{1-12}
+		\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   0.036 & 0.125 & \emph{0.021} & \emph{0.028} & \emph{0.044} & 0.026 & \textbf{0.018} & \textbf{0.002} & \textbf{0.018} \\ 
+		 &  & 0.03 &   \emph{0.071} & 0.149 & \textbf{0.049} & \textbf{0.053} & \emph{0.060} & \emph{0.050} & 0.074 & \textbf{0.034} & 0.073 \\ 
+		 &  & 0.1 &   \emph{0.036} & 0.070 & \emph{0.031} & \textbf{0.026} & \textbf{0.017} & \textbf{0.026} & 0.173 & \emph{0.023} & 0.174 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   0.023 & 0.101 & \textbf{0.013} & \textbf{0.017} & \emph{0.033} & \emph{0.016} & \emph{0.020} & \textbf{-0.005} & 0.020 \\ 
+		 &  & 0.03 &   \emph{0.108} & 0.133 & \textbf{0.091} & \textbf{0.104} & \textbf{0.045} & \emph{0.103} & 0.148 & \emph{0.064} & 0.146 \\ 
+		 &  & 0.1 &   \emph{0.101} & \textbf{0.010} & \emph{0.102} & \textbf{0.094} & -0.023 & \textbf{0.094} & 0.469 & \emph{0.017} & 0.474 \\ \cline{1-12}
+		\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   0.073 & 0.182 & \emph{0.041} & \emph{0.062} & \emph{0.132} & 0.045 & \textbf{0.015} & \textbf{0.032} & \textbf{0.014} \\ 
+		 &  & 0.03 &   0.162 & 0.206 & \emph{0.120} & \emph{0.152} & \emph{0.116} & 0.140 & \textbf{0.075} & \textbf{-0.010} & \textbf{0.076} \\ 
+		 &  & 0.1 &   \emph{0.091} & 0.086 & \emph{0.084} & \textbf{0.079} & \emph{0.036} & \textbf{0.078} & 0.146 & \textbf{-0.028} & 0.147 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   \emph{0.057} & 0.132 & \emph{0.040} & 0.061 & \emph{0.086} & 0.054 & \textbf{0.019} & \textbf{-0.023} & \textbf{0.019} \\ 
+		 &  & 0.03 &   \emph{0.182} & 0.205 & \emph{0.141} & 0.185 & \emph{0.102} & 0.177 & \textbf{0.128} & \textbf{-0.027} & \textbf{0.129} \\ 
+		 &  & 0.1 &   \emph{0.216} & 0.050 & \emph{0.216} & \textbf{0.210} & \textbf{0.012} & \textbf{0.212} & 0.326 & \emph{0.029} & 0.328 \\ 
+		  \end{tabular}
+		\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 3 (\textbf{minimum}, \emph{next best}).\label{table:loc3-estimation}}
+		\end{center}
+		\end{table}
+		
+		
+		
+		% latex table generated in R 2.15.2 by xtable 1.7-0 package
+		% Thu Mar  7 11:23:54 2013
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc | ccc | ccc | ccc }
+		&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\
+		$\rho$ & $\tau_x$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
+		\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & \textbf{0.024} & \textbf{-0.101} & \emph{0.014} & 0.044 & \emph{-0.155} & 0.020 & \emph{0.037} & -0.159 & \textbf{0.012} \\ 
+		 &  & 0.03 &   \textbf{0.023} & \emph{-0.060} & \textbf{0.020} & \emph{0.036} & -0.094 & \emph{0.028} & 0.046 & \textbf{-0.038} & 0.045 \\ 
+		 &  & 0.1 &   \textbf{0.032} & \emph{-0.136} & \textbf{0.014} & \emph{0.047} & -0.176 & \emph{0.017} & 0.091 & \textbf{-0.005} & 0.092 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   \textbf{0.042} & \textbf{-0.162} & \emph{0.015} & 0.065 & -0.220 & 0.017 & \emph{0.049} & \emph{-0.188} & \textbf{0.013} \\ 
+		 &  & 0.03 &   \textbf{0.031} & \emph{-0.114} & \textbf{0.019} & \emph{0.057} & -0.161 & \emph{0.031} & 0.100 & \textbf{-0.061} & 0.097 \\ 
+		 &  & 0.1 &   \textbf{0.055} & \emph{-0.157} & \textbf{0.031} & \emph{0.064} & -0.180 & \emph{0.031} & 0.210 & \textbf{-0.042} & 0.210 \\ \cline{1-12}
+		\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   \textbf{0.023} & \textbf{-0.087} & \emph{0.015} & 0.040 & \emph{-0.130} & 0.023 & \emph{0.038} & -0.161 & \textbf{0.012} \\ 
+		 &  & 0.03 &   \textbf{0.024} & \textbf{-0.061} & \textbf{0.021} & \emph{0.039} & -0.093 & \emph{0.031} & 0.041 & \emph{-0.085} & 0.035 \\ 
+		 &  & 0.1 &   \textbf{0.037} & \emph{-0.128} & \textbf{0.021} & \emph{0.052} & -0.165 & \emph{0.025} & 0.059 & \textbf{-0.023} & 0.059 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   \textbf{0.041} & \textbf{-0.151} & \emph{0.018} & 0.067 & -0.208 & 0.024 & \emph{0.055} & \emph{-0.198} & \textbf{0.016} \\ 
+		 &  & 0.03 &   \textbf{0.046} & \emph{-0.095} & \textbf{0.037} & \emph{0.063} & -0.124 & \emph{0.048} & 0.090 & \textbf{-0.058} & 0.088 \\ 
+		 &  & 0.1 &   \textbf{0.078} & \emph{-0.137} & \textbf{0.060} & \emph{0.089} & -0.149 & \emph{0.068} & 0.153 & \textbf{0.038} & 0.153 \\ \cline{1-12}
+		\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   \textbf{0.024} & \textbf{-0.089} & \emph{0.016} & \emph{0.036} & \emph{-0.118} & 0.022 & 0.041 & -0.178 & \textbf{0.009} \\ 
+		 &  & 0.03 &   \textbf{0.025} & \textbf{-0.014} & \textbf{0.025} & 0.047 & -0.041 & 0.045 & \emph{0.038} & \emph{-0.037} & \emph{0.038} \\ 
+		 &  & 0.1 &   \textbf{0.031} & \emph{-0.101} & \textbf{0.021} & \emph{0.050} & -0.142 & \emph{0.030} & 0.079 & \textbf{-0.040} & 0.078 \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   \textbf{0.044} & \textbf{-0.148} & \emph{0.023} & 0.062 & \emph{-0.186} & 0.027 & \emph{0.055} & -0.200 & \textbf{0.015} \\ 
+		 &  & 0.03 &   \textbf{0.056} & \textbf{-0.042} & \textbf{0.055} & 0.101 & \emph{-0.066} & 0.097 & \emph{0.081} & -0.069 & \emph{0.077} \\ 
+		 &  & 0.1 &   \emph{0.157} & \emph{-0.188} & \textbf{0.122} & 0.168 & -0.215 & \emph{0.123} & \textbf{0.155} & \textbf{-0.028} & 0.156 \\ 
+		  \end{tabular}
+		\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 4 (\textbf{minimum}, \emph{next best}).\label{table:loc4-estimation}}
+		\end{center}
+		\end{table}
+
+		
+		
+		
+		% latex table generated in R 2.15.2 by xtable 1.7-0 package
+		% Thu Mar  7 11:23:54 2013
+		\begin{table}[ht]
+		\begin{center}
+		\begin{tabular}{ccc | ccc | ccc | ccc }
+		&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\
+		$\rho$ & $\tau_x$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
+		\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & \emph{0.002} & \emph{0.003} & \emph{0.002} & 0.004 & 0.004 & 0.004 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.03 &   \emph{0.029} & 0.024 & \emph{0.029} & 0.035 & \emph{0.024} & 0.035 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.1 &   \emph{0.017} & 0.008 & \emph{0.017} & 0.018 & \emph{0.003} & 0.018 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   \emph{0.002} & \emph{-0.003} & \emph{0.002} & 0.005 & -0.004 & 0.005 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.03 &   \emph{0.039} & -0.007 & \emph{0.040} & 0.054 & \emph{0.000} & 0.054 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.1 &   0.079 & 0.061 & 0.076 & \emph{0.069} & \emph{0.059} & \emph{0.066} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{1-12}
+		\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   \emph{0.010} & -0.010 & \emph{0.010} & 0.016 & \emph{-0.009} & 0.016 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.03 &   \emph{0.022} & \emph{0.021} & \emph{0.022} & 0.035 & 0.024 & 0.035 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.1 &   0.025 & \emph{0.017} & 0.025 & \emph{0.024} & 0.026 & \emph{0.023} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   \emph{0.008} & \emph{-0.018} & \emph{0.007} & 0.018 & -0.029 & 0.018 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.03 &   \emph{0.030} & \emph{0.000} & \emph{0.030} & 0.040 & 0.011 & 0.040 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.1 &   0.057 & -0.036 & 0.057 & \emph{0.057} & \emph{-0.034} & \emph{0.056} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{1-12}
+		\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   \emph{0.007} & \emph{-0.004} & \emph{0.008} & 0.025 & -0.008 & 0.026 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.03 &   \emph{0.041} & \emph{-0.024} & \emph{0.040} & 0.053 & -0.038 & 0.052 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.1 &   \emph{0.059} & \emph{-0.001} & \emph{0.059} & 0.065 & -0.008 & 0.066 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ \cline{2-12}
+		 & \multirow{3}{*}{0.1} & 0 &   \emph{0.004} & 0.003 & \emph{0.004} & 0.008 & \emph{0.002} & 0.008 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.03 &   \emph{0.116} & \emph{-0.035} & \emph{0.116} & 0.173 & -0.056 & 0.172 & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		 &  & 0.1 &   0.160 & 0.069 & 0.157 & \emph{0.132} & \emph{0.028} & \emph{0.133} & \textbf{0.000} & \textbf{0.000} & \textbf{0.000} \\ 
+		  \end{tabular}
+		\caption{MSE, bias, and variance of estimates for $\beta_1$ at location 5 (\textbf{minimum}, \emph{next best}).\label{table:loc5-estimation}}
+		\end{center}
+		\end{table}
+
+
+
+
+	%\subsection{Figures}
+	%The plots of bias demonstrate that GWL tended to ``fill the valleys" and ``trim the peaks" of the coefficient surface for $\beta_1$, which is not unexpected for a smoother like GWR. 
+	
+	%Figures \ref{fig:coveragemap1} - \ref{fig:coveragemap18} show the frequency with which the true value of the parameter $\beta_1$ was covered by the 95\% confidence intervals at each location under each simulation setting. The left column shows the coverage frequency of the 95\% CI of the GWL using the unshrunk-bootstrap method of CI construction. The middle column is the coverage frequency of the 95\% CI the O-GWR using the bootstrap to generate the CI. The right column is the relative efficiency of the GWL to O-GWR. In the first two columns, the color white is used to indicate areas where the nominal coverage frequency of 95\% is achieved, while blue codes areas that exceeded 95\% coverage and orange codes areas that fell short of 95\% coverage. In the third column, the color white indicates areas where the relative efficiency is unity, while orange indicates areas where the relative efficiency was less than unity and blue indicates areas where the relative efficiency exceeded unity.\\	
 	
 	
 
@@ -466,7 +634,7 @@
 			
 \section{Data analysis}
 	\subsection{Census poverty data}
-	We present the following analysis to demonstrate one possible application of the geographically-weighted lasso in a linear regression context. We use county-level data from the US Census Bureau to select the social and demographic variables that are important predictors of the county-level poverty rate in the upper midwest, and to estimate the coefficients associated with these predictors. Data are from six censuses - the decennial censuses from 1960 to 2000, and from the American Community Survey in 2006. Selection and estimation are done for each census individually (no attempt is made here to borrow strength across years). The outcome of interest (poverty rate) is a proportion and so takes values on $[0,1]$, but to demonstrate the GWL in a linear regression context, we model the logit-transformed poverty rate. Our data set covers all counties in the states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. The potential predictors are described in Table \ref{table:census-vars}.\\
+	We present the following analysis to demonstrate one possible application of the geographically-weighted LASSO in a linear regression context. We use county-level data from the U.S. Census Bureau to select the social and demographic variables that are important predictors of the county-level poverty rate in the upper midwest, and to estimate the coefficients associated with these predictors. Data are from six censuses - the decennial censuses from 1960 to 2000, and from the American Community Survey in 2006. Selection and estimation are done for each census individually (no attempt is made here to borrow strength across years). The outcome of interest (poverty rate) is a proportion and so takes values on $[0,1]$, but to demonstrate the GWL in a linear regression context, we model the logit-transformed poverty rate. Our data set covers all counties in the states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. The potential predictors are described in Table \ref{table:census-vars}.\\
 	
 	\begin{table}
 		\begin{center}

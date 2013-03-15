@@ -1,0 +1,56 @@
+\begin{figure}
+\begin{center}
+\includegraphics[height=3in]{../../figures/scratch/beta1-actual.pdf}
+\caption{The actual $\beta_1$ coefficient surface used in the simulation.\label{fig:beta1-actual}}
+\end{center}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{center}
+\includegraphics[height=8in]{../../figures/poverty/1960.linear.coefficients.pdf}
+\caption{Estimated coefficient surfaces for the 1960 census.\label{fig:census-coefs-1960}}
+\end{center}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{center}
+\includegraphics[height=8in]{../../figures/poverty/1970.linear.coefficients.pdf}
+\caption{Estimated coefficient surfaces for the 1970 census.\label{fig:census-coefs-1970}}
+\end{center}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{center}
+\includegraphics[height=8in]{../../figures/poverty/1980.linear.coefficients.pdf}
+\caption{Estimated coefficient surfaces for the 1980 census.\label{fig:census-coefs-1980}}
+\end{center}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{center}
+\includegraphics[height=8in]{../../figures/poverty/1990.linear.coefficients.pdf}
+\caption{Estimated coefficient surfaces for the 1990 census.\label{fig:census-coefs-1990}}
+\end{center}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{center}
+\includegraphics[height=8in]{../../figures/poverty/2000.linear.coefficients.pdf}
+\caption{Estimated coefficient surfaces for the 2000 census.\label{fig:census-coefs-2000}}
+\end{center}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{center}
+\includegraphics[height=8in]{../../figures/poverty/2006.linear.coefficients.pdf}
+\caption{Estimated coefficient surfaces for the 2006 census.\label{fig:census-coefs-2006}}
+\end{center}
+\end{figure}
+\efloatseparator
+ 

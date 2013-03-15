@@ -1,0 +1,29 @@
+% latex table generated in R 2.15.2 by xtable 1.7-0 package
+% Fri Mar 15 10:06:16 2013
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{cc}
+$\rho$ & $\tau_x$ & $\tau_\sigma$ &  $\beta_1$ & $\beta_2$ - $\beta_5$ \\ 
+  \hline
+\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & 1.00 & 0.21 \\ 
+ &  & 0.03 &   0.99 & 0.34 \\ 
+ &  & 0.1 &   1.00 & 0.44 \\ \cline{2-5}
+ & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.20 \\ 
+ &  & 0.03 &   0.99 & 0.38 \\ 
+ &  & 0.1 &   0.97 & 0.59 \\ \cline{1-5}
+\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   1.00 & 0.26 \\ 
+ &  & 0.03 &   1.00 & 0.29 \\ 
+ &  & 0.1 &   1.00 & 0.47 \\ \cline{2-5}
+ & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.26 \\ 
+ &  & 0.03 &   0.98 & 0.39 \\ 
+ &  & 0.1 &   0.98 & 0.60 \\ \cline{1-5}
+\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   0.99 & 0.30 \\ 
+ &  & 0.03 &   0.94 & 0.40 \\ 
+ &  & 0.1 &   0.98 & 0.45 \\ \cline{2-5}
+ & \multirow{3}{*}{0.1} & 0 &   1.00 & 0.34 \\ 
+ &  & 0.03 &   0.93 & 0.46 \\ 
+ &  & 0.1 &   0.94 & 0.61 \\ 
+  \end{tabular}
+\caption{Selection frequency for the indicated variables at location 1}
+\end{center}
+\end{table}

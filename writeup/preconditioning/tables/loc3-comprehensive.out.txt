@@ -2,24 +2,25 @@
 % Thu Mar  7 11:23:54 2013
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{ccc | ccc | ccc | ccc }
-&&&\multicolumn{3}{c}{GWL}&\multicolumn{3}{c}{GWL-U}&\multicolumn{3}{c}{Oracle}\\$\tau_x$ & $\rho$ & $\tau_\sigma$ & MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\   \hline
-\multirow{9}{*}{0.03} & \multirow{3}{*}{0} & 0 & 0.028 & 0.102 & 0.018 & \textbf{0.014} & \emph{0.003} & \textbf{0.014} & \emph{0.015} & \textbf{-0.001} & \emph{0.015} \\ 
+\begin{tabular}{ccccccccc}
+$\rho$ & $\tau_x$ & $\tau_\sigma$ &  GWL & GWL & GWL & GWL-U & GWL-U & GWL-U & Oracle & Oracle & Oracle \\ 
+  \hline
+\multirow{6}{*}{0} & \multirow{3}{*}{0.03} & 0 & 0.028 & 0.102 & 0.018 & \textbf{0.014} & \emph{0.003} & \textbf{0.014} & \emph{0.015} & \textbf{-0.001} & \emph{0.015} \\ 
  &  & 0.03 &   \emph{0.042} & 0.095 & \emph{0.033} & \textbf{0.030} & \textbf{0.001} & \textbf{0.030} & 0.093 & \emph{0.023} & 0.094 \\ 
  &  & 0.1 &   \emph{0.034} & 0.071 & \emph{0.029} & \textbf{0.019} & \emph{0.013} & \textbf{0.019} & 0.168 & \textbf{-0.004} & 0.169 \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   0.036 & 0.125 & \emph{0.021} & \emph{0.028} & \emph{0.044} & 0.026 & \textbf{0.018} & \textbf{0.002} & \textbf{0.018} \\ 
+ & \multirow{3}{*}{0.1} & 0 &   \emph{0.022} & 0.075 & \emph{0.017} & \textbf{0.016} & \textbf{-0.012} & \textbf{0.016} & 0.023 & \emph{-0.018} & 0.023 \\ 
+ &  & 0.03 &   \emph{0.083} & 0.113 & \textbf{0.071} & \textbf{0.078} & \textbf{0.022} & \emph{0.078} & 0.157 & \emph{-0.037} & 0.157 \\ 
+ &  & 0.1 &   \emph{0.078} & 0.080 & \emph{0.073} & \textbf{0.049} & \textbf{0.004} & \textbf{0.049} & 0.250 & \emph{0.064} & 0.248 \\ \cline{1-12}
+\multirow{6}{*}{0.5} & \multirow{3}{*}{0.03} & 0 &   0.036 & 0.125 & \emph{0.021} & \emph{0.028} & \emph{0.044} & 0.026 & \textbf{0.018} & \textbf{0.002} & \textbf{0.018} \\ 
  &  & 0.03 &   \emph{0.071} & 0.149 & \textbf{0.049} & \textbf{0.053} & \emph{0.060} & \emph{0.050} & 0.074 & \textbf{0.034} & 0.073 \\ 
  &  & 0.1 &   \emph{0.036} & 0.070 & \emph{0.031} & \textbf{0.026} & \textbf{0.017} & \textbf{0.026} & 0.173 & \emph{0.023} & 0.174 \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   0.073 & 0.182 & \emph{0.041} & \emph{0.062} & \emph{0.132} & 0.045 & \textbf{0.015} & \textbf{0.032} & \textbf{0.014} \\ 
- &  & 0.03 &   0.162 & 0.206 & \emph{0.120} & \emph{0.152} & \emph{0.116} & 0.140 & \textbf{0.075} & \textbf{-0.010} & \textbf{0.076} \\ 
- &  & 0.1 &   \emph{0.091} & 0.086 & \emph{0.084} & \textbf{0.079} & \emph{0.036} & \textbf{0.078} & 0.146 & \textbf{-0.028} & 0.147 \\ \cline{1-12}
-\multirow{9}{*}{0.1} & \multirow{3}{*}{0} & 0 &   \emph{0.022} & 0.075 & \emph{0.017} & \textbf{0.016} & \textbf{-0.012} & \textbf{0.016} & 0.023 & \emph{-0.018} & 0.023 \\ 
- &  & 0.03 &   \emph{0.083} & 0.113 & \textbf{0.071} & \textbf{0.078} & \textbf{0.022} & \emph{0.078} & 0.157 & \emph{-0.037} & 0.157 \\ 
- &  & 0.1 &   \emph{0.078} & 0.080 & \emph{0.073} & \textbf{0.049} & \textbf{0.004} & \textbf{0.049} & 0.250 & \emph{0.064} & 0.248 \\ \cline{2-12}
- & \multirow{3}{*}{0.5} & 0 &   0.023 & 0.101 & \textbf{0.013} & \textbf{0.017} & \emph{0.033} & \emph{0.016} & \emph{0.020} & \textbf{-0.005} & 0.020 \\ 
+ & \multirow{3}{*}{0.1} & 0 &   0.023 & 0.101 & \textbf{0.013} & \textbf{0.017} & \emph{0.033} & \emph{0.016} & \emph{0.020} & \textbf{-0.005} & 0.020 \\ 
  &  & 0.03 &   \emph{0.108} & 0.133 & \textbf{0.091} & \textbf{0.104} & \textbf{0.045} & \emph{0.103} & 0.148 & \emph{0.064} & 0.146 \\ 
- &  & 0.1 &   \emph{0.101} & \textbf{0.010} & \emph{0.102} & \textbf{0.094} & -0.023 & \textbf{0.094} & 0.469 & \emph{0.017} & 0.474 \\ \cline{2-12}
- & \multirow{3}{*}{0.8} & 0 &   \emph{0.057} & 0.132 & \emph{0.040} & 0.061 & \emph{0.086} & 0.054 & \textbf{0.019} & \textbf{-0.023} & \textbf{0.019} \\ 
+ &  & 0.1 &   \emph{0.101} & \textbf{0.010} & \emph{0.102} & \textbf{0.094} & -0.023 & \textbf{0.094} & 0.469 & \emph{0.017} & 0.474 \\ \cline{1-12}
+\multirow{6}{*}{0.8} & \multirow{3}{*}{0.03} & 0 &   0.073 & 0.182 & \emph{0.041} & \emph{0.062} & \emph{0.132} & 0.045 & \textbf{0.015} & \textbf{0.032} & \textbf{0.014} \\ 
+ &  & 0.03 &   0.162 & 0.206 & \emph{0.120} & \emph{0.152} & \emph{0.116} & 0.140 & \textbf{0.075} & \textbf{-0.010} & \textbf{0.076} \\ 
+ &  & 0.1 &   \emph{0.091} & 0.086 & \emph{0.084} & \textbf{0.079} & \emph{0.036} & \textbf{0.078} & 0.146 & \textbf{-0.028} & 0.147 \\ \cline{2-12}
+ & \multirow{3}{*}{0.1} & 0 &   \emph{0.057} & 0.132 & \emph{0.040} & 0.061 & \emph{0.086} & 0.054 & \textbf{0.019} & \textbf{-0.023} & \textbf{0.019} \\ 
  &  & 0.03 &   \emph{0.182} & 0.205 & \emph{0.141} & 0.185 & \emph{0.102} & 0.177 & \textbf{0.128} & \textbf{-0.027} & \textbf{0.129} \\ 
  &  & 0.1 &   \emph{0.216} & 0.050 & \emph{0.216} & \textbf{0.210} & \textbf{0.012} & \textbf{0.212} & 0.326 & \emph{0.029} & 0.328 \\ 
   \end{tabular}
