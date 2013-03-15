@@ -50,10 +50,14 @@
 
 \section{Introduction}
 	%Varying-coefficients regression
-	Varying-coefficients regression (VCR) \citep{Hastie:1993a} is a technique used to model nonstationary regression processes. Whereas the coefficients in ordinary least squares (OLS) regression are scalar constants, the coefficients in VCR are functions - often \emph{smooth} functions - of some effect-modifying parameter.  Methods for estimating the coefficient functions of VCR are typically divided between spline-based \citep{Wood:2006} and kernel-based \citep{Hastie:1993b, Loader:1999} methods. 
+	Varying-coefficients regression (VCR) \citep{Hastie:1993a} is a technique used to model non-stationary regression processes. Whereas the coefficients in ordinary least squares (OLS) regression are scalar constants, the coefficients in VCR are functions - often \emph{smooth} functions - of some effect-modifying parameter.  Methods for estimating the coefficient functions of VCR are typically divided between spline-based \citep{Wood:2006} and kernel-based \citep{Hastie:1993b, Loader:1999} methods. 
 	
+	%Spatial regression
+	Geostatistical data is the name for observations of a continuous spatial process that are made at discrete locations. 
+	Clustering is a typical form of non-stationarity in spatial data. One way to analyze clustered data is to assume a constant underlying mean with random deviations that are clustered in space. This is the structure of an autoregressive model \citep{}. If the underlying mean is not constant but is given by a regression function with constant coefficients, then a conditionally autoregressive (CAR) model \citep{} is used to simultaneously estimate regression coefficients and clustering of the residuals.
+
 	%Spatial VCR
-	A spatial VCR model typically uses the spatial location as an effect-modifying parameter. 
+	Where the underlying mean is a regression function but the coefficients are not constants, a spatial VCR model is appropriate. Both spline-based \citep{} and kernel-based \citep{Fotheringham:2002} methods are available for estimating the coefficient functions. 
 	
 	%Kernel smoothing
 	Geographically weighted regression (GWR) \citep{Fotheringham:2002} is a method of estimating the coefficients of a VCR model for spatial data. GWR uses kernel-weighted regression with weights based on the distance between observation locations. The presentation of GWR in \cite{Fotheringham:2002} follows the development of local likelihood in \cite{Loader:1999}.
@@ -61,12 +65,13 @@
 	%Local regression
 	GWR can be thought of as a kernel smoother for regression coefficients, and hence GWR coefficient estimates are likely to exhibit bias near the boundary of the region being modeled \citep{Hastie:1993b}. Modeling the coefficient surface as locally linear rather than locally constant (by including coefficient-by-location interactions) can reduce this boundary-effect bias \citep{Hastie:1993b}. Adding these interactions to the GWR model is analogous to a transition from kernel smoothing to local regression, and was introduced in \cite{Wang:2008b}.
 	
-	%Global Variable selection
+	%Variable selection for spatial VCR models
 	There is interest among practitioners of GWR not only in estimating the spatially-varying coefficient surface, but in doing variable selection to estimate which covariates are important predictors of the output variable, and in what regions they are important (citations?).
 	
-	%Local variable selection
+	%Global Variable selection
 	Some recent research has focused on variable selection in varying-coefficients models. In the context of varying-coefficients regression models, global variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero everywhere against the hypothesis that the coefficient is nonzero somewhere) is distinguished from local variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero at a given location against the hypothesis that the coefficient at that location is nonzero). Global variable selection for models where the varying coefficients are estimated using splines is addressed in \cite{Fan:1999} for response variables that belong to an exponential-family distribution (as in the generalized linear model), and in \cite{Wang:2008a} for models with repeated measurements. \cite{Antoniadis:2012a} estimates the coefficient functions with P-splines, and then uses the nonnegative garrote of \cite{Breiman:1995} to do local variable selection by selecting P-spline bases.
 	
+	%Local variable selection
 	Here we discuss a method of local variable selection in GWR models using the adaptive lasso of \cite{Zou:2006}. The idea first appears in the literature as the geographically-weighted LASSO (GWL) of \cite{Wheeler:2009}, which uses a jackknife criterion for selection of the lasso tuning parameters. Because the jackknife criterion can only be computed at locations where the response variable is observed, the GWL cannot be used for imputation of missing data nor for interpolation between observation locations. We avoid this limitation of the GWL by using a penalized-likelihood criterion to select the lasso tuning parameters (specifically the AIC, but in principle one could use the BIC, \emph{et cetera}). The AIC allows us to easily adapt our method to the setting of a generalized linear model. The local AIC presented here is based on an \emph{ad hoc} calculation of the degrees of freedom used to estimate the spatially-varying coefficient surfaces.
 	
 \section{Geographically-weighted regression \label{section:GWR}}

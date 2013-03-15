@@ -135,15 +135,17 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
         nsteps = length(model$lambda) + 1   
     
         if (mode.select=='CV') {
-            predx = matrix(xx[colocated,], reps, dim(xs)[2])    
+        	reps = length(colocated)
+        	predx = t(apply(matrix(xx[colocated,], nrow=reps, ncol=dim(xx)[2]), 1, function(X) {(X-meanx) * adapt.weight / normx}))  
             vars = apply(predict(model, type='coef')[['coefficients']], 1, function(x) {which(abs(x)>0)})
             df = sapply(vars, length) + 1                        
 
             predictions = predict(model, newx=predx, type='fit', mode='step')[['fit']]
             loss = colSums(abs(matrix(predictions - matrix(y[colocated], nrow=reps, ncol=nsteps), nrow=reps, ncol=nsteps)))                
-            s2 = sum(w*(fitted[,nsteps] - as.matrix(y))**2) / (sum(w)-df-1)
+            s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w[permutation]) 
 
-            loss.local = loss        
+            loss.local = loss   
+            k = which.min(loss)     
 
         } else if (mode.select=='AIC') {
             predx = t(apply(xx[permutation,], 1, function(X) {(X-meanx) * adapt.weight / normx}))
