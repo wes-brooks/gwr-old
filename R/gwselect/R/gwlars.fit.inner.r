@@ -128,16 +128,15 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             predx = xx[permutation,]
         }
     
-        fitx = xs
+        fitx = cbind(w[permutation], xs)
         fity = yyy
     
         model = lars(x=fitx, y=fity, type='lar', normalize=FALSE, intercept=FALSE)
-        #model = lars(x=fitx, y=fity, type='lar', normalize=FALSE, intercept=TRUE)
         nsteps = length(model$lambda) + 1   
     
         if (mode.select=='CV') {
         	reps = length(colocated)
-        	predx = t(apply(matrix(xx[colocated,], nrow=reps, ncol=dim(xx)[2]), 1, function(X) {(X-meanx) * adapt.weight / normx}))  
+        	predx = t(apply(matrix(xx[colocated,], nrow=reps, ncol=dim(xx)[2]), 1, function(X) {(X-meanx) * adapt.weight / normx}))
             vars = apply(predict(model, type='coef')[['coefficients']], 1, function(x) {which(abs(x)>0)})
             df = sapply(vars, length) + 1                        
 
@@ -149,21 +148,25 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             k = which.min(loss)     
 
         } else if (mode.select=='AIC') {
-            predx = t(apply(xx[permutation,], 1, function(X) {(X-meanx) * adapt.weight / normx}))
+            predx = cbind(1, t(apply(xx[permutation,], 1, function(X) {(X-meanx) * adapt.weight / normx})))
             predy = as.matrix(yy[permutation])
-            vars = apply(as.matrix(predict(model, type='coef')[['coefficients']]), 1, function(x) {which(abs(x)>0)})
+            
+            vars = apply(as.matrix(predict(model, type='coef')[['coefficients']]), 1, function(x) {which(abs(x[2:length(x)])>0)})
             df = sapply(vars, length) + 1
 
             if (n.weighted > ncol(x)) {               
-                coefs = cbind(t(meany-t(as.matrix(apply(predx,2,mean))) %*%t(coef(model))), coef(model))
-                fitted = cbind(1,predx) %*% coefs  
-                #fitted = predict(model, newx=predx, type="fit", mode="step")[["fit"]]   
-                s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w[permutation] - ncol(x))  
+                #Get the un-penalized intercept
+                coefs = as.matrix(coef(model))
+                fitted = predx %*% t(coefs)
+                coefs[,1] = coefs[,1] + apply(fitted, 2, function(x) {sum(w[permutation]*(yy[permutation]-x)) / sum(w[permutation])})
+                fitted = predx %*% t(coefs)    
+                
+                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - yy[permutation])**2) / sum(w[permutation])  
                 loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + 2*df)
                 k = which.min(loss)
 
                 if (k > 1) {
-                    varset = vars[[k]]
+                    varset = vars[[k]] - 1
                     modeldata = data.frame(y=yy[permutation], xx[permutation,varset])
                     m = lm(y~., data=modeldata, weights=w[permutation])
                     coefs.unshrunk = rep(0, ncol(x) + 1)
