@@ -22,7 +22,11 @@ gwglmnet.fit.knnparallel = function(x, y, family, coords, fit.loc, indx, D, s, v
             prior.weights=prior.weights, target=target)
         bandwidth = opt$minimum
         
-        m = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, indx=indx, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, mode.select=mode.select, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N, interact=interact, alpha=alpha)
+        if (is.null(oracle)) {
+	        m = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, indx=indx, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, mode.select=mode.select, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N, interact=interact, alpha=alpha)
+        } else {
+            m = gwlars.fit.oracle(x=x, y=y, bw=bandwidth, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, dist=dist, prior.weights=prior.weights, gweight=gweight, interact=interact)
+        }
         cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ", loss=", m[['loss.local']], ".\n", sep=''))
         return(m)
     }

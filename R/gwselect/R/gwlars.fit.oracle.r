@@ -1,4 +1,4 @@
-gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, oracle=NULL, tuning=FALSE, predict=FALSE, simulation=FALSE, verbose=FALSE, interact=FALSE, mode.select, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, N=N) {
+gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaussian', dist=NULL, oracle=NULL, tuning=FALSE, predict=FALSE, simulation=FALSE, verbose=FALSE, interact=FALSE, mode.select, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, N=N) {
     if (!is.null(indx)) {
         colocated = which(round(coords[indx,1],5)==round(as.numeric(loc[1]),5) & round(coords[indx,2],5) == round(as.numeric(loc[2]),5))
     }
@@ -85,7 +85,7 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, o
 
         permuted = data.frame(fitdata[permutation,])
         colnames(permuted) = colnames(fitdata)
-        model = lm(y~., data=permuted, weights=w)
+        model = glm(y~., data=permuted, weights=w, family=family)
                 
         #Get the coefficients:
         coefs = rep(0, ncol(x)+1)
