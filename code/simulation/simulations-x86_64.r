@@ -99,16 +99,19 @@ for (i in 1:N**2) {
 }
 
 #Find the optimal bandwidth and use it to generate a model:
-bw = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,0.5), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
-model = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=101, mode.select='AIC', bw=bw, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
+#bw = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,0.5), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
+#model = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='AIC', bw=bw, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
 
 
-bw.preconditioned = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,0.5), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=TRUE, parallel=FALSE, interact=TRUE)
-model.preconditioned = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=101, mode.select='AIC', bw=bw, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=TRUE, parallel=FALSE, interact=TRUE)
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,0.5), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
+model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='AIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
+
+bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,0.5), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
+model.enet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='AIC', bw=bw.enet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
 
 
 bw.oracular = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,0.5), gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=TRUE)
-model.oracular = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=101, mode.select='AIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE)
+model.oracular = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='AIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE)
 
 
 
@@ -118,77 +121,118 @@ write.table(sim, file=paste("output/Data.", cluster, ".", process, ".csv", sep="
 
 #Original GWSELECT:
 vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
-for (k in 1:6) {
-    coefs = t(sapply(1:N**2, function(y) {sapply(model[['model']][['models']][[y]][['coeflist']], function(x) {x[k]})}))
-    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".bootstrap.csv", sep=""), sep=',', row.names=FALSE)
-}
+#for (k in 1:6) {
+#    coefs = t(sapply(1:N**2, function(y) {sapply(model[['model']][['models']][[y]][['coeflist']], function(x) {x[k]})}))
+#    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".bootstrap.csv", sep=""), sep=',', row.names=FALSE)
+#}
 
-coefs = t(sapply(1:N**2, function(y) {as.vector(model[['model']][['models']][[y]][['coef']])}))
-write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+#coefs = t(sapply(1:N**2, function(y) {as.vector(model[['model']][['models']][[y]][['coef']])}))
+#write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
 
 
 #Write the results to some files:
+#vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
+#for (k in 1:6) {
+#    coefs = t(sapply(1:N**2, function(y) {sapply(model[['model']][['models']][[y]][['coef.unshrunk.list']], function(x) {x[k]})}))
+#    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".unshrunk-bootstrap.csv", sep=""), sep=',', row.names=FALSE)
+#}
+
+#coefs = t(sapply(1:N**2, function(y) {as.vector(model[['model']][['models']][[y]][['coef.unshrunk']])}))
+#write.table(coefs, file=paste("output/CoefEstimatesUnshrunk.", cluster, ".", process, ".csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+
+#ses = t(sapply(1:N**2, function(y) {as.vector(model[['model']][['models']][[y]][['se.unshrunk']])}))
+#write.table(ses, file=paste("output/CoefSEsUnshrunk.", cluster, ".", process, ".csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+
+
+#params = c('bw', 'sigma2', 'loss.local', 's', 's2.unshrunk', 'fitted')
+#target = params[1]
+#output = sapply(1:N**2, function(y) {model[['model']][['models']][[y]][[target]]})
+
+#for (i in 2:length(params)) {
+#    target = params[i]
+#    output = cbind(output, sapply(1:N**2, function(y) {model[['model']][['models']][[y]][[target]]}))
+#}
+#write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".csv", sep=""), col.names=params, sep=',', row.names=FALSE)
+
+
+
+
+
+#glmnet:
 vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
-for (k in 1:6) {
-    coefs = t(sapply(1:N**2, function(y) {sapply(model[['model']][['models']][[y]][['coef.unshrunk.list']], function(x) {x[k]})}))
-    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".unshrunk-bootstrap.csv", sep=""), sep=',', row.names=FALSE)
-}
+#for (k in 1:6) {
+#    coefs = t(sapply(1:N**2, function(y) {sapply(model.glmnet[['model']][['models']][[y]][['coeflist']], function(x) {x[k]})}))
+#    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".glmnet.bootstrap.csv", sep=""), sep=',', row.names=FALSE)
+#}
 
-coefs = t(sapply(1:N**2, function(y) {as.vector(model[['model']][['models']][[y]][['coef.unshrunk']])}))
-write.table(coefs, file=paste("output/CoefEstimatesUnshrunk.", cluster, ".", process, ".csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+coefs = t(sapply(1:N**2, function(y) {as.vector(model.glmnet[['model']][['models']][[y]][['coef']])}))
+write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".glmnet.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
 
-ses = t(sapply(1:N**2, function(y) {as.vector(model[['model']][['models']][[y]][['se.unshrunk']])}))
-write.table(ses, file=paste("output/CoefSEsUnshrunk.", cluster, ".", process, ".csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+
+#Write the results to some files:
+#vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
+#for (k in 1:6) {
+#    coefs = t(sapply(1:N**2, function(y) {sapply(model.glmnet[['model']][['models']][[y]][['coef.unshrunk.list']], function(x) {x[k]})}))
+#    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".glmnet.unshrunk-bootstrap.csv", sep=""), sep=',', row.names=FALSE)
+#}
+
+coefs = t(sapply(1:N**2, function(y) {as.vector(model.glmnet[['model']][['models']][[y]][['coef.unshrunk']])}))
+write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".unshrunk.glmnet.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+
+ses = t(sapply(1:N**2, function(y) {as.vector(model.glmnet[['model']][['models']][[y]][['se.unshrunk']])}))
+write.table(ses, file=paste("output/CoefSEs.", cluster, ".", process, ".unshrunk.glmnet.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
 
 
 params = c('bw', 'sigma2', 'loss.local', 's', 's2.unshrunk', 'fitted')
 target = params[1]
-output = sapply(1:N**2, function(y) {model[['model']][['models']][[y]][[target]]})
+output = sapply(1:N**2, function(y) {model.glmnet[['model']][['models']][[y]][[target]]})
 
 for (i in 2:length(params)) {
     target = params[i]
-    output = cbind(output, sapply(1:N**2, function(y) {model[['model']][['models']][[y]][[target]]}))
+    output = cbind(output, sapply(1:N**2, function(y) {model.glmnet[['model']][['models']][[y]][[target]]}))
 }
-write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".csv", sep=""), col.names=params, sep=',', row.names=FALSE)
+write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".glmnet.csv", sep=""), col.names=params, sep=',', row.names=FALSE)
 
 
 
 
 
-#Preconditioned:
+
+#enet:
 vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
-for (k in 1:6) {
-    coefs = t(sapply(1:N**2, function(y) {sapply(model.preconditioned[['model']][['models']][[y]][['coeflist']], function(x) {x[k]})}))
-    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".precon.bootstrap.csv", sep=""), sep=',', row.names=FALSE)
-}
+#for (k in 1:6) {
+#    coefs = t(sapply(1:N**2, function(y) {sapply(model.enet[['model']][['models']][[y]][['coeflist']], function(x) {x[k]})}))
+#    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".enet.bootstrap.csv", sep=""), sep=',', row.names=FALSE)
+#}
 
-coefs = t(sapply(1:N**2, function(y) {as.vector(model.preconditioned[['model']][['models']][[y]][['coef']])}))
-write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".precon.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+coefs = t(sapply(1:N**2, function(y) {as.vector(model.enet[['model']][['models']][[y]][['coef']])}))
+write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".enet.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
 
 
 #Write the results to some files:
-vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
-for (k in 1:6) {
-    coefs = t(sapply(1:N**2, function(y) {sapply(model.preconditioned[['model']][['models']][[y]][['coef.unshrunk.list']], function(x) {x[k]})}))
-    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".precon.unshrunk-bootstrap.csv", sep=""), sep=',', row.names=FALSE)
-}
+#vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
+#for (k in 1:6) {
+#    coefs = t(sapply(1:N**2, function(y) {sapply(model.enet[['model']][['models']][[y]][['coef.unshrunk.list']], function(x) {x[k]})}))
+#    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".enet.unshrunk-bootstrap.csv", sep=""), sep=',', row.names=FALSE)
+#}
 
-coefs = t(sapply(1:N**2, function(y) {as.vector(model.preconditioned[['model']][['models']][[y]][['coef.unshrunk']])}))
-write.table(coefs, file=paste("output/CoefEstimatesUnshrunk.", cluster, ".", process, ".precon.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+coefs = t(sapply(1:N**2, function(y) {as.vector(model.enet[['model']][['models']][[y]][['coef.unshrunk']])}))
+write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".unshrunk.enet.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
 
-ses = t(sapply(1:N**2, function(y) {as.vector(model.preconditioned[['model']][['models']][[y]][['se.unshrunk']])}))
-write.table(ses, file=paste("output/CoefSEsUnshrunk.", cluster, ".", process, ".precon.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+ses = t(sapply(1:N**2, function(y) {as.vector(model.enet[['model']][['models']][[y]][['se.unshrunk']])}))
+write.table(ses, file=paste("output/CoefSEs.", cluster, ".", process, ".unshrunk.enet.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
 
 
 params = c('bw', 'sigma2', 'loss.local', 's', 's2.unshrunk', 'fitted')
 target = params[1]
-output = sapply(1:N**2, function(y) {model.preconditioned[['model']][['models']][[y]][[target]]})
+output = sapply(1:N**2, function(y) {model.enet[['model']][['models']][[y]][[target]]})
 
 for (i in 2:length(params)) {
     target = params[i]
-    output = cbind(output, sapply(1:N**2, function(y) {model.preconditioned[['model']][['models']][[y]][[target]]}))
+    output = cbind(output, sapply(1:N**2, function(y) {model.enet[['model']][['models']][[y]][[target]]}))
 }
-write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".precon.csv", sep=""), col.names=params, sep=',', row.names=FALSE)
+write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".enet.csv", sep=""), col.names=params, sep=',', row.names=FALSE)
+
 
 
 
@@ -196,16 +240,16 @@ write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".pr
 #For oracle property:
 #Write the results to some files:
 vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
-for (k in 1:6) {
-    coefs = t(sapply(1:N**2, function(y) {sapply(model.oracular[['model']][['models']][[y]][['coeflist']], function(x) {x[k]})}))
-    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".OracularBootstrap.csv", sep=""), sep=',', row.names=FALSE)
-}
+#for (k in 1:6) {
+#    coefs = t(sapply(1:N**2, function(y) {sapply(model.oracular[['model']][['models']][[y]][['coeflist']], function(x) {x[k]})}))
+#    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".OracularBootstrap.csv", sep=""), sep=',', row.names=FALSE)
+#}
 
 coefs = t(sapply(1:N**2, function(y) {as.vector(model.oracular[['model']][['models']][[y]][['coef']])}))
-write.table(coefs, file=paste("output/CoefEstimatesOracular.", cluster, ".", process, ".csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".oracle.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
 
 ses = t(sapply(1:N**2, function(y) {as.vector(model.oracular[['model']][['models']][[y]][['se.coef']])}))
-write.table(ses, file=paste("output/CoefSEsOracular.", cluster, ".", process, ".csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+write.table(ses, file=paste("output/CoefSEs.", cluster, ".", process, ".oracle.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
 
 
 params = c('bw', 'sigma2', 'loss.local', 'fitted')
@@ -216,5 +260,5 @@ for (i in 2:length(params)) {
     target = params[i]
     output = cbind(output, sapply(1:N**2, function(y) {model.oracular[['model']][['models']][[y]][[target]]}))
 }
-write.table(output, file=paste("output/MiscParamsOracular.", cluster, ".", process, ".csv", sep=""), col.names=params, sep=',', row.names=FALSE)
+write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".oracle.csv", sep=""), col.names=params, sep=',', row.names=FALSE)
 

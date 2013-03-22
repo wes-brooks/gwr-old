@@ -30,7 +30,7 @@ gwglmnet.sel = function(formula, data=list(), family, range=NULL, weights=NULL, 
     opt <- optimize(gwglmnet.cv.f, lower=beta1, upper=beta2, 
         maximum=FALSE, formula=formula, indx=indx, coords=coords, s=s, family=family, mode.select=mode.select,
         gweight=gweight, verbose=verbose, longlat=longlat, data=data, method=method, alpha=alpha,
-        weights=weights, tol=tol, adapt=adapt, parallel=parallel, precondition=precondition, N=1, interact)
+        weights=weights, tol=tol, adapt=adapt, parallel=parallel, precondition=precondition, N=1, interact=interact)
 
     bdwt <- opt$minimum
     res <- bdwt

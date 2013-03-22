@@ -1,4 +1,4 @@
-gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=NULL, family, mode.select, tuning=FALSE, predict=FALSE, simulation=FALSE, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, interact=FALSE, precondition=FALSE, N=1, alpha=1, tau=3) {
+gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=NULL, family, mode.select, tuning, predict, simulation, verbose, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt, interact, precondition, N=1, alpha, tau=3) {
     if (!is.null(indx)) {
         colocated = which(round(coords[indx,1],5)==round(as.numeric(loc[1]),5) & round(coords[indx,2],5) == round(as.numeric(loc[2]),5))
     }
@@ -15,6 +15,13 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
     if (!is.null(indx)) {
         gwr.weights = gwr.weights[indx]
     }
+
+	#Allow for the adaptive elastic net penalty:
+	if (substring(as.character(alpha), 1, 1) == 'a') {
+		cormat = abs(cor(x))
+		diag(cormat) = NA
+		alpha = 1 - max(cormat, na.rm=TRUE)
+	}
 
     if (interact) {
         newnames = vector()
@@ -69,7 +76,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
         sqrt.w <- diag(sqrt(w[permutation]))        
         #yyy = sqrt.w %*% yy[permutation,]
         yyy = yy[permutation,]
-        meany = mean(yyy)
+        meany = sum(w[permutation]*yyy)/sum(w[permutation])
         yyy = yyy #- meany   
         #normy = sqrt(sum(yyy**2))
         #yyy = yyy / normy
@@ -132,14 +139,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
         fitx = xs
         fity = yyy
 
-        #Allow for the adaptive elastic net penalty:
-        if (substring(as.character(alpha), 1, 1) == 'a') {
-            cormat = abs(cor(fitx))
-            diag(cormat) = NA
-            alpha = 1 - max(cormat, na.rm=TRUE)
-        }
-
-        model = glmnet(x=fitx, y=fity, standardize=TRUE, intercept=FALSE, family=family, weights=w[permutation], alpha=alpha)
+        model = glmnet(x=fitx, y=fity, standardize=FALSE, intercept=TRUE, family=family, weights=w[permutation], alpha=alpha)
         nsteps = length(model$lambda) + 1   
     
         if (mode.select=='CV') {
@@ -155,14 +155,15 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
         } else if (mode.select=='AIC') {
             predx = t(apply(xx[permutation,], 1, function(X) {(X-meanx) * adapt.weight / normx}))
             predy = as.matrix(yy[permutation])
-            vars = apply(as.matrix(coef(model)), 2, function(x) {which(abs(x)>0) - 1})
+            vars = apply(as.matrix(coef(model)[-1,]), 2, function(x) {which(abs(x)>0)})
             df = sapply(vars, length) + 1
 
             if (n.weighted > ncol(x)) {               
                 coefs = t(as.matrix(coef(model)))
-                coefs[,1] = meany
+                #coefs[,1] = coefs[,1] + meany
                 fitted = predict(model, newx=predx, type="response")   
-                s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w[permutation])  
+                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / sum(w[permutation])  
+                #s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w[permutation])  
                 loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + 2*df)
                 k = which.min(loss)
 
@@ -178,9 +179,9 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                     se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']
                 } else {
                     coefs.unshrunk = rep(0, ncol(xx) + 1)
-                    coefs.unshrunk[1] = meany
+                    coefs.unshrunk[1] = mean(fity * sqrt(w[permutation]))
                     
-                    s2.unshrunk = sum(fity**2)/sum(w[permutation])
+                    s2.unshrunk = sum((sqrt(w[permutation])*fity)**2)/sum(w[permutation])
                     se.unshrunk = rep(0, ncol(xx) + 1)
                     se.unshrunk[1] = sqrt(s2.unshrunk)
                 }
@@ -199,12 +200,12 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
         } else if (mode.select=='BIC') {
             predx = t(apply(xx[permutation,], 1, function(X) {(X-meanx) * adapt.weight / normx}))
             predy = as.matrix(yy[permutation])
-            vars = apply(as.matrix(coef(model)), 2, function(x) {which(abs(x)>0) - 1})
+            vars = apply(as.matrix(coef(model)[-1,]), 2, function(x) {which(abs(x)>0)})
             df = sapply(vars, length) + 1
 
             if (sum(w[permutation]) > nsteps) {               
                 coefs = t(as.matrix(coef(model)))
-                coefs[,1] = meany
+                #coefs[,1] = meany
                 fitted = predict(model, newx=fitx, type="fit", mode="step")[["fit"]]
                 s2 = sum(lsfit(y=fity, x=fitx)$residuals**2) / (sum(w[permutation]) - nsteps - 1)     
                 loss = as.vector(apply(fitted, 2, function(z) {sum(((z - fity)**2)[permutation])})/s2 + log(sum(w[permutation]))*df)
@@ -222,11 +223,11 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                     se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']
                 } else {
                     coefs.unshrunk = rep(0, ncol(xx) + 1)
-                    coefs.unshrunk[1] = meany
+                    coefs.unshrunk[1] = mean(fity * sqrt(w[permutation]))
                     
-                    s2.unshrunk = sum(fity**2)/(sum(w[permutation]) - 1)
+                    s2.unshrunk = sum((sqrt(w[permutation])*fity)**2)/sum(w[permutation])
                     se.unshrunk = rep(0, ncol(xx) + 1)
-                    se.unshrunk[1] = sqrt(s2.unshrunk / sum(w[permutation]))
+                    se.unshrunk[1] = sqrt(s2.unshrunk)
                 }
                 
                 if (length(colocated)>0) {
@@ -255,7 +256,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
             rownames(coefs) = c("(Intercept)", colnames(x))   
 
             coefs = coefs * c(1, adapt.weight) * c(1, 1/normx)
-            if (length(coefs)>1) {coefs[1] = coefs[1] - sum(coefs[2:length(coefs)] * meanx)}
+            if (length(coefs)>1) {coefs[1] = mean(sqrt(w[permutation])*fity) - sum(coefs[2:length(coefs)] * drop(sqrt(w[permutation]) %*% xxx) / nrow(xxx))}
             if (verbose) {print(coefs)}
     
             if (interact) {
@@ -303,11 +304,11 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
     }
     
     if (tuning) {
-        return(list(loss.local=loss.local))
+        return(list(loss.local=loss.local, s=s.optimal, sigma2=s2, nonzero=colnames(x)[vars[[s.optimal]]], weightsum=sum(w), loss=loss, alpha=alpha))
     } else if (predict) {
         return(list(loss.local=loss.local, coef=coefs))
     } else if (simulation) {
-        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, s=s.optimal, bw=bw, sigma2=s2, coef.unshrunk=coefs.unshrunk, s2.unshrunk=s2.unshrunk, coef.unshrunk.list=coef.unshrunk.list, se.unshrunk=se.unshrunk, fitted=fitted[colocated,s.optimal][1], alpha=alpha))
+        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, s=s.optimal, bw=bw, sigma2=s2, coef.unshrunk=coefs.unshrunk, s2.unshrunk=s2.unshrunk, coef.unshrunk.list=coef.unshrunk.list, se.unshrunk=se.unshrunk, fitted=fitted, alpha=alpha, nonzero=colnames(x)[vars[[s.optimal]]], actual=predy[colocated], weightsum=sum(w), loss=loss))
     } else {
         return(list(model=model, loss=loss, coef=coefs, coef.unshrunk=coefs.unshrunk, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, meany=meany, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N, fitted=fitted, alpha=alpha))
     }

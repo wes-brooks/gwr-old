@@ -1,4 +1,4 @@
-gwglmnet <- function(formula, data, family, weights=NULL, coords, fit.loc=NULL, indx=NULL, tuning=FALSE, predict=FALSE, simulation=FALSE, gweight, bw=NULL, mode.select='AIC', verbose=FALSE, longlat, tol, N=1, method, adapt=FALSE, s=NULL, parallel=FALSE, precondition=FALSE, D=NULL, interact=FALSE, alpha=1) {
+gwglmnet <- function(formula, data, family, weights=NULL, coords, fit.loc=NULL, indx=NULL, tuning=FALSE, predict=FALSE, simulation=FALSE, gweight, bw=NULL, mode.select='AIC', verbose=FALSE, longlat, tol, N=1, method, adapt=FALSE, s=NULL, parallel=FALSE, precondition=FALSE, D=NULL, oracle=NULL, interact=FALSE, alpha=1) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is(data, "Spatial")) {
@@ -54,9 +54,9 @@ gwglmnet <- function(formula, data, family, weights=NULL, coords, fit.loc=NULL, 
     if (method=='dist') {
         weight.matrix = gweight(D, bw)
         if (parallel) {
-            res[['model']] = gwglmnet.fit.fixedbwparallel(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, N=N, coords=coords, mode.select=mode.select, bw=bw, fit.loc=fit.loc, gwr.weights=weight.matrix, s=s, verbose=verbose, adapt=adapt, precondition=precondition, interact=interact, alpha=alpha)
+            res[['model']] = gwglmnet.fit.fixedbwparallel(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, N=N, coords=coords, mode.select=mode.select, bw=bw, fit.loc=fit.loc, gwr.weights=weight.matrix, s=s, verbose=verbose, adapt=adapt, precondition=precondition, interact=interact, alpha=alpha, oracle=oracle)
         } else {
-            res[['model']] = gwglmnet.fit.fixedbw(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, N=N, coords=coords, mode.select=mode.select, bw=bw, fit.loc=fit.loc, gwr.weights=weight.matrix, s=s, verbose=verbose, adapt=adapt, precondition=precondition, interact=interact, alpha=alpha)
+            res[['model']] = gwglmnet.fit.fixedbw(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, N=N, coords=coords, mode.select=mode.select, bw=bw, fit.loc=fit.loc, gwr.weights=weight.matrix, s=s, verbose=verbose, adapt=adapt, precondition=precondition, interact=interact, alpha=alpha, oracle=oracle)
         }
     } else {        
         bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
@@ -68,15 +68,15 @@ gwglmnet <- function(formula, data, family, weights=NULL, coords, fit.loc=NULL, 
 
         if (method=='nen') {
             if (parallel) {
-                res[['model']] = gwglmnet.fit.nenparallel(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, N=N, coords=coords, fit.loc=fit.loc, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, interact=interact, alpha=alpha)
+                res[['model']] = gwglmnet.fit.nenparallel(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, N=N, coords=coords, fit.loc=fit.loc, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, interact=interact, alpha=alpha, oracle=oracle)
             } else {
-                res[['model']] = gwglmnet.fit.nen(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, interact=interact, alpha=alpha)
+                res[['model']] = gwglmnet.fit.nen(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, interact=interact, alpha=alpha, oracle=oracle)
             }
         } else if (method=='knn') {
             if (parallel) {
-                res[['model']] = gwglmnet.fit.knnparallel(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, interact=interact, alpha=alpha)
+                res[['model']] = gwglmnet.fit.knnparallel(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, interact=interact, alpha=alpha, oracle=oracle)
             } else {
-                res[['model']] = gwglmnet.fit.knn(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, interact=interact, alpha=alpha)
+                res[['model']] = gwglmnet.fit.knn(x=x, y=y, family=family, prior.weights=weights, tuning=tuning, predict=predict, simulation=simulation, indx=indx, coords=coords, fit.loc=fit.loc, N=N, D=D, longlat=longlat, mode.select=mode.select, s=s, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, interact=interact, alpha=alpha, oracle=oracle)
             }
         }
     }
