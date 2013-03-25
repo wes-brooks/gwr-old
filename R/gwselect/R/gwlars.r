@@ -55,9 +55,9 @@ gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL,
     if (method=='dist') {
         weight.matrix = gweight(D, bw)
         if (parallel) {
-            res[['model']] = gwlars.fit.fixedbwparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, adapt=adapt, precondition=precondition, oracle=oracle)
+            res[['model']] = gwlars.fit.fixedbwparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, adapt=adapt, precondition=precondition, oracle=oracle, interact=interact)
         } else {
-            res[['model']] = gwlars.fit.fixedbw(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, adapt=adapt, precondition=precondition, oracle=oracle)
+            res[['model']] = gwlars.fit.fixedbw(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, adapt=adapt, precondition=precondition, oracle=oracle, interact=interact)
         }
     } else {        
         bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
@@ -71,9 +71,9 @@ gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL,
 
         if (method=='nen') {
             if (parallel) {
-                res[['model']] = gwlars.fit.nenparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle)
+                res[['model']] = gwlars.fit.nenparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact)
             } else {
-                res[['model']] = gwlars.fit.nen(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle)
+                res[['model']] = gwlars.fit.nen(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact)
             }
         } else if (method=='knn') {
             if (parallel) {

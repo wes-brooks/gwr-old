@@ -16,9 +16,16 @@ Y = as.matrix(sim$Y[indx])
 W = diag(sqrt(w[indx]))
 
 WX = W%*%X
+WX2 = W%*%X2
+WX3 = scale(WX2, scale=FALSE)
 WY = W%*%Y
+WY3 = WY - mean(WY)
+m6 = lars(x=WX2, y=WY3, intercept=FALSE)
+
+
+
 wm = sum(WY)/sum(W)
-m = lars(x=WX, y=WY, type='lar')
+m = lars(x=WX, y=WY, type='lar', intercept=FALSE)
 
 WX2 = WX - colMeans(WX)
 mm = lars(x=WX2, y=WY2, type='lar', normalize=FALSE)
@@ -30,7 +37,7 @@ WX3.c = W%*%X3
 WX3.c[,2:ncol(WX3)] = WX3[,2:ncol(WX3)] - colMeans(WX3[,2:ncol(WX3)])
 
 WY.c = WY - mean(WY)
-m3 = lars(x=WX3.c, y=WY, normalize=FALSE, intercept=FALSE)
+m3 = lars(x=WX2, y=WY.c, normalize=FALSE, intercept=FALSE)
 
 
 m1 = lsfit(x=X, y=Y, wt=w[indx])

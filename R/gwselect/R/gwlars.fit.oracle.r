@@ -15,17 +15,15 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
     if (!is.null(indx)) {
         gwr.weights = gwr.weights[indx]
     }
-
-    vars = colnames(x)
+	
+	vars = colnames(x)
     which.oracle = vector()
     for (v in oracle) {
         if (v %in% vars)
             which.oracle = c(which.oracle, which(vars==v))
     }
     df = length(oracle) + 1
-    #x = x[,oracle]
-
-
+    
     if (interact) {
         newnames = vector()
         oldnames = colnames(x)
@@ -43,18 +41,20 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
         colnames(x) = c(oldnames, newnames)
         
         wo = vector()
-        for (l in 1:length(which.oracle)) {
-            wo = c(wo, which.oracle[l])
-            wo = c(wo, length(oldnames) + 2*(which.oracle[l]-1) + 1)
-            wo = c(wo, length(oldnames) + 2*which.oracle[l])
-        }
-        which.oracle = wo
-        oracle = colnames(x)[which.oracle]
+        if (length(which.oracle) > 0) {
+			for (l in 1:length(which.oracle)) {
+				wo = c(wo, which.oracle[l])
+				wo = c(wo, length(oldnames) + 2*(which.oracle[l]-1) + 1)
+				wo = c(wo, length(oldnames) + 2*which.oracle[l])
+			}
+			which.oracle = wo
+			oracle = colnames(x)[which.oracle]
+		} else {
+			oracle = NULL
+		}
     }
 
-    
-
-    xx = as.matrix(x)
+	xx = as.matrix(x)
     yy = as.matrix(y)    
     w <- prior.weights * gwr.weights
     
@@ -93,7 +93,7 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
         coefs = Matrix(coefs, ncol=1)
         rownames(coefs) = c("(Intercept)", colnames(x))
 
-        if (interact) {
+		if (interact) {
             locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
             cc = Matrix(0, nrow=(length(coefs)-1-length(oldnames))/2, ncol=3)
             cc[,1] = coefs[seq(2, 1+length(oldnames))]
@@ -103,66 +103,74 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
             coefs = Matrix(c(coefs[1], as.vector(ccc)))
             rownames(coefs) =  c("(Intercept)", oldnames)
         }   
-
+        
         coef.list[[i]] = coefs
         if (verbose) {print(coefs)}
     
-        if (i==N) { 
-            s2 = sum(model$residuals^2)/sum(w[permutation])
-    
-            #Get standard errors of the coefficient estimates:
-            se.coef = rep(0, ncol(x)+1)
-            se.coef[c(1, which.oracle+1)] = summary(model)$coefficients[,'Std. Error']
-            se.coef = Matrix(se.coef, ncol=1)
-            rownames(se.coef) = c("(Intercept)", colnames(x))
-            
-
-            if (interact) {
-                locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
-                cc = Matrix(0, nrow=(length(se.coef)-1-length(oldnames))/2, ncol=3)
-                cc[,1] = se.coef[seq(2, 1+length(oldnames))]**2
-                cc[,2] = se.coef[seq(2+length(oldnames), length(se.coef)-1, by=2)]**2
-                cc[,3] = se.coef[seq(2+length(oldnames), length(se.coef)-1, by=2)+1]**2           
-                ccc = sqrt(cc %*% locmat)
-                se.coef = Matrix(c(se.coef[1], as.vector(ccc)))
-                rownames(se.coef) =  c("(Intercept)", oldnames)
-            }  
-    
-            #Find the local loss (for tuning bw)
-            if (mode.select=='CV') {
-                predictions = predict(model, newdata=localdata)
-                loss.local = abs(Matrix(predictions - y[colocated], ncol=1))      
-    
-            } else if (mode.select=='AIC') {                           
-                fitted = predict(model, newdata=localdata)
-                s2 = sum(w[permutation]*model$residuals**2) / sum(w[permutation])    
-                
-                if (length(colocated)>0) {
-                    loss.local = log(s2) + 2*df/sum(w[permutation])
-                } else {
-                    loss.local = NA
-                }                     
-    
-            } else if (mode.select=='BIC') {   
-                fitted = predict(model, newdata=localdata)
-                s2 = sum(w[permutation]*model$residuals**2) / sum(w[permutation])
-    
-                if (length(colocated)>0) {
-                    loss.local = log(s2) + 2*log(sum(w[permutation]))/sum(w[permutation])
-                } else {
-                    loss.local = NA
-                }
-            }
+    	if (i==N) { 
+	    	if (sum(w) > dim(permuted)[2])  {  		
+				s2 = sum(w[permutation]*model$residuals^2)/(sum(w) - dim(permuted)[2] - 1)
+	
+				#Get standard errors of the coefficient estimates:
+				se.coef = rep(0, ncol(x)+1)
+				se.coef[c(1, which.oracle+1)] = summary(model)$coefficients[,'Std. Error']
+				se.coef = Matrix(se.coef, ncol=1)
+				rownames(se.coef) = c("(Intercept)", colnames(x))
+			
+				if (interact) {
+					locmat = t(as.matrix(cbind(rep(1,nrow(loc)),loc)))
+					cc = Matrix(0, nrow=(length(se.coef)-1-length(oldnames))/2, ncol=3)
+					cc[,1] = se.coef[seq(2, 1+length(oldnames))]**2
+					cc[,2] = se.coef[seq(2+length(oldnames), length(se.coef)-1, by=2)]**2
+					cc[,3] = se.coef[seq(2+length(oldnames), length(se.coef)-1, by=2)+1]**2           
+					ccc = sqrt(cc %*% locmat)
+					se.coef = Matrix(c(se.coef[1], as.vector(ccc)))
+					rownames(se.coef) =  c("(Intercept)", oldnames)
+				}  
+			
+				#Find the local loss (for tuning bw)
+				if (mode.select=='CV') {
+					predictions = predict(model, newdata=localdata)
+					loss.local = abs(Matrix(predictions - y[colocated], ncol=1))      
+	
+				} else if (mode.select=='AIC') {                           
+					fitted = predict(model, newdata=localdata)
+					s2 = sum(w[permutation]*model$residuals**2) / (sum(w) - dim(permuted)[2] - 1)    
+				
+					if (length(colocated)>0) {
+						loss.local = log(s2) + 2*df/sum(w)
+					} else {
+						loss.local = NA
+					}                     
+				
+				} else if (mode.select=='BIC') {   
+					fitted = predict(model, newdata=localdata)
+					s2 = sum(w[permutation]*model$residuals**2) / (sum(w) - dim(permuted)[2] - 1) 
+	
+					if (length(colocated)>0) {
+						loss.local = log(s2) + 2*log(sum(w))/sum(w)
+					} else {
+						loss.local = NA
+					}
+				}
+			} else {
+				loss.local = Inf
+				fitted = NA
+				s2 = NA
+				se.coef = NA
+				coef.list = NA
+				coefs = NA
+			}
         }
     }
     
     #Return the results
     if (tuning) {
-        return(list(loss.local=loss.local))
+        return(list(loss.local=loss.local, s=NULL, sigma2=s2, nonzero=NULL, weightsum=sum(w)))
     } else if (predict) {
         return(list(loss.local=loss.local, coef=coefs))
     } else if (simulation) {
-        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, bw=bw, sigma2=s2, se.coef=se.coef, fitted=fitted[1]))
+        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, bw=bw, sigma2=s2, se.coef=se.coef, fitted=fitted[1], nonzero=NULL, weightsum=sum(w), s=NULL))
     } else {
         return(list(model=model, coef=coefs, coeflist=coef.list, loc=loc, bw=bw, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N))
     }

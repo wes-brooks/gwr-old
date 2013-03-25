@@ -76,7 +76,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
         sqrt.w <- diag(sqrt(w[permutation]))        
         #yyy = sqrt.w %*% yy[permutation,]
         yyy = yy[permutation,]
-        meany = sum(w[permutation]*yyy)/sum(w[permutation])
+        meany = sum((w*yy)[permutation])/sum(w)
         yyy = yyy #- meany   
         #normy = sqrt(sum(yyy**2))
         #yyy = yyy / normy
@@ -158,13 +158,14 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
             vars = apply(as.matrix(coef(model)[-1,]), 2, function(x) {which(abs(x)>0)})
             df = sapply(vars, length) + 1
 
-            if (n.weighted > ncol(x)) {               
+            if (sum(w) > ncol(x)) {      
+            	wcm = apply(predx[,-1], 2, function(x) {sum(x*w[permutation])})/sum(w)         
                 coefs = t(as.matrix(coef(model)))
                 #coefs[,1] = coefs[,1] + meany
                 fitted = predict(model, newx=predx, type="response")   
-                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / sum(w[permutation])  
-                #s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w[permutation])  
-                loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + 2*df)
+                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / (sum(w)-ncol(x))  
+                #s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w)  
+                loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + log(s2) + 2*df)
                 k = which.min(loss)
 
                 if (k > 1) {
@@ -192,6 +193,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                     loss.local = rep(NA, length(loss))
                 }                     
             } else {
+            	fitted = rep(meany, length(permutation))
                 s2 = 0
                 loss = Inf
                 loss.local = c(Inf)   
@@ -207,7 +209,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                 coefs = t(as.matrix(coef(model)))
                 #coefs[,1] = meany
                 fitted = predict(model, newx=fitx, type="fit", mode="step")[["fit"]]
-                s2 = sum(lsfit(y=fity, x=fitx)$residuals**2) / (sum(w[permutation]) - nsteps - 1)     
+                s2 = sum(lsfit(y=fity, x=fitx)$residuals**2) / (sum(w[permutation]) - df)     
                 loss = as.vector(apply(fitted, 2, function(z) {sum(((z - fity)**2)[permutation])})/s2 + log(sum(w[permutation]))*df)
                 k = which.min(loss)
 
