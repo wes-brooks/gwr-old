@@ -157,7 +157,7 @@ output = sapply(1:N**2, function(y) {model.lars[['model']][['models']][[y]][[tar
 
 for (i in 2:length(params)) {
     target = params[i]
-    output = cbind(output, sapply(1:N**2, function(y) {model[['model']][['models']][[y]][[target]]}))
+    output = cbind(output, sapply(1:N**2, function(y) {model.lars[['model']][['models']][[y]][[target]]}))
 }
 write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".lars.csv", sep=""), col.names=params, sep=',', row.names=FALSE)
 

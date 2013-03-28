@@ -162,7 +162,6 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 coefs[,1] = apply(coefs, 1, function(x) {x[1] - sum(x[-1] * wcm)})
                 fitted = predx %*% t(coefs)
                 coefs[,1] = coefs[,1] + apply(fitted, 2, function(x) {sum(w[permutation]*(predy-x)) / sum(w)})
-                #print(coefs)
                 fitted = predx %*% t(coefs)    
 				vars = apply(coefs, 1, function(x) {which(abs(x[-1])>0)})
 				df = sapply(vars, length) + 1
@@ -172,11 +171,10 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 k = which.min(loss)
 
                 if (k > 1) {
-                    varset = vars[[k]] - 1
-                    #print(varset)
+                    varset = vars[[k]] #- 1
                     modeldata = data.frame(y=yy[permutation], xx[permutation,varset])
                     m = lm(y~., data=modeldata, weights=w[permutation])
-                    coefs.unshrunk = rep(0, ncol(x) + 1)
+                    coefs.unshrunk = rep(0, ncol(xx) + 1)
                     coefs.unshrunk[c(1, varset + 1)] = coef(m)
                     s2.unshrunk = sum(m$residuals**2)/sum(w[permutation])
 
@@ -315,8 +313,8 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
     } else if (predict) {
         return(list(loss.local=loss.local, coef=coefs))
     } else if (simulation) {
-        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, s=s.optimal, bw=bw, sigma2=s2, coef.unshrunk=coefs.unshrunk, s2.unshrunk=s2.unshrunk, coef.unshrunk.list=coef.unshrunk.list, se.unshrunk=se.unshrunk, nonzero=colnames(x)[vars[[s.optimal]]], fitted=fitted, weightsum=sum(w), loss=loss))
+        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, s=s.optimal, bw=bw, sigma2=s2, coef.unshrunk=coefs.unshrunk, s2.unshrunk=s2.unshrunk, coef.unshrunk.list=coef.unshrunk.list, se.unshrunk=se.unshrunk, nonzero=colnames(x)[vars[[s.optimal]]], fitted=fitted[colocated,s.optimal], weightsum=sum(w), loss=loss))
     } else {
-        return(list(model=model, loss=loss, coef=coefs, coef.unshrunk=coefs.unshrunk, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, meany=meany, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N, fitted=fitted))
+        return(list(model=model, loss=loss, coef=coefs, coef.unshrunk=coefs.unshrunk, coeflist=coef.list, s=s.optimal, loc=loc, bw=bw, meanx=meanx, meany=meany, coef.scale=adapt.weight/normx, df=df, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N, fitted=fitted[colocated,s.optimal]))
     }
 }

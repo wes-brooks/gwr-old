@@ -18,7 +18,9 @@ gwglmnet.fit.nen = function(x, y, family, coords, D, s, mode.select, verbose, pr
 
         models[[i]] = 1 #gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, loc=loc, bw=bandwidth, dist=dist, s=s, mode.select=mode.select, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, tuning=tuning, simulation=simulation, predict=predict, precondition=precondition, N=N interact=interact, alpha=alpha)
 
-        cat(paste("For i=", i, ", target:", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
+		if (verbose) {
+        	cat(paste("For i=", i, ", target:", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
+        }
     }
 
     gwglmnet.object[['models']] = models

@@ -29,7 +29,9 @@ gwlars.fit.fixedbw = function(x, y, coords, indx, fit.loc, bw, D=NULL, N, s=NULL
             models[[i]] = gwlars.fit.oracle(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, interact=interact)
         }
 
-        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw,3), "; loss=", round(models[[i]][['loss.local']],12), "; s=", models[[i]][['s']], "; sigma2=", round(models[[i]][['sigma2']],3), "; nonzero=", paste(models[[i]][['nonzero']], collapse=","), "; weightsum=", round(models[[i]][['weightsum']],3), ".\n", sep=''))
+        if (verbose) {
+        	cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw,3), "; loss=", round(models[[i]][['loss.local']],12), "; s=", models[[i]][['s']], "; sigma2=", round(models[[i]][['sigma2']],3), "; nonzero=", paste(models[[i]][['nonzero']], collapse=","), "; weightsum=", round(models[[i]][['weightsum']],3), ".\n", sep=''))
+        }
     }
 
     gwlars.object[['models']] = models

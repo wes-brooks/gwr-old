@@ -29,9 +29,11 @@ gwlars.fit.nen = function(x, y, coords, D, N=N, s, mode.select, shrink, verbose,
 
         models[[i]] = gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, N=N, s=s, mode.select=mode.select, shrink=shrink, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition)
 
-        cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
-    }
-
+		if (verbose) {
+	        cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
+    	}
+	}
+	
     gwlars.object[['models']] = models
     gwlars.object[['mode']] = mode
     gwlars.object[['coords']] = coords

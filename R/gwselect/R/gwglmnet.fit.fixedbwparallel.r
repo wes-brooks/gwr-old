@@ -28,7 +28,10 @@ gwglmnet.fit.fixedbwparallel = function(x, y, family, coords, fit.loc=NULL, indx
 		} else {
             m = gwlars.fit.oracle(x=x, y=y, family='gaussian', bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight)
         }
-        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw,3), "; s=", m[['s']], "; sigma2=", round(m[['sigma2']],3), "; nonzero=", paste(m[['nonzero']], collapse=","), "; weightsum=", round(m[['weightsum']],3), "; alpha=", round(m[['alpha']], 3), ".\n", sep=''))
+        
+        if (verbose) {
+	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw,3), "; s=", m[['s']], "; sigma2=", round(m[['sigma2']],3), "; nonzero=", paste(m[['nonzero']], collapse=","), "; weightsum=", round(m[['weightsum']],3), "; alpha=", round(m[['alpha']], 3), ".\n", sep=''))
+        }
         return(m)
     }
 

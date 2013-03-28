@@ -28,7 +28,10 @@ gwlars.fit.fixedbwparallel = function(x, y, coords, indx, fit.loc, bw, D=NULL, N
         } else {
             m = gwlars.fit.oracle(x=x, y=y, family='gaussian', bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, interact=interact)
         }
-        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", bw, "; loss=", m[['loss.local']], "; s=", m[['s']], "; sigma2=", m[['sigma2']], "; nonzero=", paste(m[['nonzero']], collapse=", "), ".\n", sep=''))
+        
+        if (verbose) {
+        	cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", bw, "; loss=", m[['loss.local']], "; s=", m[['s']], "; sigma2=", m[['sigma2']], "; nonzero=", paste(m[['nonzero']], collapse=", "), ".\n", sep=''))
+        }
         return(m)
     }
 

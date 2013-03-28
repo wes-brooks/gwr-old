@@ -28,8 +28,10 @@ gwlars.fit.knn = function(x, y, coords, indx, fit.loc, D, N=N, s, mode.select, t
         } else {
             models[[i]] = gwlars.fit.oracle(x=x, y=y, bw=bandwidth, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, dist=dist, prior.weights=prior.weights, gweight=gweight, interact=interact)
         }
-        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); target=", target, "; bw=", bandwidth, "; tolerance=", target/1000, "; loss=", models[[i]][['loss.local']], ".\n", sep=''))
-
+        
+        if (verbose) {
+	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); target=", target, "; bw=", bandwidth, "; tolerance=", target/1000, "; loss=", models[[i]][['loss.local']], ".\n", sep=''))
+		}
     }
 
     gwlars.object[['models']] = models
