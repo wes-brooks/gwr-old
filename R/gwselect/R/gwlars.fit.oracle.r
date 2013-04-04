@@ -135,7 +135,7 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
 	
 				} else if (mode.select=='AIC') {                           
 					fitted = predict(model, newdata=localdata)
-					s2 = sum(w[permutation]*model$residuals**2) / (sum(w) - dim(permuted)[2] - 1)    
+					s2 = sum(w[permutation]*model$residuals**2) / sum(w)   
 				
 					if (length(colocated)>0) {
 						loss.local = log(s2) + 2*df/sum(w)
