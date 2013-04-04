@@ -1,4 +1,4 @@
-gwlars.fit.fixedbw = function(x, y, coords, indx, fit.loc, bw, D=NULL, N, s=NULL, mode.select, tuning, predict, simulation, oracle, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, interact) {
+gwlars.fit.fixedbw = function(x, y, coords, indx, fit.loc, bw, D=NULL, N, s=NULL, mode.select, tuning, predict, simulation, oracle, verbose=FALSE, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, interact, shrunk.fit) {
     if (!is.null(fit.loc)) {
         coords.unique = fit.loc
     } else {
@@ -24,13 +24,13 @@ gwlars.fit.fixedbw = function(x, y, coords, indx, fit.loc, bw, D=NULL, N, s=NULL
         gw = gweights[[i]]
 
         if (is.null(oracle)) {
-            models[[i]] = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, interact=interact)
+            models[[i]] = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, interact=interact, shrunk.fit=shrunk.fit)
         } else {
             models[[i]] = gwlars.fit.oracle(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, interact=interact)
         }
 
         if (verbose) {
-        	cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw,3), "; loss=", round(models[[i]][['loss.local']],12), "; s=", models[[i]][['s']], "; sigma2=", round(models[[i]][['sigma2']],3), "; nonzero=", paste(models[[i]][['nonzero']], collapse=","), "; weightsum=", round(models[[i]][['weightsum']],3), ".\n", sep=''))
+        	cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw,3), "; loss=", round(models[[i]][['loss.local']],3), "; s=", models[[i]][['s']], "; sigma2=", round(models[[i]][['sigma2']],3), "; nonzero=", paste(models[[i]][['nonzero']], collapse=","), "; weightsum=", round(models[[i]][['weightsum']],3), ".\n", sep=''))
         }
     }
 

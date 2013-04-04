@@ -1,4 +1,4 @@
-gwglmnet.fit.fixedbw = function(x, y, family, coords, fit.loc=NULL, oracle, bw, D=NULL, s=NULL, verbose=FALSE, mode.select, gwr.weights=NULL, indx=NULL, prior.weights=NULL, tuning=FALSE, predict=FALSE, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, alpha, simulation, interact, N) {
+gwglmnet.fit.fixedbw = function(x, y, family, coords, fit.loc=NULL, oracle, bw, D=NULL, s=NULL, verbose=FALSE, mode.select, gwr.weights=NULL, indx=NULL, prior.weights=NULL, tuning=FALSE, predict=FALSE, gweight=NULL, longlat=FALSE, adapt=FALSE, precondition=FALSE, alpha, simulation, interact, N, shrunk.fit) {
     if (!is.null(fit.loc)) {
         coords.unique = fit.loc
     } else {
@@ -24,7 +24,7 @@ gwglmnet.fit.fixedbw = function(x, y, family, coords, fit.loc=NULL, oracle, bw, 
         gw = gweights[[i]]
 
 		if (is.null(oracle)) {
-	        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, s=s, verbose=verbose, mode.select=mode.select, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, predict=predict, tuning=tuning, simulation=simulation, alpha=alpha, interact=interact, N=N)
+	        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, s=s, verbose=verbose, mode.select=mode.select, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, predict=predict, tuning=tuning, simulation=simulation, alpha=alpha, interact=interact, N=N, shrunk.fit=shrunk.fit)
 		} else {
             models[[i]] = gwlars.fit.oracle(x=x, y=y, family='gaussian', bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight)
         }
