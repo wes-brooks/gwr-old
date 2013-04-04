@@ -1,22 +1,22 @@
-library(sp, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(shapefiles, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(plotrix, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(ggplot2, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(RandomFields, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(scales, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
+library(sp, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(shapefiles, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(plotrix, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(ggplot2, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(RandomFields, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(scales, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
 
-library(foreach, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(iterators, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(multicore, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(doMC, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
+library(foreach, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(iterators, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(multicore, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(doMC, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
 
-library(lars, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(glmnet, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(gwselect, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
+library(lars, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(glmnet, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(gwselect, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
 
-library(splancs, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(geoR, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
-library(maptools, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/2.15'))
+library(splancs, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(geoR, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(maptools, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
 library(spgwr, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
 
 #library(geoR)
@@ -41,11 +41,11 @@ b = 25
 params = data.frame(tau, rho, sigma.tau)
 
 #Read command-line parameters
-#args = commandArgs(trailingOnly=TRUE)
-#cluster = as.integer(args[1])
-#process = as.integer(args[2])
+args = commandArgs(trailingOnly=TRUE)
+cluster = as.integer(args[1])
+process = as.integer(args[2])
 #cluster=NA
-process=2
+#process=2
 
 #Simulation parameters are based on the value of process
 setting = process %/% B + 1

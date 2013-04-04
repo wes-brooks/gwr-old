@@ -41,11 +41,11 @@ b = 25
 params = data.frame(tau, rho, sigma.tau)
 
 #Read command-line parameters
-#args = commandArgs(trailingOnly=TRUE)
-#cluster = as.integer(args[1])
-#process = as.integer(args[2])
+args = commandArgs(trailingOnly=TRUE)
+cluster = as.integer(args[1])
+process = as.integer(args[2])
 #cluster=NA
-process=2
+#process=2
 
 #Simulation parameters are based on the value of process
 setting = process %/% B + 1

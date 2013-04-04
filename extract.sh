@@ -1,5 +1,5 @@
 #! /bin/sh
-for i in `ls output/output-56-*`; do
+for i in `ls output-59-*`; do
     tar -xvzf $i;
 done
 
