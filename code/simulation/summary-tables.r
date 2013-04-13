@@ -174,7 +174,7 @@ varx.table = list()
 for (l in 1:length(locs)) {
     varx.table[[l]] = as.matrix(sapply(varx[[l]], identity))
     varxbold = matrix(FALSE, nrow=dim(varx.table[[l]])[1], ncol=dim(varx.table[[l]])[2])
-    for (i in 1:(dim(varx.table[[l]])[1])) {varxbold[i,order(by.table[[l]][i,])[1]] = TRUE}
+    for (i in 1:(dim(varx.table[[l]])[1])) {varxbold[i,order(varx.table[[l]][i,])[1]] = TRUE}
     varxital = matrix(FALSE, nrow=dim(varx.table[[l]])[1], ncol=dim(varx.table[[l]])[2])
     for (i in 1:(dim(varx.table[[l]])[1])) {varxital[i,order(varx.table[[l]][i,])[2]] = TRUE}
     xtable.printbold(xtable(varx.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Variance of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{VarX}", sep="")), which.bold=varxbold, which.ital=varxital, include.rownames=FALSE, hline.after=c(0))
@@ -207,7 +207,7 @@ vary.table = list()
 for (l in 1:length(locs)) {
     vary.table[[l]] = as.matrix(sapply(vary[[l]], identity))
     varybold = matrix(FALSE, nrow=dim(vary.table[[l]])[1], ncol=dim(vary.table[[l]])[2])
-    for (i in 1:(dim(vary.table[[l]])[1])) {varybold[i,order(by.table[[l]][i,])[1]] = TRUE}
+    for (i in 1:(dim(vary.table[[l]])[1])) {varybold[i,order(vary.table[[l]][i,])[1]] = TRUE}
     varyital = matrix(FALSE, nrow=dim(vary.table[[l]])[1], ncol=dim(vary.table[[l]])[2])
     for (i in 1:(dim(vary.table[[l]])[1])) {varyital[i,order(vary.table[[l]][i,])[2]] = TRUE}
     xtable.printbold(xtable(vary.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Variance of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{VarY}", sep="")), which.bold=varybold, which.ital=varyital, include.rownames=FALSE, hline.after=c(0))

@@ -7,11 +7,11 @@ registerCores(n=3)
 seeds = as.vector(read.csv("seeds.csv", header=FALSE)[,1])
 B = 100
 N = 30
-N.full = 30
 coord = seq(0, 1, length.out=N)
 
 #Establish the simulation parameters
-tau = rep(c(0.03, 0.1), each=9)
+#tau = rep(c(0.03, 0.1), each=9)
+tau = rep(c(0, 0.1), each=9)
 rho = rep(rep(c(0, 0.5, 0.8), each=3), times=2)
 sigma.tau = rep(c(0, 0.03, 0.1), times=6)
 b = 25
@@ -34,11 +34,11 @@ parameters = params[setting,]
 
 #Get two (independent) Gaussian random fields:
 set.seed(seeds[process+1])
-d1 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
-d2 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
-d3 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
-d4 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
-d5 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
+d1 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
+d2 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
+d3 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
+d4 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
+d5 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
 
 loc.x = d1$coords[,1]
 loc.y = d1$coords[,2]
@@ -52,18 +52,18 @@ L = chol(S)
 D = as.matrix(cbind(d1$data, d2$data, d3$data, d4$data, d5$data)) %*% L
     
 #
-X1 = matrix(D[,1], N.full, N.full)
-X2 = matrix(D[,2], N.full, N.full)
-X3 = matrix(D[,3], N.full, N.full)
-X4 = matrix(D[,4], N.full, N.full)
-X5 = matrix(D[,5], N.full, N.full)
+X1 = matrix(D[,1], N, N)
+X2 = matrix(D[,2], N, N)
+X3 = matrix(D[,3], N, N)
+X4 = matrix(D[,4], N, N)
+X5 = matrix(D[,5], N, N)
 
-#if (parameters[['function.type']] == 'step') {B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N.full), N.full, N.full)}
-#if (parameters[['function.type']] == 'gradient') {B1 = matrix(rep(1-coord, N.full), N.full, N.full)}
+#if (parameters[['function.type']] == 'step') {B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)}
+#if (parameters[['function.type']] == 'gradient') {B1 = matrix(rep(1-coord, N), N, N)}
 
 
-if (parameters[['sigma.tau']] == 0) {epsilon = rnorm(N.full**2, mean=0, sd=1)}
-if (parameters[['sigma.tau']] > 0) {epsilon = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['sigma.tau']]))$data}
+if (parameters[['sigma.tau']] == 0) {epsilon = rnorm(N**2, mean=0, sd=1)}
+if (parameters[['sigma.tau']] > 0) {epsilon = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['sigma.tau']]))$data}
 
 #
 mu = X1*B1

@@ -27,40 +27,48 @@ library(spgwr, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
 seeds = as.vector(read.csv("seeds.csv", header=FALSE)[,1])
 B = 100
 N = 30
-N.full = 30
 coord = seq(0, 1, length.out=N)
 
 #Establish the simulation parameters
-settings = 8
-tau = rep(0.03, settings)
-rho = rep(0, settings)
+settings = 12
+tau = rep(0, settings)
+rho = rep(c(rep(0,2), rep(0.5,2)), settings/4)
 sigma.tau = rep(0, settings)
+sigma = rep(c(0.5,1), settings/2)
 
 b = 25
 
-params = data.frame(tau, rho, sigma.tau)
+params = data.frame(tau, rho, sigma.tau, sigma)
 
 #Read command-line parameters
 args = commandArgs(trailingOnly=TRUE)
 cluster = as.integer(args[1])
 process = as.integer(args[2])
 #cluster=NA
-#process=2
+#process=1150
 
 #Simulation parameters are based on the value of process
 setting = process %/% B + 1
 parameters = params[setting,]
-
-#Get two (independent) Gaussian random fields:
 set.seed(seeds[process+1])
-d1 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
-d2 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
-d3 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
-d4 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
-d5 = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
 
-loc.x = d1$coords[,1]
-loc.y = d1$coords[,2]
+#Generate the covariates:
+if (parameters[['tau']] > 0) {
+    d1 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data
+    d2 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data
+    d3 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data
+    d4 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data
+    d5 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))$data
+} else {
+    d1 = rnorm(N**2, mean=0, sd=1)
+    d2 = rnorm(N**2, mean=0, sd=1)
+    d3 = rnorm(N**2, mean=0, sd=1)
+    d4 = rnorm(N**2, mean=0, sd=1)
+    d5 = rnorm(N**2, mean=0, sd=1)
+}
+
+loc.x = rep(coord, times=N)
+loc.y = rep(coord, each=N)
 
 #Use the Cholesky decomposition to correlate the random fields:
 S = matrix(parameters[['rho']], 5, 5)
@@ -68,59 +76,62 @@ diag(S) = rep(1, 5)
 L = chol(S)
 
 #Force correlation on the Gaussian random fields:
-D = as.matrix(cbind(d1$data, d2$data, d3$data, d4$data, d5$data)) %*% L
+D = as.matrix(cbind(d1, d2, d3, d4, d5)) %*% L
     
 #
-X1 = matrix(D[,1], N.full, N.full)
-X2 = matrix(D[,2], N.full, N.full)
-X3 = matrix(D[,3], N.full, N.full)
-X4 = matrix(D[,4], N.full, N.full)
-X5 = matrix(D[,5], N.full, N.full)
+X1 = matrix(D[,1], N, N)
+X2 = matrix(D[,2], N, N)
+X3 = matrix(D[,3], N, N)
+X4 = matrix(D[,4], N, N)
+X5 = matrix(D[,5], N, N)
 
-#if (parameters[['function.type']] == 'step') {B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N.full), N.full, N.full)}
-#if (parameters[['function.type']] == 'gradient') {B1 = matrix(rep(1-coord, N.full), N.full, N.full)}
-
-
-if (parameters[['sigma.tau']] == 0) {epsilon = rnorm(N.full**2, mean=0, sd=1)}
-if (parameters[['sigma.tau']] > 0) {epsilon = grf(n=N.full**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['sigma.tau']]))$data}
+if (parameters[['sigma.tau']] == 0) {epsilon = rnorm(N**2, mean=0, sd=parameters[['sigma']])}
+if (parameters[['sigma.tau']] > 0) {epsilon = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(parameters[['sigma']],parameters[['sigma.tau']]))$data}
 
 
-if ((setting-1) %% 2 == 1) {
+if ((setting-1) %/% 4 == 0) {
     B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)
-} else {
-    B1 = matrix(0, N, N)
-}
-
-if (((setting-1) %/%2) %% 2 == 1) {
-    B2 = matrix(rep(coord, N), N, N)
-} else {
-    B2 = matrix(0, N, N)
-}
-
-if (((setting-1) %/%4) %% 2 == 1) {
+} else if ((setting-1) %/% 4 == 1) {
+    B1 = matrix(rep(coord, N), N, N)
+} else if ((setting-1) %/% 4 == 2) {
     Xmat = matrix(rep(rep(coord, times=N), times=N), N**2, N**2)
     Ymat = matrix(rep(rep(coord, each=N), times=N), N**2, N**2)
-    D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
+    D = (Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2
     d = D[435,]
-    B3 = matrix(max(d)-d, N, N)
-} else {
-    B3 = matrix(0, N, N)
+    B1 = matrix(max(d)-d, N, N)
 }
 
-mu = X1*B1 + X2*B2 + X3*B3
+#if (((setting-1) %/%2) %% 2 == 1) {
+#    B2 = matrix(rep(coord, N), N, N)
+#} else {
+#    B2 = matrix(0, N, N)
+#}
+
+#if (((setting-1) %/%4) %% 2 == 1) {
+#    Xmat = matrix(rep(rep(coord, times=N), times=N), N**2, N**2)
+#    Ymat = matrix(rep(rep(coord, each=N), times=N), N**2, N**2)
+#    D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
+#    d = D[435,]
+#    B3 = matrix(max(d)-d, N, N)
+#} else {
+#    B3 = matrix(0, N, N)
+#}
+
+mu = X1*B1
 Y = mu + epsilon
 
 sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), X3=as.vector(X3), X4=as.vector(X4), X5=as.vector(X5), loc.x, loc.y)
 fitloc = cbind(rep(seq(0,1, length.out=N), each=N), rep(seq(0,1, length.out=N), times=N))
 
-vars = cbind(B1=as.vector(B1!=0), B2=as.vector(B2!=0), B3=as.vector(B3!=0))
+vars = cbind(B1=as.vector(B1!=0))#, B2=as.vector(B2!=0), B3=as.vector(B3!=0))
 oracle = list()
 for (i in 1:N**2) { 
     oracle[[i]] = character(0)
     if (vars[i,'B1']) { oracle[[i]] = c(oracle[[i]] , "X1") }
-    if (vars[i,'B2']) { oracle[[i]] = c(oracle[[i]] , "X2") }
-    if (vars[i,'B3']) { oracle[[i]] = c(oracle[[i]] , "X3") }
+    #if (vars[i,'B2']) { oracle[[i]] = c(oracle[[i]] , "X2") }
+    #if (vars[i,'B3']) { oracle[[i]] = c(oracle[[i]] , "X3") }
 }
+
 
 #Find the optimal bandwidth and use it to generate a model:
 bw.lars = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE)
@@ -333,4 +344,3 @@ write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".
 
 output = as.matrix(model.spgwr$SDF@data[,'pred'])
 write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".spgwr.csv", sep=""), col.names=c("fitted"), sep=',', row.names=FALSE)
-

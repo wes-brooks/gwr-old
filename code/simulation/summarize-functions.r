@@ -8,7 +8,7 @@ params = c('bw', 'sigma2', 'loss.local', 's')
 #args = commandArgs(trailingOnly=TRUE)
 #cluster = as.integer(args[1])
 #cluster = 'NA'
-cluster = 59
+cluster = 61
 
 B = 100
 N = 30
@@ -21,8 +21,8 @@ sigma.tau = rep(0, 8)
 params = data.frame(tau, rho, sigma.tau)
 
 N = 30
-settings = 1:2
-nsims = 2
+settings = 1:8
+nsims = 100
 nvars = 5
 
 coord = seq(0, 1, length.out=N)
@@ -35,6 +35,7 @@ file.endings = list(gwr=".gwr.csv", lars=".lars.csv", enet=".enet.csv", glmnet="
 
 Y.err = list()
 X.err = lapply(1:nvars, function(x) {list()})
+bandwidth = list()
 selection = list()
 
 for (m in sim.modes) {
@@ -44,14 +45,11 @@ for (m in sim.modes) {
 
 for (m in selection.modes) {
     selection[[m]] = list()
+    bandwidth[[m]] = list()
 }
 
 #remove the simulations that failed during their runs.
-sims = lapply(settings, function(x) {as.character(51:52)})
-#sims[[14]] = sims[[14]][c(-96,-85,-66,-50,-14)]
-#sims[[11]] = sims[[11]][c(-94,-44)]
-#sims[[8]] = sims[[8]][-84]
-
+sims = lapply(settings, function(x) {as.character(1:nsims)})
 
 for (setting in settings) {
 	cat(paste("Begin setting ", setting, ".\n", sep=""))
@@ -85,6 +83,7 @@ for (setting in settings) {
 
     for (m in selection.modes) {
         selection[[m]][[setting]] = list()
+        bandwidth[[m]][[setting]] = list()
     }
 
     for (m in sim.modes) {
@@ -94,7 +93,6 @@ for (setting in settings) {
 
 
     vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
-    vv = c("X1", 'X2', 'X3', 'X4', 'X5')
 
     for (k in sims[[setting]]) {
         sim = (setting-1)*100 + as.numeric(k) - 1
@@ -124,7 +122,11 @@ for (setting in settings) {
             Y.err[[m]][[setting]][[k]] = as.vector(raw$Y - fitted)
 
             if (m %in% selection.modes) {
-                for (v in vv) {
+                filename = paste("output/MiscParams.", cluster, ".", sim, file.endings[[m]], sep="")
+                params = read.csv(filename, header=TRUE)
+                bandwidth[[m]][[setting]][[k]] = params$bw
+
+                for (v in vars[-1]) {
                     cat(paste("Begin variable ", v, "\n", sep=""))
 
                     #Calculate how often each variable was selected for inclusion in the local models
