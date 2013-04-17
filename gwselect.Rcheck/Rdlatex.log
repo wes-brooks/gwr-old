@@ -1,0 +1,772 @@
+Hmm ... looks like a package
+
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012)
+ restricted \write18 enabled.
+entering extended mode
+
+(/private/var/folders/fp/ytpc1v4x7lg7gdzzyqvh58xr0000gn/T/RtmpnsXjRq/Rd2pdf1352
+11ec0db9/Rd2.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman-x-2012-05-30, ngerman-x-2012-05-30, afrikaans, ancientgreek, ibycus, arabi
+c, armenian, basque, bulgarian, catalan, pinyin, coptic, croatian, czech, danis
+h, dutch, ukenglish, usenglishmax, esperanto, estonian, ethiopic, farsi, finnis
+h, french, friulan, galician, german, ngerman, swissgerman, monogreek, greek, h
+ungarian, icelandic, assamese, bengali, gujarati, hindi, kannada, malayalam, ma
+rathi, oriya, panjabi, tamil, telugu, indonesian, interlingua, irish, italian, 
+kurmanji, latin, latvian, lithuanian, mongolian, mongolianlmc, bokmal, nynorsk,
+ polish, portuguese, romanian, romansh, russian, sanskrit, serbian, serbianc, s
+lovak, slovenian, spanish, swedish, turkish, turkmen, ukrainian, uppersorbian, 
+welsh, loaded.
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/url/url.sty) NOT loading ae
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/t1enc.def))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/times.sty)
+NOT loading lmodern
+(/usr/local/texlive/2012/texmf-dist/tex/latex/inconsolata/inconsolata.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1enc.def))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/keyval.sty))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/color.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/color.cfg)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/pdftex-def/pdftex.def
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/infwarerr.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/ltxcmds.sty)))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty))
+(/usr/local/texlive/2012/texmf-dist/tex/generic/ifxetex/ifxetex.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/kvoptions.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/hyperref.cfg))
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 356.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 356.
+
+) (/usr/local/texlive/2012/texmf-dist/tex/latex/base/makeidx.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/inputenc.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/t1enc.dfu)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ot1enc.dfu)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/omsenc.dfu)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1enc.dfu))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/latin1.def))
+Writing index file Rd2.idx
+No file Rd2.aux.
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1cmr.fd)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/gettitlestring.sty))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/inconsolata/t1fi4.fd)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/t1phv.fd)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [1{/usr/local/texl
+ive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 73--73
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[2]
+Underfull \vbox (badness 10000) has occurred while \output is active [3]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)pdfTeX warning (ext
+4): destination with the same identifier (name{Rfn.gwglmnet}) has been already 
+used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.211 ... LASSO for variable selection.}{gwglmnet}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{Rfn.gwglmnet.1}) has been already used, du
+plicate ignored
+<to be read again> 
+                   \relax 
+l.211 ... LASSO for variable selection.}{gwglmnet}
+                                                  
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 221--221
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[4] [5] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)pdfTeX warn
+ing (ext4): destination with the same identifier (name{Rfn.gwglmnet}) has been 
+already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.359 ... LASSO for variable selection.}{gwglmnet}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{Rfn.gwglmnet.1}) has been already used, du
+plicate ignored
+<to be read again> 
+                   \relax 
+l.359 ... LASSO for variable selection.}{gwglmnet}
+                                                  
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 369--369
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[6] [7] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)pdfTeX warn
+ing (ext4): destination with the same identifier (name{Rfn.gwglmnet}) has been 
+already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.507 ... LASSO for variable selection.}{gwglmnet}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{Rfn.gwglmnet.1}) has been already used, du
+plicate ignored
+<to be read again> 
+                   \relax 
+l.507 ... LASSO for variable selection.}{gwglmnet}
+                                                  
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 517--517
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[8] [9] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [10]
+Overfull \hbox (29.78088pt too wide) in paragraph at lines 665--665
+ []\T1/fi4/m/n/10 gwglmnet.adaptive.fit(x, y, coords, weight.matrix, s, verbose
+, family, prior.weights)[] 
+[11]
+Underfull \vbox (badness 10000) has occurred while \output is active [12]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (134.78088pt too wide) in paragraph at lines 845--845
+ []\T1/fi4/m/n/10 gwglmnet.adaptive.ssr(bw, x, y, colocated, dist, s, verbose, 
+family, prior.weights, gweight, type, target)[] 
+[13] [14] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (169.78088pt too wide) in paragraph at lines 980--980
+ []\T1/fi4/m/n/10 gwglmnet.cv.f(formula, data, bw, coords, gweight, verbose, ad
+apt, longlat, s, family, weights, nn, D = NULL, ...)[] 
+[15] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [16] [17]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (759.78088pt too wide) in paragraph at lines 1177--1177
+ []\T1/fi4/m/n/10 gwglmnet.nen(formula, data, coords, gweight, bw, D = NULL, ve
+rbose = FALSE, longlat = FALSE, adapt = FALSE, s = NULL, family, weights = NULL
+, tolerance = .Machine$double.eps^0.25, beta1 = NULL, beta2 = NULL, type, paral
+lel = FALSE)[] 
+[18] [19]
+Underfull \vbox (badness 10000) has occurred while \output is active [20]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (429.78088pt too wide) in paragraph at lines 1351--1351
+ []\T1/fi4/m/n/10 gwglmnet.nen.adaptive.fit.parallel(x, y, coords, D, s, verbos
+e, family, prior.weights, gweight, target, beta1, beta2, type = "pearson", tol 
+= 1e-25, longlat = FALSE)[] 
+[21]
+Underfull \vbox (badness 10000) has occurred while \output is active [22]
+Underfull \vbox (badness 10000) has occurred while \output is active [23]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (429.78088pt too wide) in paragraph at lines 1537--1537
+ []\T1/fi4/m/n/10 gwglmnet.nen.adaptive.fit.parallel(x, y, coords, D, s, verbos
+e, family, prior.weights, gweight, target, beta1, beta2, type = "pearson", tol 
+= 1e-25, longlat = FALSE)[] 
+[24]
+Underfull \vbox (badness 10000) has occurred while \output is active [25]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [26]
+Overfull \hbox (679.78088pt too wide) in paragraph at lines 1723--1723
+ []\T1/fi4/m/n/10 gwglmnet.nen.cv.f(formula, data, bw, coords, gweight, verbose
+, adapt, longlat, s = NULL, beta1, beta2, family, weights = NULL, D = NULL, tol
+erance = .Machine$double.eps^0.25, type = "pearson", parallel = FALSE, ...)[] 
+[27] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (354.78088pt too wide) in paragraph at lines 1830--1830
+ []\T1/fi4/m/n/10 gwglmnet.nen.fit(x, y, coords, D, s = NULL, verbose, family, 
+prior.weights, gweight, bw, beta1, beta2, type = "pearson", tol = 1e-25, longla
+t = FALSE)[] 
+[28]
+Underfull \vbox (badness 10000) has occurred while \output is active [29]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (384.78088pt too wide) in paragraph at lines 1980--1980
+ []\T1/fi4/m/n/10 gwglmnet.nen.fit.parallel(x, y, coords, D, s, verbose, family
+, prior.weights, gweight, target, beta1, beta2, type = "pearson", tol = 1e-25, 
+longlat = FALSE)[] 
+[30] [31] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (719.78088pt too wide) in paragraph at lines 2126--2126
+ []\T1/fi4/m/n/10 gwglmnet.nen.sel(formula, data = list(), coords, adapt = FALS
+E, gweight = gwr.Gauss, s = NULL, method = "cv", verbose = FALSE, longlat = FAL
+SE, family, weights = NULL, tol = .Machine$double.eps^0.25, type, parallel = FA
+LSE)[] 
+[32] [33] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (644.78088pt too wide) in paragraph at lines 2275--2275
+ []\T1/fi4/m/n/10 gwglmnet.sel(formula, data = list(), coords, adapt = FALSE, n
+earest.neighbors = FALSE, gweight = gwr.Gauss, s, method = "cv", verbose = FALS
+E, longlat = FALSE, family, weights, tol = .Machine$double.eps^0.25)[] 
+[34] [35] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [36]
+[37] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [38]
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 2565--2565
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[39]
+Underfull \vbox (badness 10000) has occurred while \output is active [40]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 2713--2713
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[41]
+Underfull \vbox (badness 10000) has occurred while \output is active [42]
+No file Rd2.ind.
+[43] (./Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)pdfTeX warning (dest): name
+{Rfn.<pkg>} has been referenced but does not exist, replaced by a fixed one
+
+{/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/tex
+live/2012/texmf-dist/fonts/enc/dvips/inconsolata/fi4-ec.enc}</usr/local/texlive
+/2012/texmf-dist/fonts/type1/public/inconsolata/Inconsolata.pfb></usr/local/tex
+live/2012/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/20
+12/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2012/texmf-d
+ist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/
+type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/
+times/utmri8a.pfb>
+Output written on Rd2.pdf (43 pages, 121295 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.15 [TeX Live 2012] (kpathsea + Thai support).
+Scanning input file ./Rd2.idx....done (63 entries accepted, 0 rejected).
+Sorting entries....done (401 comparisons).
+Generating output file ./Rd2.ind....done (80 lines written, 0 warnings).
+Output written in ./Rd2.ind.
+Transcript written in ./Rd2.ilg.
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012)
+ restricted \write18 enabled.
+entering extended mode
+
+(/private/var/folders/fp/ytpc1v4x7lg7gdzzyqvh58xr0000gn/T/RtmpnsXjRq/Rd2pdf1352
+11ec0db9/Rd2.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman-x-2012-05-30, ngerman-x-2012-05-30, afrikaans, ancientgreek, ibycus, arabi
+c, armenian, basque, bulgarian, catalan, pinyin, coptic, croatian, czech, danis
+h, dutch, ukenglish, usenglishmax, esperanto, estonian, ethiopic, farsi, finnis
+h, french, friulan, galician, german, ngerman, swissgerman, monogreek, greek, h
+ungarian, icelandic, assamese, bengali, gujarati, hindi, kannada, malayalam, ma
+rathi, oriya, panjabi, tamil, telugu, indonesian, interlingua, irish, italian, 
+kurmanji, latin, latvian, lithuanian, mongolian, mongolianlmc, bokmal, nynorsk,
+ polish, portuguese, romanian, romansh, russian, sanskrit, serbian, serbianc, s
+lovak, slovenian, spanish, swedish, turkish, turkmen, ukrainian, uppersorbian, 
+welsh, loaded.
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/url/url.sty) NOT loading ae
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/t1enc.def))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/times.sty)
+NOT loading lmodern
+(/usr/local/texlive/2012/texmf-dist/tex/latex/inconsolata/inconsolata.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1enc.def))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/keyval.sty))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/color.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/color.cfg)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/pdftex-def/pdftex.def
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/infwarerr.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/ltxcmds.sty)))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty))
+(/usr/local/texlive/2012/texmf-dist/tex/generic/ifxetex/ifxetex.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/kvoptions.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/hyperref.cfg))
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 356.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 356.
+
+) (/usr/local/texlive/2012/texmf-dist/tex/latex/base/makeidx.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/inputenc.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/t1enc.dfu)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ot1enc.dfu)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/omsenc.dfu)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1enc.dfu))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/latin1.def))
+Writing index file Rd2.idx
+(./Rd2.aux) (/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1cmr.fd)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/gettitlestring.sty))
+(./Rd2.out) (./Rd2.out)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/inconsolata/t1fi4.fd)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/t1phv.fd) (./Rd2.toc)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [1{/usr/local/texl
+ive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 73--73
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[2] [3] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)pdfTeX warn
+ing (ext4): destination with the same identifier (name{Rfn.gwglmnet}) has been 
+already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.211 ... LASSO for variable selection.}{gwglmnet}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{Rfn.gwglmnet.1}) has been already used, du
+plicate ignored
+<to be read again> 
+                   \relax 
+l.211 ... LASSO for variable selection.}{gwglmnet}
+                                                  
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 221--221
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[4] [5] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)pdfTeX warn
+ing (ext4): destination with the same identifier (name{Rfn.gwglmnet}) has been 
+already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.359 ... LASSO for variable selection.}{gwglmnet}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{Rfn.gwglmnet.1}) has been already used, du
+plicate ignored
+<to be read again> 
+                   \relax 
+l.359 ... LASSO for variable selection.}{gwglmnet}
+                                                   [6]
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 369--369
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[7]
+Underfull \vbox (badness 10000) has occurred while \output is active [8]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)pdfTeX warning (ext
+4): destination with the same identifier (name{Rfn.gwglmnet}) has been already 
+used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.507 ... LASSO for variable selection.}{gwglmnet}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{Rfn.gwglmnet.1}) has been already used, du
+plicate ignored
+<to be read again> 
+                   \relax 
+l.507 ... LASSO for variable selection.}{gwglmnet}
+                                                  
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 517--517
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[9]
+Underfull \vbox (badness 10000) has occurred while \output is active [10]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (29.78088pt too wide) in paragraph at lines 665--665
+ []\T1/fi4/m/n/10 gwglmnet.adaptive.fit(x, y, coords, weight.matrix, s, verbose
+, family, prior.weights)[] 
+[11]
+Underfull \vbox (badness 10000) has occurred while \output is active [12]
+Underfull \vbox (badness 10000) has occurred while \output is active [13]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (134.78088pt too wide) in paragraph at lines 845--845
+ []\T1/fi4/m/n/10 gwglmnet.adaptive.ssr(bw, x, y, colocated, dist, s, verbose, 
+family, prior.weights, gweight, type, target)[] 
+[14]
+Underfull \vbox (badness 10000) has occurred while \output is active [15]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (169.78088pt too wide) in paragraph at lines 980--980
+ []\T1/fi4/m/n/10 gwglmnet.cv.f(formula, data, bw, coords, gweight, verbose, ad
+apt, longlat, s, family, weights, nn, D = NULL, ...)[] 
+[16] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [17]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (759.78088pt too wide) in paragraph at lines 1177--1177
+ []\T1/fi4/m/n/10 gwglmnet.nen(formula, data, coords, gweight, bw, D = NULL, ve
+rbose = FALSE, longlat = FALSE, adapt = FALSE, s = NULL, family, weights = NULL
+, tolerance = .Machine$double.eps^0.25, beta1 = NULL, beta2 = NULL, type, paral
+lel = FALSE)[] 
+[18] [19]
+Underfull \vbox (badness 10000) has occurred while \output is active [20]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (429.78088pt too wide) in paragraph at lines 1351--1351
+ []\T1/fi4/m/n/10 gwglmnet.nen.adaptive.fit.parallel(x, y, coords, D, s, verbos
+e, family, prior.weights, gweight, target, beta1, beta2, type = "pearson", tol 
+= 1e-25, longlat = FALSE)[] 
+[21] [22]
+Underfull \vbox (badness 10000) has occurred while \output is active [23]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (429.78088pt too wide) in paragraph at lines 1537--1537
+ []\T1/fi4/m/n/10 gwglmnet.nen.adaptive.fit.parallel(x, y, coords, D, s, verbos
+e, family, prior.weights, gweight, target, beta1, beta2, type = "pearson", tol 
+= 1e-25, longlat = FALSE)[] 
+[24]
+Underfull \vbox (badness 10000) has occurred while \output is active [25]
+Underfull \vbox (badness 10000) has occurred while \output is active [26]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (679.78088pt too wide) in paragraph at lines 1723--1723
+ []\T1/fi4/m/n/10 gwglmnet.nen.cv.f(formula, data, bw, coords, gweight, verbose
+, adapt, longlat, s = NULL, beta1, beta2, family, weights = NULL, D = NULL, tol
+erance = .Machine$double.eps^0.25, type = "pearson", parallel = FALSE, ...)[] 
+[27] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (354.78088pt too wide) in paragraph at lines 1830--1830
+ []\T1/fi4/m/n/10 gwglmnet.nen.fit(x, y, coords, D, s = NULL, verbose, family, 
+prior.weights, gweight, bw, beta1, beta2, type = "pearson", tol = 1e-25, longla
+t = FALSE)[] 
+[28] [29] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (384.78088pt too wide) in paragraph at lines 1980--1980
+ []\T1/fi4/m/n/10 gwglmnet.nen.fit.parallel(x, y, coords, D, s, verbose, family
+, prior.weights, gweight, target, beta1, beta2, type = "pearson", tol = 1e-25, 
+longlat = FALSE)[] 
+[30] [31] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (719.78088pt too wide) in paragraph at lines 2126--2126
+ []\T1/fi4/m/n/10 gwglmnet.nen.sel(formula, data = list(), coords, adapt = FALS
+E, gweight = gwr.Gauss, s = NULL, method = "cv", verbose = FALSE, longlat = FAL
+SE, family, weights = NULL, tol = .Machine$double.eps^0.25, type, parallel = FA
+LSE)[] 
+[32] [33] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [34]
+Overfull \hbox (644.78088pt too wide) in paragraph at lines 2275--2275
+ []\T1/fi4/m/n/10 gwglmnet.sel(formula, data = list(), coords, adapt = FALSE, n
+earest.neighbors = FALSE, gweight = gwr.Gauss, s, method = "cv", verbose = FALS
+E, longlat = FALSE, family, weights, tol = .Machine$double.eps^0.25)[] 
+[35]
+Underfull \vbox (badness 10000) has occurred while \output is active [36]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [37]
+Underfull \vbox (badness 10000) has occurred while \output is active [38]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 2565--2565
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[39]
+Underfull \vbox (badness 10000) has occurred while \output is active [40]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 2713--2713
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[41] [42] (./Rd2.ind [43]
+Overfull \hbox (3.3567pt too wide) in paragraph at lines 11--13
+[]| \T1/fi4/m/n/10 gwglmnet.nen.adaptive.fit.parallel\T1/ptm/m/n/10 , 
+
+Overfull \hbox (3.3567pt too wide) in paragraph at lines 29--31
+[]| \T1/fi4/m/n/10 gwglmnet.nen.adaptive.fit.parallel\T1/ptm/m/n/10 , 
+
+LaTeX Font Warning: Font shape `T1/fi4/m/it' undefined
+(Font)              using `T1/fi4/m/n' instead on input line 68.
+
+[44]) (./Rd2.aux)
+
+Package rerunfilecheck Warning: File `Rd2.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ )
+(see the transcript file for additional information)pdfTeX warning (dest): name
+{Rfn.<pkg>} has been referenced but does not exist, replaced by a fixed one
+
+{/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/tex
+live/2012/texmf-dist/fonts/enc/dvips/inconsolata/fi4-ec.enc}</usr/local/texlive
+/2012/texmf-dist/fonts/type1/public/inconsolata/Inconsolata.pfb></usr/local/tex
+live/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
+ive/2012/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/201
+2/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2012/texmf-di
+st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/t
+ype1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/t
+imes/utmri8a.pfb>
+Output written on Rd2.pdf (44 pages, 133979 bytes).
+Transcript written on Rd2.log.
+This is makeindex, version 2.15 [TeX Live 2012] (kpathsea + Thai support).
+Scanning input file ./Rd2.idx....done (63 entries accepted, 0 rejected).
+Sorting entries....done (401 comparisons).
+Generating output file ./Rd2.ind....done (80 lines written, 0 warnings).
+Output written in ./Rd2.ind.
+Transcript written in ./Rd2.ilg.
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012)
+ restricted \write18 enabled.
+entering extended mode
+
+(/private/var/folders/fp/ytpc1v4x7lg7gdzzyqvh58xr0000gn/T/RtmpnsXjRq/Rd2pdf1352
+11ec0db9/Rd2.tex
+LaTeX2e <2011/06/27>
+Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman-x-2012-05-30, ngerman-x-2012-05-30, afrikaans, ancientgreek, ibycus, arabi
+c, armenian, basque, bulgarian, catalan, pinyin, coptic, croatian, czech, danis
+h, dutch, ukenglish, usenglishmax, esperanto, estonian, ethiopic, farsi, finnis
+h, french, friulan, galician, german, ngerman, swissgerman, monogreek, greek, h
+ungarian, icelandic, assamese, bengali, gujarati, hindi, kannada, malayalam, ma
+rathi, oriya, panjabi, tamil, telugu, indonesian, interlingua, irish, italian, 
+kurmanji, latin, latvian, lithuanian, mongolian, mongolianlmc, bokmal, nynorsk,
+ polish, portuguese, romanian, romansh, russian, sanskrit, serbian, serbianc, s
+lovak, slovenian, spanish, swedish, turkish, turkmen, ukrainian, uppersorbian, 
+welsh, loaded.
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/book.cls
+Document Class: book 2007/10/19 v1.4h Standard LaTeX document class
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/bk10.clo))
+(/Library/Frameworks/R.framework/Resources/share/texmf/tex/latex/Rd.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ifthen.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/longtable.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/bm.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/alltt.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/tools/verbatim.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/url/url.sty) NOT loading ae
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/fontenc.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/t1enc.def))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/times.sty)
+NOT loading lmodern
+(/usr/local/texlive/2012/texmf-dist/tex/latex/inconsolata/inconsolata.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/textcomp.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1enc.def))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/keyval.sty))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/graphics/color.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/color.cfg)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/pdftex-def/pdftex.def
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/infwarerr.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/ltxcmds.sty)))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/hyperref.sty
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty))
+(/usr/local/texlive/2012/texmf-dist/tex/generic/ifxetex/ifxetex.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/kvoptions.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/latexconfig/hyperref.cfg))
+
+Package hyperref Message: Driver (autodetected): hpdftex.
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/hpdftex.def
+(/usr/local/texlive/2012/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty))
+
+Package hyperref Warning: Option `hyperindex' has already been used,
+(hyperref)                setting the option has no effect on input line 356.
+
+
+Package hyperref Warning: Option `pagebackref' has already been used,
+(hyperref)                setting the option has no effect on input line 356.
+
+) (/usr/local/texlive/2012/texmf-dist/tex/latex/base/makeidx.sty)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/inputenc.sty
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/t1enc.dfu)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ot1enc.dfu)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/omsenc.dfu)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1enc.dfu))
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/latin1.def))
+Writing index file Rd2.idx
+(./Rd2.aux) (/usr/local/texlive/2012/texmf-dist/tex/latex/base/ts1cmr.fd)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/t1ptm.fd)
+(/usr/local/texlive/2012/texmf-dist/tex/context/base/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/nameref.sty
+(/usr/local/texlive/2012/texmf-dist/tex/generic/oberdiek/gettitlestring.sty))
+(./Rd2.out) (./Rd2.out)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/inconsolata/t1fi4.fd)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/psnfss/t1phv.fd) (./Rd2.toc)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [1{/usr/local/texl
+ive/2012/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 73--73
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[2] [3] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)pdfTeX warn
+ing (ext4): destination with the same identifier (name{Rfn.gwglmnet}) has been 
+already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.211 ... LASSO for variable selection.}{gwglmnet}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{Rfn.gwglmnet.1}) has been already used, du
+plicate ignored
+<to be read again> 
+                   \relax 
+l.211 ... LASSO for variable selection.}{gwglmnet}
+                                                  
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 221--221
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[4] [5] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)pdfTeX warn
+ing (ext4): destination with the same identifier (name{Rfn.gwglmnet}) has been 
+already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.359 ... LASSO for variable selection.}{gwglmnet}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{Rfn.gwglmnet.1}) has been already used, du
+plicate ignored
+<to be read again> 
+                   \relax 
+l.359 ... LASSO for variable selection.}{gwglmnet}
+                                                   [6]
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 369--369
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[7]
+Underfull \vbox (badness 10000) has occurred while \output is active [8]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)pdfTeX warning (ext
+4): destination with the same identifier (name{Rfn.gwglmnet}) has been already 
+used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.507 ... LASSO for variable selection.}{gwglmnet}
+                                                  pdfTeX warning (ext4): destin
+ation with the same identifier (name{Rfn.gwglmnet.1}) has been already used, du
+plicate ignored
+<to be read again> 
+                   \relax 
+l.507 ... LASSO for variable selection.}{gwglmnet}
+                                                  
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 517--517
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[9]
+Underfull \vbox (badness 10000) has occurred while \output is active [10]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (29.78088pt too wide) in paragraph at lines 665--665
+ []\T1/fi4/m/n/10 gwglmnet.adaptive.fit(x, y, coords, weight.matrix, s, verbose
+, family, prior.weights)[] 
+[11]
+Underfull \vbox (badness 10000) has occurred while \output is active [12]
+Underfull \vbox (badness 10000) has occurred while \output is active [13]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (134.78088pt too wide) in paragraph at lines 845--845
+ []\T1/fi4/m/n/10 gwglmnet.adaptive.ssr(bw, x, y, colocated, dist, s, verbose, 
+family, prior.weights, gweight, type, target)[] 
+[14]
+Underfull \vbox (badness 10000) has occurred while \output is active [15]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (169.78088pt too wide) in paragraph at lines 980--980
+ []\T1/fi4/m/n/10 gwglmnet.cv.f(formula, data, bw, coords, gweight, verbose, ad
+apt, longlat, s, family, weights, nn, D = NULL, ...)[] 
+[16] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [17]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (759.78088pt too wide) in paragraph at lines 1177--1177
+ []\T1/fi4/m/n/10 gwglmnet.nen(formula, data, coords, gweight, bw, D = NULL, ve
+rbose = FALSE, longlat = FALSE, adapt = FALSE, s = NULL, family, weights = NULL
+, tolerance = .Machine$double.eps^0.25, beta1 = NULL, beta2 = NULL, type, paral
+lel = FALSE)[] 
+[18] [19]
+Underfull \vbox (badness 10000) has occurred while \output is active [20]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (429.78088pt too wide) in paragraph at lines 1351--1351
+ []\T1/fi4/m/n/10 gwglmnet.nen.adaptive.fit.parallel(x, y, coords, D, s, verbos
+e, family, prior.weights, gweight, target, beta1, beta2, type = "pearson", tol 
+= 1e-25, longlat = FALSE)[] 
+[21] [22]
+Underfull \vbox (badness 10000) has occurred while \output is active [23]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (429.78088pt too wide) in paragraph at lines 1537--1537
+ []\T1/fi4/m/n/10 gwglmnet.nen.adaptive.fit.parallel(x, y, coords, D, s, verbos
+e, family, prior.weights, gweight, target, beta1, beta2, type = "pearson", tol 
+= 1e-25, longlat = FALSE)[] 
+[24]
+Underfull \vbox (badness 10000) has occurred while \output is active [25]
+Underfull \vbox (badness 10000) has occurred while \output is active [26]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (679.78088pt too wide) in paragraph at lines 1723--1723
+ []\T1/fi4/m/n/10 gwglmnet.nen.cv.f(formula, data, bw, coords, gweight, verbose
+, adapt, longlat, s = NULL, beta1, beta2, family, weights = NULL, D = NULL, tol
+erance = .Machine$double.eps^0.25, type = "pearson", parallel = FALSE, ...)[] 
+[27] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (354.78088pt too wide) in paragraph at lines 1830--1830
+ []\T1/fi4/m/n/10 gwglmnet.nen.fit(x, y, coords, D, s = NULL, verbose, family, 
+prior.weights, gweight, bw, beta1, beta2, type = "pearson", tol = 1e-25, longla
+t = FALSE)[] 
+[28] [29] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (384.78088pt too wide) in paragraph at lines 1980--1980
+ []\T1/fi4/m/n/10 gwglmnet.nen.fit.parallel(x, y, coords, D, s, verbose, family
+, prior.weights, gweight, target, beta1, beta2, type = "pearson", tol = 1e-25, 
+longlat = FALSE)[] 
+[30] [31] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (719.78088pt too wide) in paragraph at lines 2126--2126
+ []\T1/fi4/m/n/10 gwglmnet.nen.sel(formula, data = list(), coords, adapt = FALS
+E, gweight = gwr.Gauss, s = NULL, method = "cv", verbose = FALSE, longlat = FAL
+SE, family, weights = NULL, tol = .Machine$double.eps^0.25, type, parallel = FA
+LSE)[] 
+[32] [33] (/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [34]
+Overfull \hbox (644.78088pt too wide) in paragraph at lines 2275--2275
+ []\T1/fi4/m/n/10 gwglmnet.sel(formula, data = list(), coords, adapt = FALSE, n
+earest.neighbors = FALSE, gweight = gwr.Gauss, s, method = "cv", verbose = FALS
+E, longlat = FALSE, family, weights, tol = .Machine$double.eps^0.25)[] 
+[35]
+Underfull \vbox (badness 10000) has occurred while \output is active [36]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def) [37]
+Underfull \vbox (badness 10000) has occurred while \output is active [38]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 2565--2565
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[39]
+Underfull \vbox (badness 10000) has occurred while \output is active [40]
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/utf8.def)
+Overfull \hbox (389.78088pt too wide) in paragraph at lines 2713--2713
+ []\T1/fi4/m/n/10 gwglmnet(formula, data, coords, gweight, bw, D = NULL, verbos
+e = FALSE, longlat = FALSE, adapt = FALSE, s, family, weights = NULL, nearest.n
+eighbors = FALSE)[] 
+[41] [42] (./Rd2.ind [43]
+Overfull \hbox (3.3567pt too wide) in paragraph at lines 11--13
+[]| \T1/fi4/m/n/10 gwglmnet.nen.adaptive.fit.parallel\T1/ptm/m/n/10 , 
+
+Overfull \hbox (3.3567pt too wide) in paragraph at lines 29--31
+[]| \T1/fi4/m/n/10 gwglmnet.nen.adaptive.fit.parallel\T1/ptm/m/n/10 , 
+
+LaTeX Font Warning: Font shape `T1/fi4/m/it' undefined
+(Font)              using `T1/fi4/m/n' instead on input line 68.
+
+[44]) (./Rd2.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ )
+(see the transcript file for additional information)pdfTeX warning (dest): name
+{Rfn.<pkg>} has been referenced but does not exist, replaced by a fixed one
+
+{/usr/local/texlive/2012/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/tex
+live/2012/texmf-dist/fonts/enc/dvips/inconsolata/fi4-ec.enc}</usr/local/texlive
+/2012/texmf-dist/fonts/type1/public/inconsolata/Inconsolata.pfb></usr/local/tex
+live/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
+ive/2012/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/local/texlive/201
+2/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2012/texmf-di
+st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/t
+ype1/urw/times/utmr8a.pfb></usr/local/texlive/2012/texmf-dist/fonts/type1/urw/t
+imes/utmri8a.pfb>
+Output written on Rd2.pdf (44 pages, 134591 bytes).
+Transcript written on Rd2.log.
+Saving output to 'gwselect-manual.pdf' ...
+Done
+You may want to clean up by 'rm -rf /var/folders/fp/ytpc1v4x7lg7gdzzyqvh58xr0000gn/T//RtmpnsXjRq/Rd2pdf135211ec0db9'

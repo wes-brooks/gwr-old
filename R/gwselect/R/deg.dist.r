@@ -1,5 +1,4 @@
-function (long1, lat1, long2, lat2) 
-{
+deg.dist = function (long1, lat1, long2, lat2) {
     rad <- pi/180
     a1 <- lat1 * rad
     a2 <- long1 * rad

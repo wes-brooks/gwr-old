@@ -1,0 +1,580 @@
+* using log directory ‘/Users/wesley/git/gwr/gwselect.Rcheck’
+* using R version 2.15.2 (2012-10-26)
+* using platform: x86_64-apple-darwin9.8.0 (64-bit)
+* using session charset: UTF-8
+* checking for file ‘gwselect/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘gwselect’ version ‘0.1’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking whether package ‘gwselect’ can be installed ... WARNING
+Found the following significant warnings:
+  Warning: /Users/wesley/git/gwr/R/gwselect/man/gwselect-package.Rd:28: All text must be in a section
+See ‘/Users/wesley/git/gwr/gwselect.Rcheck/00install.out’ for details.
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking for unstated dependencies in R code ... OK
+* checking S3 generic/method consistency ... WARNING
+plot:
+  function(x, ...)
+plot.coef.gwglmnet:
+  function(model, var, breaks)
+
+plot:
+  function(x, ...)
+plot.coef.gwlars:
+  function(model, var, locs, data, s, breaks)
+
+plot:
+  function(x, ...)
+plot.coef.gwr:
+  function(model, var, locs, breaks)
+
+plot:
+  function(x, ...)
+plot.effect.gwlars:
+  function(model, var, locs, l, data, breaks)
+
+plot:
+  function(x, ...)
+plot.gwselect:
+  function(model, part, var, type, locs, polygons, s, group, title,
+           borderlines, by.locs, by.polygons, col.bg, col.outline)
+
+plot:
+  function(x, ...)
+plot.residuals.gwlars:
+  function(model, locs, l, data, breaks)
+
+plot:
+  function(x, ...)
+plot.residuals.gwr:
+  function(model, locs, l, data, breaks)
+
+plot:
+  function(x, ...)
+plot.sign.resid.gwlars:
+  function(model, locs, l, data, breaks)
+
+See section ‘Generic functions and methods’ of the ‘Writing R
+Extensions’ manual.
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+plot.coef.gwglmnet: warning in coord_map(project = "globular"): partial
+  argument match of 'project' to 'projection'
+plot.coef.gwlars: warning in coord_map(project = "globular"): partial
+  argument match of 'project' to 'projection'
+plot.coef.gwr: warning in coord_map(project = "globular"): partial
+  argument match of 'project' to 'projection'
+plot.effect.gwlars: warning in coord_map(project = "globular"): partial
+  argument match of 'project' to 'projection'
+plot.gwselect: warning in coord_map(project = "globular"): partial
+  argument match of 'project' to 'projection'
+plot.residuals.gwlars: warning in coord_map(project = "globular"):
+  partial argument match of 'project' to 'projection'
+plot.residuals.gwr: warning in coord_map(project = "globular"): partial
+  argument match of 'project' to 'projection'
+plot.sign.resid.gwlars: warning in coord_map(project = "globular"):
+  partial argument match of 'project' to 'projection'
+gwglmnet: no visible global function definition for ‘earth.dist’
+gwglmnet: possible error in gwglmnet.fit.nenparallel(x = x, y = y,
+  family = family, prior.weights = weights, tuning = tuning, predict =
+  predict, simulation = simulation, indx = indx, N = N, coords =
+  coords, fit.loc = fit.loc, D = D, longlat = longlat, mode.select =
+  mode.select, s = s, verbose = verbose, adapt = adapt, target = bw,
+  gweight = gweight, beta1 = beta1, beta2 = beta2, tol = tol,
+  precondition = precondition, interact = interact, alpha = alpha,
+  oracle = oracle, shrunk.fit = shrunk.fit): unused argument(s) (indx =
+  indx, fit.loc = fit.loc, oracle = oracle, shrunk.fit = shrunk.fit)
+gwglmnet: possible error in gwglmnet.fit.nen(x = x, y = y, family =
+  family, prior.weights = weights, tuning = tuning, predict = predict,
+  simulation = simulation, indx = indx, coords = coords, fit.loc =
+  fit.loc, N = N, D = D, longlat = longlat, mode.select = mode.select,
+  s = s, verbose = verbose, adapt = adapt, target = bw, gweight =
+  gweight, beta1 = beta1, beta2 = beta2, tol = tol, precondition =
+  precondition, interact = interact, alpha = alpha, oracle = oracle,
+  shrunk.fit = shrunk.fit): unused argument(s) (indx = indx, fit.loc =
+  fit.loc, oracle = oracle, shrunk.fit = shrunk.fit)
+gwglmnet: possible error in gwglmnet.fit.knnparallel(x = x, y = y,
+  family = family, prior.weights = weights, tuning = tuning, predict =
+  predict, simulation = simulation, indx = indx, coords = coords,
+  fit.loc = fit.loc, N = N, D = D, longlat = longlat, mode.select =
+  mode.select, s = s, verbose = verbose, adapt = adapt, target = bw,
+  gweight = gweight, beta1 = beta1, beta2 = beta2, tol = tol,
+  precondition = precondition, interact = interact, alpha = alpha,
+  oracle = oracle, shrunk.fit = shrunk.fit): unused argument(s) (oracle
+  = oracle, shrunk.fit = shrunk.fit)
+gwglmnet: possible error in gwglmnet.fit.knn(x = x, y = y, family =
+  family, prior.weights = weights, tuning = tuning, predict = predict,
+  simulation = simulation, indx = indx, coords = coords, fit.loc =
+  fit.loc, N = N, D = D, longlat = longlat, mode.select = mode.select,
+  s = s, verbose = verbose, adapt = adapt, target = bw, gweight =
+  gweight, beta1 = beta1, beta2 = beta2, tol = tol, precondition =
+  precondition, interact = interact, alpha = alpha, oracle = oracle,
+  shrunk.fit = shrunk.fit): unused argument(s) (shrunk.fit =
+  shrunk.fit)
+gwglmnet.fit.fixedbwparallel: no visible binding for global variable
+  ‘i’
+gwglmnet.fit.knn: possible error in gwglmnet.fit.inner(x = x, y = y,
+  family = family, coords = coords, loc = loc, mode.select =
+  mode.select, tuning = tuning, predict = predict, simulation =
+  simulation, indx = indx, bw = bandwidth, dist = dist, s = s, verbose
+  = verbose, mode.select = mode.select, gwr.weights = NULL,
+  prior.weights = prior.weights, gweight = gweight, adapt = adapt,
+  precondition = precondition, N = N, interact = interact, alpha =
+  alpha): formal argument "mode.select" matched by multiple actual
+  arguments
+gwglmnet.fit.knnparallel: no visible binding for global variable ‘i’
+gwglmnet.fit.knnparallel: no visible binding for global variable
+  ‘oracle’
+gwglmnet.fit.knnparallel: possible error in gwglmnet.fit.inner(x = x, y
+  = y, family = family, coords = coords, mode.select = mode.select,
+  tuning = tuning, predict = predict, simulation = simulation, indx =
+  indx, loc = loc, bw = bandwidth, dist = dist, s = s, verbose =
+  verbose, mode.select = mode.select, gwr.weights = NULL, prior.weights
+  = prior.weights, gweight = gweight, adapt = adapt, precondition =
+  precondition, N = N, interact = interact, alpha = alpha): formal
+  argument "mode.select" matched by multiple actual arguments
+gwglmnet.fit.nenparallel: no visible binding for global variable ‘i’
+gwglmnet.sel: no visible binding for global variable ‘gwr.Gauss’
+gwglmnet.sel: no visible binding for global variable ‘y’
+gwlars: no visible global function definition for ‘earth.dist’
+gwlars: possible error in gwlars.fit.nenparallel(x = x, y = y,
+  prior.weights = weights, coords = coords, indx = indx, fit.loc =
+  fit.loc, D = D, N = N, longlat = longlat, s = s, mode.select =
+  mode.select, tuning = tuning, simulation = simulation, predict =
+  predict, verbose = verbose, adapt = adapt, target = bw, gweight =
+  gweight, beta1 = beta1, beta2 = beta2, tol = tol, precondition =
+  precondition, oracle = oracle, interact = interact, shrunk.fit =
+  shrunk.fit): unused argument(s) (indx = indx, fit.loc = fit.loc,
+  tuning = tuning, simulation = simulation, predict = predict, oracle =
+  oracle, interact = interact, shrunk.fit = shrunk.fit)
+gwlars: possible error in gwlars.fit.nen(x = x, y = y, prior.weights =
+  weights, coords = coords, indx = indx, fit.loc = fit.loc, D = D, N =
+  N, longlat = longlat, s = s, mode.select = mode.select, tuning =
+  tuning, simulation = simulation, predict = predict, verbose =
+  verbose, adapt = adapt, target = bw, gweight = gweight, beta1 =
+  beta1, beta2 = beta2, tol = tol, precondition = precondition, oracle
+  = oracle, interact = interact, shrunk.fit = shrunk.fit): unused
+  argument(s) (indx = indx, fit.loc = fit.loc, tuning = tuning,
+  simulation = simulation, predict = predict, oracle = oracle, interact
+  = interact, shrunk.fit = shrunk.fit)
+gwlars: possible error in gwlars.fit.knnparallel(x = x, y = y,
+  prior.weights = weights, coords = coords, indx = indx, fit.loc =
+  fit.loc, D = D, N = N, longlat = longlat, s = s, mode.select =
+  mode.select, tuning = tuning, simulation = simulation, predict =
+  predict, verbose = verbose, adapt = adapt, target = bw, gweight =
+  gweight, beta1 = beta1, beta2 = beta2, tol = tol, precondition =
+  precondition, oracle = oracle, interact = interact, shrunk.fit =
+  shrunk.fit): unused argument(s) (shrunk.fit = shrunk.fit)
+gwlars: possible error in gwlars.fit.knn(x = x, y = y, prior.weights =
+  weights, coords = coords, indx = indx, fit.loc = fit.loc, D = D, N =
+  N, longlat = longlat, s = s, mode.select = mode.select, tuning =
+  tuning, simulation = simulation, predict = predict, verbose =
+  verbose, adapt = adapt, target = bw, gweight = gweight, beta1 =
+  beta1, beta2 = beta2, tol = tol, precondition = precondition, oracle
+  = oracle, interact = interact, shrunk.fit = shrunk.fit): unused
+  argument(s) (shrunk.fit = shrunk.fit)
+gwlars.fit.fixedbwparallel: no visible binding for global variable ‘i’
+gwlars.fit.knnparallel: no visible binding for global variable ‘i’
+gwlars.fit.nen: no visible binding for global variable ‘fit.loc’
+gwlars.fit.nen: no visible binding for global variable ‘indx’
+gwlars.fit.nen: no visible binding for global variable ‘total.weight’
+gwlars.fit.nen: possible error in gwlars.fit.inner(x = x, y = y, coords
+  = coords, loc = loc, bw = bandwidth, dist = dist, N = N, s = s,
+  mode.select = mode.select, shrink = shrink, verbose = verbose,
+  gwr.weights = NULL, prior.weights = prior.weights, gweight = gweight,
+  adapt = adapt, mode = mode, precondition = precondition): unused
+  argument(s) (shrink = shrink, mode = mode)
+gwlars.fit.nenparallel: no visible binding for global variable
+  ‘fit.loc’
+gwlars.fit.nenparallel: no visible binding for global variable ‘bw’
+gwlars.fit.nenparallel: no visible binding for global variable ‘i’
+gwlars.fit.nenparallel: possible error in gwlars.fit.inner(x = x, y =
+  y, coords = coords, loc = loc, bw = bandwidth, dist = dist, N = N, s
+  = s, mode.select = mode.select, verbose = verbose, gwr.weights =
+  NULL, prior.weights = prior.weights, gweight = gweight, adapt =
+  adapt, mode = mode, precondition = precondition): unused argument(s)
+  (mode = mode)
+gwlars.sel: no visible binding for global variable ‘gwr.Gauss’
+gwlars.sel: no visible binding for global variable ‘y’
+gwlars.ssr: possible error in gwlars.fit.inner(x = x, y = y, coords =
+  coords, loc = loc, bw = bw, dist = dist, N = N, s = s, mode.select =
+  mode.select, shrink = shrink, verbose = verbose, gwr.weights = NULL,
+  prior.weights = prior.weights, gweight = gweight, adapt = adapt, mode
+  = mode, precondition = precondition): unused argument(s) (shrink =
+  shrink, mode = mode)
+gwlars.ssr: no visible binding for global variable ‘N’
+gwr.heatmap : <anonymous>: no visible binding for global variable
+  ‘sim.model’
+gwr.heatmap : <anonymous>: no visible binding for global variable ‘i’
+gwr.heatmap: no visible binding for global variable ‘eta’
+plot.coef.gwglmnet: no visible binding for global variable ‘long’
+plot.coef.gwglmnet: no visible binding for global variable ‘lat’
+plot.coef.gwglmnet: no visible binding for global variable ‘group’
+plot.coef.gwglmnet: no visible binding for global variable ‘output’
+plot.coef.gwlars: no visible binding for global variable ‘long’
+plot.coef.gwlars: no visible binding for global variable ‘lat’
+plot.coef.gwlars: no visible binding for global variable ‘group’
+plot.coef.gwlars: no visible binding for global variable ‘output’
+plot.coef.gwr: no visible binding for global variable ‘long’
+plot.coef.gwr: no visible binding for global variable ‘lat’
+plot.coef.gwr: no visible binding for global variable ‘group’
+plot.coef.gwr: no visible binding for global variable ‘output’
+plot.effect.gwlars: no visible binding for global variable ‘long’
+plot.effect.gwlars: no visible binding for global variable ‘lat’
+plot.effect.gwlars: no visible binding for global variable ‘group’
+plot.effect.gwlars: no visible binding for global variable ‘output’
+plot.gwselect: no visible binding for global variable ‘long’
+plot.gwselect: no visible binding for global variable ‘lat’
+plot.residuals.gwlars: no visible binding for global variable ‘long’
+plot.residuals.gwlars: no visible binding for global variable ‘lat’
+plot.residuals.gwlars: no visible binding for global variable ‘group’
+plot.residuals.gwlars: no visible binding for global variable ‘output’
+plot.residuals.gwr: no visible global function definition for
+  ‘predict.gwr’
+plot.residuals.gwr: no visible binding for global variable ‘long’
+plot.residuals.gwr: no visible binding for global variable ‘lat’
+plot.residuals.gwr: no visible binding for global variable ‘group’
+plot.residuals.gwr: no visible binding for global variable ‘output’
+plot.sign.resid.gwlars: no visible binding for global variable ‘long’
+plot.sign.resid.gwlars: no visible binding for global variable ‘lat’
+plot.sign.resid.gwlars: no visible binding for global variable ‘group’
+plot.sign.resid.gwlars: no visible binding for global variable ‘output’
+* checking Rd files ... WARNING
+prepare_Rd: gwglmnet.Rd:55-57: Dropping empty section \details
+prepare_Rd: gwglmnet.Rd:58-64: Dropping empty section \value
+prepare_Rd: gwglmnet.Rd:71-73: Dropping empty section \note
+prepare_Rd: gwglmnet.Rd:65-67: Dropping empty section \references
+prepare_Rd: gwglmnet.Rd:77-79: Dropping empty section \seealso
+prepare_Rd: gwglmnet.adaptive.fit.Rd:40-42: Dropping empty section \details
+prepare_Rd: gwglmnet.adaptive.fit.Rd:43-49: Dropping empty section \value
+prepare_Rd: gwglmnet.adaptive.fit.Rd:56-58: Dropping empty section \note
+prepare_Rd: gwglmnet.adaptive.fit.Rd:50-52: Dropping empty section \references
+prepare_Rd: gwglmnet.adaptive.fit.Rd:62-64: Dropping empty section \seealso
+prepare_Rd: gwglmnet.adaptive.ssr.Rd:52-54: Dropping empty section \details
+prepare_Rd: gwglmnet.adaptive.ssr.Rd:55-61: Dropping empty section \value
+prepare_Rd: gwglmnet.adaptive.ssr.Rd:68-70: Dropping empty section \note
+prepare_Rd: gwglmnet.adaptive.ssr.Rd:62-64: Dropping empty section \references
+prepare_Rd: gwglmnet.adaptive.ssr.Rd:74-76: Dropping empty section \seealso
+prepare_Rd: gwglmnet.cv.f.Rd:58-60: Dropping empty section \details
+prepare_Rd: gwglmnet.cv.f.Rd:61-67: Dropping empty section \value
+prepare_Rd: gwglmnet.cv.f.Rd:74-76: Dropping empty section \note
+prepare_Rd: gwglmnet.cv.f.Rd:68-70: Dropping empty section \references
+prepare_Rd: gwglmnet.cv.f.Rd:80-82: Dropping empty section \seealso
+prepare_Rd: gwglmnet.fit.Rd:40-42: Dropping empty section \details
+prepare_Rd: gwglmnet.fit.Rd:43-49: Dropping empty section \value
+prepare_Rd: gwglmnet.fit.Rd:56-58: Dropping empty section \note
+prepare_Rd: gwglmnet.fit.Rd:50-52: Dropping empty section \references
+prepare_Rd: gwglmnet.fit.Rd:62-64: Dropping empty section \seealso
+prepare_Rd: gwglmnet.nen.Rd:67-69: Dropping empty section \details
+prepare_Rd: gwglmnet.nen.Rd:70-76: Dropping empty section \value
+prepare_Rd: gwglmnet.nen.Rd:83-85: Dropping empty section \note
+prepare_Rd: gwglmnet.nen.Rd:77-79: Dropping empty section \references
+prepare_Rd: gwglmnet.nen.Rd:89-91: Dropping empty section \seealso
+prepare_Rd: gwglmnet.nen.adaptive.fit.Rd:61-63: Dropping empty section \details
+prepare_Rd: gwglmnet.nen.adaptive.fit.Rd:64-70: Dropping empty section \value
+prepare_Rd: gwglmnet.nen.adaptive.fit.Rd:77-79: Dropping empty section \note
+prepare_Rd: gwglmnet.nen.adaptive.fit.Rd:71-73: Dropping empty section \references
+prepare_Rd: gwglmnet.nen.adaptive.fit.Rd:83-85: Dropping empty section \seealso
+prepare_Rd: gwglmnet.nen.adaptive.fit.parallel.Rd:61-63: Dropping empty section \details
+prepare_Rd: gwglmnet.nen.adaptive.fit.parallel.Rd:64-70: Dropping empty section \value
+prepare_Rd: gwglmnet.nen.adaptive.fit.parallel.Rd:77-79: Dropping empty section \note
+prepare_Rd: gwglmnet.nen.adaptive.fit.parallel.Rd:71-73: Dropping empty section \references
+prepare_Rd: gwglmnet.nen.adaptive.fit.parallel.Rd:83-85: Dropping empty section \seealso
+prepare_Rd: gwglmnet.nen.cv.f.Rd:70-72: Dropping empty section \details
+prepare_Rd: gwglmnet.nen.cv.f.Rd:73-79: Dropping empty section \value
+prepare_Rd: gwglmnet.nen.cv.f.Rd:86-88: Dropping empty section \note
+prepare_Rd: gwglmnet.nen.cv.f.Rd:80-82: Dropping empty section \references
+prepare_Rd: gwglmnet.nen.cv.f.Rd:92-94: Dropping empty section \seealso
+prepare_Rd: gwglmnet.nen.fit.Rd:61-63: Dropping empty section \details
+prepare_Rd: gwglmnet.nen.fit.Rd:64-70: Dropping empty section \value
+prepare_Rd: gwglmnet.nen.fit.Rd:77-79: Dropping empty section \note
+prepare_Rd: gwglmnet.nen.fit.Rd:71-73: Dropping empty section \references
+prepare_Rd: gwglmnet.nen.fit.Rd:83-85: Dropping empty section \seealso
+prepare_Rd: gwglmnet.nen.fit.parallel.Rd:61-63: Dropping empty section \details
+prepare_Rd: gwglmnet.nen.fit.parallel.Rd:64-70: Dropping empty section \value
+prepare_Rd: gwglmnet.nen.fit.parallel.Rd:77-79: Dropping empty section \note
+prepare_Rd: gwglmnet.nen.fit.parallel.Rd:71-73: Dropping empty section \references
+prepare_Rd: gwglmnet.nen.fit.parallel.Rd:83-85: Dropping empty section \seealso
+prepare_Rd: gwglmnet.nen.sel.Rd:58-60: Dropping empty section \details
+prepare_Rd: gwglmnet.nen.sel.Rd:61-67: Dropping empty section \value
+prepare_Rd: gwglmnet.nen.sel.Rd:74-76: Dropping empty section \note
+prepare_Rd: gwglmnet.nen.sel.Rd:68-70: Dropping empty section \references
+prepare_Rd: gwglmnet.nen.sel.Rd:80-82: Dropping empty section \seealso
+prepare_Rd: gwglmnet.sel.Rd:55-57: Dropping empty section \details
+prepare_Rd: gwglmnet.sel.Rd:58-64: Dropping empty section \value
+prepare_Rd: gwglmnet.sel.Rd:71-73: Dropping empty section \note
+prepare_Rd: gwglmnet.sel.Rd:65-67: Dropping empty section \references
+prepare_Rd: gwglmnet.sel.Rd:77-79: Dropping empty section \seealso
+prepare_Rd: gwlars.Rd:55-57: Dropping empty section \details
+prepare_Rd: gwlars.Rd:58-64: Dropping empty section \value
+prepare_Rd: gwlars.Rd:71-73: Dropping empty section \note
+prepare_Rd: gwlars.Rd:65-67: Dropping empty section \references
+prepare_Rd: gwlars.Rd:77-79: Dropping empty section \seealso
+prepare_Rd: gwlars.sel.Rd:55-57: Dropping empty section \details
+prepare_Rd: gwlars.sel.Rd:58-64: Dropping empty section \value
+prepare_Rd: gwlars.sel.Rd:71-73: Dropping empty section \note
+prepare_Rd: gwlars.sel.Rd:65-67: Dropping empty section \references
+prepare_Rd: gwlars.sel.Rd:77-79: Dropping empty section \seealso
+prepare_Rd: gwr.matplot.Rd:55-57: Dropping empty section \details
+prepare_Rd: gwr.matplot.Rd:58-64: Dropping empty section \value
+prepare_Rd: gwr.matplot.Rd:71-73: Dropping empty section \note
+prepare_Rd: gwr.matplot.Rd:65-67: Dropping empty section \references
+prepare_Rd: gwr.matplot.Rd:77-79: Dropping empty section \seealso
+prepare_Rd: gwselect-package.Rd:28: All text must be in a section
+prepare_Rd: gwselect-package.Rd:34-35: Dropping empty section \examples
+prepare_Rd: legend.Rd:55-57: Dropping empty section \details
+prepare_Rd: legend.Rd:58-64: Dropping empty section \value
+prepare_Rd: legend.Rd:71-73: Dropping empty section \note
+prepare_Rd: legend.Rd:65-67: Dropping empty section \references
+prepare_Rd: legend.Rd:77-79: Dropping empty section \seealso
+prepare_Rd: registerCores.Rd:55-57: Dropping empty section \details
+prepare_Rd: registerCores.Rd:58-64: Dropping empty section \value
+prepare_Rd: registerCores.Rd:71-73: Dropping empty section \note
+prepare_Rd: registerCores.Rd:65-67: Dropping empty section \references
+prepare_Rd: registerCores.Rd:77-79: Dropping empty section \seealso
+prepare_Rd: utils.Rd:55-57: Dropping empty section \details
+prepare_Rd: utils.Rd:58-64: Dropping empty section \value
+prepare_Rd: utils.Rd:71-73: Dropping empty section \note
+prepare_Rd: utils.Rd:65-67: Dropping empty section \references
+prepare_Rd: utils.Rd:77-79: Dropping empty section \seealso
+* checking Rd metadata ... WARNING
+Rd files with duplicated name 'gwglmnet':
+  ‘gwglmnet.Rd’ ‘gwlars.Rd’ ‘gwlars.sel.Rd’ ‘legend.Rd’
+Rd files with duplicated alias 'gwglmnet':
+  ‘gwglmnet.Rd’ ‘gwlars.Rd’ ‘gwlars.sel.Rd’ ‘legend.Rd’
+* checking Rd cross-references ... WARNING
+Unknown package(s) ‘<pkg>’ in Rd xrefs
+* checking for missing documentation entries ... WARNING
+Undocumented code objects:
+  ‘bisquare’ ‘color2D’ ‘gwglmnet.fit.fixedbw’
+  ‘gwglmnet.fit.fixedbwparallel’ ‘gwglmnet.fit.inner’
+  ‘gwglmnet.fit.knn’ ‘gwglmnet.fit.knnparallel’ ‘gwglmnet.fit.nen’
+  ‘gwglmnet.fit.nenparallel’ ‘gwglmnet.knn’ ‘gwglmnet.ssr’ ‘gwlars’
+  ‘gwlars.cv.f’ ‘gwlars.fit.fixedbw’ ‘gwlars.fit.fixedbwparallel’
+  ‘gwlars.fit.inner’ ‘gwlars.fit.knn’ ‘gwlars.fit.knnparallel’
+  ‘gwlars.fit.nen’ ‘gwlars.fit.nenparallel’ ‘gwlars.fit.oracle’
+  ‘gwlars.knn’ ‘gwlars.sel’ ‘gwlars.ssr’ ‘gwr.heatmap’
+  ‘gwr.heatmap.homebrew’ ‘heat_leg’ ‘plot.coef.gwglmnet’
+  ‘plot.coef.gwlars’ ‘plot.coef.gwr’ ‘plot.effect.gwlars’
+  ‘plot.gwselect’ ‘plot.residuals.gwlars’ ‘plot.residuals.gwr’
+  ‘plot.sign.resid.gwlars’ ‘window’
+All user-level objects in a package should have documentation entries.
+See the chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... WARNING
+Functions/methods with usage in documentation object 'gwglmnet.adaptive.fit' but not in code:
+  gwglmnet.adaptive.fit
+
+Functions/methods with usage in documentation object 'gwglmnet.adaptive.ssr' but not in code:
+  gwglmnet.adaptive.ssr
+
+Functions/methods with usage in documentation object 'gwglmnet.fit' but not in code:
+  gwglmnet.fit
+
+Functions/methods with usage in documentation object 'gwglmnet.nen' but not in code:
+  gwglmnet.nen
+
+Functions/methods with usage in documentation object 'gwglmnet.nen.adaptive.fit' but not in code:
+  gwglmnet.nen.adaptive.fit.parallel
+
+Functions/methods with usage in documentation object 'gwglmnet.nen.adaptive.fit.parallel' but not in code:
+  gwglmnet.nen.adaptive.fit.parallel
+
+Functions/methods with usage in documentation object 'gwglmnet.nen.cv.f' but not in code:
+  gwglmnet.nen.cv.f
+
+Functions/methods with usage in documentation object 'gwglmnet.nen.fit' but not in code:
+  gwglmnet.nen.fit
+
+Functions/methods with usage in documentation object 'gwglmnet.nen.fit.parallel' but not in code:
+  gwglmnet.nen.fit.parallel
+
+Functions/methods with usage in documentation object 'gwglmnet.nen.sel' but not in code:
+  gwglmnet.nen.sel
+
+Codoc mismatches from documentation object 'gwglmnet':
+gwglmnet
+  Code: function(formula, data, family, weights = NULL, coords, fit.loc
+                 = NULL, indx = NULL, tuning = FALSE, predict = FALSE,
+                 simulation = FALSE, gweight, bw = NULL, mode.select =
+                 "AIC", verbose = FALSE, longlat, tol, N = 1, method,
+                 adapt = FALSE, s = NULL, parallel = FALSE,
+                 precondition = FALSE, D = NULL, oracle = NULL,
+                 interact = FALSE, alpha = 1, shrunk.fit = TRUE)
+  Docs: function(formula, data, coords, gweight, bw, D = NULL, verbose
+                 = FALSE, longlat = FALSE, adapt = FALSE, s, family,
+                 weights = NULL, nearest.neighbors = FALSE)
+  Argument names in code not in docs:
+    fit.loc indx tuning predict simulation mode.select tol N method
+    parallel precondition oracle interact alpha shrunk.fit
+  Argument names in docs not in code:
+    nearest.neighbors
+  Mismatches in argument names (first 3):
+    Position: 3 Code: family Docs: coords
+    Position: 4 Code: weights Docs: gweight
+    Position: 5 Code: coords Docs: bw
+  Mismatches in argument default values:
+    Name: 'bw' Code: NULL Docs: 
+    Name: 'longlat' Code:  Docs: FALSE
+    Name: 's' Code: NULL Docs: 
+
+Codoc mismatches from documentation object 'gwglmnet.cv.f':
+gwglmnet.cv.f
+  Code: function(formula, data, weights, indx, family, bw, coords,
+                 gweight, mode.select, verbose, adapt, longlat, s, tol,
+                 method, N, parallel, precondition, interact, alpha,
+                 shrunk.fit)
+  Docs: function(formula, data, bw, coords, gweight, verbose, adapt,
+                 longlat, s, family, weights, nn, D = NULL, ...)
+  Argument names in code not in docs:
+    indx mode.select tol method N parallel precondition interact alpha
+    shrunk.fit
+  Argument names in docs not in code:
+    nn D ...
+  Mismatches in argument names (first 3):
+    Position: 3 Code: weights Docs: bw
+    Position: 4 Code: indx Docs: coords
+    Position: 5 Code: family Docs: gweight
+
+Codoc mismatches from documentation object 'gwglmnet.sel':
+gwglmnet.sel
+  Code: function(formula, data = list(), family, range = NULL, weights
+                 = NULL, coords, indx = NULL, adapt = FALSE, gweight =
+                 gwr.Gauss, s = NULL, method = "dist", mode.select =
+                 "AIC", verbose = FALSE, longlat = FALSE, tol =
+                 .Machine$double.eps^0.25, parallel = FALSE, alpha = 1,
+                 precondition = FALSE, interact = FALSE, shrunk.fit =
+                 TRUE)
+  Docs: function(formula, data = list(), coords, adapt = FALSE,
+                 nearest.neighbors = FALSE, gweight = gwr.Gauss, s,
+                 method = "cv", verbose = FALSE, longlat = FALSE,
+                 family, weights, tol = .Machine$double.eps^0.25)
+  Argument names in code not in docs:
+    range indx mode.select parallel alpha precondition interact
+    shrunk.fit
+  Argument names in docs not in code:
+    nearest.neighbors
+  Mismatches in argument names (first 3):
+    Position: 3 Code: family Docs: coords
+    Position: 4 Code: range Docs: adapt
+    Position: 5 Code: weights Docs: nearest.neighbors
+  Mismatches in argument default values:
+    Name: 'weights' Code: NULL Docs: 
+    Name: 's' Code: NULL Docs: 
+    Name: 'method' Code: "dist" Docs: "cv"
+
+Codoc mismatches from documentation object 'gwr.matplot':
+gwr.matplot
+  Code: function(x, cs1 = c(0, 1), cs2 = c(0, 1), cs3 = c(0, 1),
+                 extremes = NA, cellcolors = NA, show.legend = FALSE,
+                 nslices = 10, xlab = "Column", ylab = "Row", do.hex =
+                 FALSE, axes = TRUE, show.values = FALSE, vcol = NA,
+                 vcex = 1, border = "black", na.color = NA, xrange =
+                 NULL, color.spec = "rgb", yrev = TRUE, xat = NULL, yat
+                 = NULL, Hinton = FALSE, ...)
+  Docs: function()
+  Argument names in code not in docs:
+    x cs1 cs2 cs3 extremes cellcolors show.legend nslices xlab ylab
+    do.hex axes show.values vcol vcex border na.color xrange color.spec
+    yrev xat yat Hinton ...
+
+Codoc mismatches from documentation object 'registerCores':
+gwglmnet
+  Code: function(formula, data, family, weights = NULL, coords, fit.loc
+                 = NULL, indx = NULL, tuning = FALSE, predict = FALSE,
+                 simulation = FALSE, gweight, bw = NULL, mode.select =
+                 "AIC", verbose = FALSE, longlat, tol, N = 1, method,
+                 adapt = FALSE, s = NULL, parallel = FALSE,
+                 precondition = FALSE, D = NULL, oracle = NULL,
+                 interact = FALSE, alpha = 1, shrunk.fit = TRUE)
+  Docs: function(formula, data, coords, gweight, bw, D = NULL, verbose
+                 = FALSE, longlat = FALSE, adapt = FALSE, s, family,
+                 weights = NULL, nearest.neighbors = FALSE)
+  Argument names in code not in docs:
+    fit.loc indx tuning predict simulation mode.select tol N method
+    parallel precondition oracle interact alpha shrunk.fit
+  Argument names in docs not in code:
+    nearest.neighbors
+  Mismatches in argument names (first 3):
+    Position: 3 Code: family Docs: coords
+    Position: 4 Code: weights Docs: gweight
+    Position: 5 Code: coords Docs: bw
+  Mismatches in argument default values:
+    Name: 'bw' Code: NULL Docs: 
+    Name: 'longlat' Code:  Docs: FALSE
+    Name: 's' Code: NULL Docs: 
+
+Codoc mismatches from documentation object 'utils':
+gwglmnet
+  Code: function(formula, data, family, weights = NULL, coords, fit.loc
+                 = NULL, indx = NULL, tuning = FALSE, predict = FALSE,
+                 simulation = FALSE, gweight, bw = NULL, mode.select =
+                 "AIC", verbose = FALSE, longlat, tol, N = 1, method,
+                 adapt = FALSE, s = NULL, parallel = FALSE,
+                 precondition = FALSE, D = NULL, oracle = NULL,
+                 interact = FALSE, alpha = 1, shrunk.fit = TRUE)
+  Docs: function(formula, data, coords, gweight, bw, D = NULL, verbose
+                 = FALSE, longlat = FALSE, adapt = FALSE, s, family,
+                 weights = NULL, nearest.neighbors = FALSE)
+  Argument names in code not in docs:
+    fit.loc indx tuning predict simulation mode.select tol N method
+    parallel precondition oracle interact alpha shrunk.fit
+  Argument names in docs not in code:
+    nearest.neighbors
+  Mismatches in argument names (first 3):
+    Position: 3 Code: family Docs: coords
+    Position: 4 Code: weights Docs: gweight
+    Position: 5 Code: coords Docs: bw
+  Mismatches in argument default values:
+    Name: 'bw' Code: NULL Docs: 
+    Name: 'longlat' Code:  Docs: FALSE
+    Name: 's' Code: NULL Docs: 
+
+* checking Rd \usage sections ... WARNING
+Objects in \usage without \alias in documentation object 'gwglmnet.nen.adaptive.fit':
+  ‘gwglmnet.nen.adaptive.fit.parallel’
+
+Documented arguments not in \usage in documentation object 'gwr.matplot':
+  ‘formula’ ‘data’ ‘coords’ ‘gweight’ ‘bw’ ‘D’ ‘verbose’ ‘longlat’
+  ‘adapt’ ‘s’ ‘family’ ‘weights’ ‘nearest.neighbors’
+
+Objects in \usage without \alias in documentation object 'registerCores':
+  ‘gwglmnet’
+
+Objects in \usage without \alias in documentation object 'utils':
+  ‘gwglmnet’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See the chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking examples ... OK
+* checking PDF version of manual ... OK
+WARNING: There were 8 warnings.
+NOTE: There was 1 note.
+See
+  ‘/Users/wesley/git/gwr/gwselect.Rcheck/00check.log’
+for details.

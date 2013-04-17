@@ -1,4 +1,4 @@
-gwglmnet.fit.knnparallel = function(x, y, family, coords, fit.loc, indx, D, s, verbose, mode.select, prior.weights, tuning, predict, simulation, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE, N, interact, alpha) {
+gwglmnet.fit.knnparallel = function(x, y, family, coords, fit.loc, indx, D, s, verbose, mode.select, prior.weights, tuning, predict, simulation, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, precondition=FALSE, N, interact, alpha, shrunk.fit) {
     if (!is.null(fit.loc)) {
         coords.unique = unique(fit.loc)
     } else {
@@ -23,7 +23,7 @@ gwglmnet.fit.knnparallel = function(x, y, family, coords, fit.loc, indx, D, s, v
         bandwidth = opt$minimum
         
         if (is.null(oracle)) {
-	        m = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, indx=indx, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, mode.select=mode.select, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N, interact=interact, alpha=alpha)
+	        m = gwglmnet.fit.inner(x=x, y=y, family=family, coords=coords, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, indx=indx, loc=loc, bw=bandwidth, dist=dist, s=s, verbose=verbose, mode.select=mode.select, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, N=N, interact=interact, alpha=alpha, shrunk.fit=shrunk.fit)
         } else {
             m = gwlars.fit.oracle(x=x, y=y, bw=bandwidth, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, dist=dist, prior.weights=prior.weights, gweight=gweight, interact=interact)
         }

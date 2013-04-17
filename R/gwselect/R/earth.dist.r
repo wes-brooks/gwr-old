@@ -1,4 +1,4 @@
-function (lats, dist = TRUE) 
+earth.dist = function (lats, dist = TRUE) 
 {
     if (class(lats) == "SpatialPoints") 
         lats <- coordinates(lats)
