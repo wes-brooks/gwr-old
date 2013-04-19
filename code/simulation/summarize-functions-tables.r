@@ -2,7 +2,7 @@ library(xtable)
 source("~/git/brooks/code/xtable.printbold.r")
 
 N = 30
-settings = 1:8
+settings = 1:12
 nsims = 100
 
 coord = seq(0, 1, length.out=N)
@@ -13,25 +13,21 @@ for (s in settings) {
     ##########################################################
     #Get the true coefficient values for this setting:
     B[[s]][['(Intercept)']] = rep(0, N**2)
-    if ((s-1) %% 2 == 1) {
-        B[[s]][['X1']] = as.vector(matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N))
-    } else {
-        B[[s]][['X1']] = rep(0, N**2)
-    }
-    if (((s-1) %/% 2) %% 2 == 1) {
-        B[[s]][['X2']] = as.vector(matrix(rep(coord, N), N, N))
-    } else {
-        B[[s]][['X2']] = rep(0, N**2)
-    }
-    if (((s-1) %/% 4) %% 2 == 1) {
+
+    if ((setting-1) %/% 4 == 0) {
+        B[[s]][['X1']] = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)
+    } else if ((setting-1) %/% 4 == 1) {
+        B[[s]][['X1']] = matrix(rep(coord, N), N, N)
+    } else if ((setting-1) %/% 4 == 2) {
         Xmat = matrix(rep(rep(coord, times=N), times=N), N**2, N**2)
         Ymat = matrix(rep(rep(coord, each=N), times=N), N**2, N**2)
-        D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
+        D = (Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2
         d = D[435,]
-        B[[s]][['X3']] = as.vector(matrix(max(d)-d, N, N))
-    } else {
-        B[[s]][['X3']] = rep(0, N**2)
+        B[[s]][['X1']] = matrix(max(d)-d, N, N)
     }
+
+    B[[s]][['X2']] = rep(0, N**2)
+    B[[s]][['X3']] = rep(0, N**2)
     B[[s]][['X4']] = rep(0, N**2)
     B[[s]][['X5']] = rep(0, N**2)
     ##########################################################
@@ -76,7 +72,7 @@ for (j in 1:length(vars)) {
         for (i in 1:(dim(msex.table[[vars[j]]][[l]])[1])) {msexbold[i,order(msex.table[[vars[j]]][[l]][i,])[1]] = TRUE}
         msexital = matrix(FALSE, nrow=dim(msex.table[[vars[j]]][[l]])[1], ncol=dim(msex.table[[vars[j]]][[l]])[2])
         for (i in 1:(dim(msex.table[[vars[j]]][[l]])[1])) {msexital[i,order(msex.table[[vars[j]]][[l]][i,])[2]] = TRUE}
-        msex.fancytable[[vars[j]]][[l]] = xtable.printbold(xtable(msex.table[[vars[j]]][[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Mean squared error of estimates for $\\beta_" , j, "$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{MSEX}", sep="")), which.bold=msexbold, which.ital=msexital, include.rownames=FALSE, hline.after=c(0))
+        msex.fancytable[[vars[j]]][[l]] = xtable.printbold(xtable(msex.table[[vars[j]]][[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Mean squared error of estimates for $\\beta_" , j, "$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{table:loc", l, "-", vars[j], "-MSEX}", sep="")), which.bold=msexbold, which.ital=msexital, include.rownames=FALSE, hline.after=c(0))
     }
 }
 
@@ -112,7 +108,7 @@ for (l in 1:length(locs)) {
     for (i in 1:(dim(msey.table[[l]])[1])) {mseybold[i,order(msey.table[[l]][i,])[1]] = TRUE}
     mseyital = matrix(FALSE, nrow=dim(msey.table[[l]])[1], ncol=dim(msey.table[[l]])[2])
     for (i in 1:(dim(msey.table[[l]])[1])) {mseyital[i,order(msey.table[[l]][i,])[2]] = TRUE}
-    msey.fancytable[[l]] = xtable.printbold(xtable(msey.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Mean squared error of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{MSEY}", sep="")), which.bold=mseybold, which.ital=mseyital, include.rownames=FALSE, hline.after=c(0))
+    msey.fancytable[[l]] = xtable.printbold(xtable(msey.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Mean squared error of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{table:loc", l, "-MSEY}", sep="")), which.bold=mseybold, which.ital=mseyital, include.rownames=FALSE, hline.after=c(0))
 }
 
 
@@ -152,7 +148,7 @@ for (j in 1:length(vars)) {
         for (i in 1:(dim(bx.table[[vars[j]]][[l]])[1])) {bxbold[i,order(bx.table[[vars[j]]][[l]][i,])[1]] = TRUE}
         bxital = matrix(FALSE, nrow=dim(bx.table[[vars[j]]][[l]])[1], ncol=dim(bx.table[[vars[j]]][[l]])[2])
         for (i in 1:(dim(bx.table[[vars[j]]][[l]])[1])) {bxital[i,order(bx.table[[vars[j]]][[l]][i,])[2]] = TRUE}
-        bx.fancytable[[vars[j]]][[l]] = xtable.printbold(xtable(bx.table[[vars[j]]][[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Bias of estimates for $\\beta_", j, "$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{BiasX}", sep="")), which.bold=bxbold, which.ital=bxital, include.rownames=FALSE, hline.after=c(0))
+        bx.fancytable[[vars[j]]][[l]] = xtable.printbold(xtable(bx.table[[vars[j]]][[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Bias of estimates for $\\beta_", j, "$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{table:loc", l, "-", vars[[j]], "-BiasX}", sep="")), which.bold=bxbold, which.ital=bxital, include.rownames=FALSE, hline.after=c(0))
     }
 }
 
@@ -183,7 +179,7 @@ for (l in 1:length(locs)) {
     for (i in 1:(dim(by.table[[l]])[1])) {bybold[i,order(by.table[[l]][i,])[1]] = TRUE}
     byital = matrix(FALSE, nrow=dim(by.table[[l]])[1], ncol=dim(by.table[[l]])[2])
     for (i in 1:(dim(by.table[[l]])[1])) {byital[i,order(by.table[[l]][i,])[2]] = TRUE}
-    xtable.printbold(xtable(by.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Bias of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{BiasY}", sep="")), which.bold=bybold, which.ital=byital, include.rownames=FALSE, hline.after=c(0))
+    xtable.printbold(xtable(by.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Bias of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{table:loc", l, "-BiasY}", sep="")), which.bold=bybold, which.ital=byital, include.rownames=FALSE, hline.after=c(0))
 }
 
 
@@ -191,11 +187,40 @@ for (l in 1:length(locs)) {
 
 
 
+varx = list()
+varx.table = list()
+varx.fancytable = list()
 
+for (j in 1:length(vars)) {
+    varx[[vars[j]]] = list()
+    varx.table[[vars[j]]] = list()
+    varx.fancytable[[vars[j]]] = list()
 
+    for (l in 1:length(locs)) {
+        varx[[vars[j]]][[l]] = list()
 
+        for (m in sim.modes) {
+            varx[[vars[j]]][[l]][[m]] = vector()
+        }
+    }
 
+    for (s in settings) {
+        for (l in 1:length(locs)) {
+            for (m in sim.modes) {
+                varx[[vars[j]]][[l]][[m]] = c(varx[[vars[j]]][[l]][[m]], var(sapply(X.err[[j]][[m]][[s]], function(x) {x[locs[l]]})))
+            }
+        }
+    }
 
+    for (l in 1:length(locs)) {
+        varx.table[[vars[j]]][[l]] = as.matrix(sapply(varx[[vars[j]]][[l]], identity))
+        varxbold = matrix(FALSE, nrow=dim(varx.table[[vars[j]]][[l]])[1], ncol=dim(varx.table[[vars[j]]][[l]])[2])
+        for (i in 1:(dim(varx.table[[vars[j]]][[l]])[1])) {varxbold[i,order(varx.table[[vars[j]]][[l]][i,])[1]] = TRUE}
+        varxital = matrix(FALSE, nrow=dim(varx.table[[vars[j]]][[l]])[1], ncol=dim(varx.table[[vars[j]]][[l]])[2])
+        for (i in 1:(dim(varx.table[[vars[j]]][[l]])[1])) {varxital[i,order(varx.table[[vars[j]]][[l]][i,])[2]] = TRUE}
+        varx.fancytable[[vars[j]]][[l]] = xtable.printbold(xtable(varx.table[[vars[j]]][[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Variance of estimates for $\\beta_", j, "$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{table:loc", l, "-", vars[[j]], "-varx}", sep="")), which.bold=varxbold, which.ital=varxital, include.rownames=FALSE, hline.after=c(0))
+    }
+}
 
 
 vary = list()
@@ -224,7 +249,7 @@ for (l in 1:length(locs)) {
     for (i in 1:(dim(vary.table[[l]])[1])) {varybold[i,order(by.table[[l]][i,])[1]] = TRUE}
     varyital = matrix(FALSE, nrow=dim(vary.table[[l]])[1], ncol=dim(vary.table[[l]])[2])
     for (i in 1:(dim(vary.table[[l]])[1])) {varyital[i,order(vary.table[[l]][i,])[2]] = TRUE}
-    vary.fancytable[[l]] = xtable.printbold(xtable(vary.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Variance of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{VarY}", sep="")), which.bold=varybold, which.ital=varyital, include.rownames=FALSE, hline.after=c(0))
+    vary.fancytable[[l]] = xtable.printbold(xtable(vary.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Variance of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{table:loc", l, "-VarY}", sep="")), which.bold=varybold, which.ital=varyital, include.rownames=FALSE, hline.after=c(0))
 }
 
 
@@ -307,14 +332,27 @@ for (s in settings) {
 selection.table = list()
 selection.fancytable = list()
 
-
 for (m in selection.modes) {
     selection.table[[m]] = list()
     selection.fancytable[[m]] = list()
 
     for (l in 1:length(locs)) {
-        selection.table[[m]][[l]] = cbind(bw[[m]][[l]], selected[['X1']][[m]][[l]], selected[['X2']][[m]][[l]], selected[['X3']][[m]][[l]], rowMeans(sapply(vars[4:5], function(x) {selected[[x]][[m]][[l]]})))
-        colnames(selection.table[[m]][[l]]) = c("mean($\\mbox{bw}$)", "$\\beta_1$", "$\\beta_2$", "$\\beta_3$", "$\\beta_4$ - $\\beta_5$")    
-        selection.fancytable[[m]][[l]] = print(xtable(selection.table[[m]][[l]], digits=2, align=c('c','c','c','c','c','c'), caption=paste("Selection frequency under ", m, " at location ", l, sep="")), sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0))
+        selection.table[[m]][[l]] = cbind(bw[[m]][[l]], selected[['X1']][[m]][[l]], rowMeans(sapply(vars[2:5], function(x) {selected[[x]][[m]][[l]]})))
+        colnames(selection.table[[m]][[l]]) = c("mean($\\mbox{bw}$)", "$\\beta_1$", "$\\beta_4$ - $\\beta_5$")    
+        selection.fancytable[[m]][[l]] = print(xtable(selection.table[[m]][[l]], digits=2, align=c('c','c','c','c'), caption=paste("Selection frequency under ", m, " at location ", l, sep="")), sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0))
     }
+}
+
+
+comprehensive.selection.table = list()
+comprehensive.selection.fancytable = list()
+
+for (l in 1:length(locs)) {
+    comprehensive.selection.table[[l]] = list()
+    for (m in selection.modes) {
+        comprehensive.selection.table[[l]] = c(comprehensive.selection.table[[l]], list(selected[['X1']][[m]][[l]]), list(rowMeans(sapply(vars[2:5], function(x) {selected[[x]][[m]][[l]]}))))
+    }
+    comprehensive.selection.table[[l]] = as.data.frame(comprehensive.selection.table[[l]])
+    colnames(comprehensive.selection.table[[l]]) = rep(c("$\\beta_1$", "$\\beta_4$ - $\\beta_5$"), length(selection.modes))  
+    comprehensive.selection.fancytable[[l]] = print(xtable(comprehensive.selection.table[[l]], digits=2, align=c('c', 'c', 'c|', 'c', 'c|', 'c', 'c'), caption=paste("Selection frequency at location ", l, "\\label{table:loc", l, "-selection}", sep="")), sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0))
 }

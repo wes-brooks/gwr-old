@@ -1,7 +1,9 @@
 \begin{figure}
 \begin{center}
-\includegraphics[height=3in]{../../figures/scratch/beta1-actual.pdf}
-\caption{The actual $\beta_1$ coefficient surface used in the simulation.\label{fig:beta1-actual}}
+\includegraphics[width=0.32\textwidth]{../../figures/simulation/step.pdf}
+\includegraphics[width=0.32\textwidth]{../../figures/simulation/gradient.pdf}
+\includegraphics[width=0.32\textwidth]{../../figures/simulation/parabola.pdf}
+\caption{The actual $\beta_1$ coefficient surface used in the simulation.\label{fig:sim-actual}}
 \end{center}
 \end{figure}
 \efloatseparator

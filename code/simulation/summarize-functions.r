@@ -8,7 +8,7 @@ params = c('bw', 'sigma2', 'loss.local', 's')
 #args = commandArgs(trailingOnly=TRUE)
 #cluster = as.integer(args[1])
 #cluster = 'NA'
-cluster = 61
+cluster = 66
 
 B = 100
 N = 30
@@ -21,7 +21,7 @@ sigma.tau = rep(0, 8)
 params = data.frame(tau, rho, sigma.tau)
 
 N = 30
-settings = 1:8
+settings = 1:12
 nsims = 100
 nvars = 5
 
@@ -58,25 +58,21 @@ for (setting in settings) {
     #Get the true coefficient values for this setting:
     B = list()
     B[['(Intercept)']] = rep(0, N**2)
-    if ((setting-1) %% 2 == 1) {
-        B[['X1']] = as.vector(matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N))
-    } else {
-        B[['X1']] = rep(0, N**2)
-    }
-    if (((setting-1) %/%2) %% 2 == 1) {
-        B[['X2']] = as.vector(matrix(rep(coord, N), N, N))
-    } else {
-        B[['X2']] = rep(0, N**2)
-    }
-    if (((setting-1) %/%4) %% 2 == 1) {
+
+    if ((setting-1) %/% 4 == 0) {
+        B[['X1']] = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)
+    } else if ((setting-1) %/% 4 == 1) {
+        B[['X1']] = matrix(rep(coord, N), N, N)
+    } else if ((setting-1) %/% 4 == 2) {
         Xmat = matrix(rep(rep(coord, times=N), times=N), N**2, N**2)
         Ymat = matrix(rep(rep(coord, each=N), times=N), N**2, N**2)
-        D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
+        D = (Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2
         d = D[435,]
-        B[['X3']] = as.vector(matrix(max(d)-d, N, N))
-    } else {
-        B[['X3']] = rep(0, N**2)
+        B[['X1']] = matrix(max(d)-d, N, N)
     }
+
+    B[['X2']] = rep(0, N**2)
+    B[['X3']] = rep(0, N**2)
     B[['X4']] = rep(0, N**2)
     B[['X5']] = rep(0, N**2)
     ##########################################################

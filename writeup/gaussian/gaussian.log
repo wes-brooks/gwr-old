@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  15 MAR 2013 15:41
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  18 APR 2013 19:32
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -580,6 +580,9 @@ Examine \scriptsize starts \@setfontsize size may be \@viiipt.
 Examine \tiny starts \@setfontsize size may be \@vipt. 
 Examine \huge starts \@setfontsize size may be \@xxpt. 
 Examine \Huge starts \@setfontsize size may be \@xxvpt. )
+(/usr/local/texlive/2012/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2012/01/12 v1.1d Sub-captions (AR)
+
 (/usr/local/texlive/2012/texmf-dist/tex/latex/caption/caption.sty
 Package: caption 2012/02/19 v3.2f Customizing captions (AR)
 
@@ -604,10 +607,12 @@ p \footnotesize \sbox \@tempboxa {#1: #2}\ifdim \wd \@tempboxa >\hsize #1: #2\p
 ar \else \global \@minipagefalse \hb@xt@ \hsize {\hfil \box \@tempboxa \hfil }\
 fi \vskip \belowcaptionskip .
 \c@ContinuedFloat=\count115
-) (/usr/local/texlive/2012/texmf-dist/tex/latex/caption/subcaption.sty
-Package: subcaption 2012/01/12 v1.1d Sub-captions (AR)
+)
 \c@subfigure=\count116
 \c@subtable=\count117
+) (/usr/local/texlive/2012/texmf-dist/tex/latex/preprint/fullpage.sty
+Package: fullpage 1999/02/23 1.1 (PWD)
+\FP@margin=\skip53
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2005/04/14 v1.61803 publication quality tables
@@ -672,12 +677,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 179--180
 
  []
 
-[6]
+
 Underfull \hbox (badness 10000) in paragraph at lines 184--185
 
  []
 
-[7] [8]
+[6] [7]
 Underfull \hbox (badness 10000) in paragraph at lines 230--231
 
  []
@@ -692,23 +697,28 @@ Underfull \hbox (badness 10000) in paragraph at lines 235--236
 
  []
 
-[9]
+
 Underfull \hbox (badness 10000) in paragraph at lines 237--238
 
  []
 
-[10]
-Underfull \hbox (badness 10000) in paragraph at lines 257--258
-
+[8]
+Overfull \hbox (3.02835pt too wide) in paragraph at lines 254--255
+\OT1/cmr/m/n/10.95 model uses only $\OML/cmm/m/it/10.95 Z[]$\OT1/cmr/m/n/10.95 
+, so $\OML/cmm/m/it/10.95 Z[]; [] ; Z[]$ \OT1/cmr/m/n/10.95 are in-cluded to te
+st the variable-selection prop-er-ties of GWL. 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 259--260
+LaTeX Warning: Reference `sim-actual' on page 9 undefined on input line 256.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 256--257
 
  []
 
-[11]
-Underfull \hbox (badness 10000) in paragraph at lines 261--262
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 258--259
 
  []
 
@@ -717,76 +727,67 @@ Underfull \hbox (badness 10000) in paragraph at lines 261--262
 (gaussian.ttt)
 \openout4 = `gaussian.fff'.
 
- (gaussian.fff) [12]
-Underfull \hbox (badness 10000) in paragraph at lines 637--638
+ (gaussian.fff)
+
+LaTeX Warning: Reference `table:loc1-X1-MSEX' on page 10 undefined on input lin
+e 295.
+
+
+LaTeX Warning: Reference `table:loc5-estimation' on page 10 undefined on input 
+line 295.
+
+[10] [11]
+Underfull \hbox (badness 10000) in paragraph at lines 615--616
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 660--661
-
- []
-
-[13] (./gaussian.bbl [14] [15])
-AED endfloat: Processing end Figures and Tables [16]
-No file gaussian.lof.
+(./gaussian.bbl [12] [13]) AED endfloat: Processing end Figures and Tables
+[14] (./gaussian.lof)
 \tf@lof=\write6
 \openout6 = `gaussian.lof'.
 
-[17
+ [15
 
 
 ] (./gaussian.fff
-File: ../../figures/scratch/beta1-actual.pdf Graphic file (type QTm)
- <use  "../../figures/scratch/beta1-actual.pdf" > [18]
+File: ../../figures/simulation/step.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/step.pdf" >
+File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/gradient.pdf" >
+File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
+
+<use  "../../figures/simulation/parabola.pdf" > [16]
 File: ../../figures/poverty/1960.linear.coefficients.pdf Graphic file (type QTm
 )
 
-<use  "../../figures/poverty/1960.linear.coefficients.pdf" >
-
-LaTeX Warning: Float too large for page by 60.35974pt on input line 14.
-
-[19]
+<use  "../../figures/poverty/1960.linear.coefficients.pdf" > [17]
 File: ../../figures/poverty/1970.linear.coefficients.pdf Graphic file (type QTm
 )
- <use  "../../figures/poverty/1970.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 22.
-
-[20]
+<use  "../../figures/poverty/1970.linear.coefficients.pdf" > [18]
 File: ../../figures/poverty/1980.linear.coefficients.pdf Graphic file (type QTm
 )
- <use  "../../figures/poverty/1980.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 30.
-
-[21]
+<use  "../../figures/poverty/1980.linear.coefficients.pdf" > [19]
 File: ../../figures/poverty/1990.linear.coefficients.pdf Graphic file (type QTm
 )
- <use  "../../figures/poverty/1990.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 38.
-
-[22]
+<use  "../../figures/poverty/1990.linear.coefficients.pdf" > [20]
 File: ../../figures/poverty/2000.linear.coefficients.pdf Graphic file (type QTm
 )
- <use  "../../figures/poverty/2000.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 46.
-
-[23]
+<use  "../../figures/poverty/2000.linear.coefficients.pdf" > [21]
 File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
 )
- <use  "../../figures/poverty/2006.linear.coefficients.pdf" >
 
-LaTeX Warning: Float too large for page by 60.35974pt on input line 54.
-
-[24])
-No file gaussian.lot.
+<use  "../../figures/poverty/2006.linear.coefficients.pdf" > [22])
+(./gaussian.lot)
 \tf@lot=\write7
 \openout7 = `gaussian.lot'.
 
-[25
+ [23
 
 
 
@@ -796,7 +797,11 @@ No file gaussian.lot.
 
 
 
-] (./gaussian.ttt [26
+] (./gaussian.ttt [24
+
+] [25
+
+] [26
 
 ] [27
 
@@ -806,7 +811,8 @@ No file gaussian.lot.
 
 ] [30
 
-] [31
+]
+[31
 
 ] [32
 
@@ -814,23 +820,18 @@ No file gaussian.lot.
 
 ] [34
 
-] [35
+] [35] [36]) (./gaussian.aux)
 
-] [36
-
-]
-[37]) (./gaussian.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 4493 strings out of 494004
- 63252 string characters out of 3150890
- 132101 words of memory out of 3000000
- 7630 multiletter control sequences out of 15000+200000
+ 4526 strings out of 494004
+ 63806 string characters out of 3150890
+ 127154 words of memory out of 3000000
+ 7652 multiletter control sequences out of 15000+200000
  16343 words of font info for 57 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,15n,38p,1097b,373s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,15n,40p,1097b,373s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (37 pages).
+Output written on gaussian.pdf (36 pages).
