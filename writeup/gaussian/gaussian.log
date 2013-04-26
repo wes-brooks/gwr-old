@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  18 APR 2013 19:32
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  25 APR 2013 17:56
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -663,62 +663,62 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 
 ] [2]
 [3]
-Underfull \hbox (badness 10000) in paragraph at lines 108--109
+Underfull \hbox (badness 10000) in paragraph at lines 113--114
 
  []
 
 [4]
-Underfull \hbox (badness 10000) in paragraph at lines 165--166
+Underfull \hbox (badness 10000) in paragraph at lines 170--171
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 179--180
+Underfull \hbox (badness 10000) in paragraph at lines 187--188
+
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 206--207
+
+ []
+
+[7] [8]
+Underfull \hbox (badness 10000) in paragraph at lines 252--253
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 184--185
+Underfull \hbox (badness 10000) in paragraph at lines 255--256
 
  []
 
-[6] [7]
-Underfull \hbox (badness 10000) in paragraph at lines 230--231
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 233--234
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 257--258
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--236
+Underfull \hbox (badness 10000) in paragraph at lines 259--260
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 237--238
-
- []
-
-[8]
-Overfull \hbox (3.02835pt too wide) in paragraph at lines 254--255
+[10]
+Overfull \hbox (3.02835pt too wide) in paragraph at lines 278--279
 \OT1/cmr/m/n/10.95 model uses only $\OML/cmm/m/it/10.95 Z[]$\OT1/cmr/m/n/10.95 
 , so $\OML/cmm/m/it/10.95 Z[]; [] ; Z[]$ \OT1/cmr/m/n/10.95 are in-cluded to te
 st the variable-selection prop-er-ties of GWL. 
  []
 
 
-LaTeX Warning: Reference `sim-actual' on page 9 undefined on input line 256.
+LaTeX Warning: Reference `sim-actual' on page 11 undefined on input line 280.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 256--257
+Underfull \hbox (badness 10000) in paragraph at lines 280--281
 
  []
 
-[9]
-Underfull \hbox (badness 10000) in paragraph at lines 258--259
+
+Underfull \hbox (badness 10000) in paragraph at lines 282--283
 
  []
 
@@ -729,24 +729,24 @@ Underfull \hbox (badness 10000) in paragraph at lines 258--259
 
  (gaussian.fff)
 
-LaTeX Warning: Reference `table:loc1-X1-MSEX' on page 10 undefined on input lin
-e 295.
+LaTeX Warning: Reference `table:loc1-X1-MSEX' on page 11 undefined on input lin
+e 326.
 
 
-LaTeX Warning: Reference `table:loc5-estimation' on page 10 undefined on input 
-line 295.
+LaTeX Warning: Reference `table:loc5-estimation' on page 11 undefined on input 
+line 326.
 
-[10] [11]
-Underfull \hbox (badness 10000) in paragraph at lines 615--616
+[11] [12]
+Underfull \hbox (badness 10000) in paragraph at lines 646--647
 
  []
 
-(./gaussian.bbl [12] [13]) AED endfloat: Processing end Figures and Tables
-[14] (./gaussian.lof)
+[13] (./gaussian.bbl [14]) AED endfloat: Processing end Figures and Tables
+[15] (./gaussian.lof)
 \tf@lof=\write6
 \openout6 = `gaussian.lof'.
 
- [15
+ [16
 
 
 ] (./gaussian.fff
@@ -758,36 +758,40 @@ File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
 <use  "../../figures/simulation/gradient.pdf" >
 File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/parabola.pdf" > [16]
+<use  "../../figures/simulation/parabola.pdf" > [17]
+File: ../../figures/simulation/illustrations/summary-locations.pdf Graphic file
+ (type QTm)
+
+<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [18]
 File: ../../figures/poverty/1960.linear.coefficients.pdf Graphic file (type QTm
 )
 
-<use  "../../figures/poverty/1960.linear.coefficients.pdf" > [17]
+<use  "../../figures/poverty/1960.linear.coefficients.pdf" > [19]
 File: ../../figures/poverty/1970.linear.coefficients.pdf Graphic file (type QTm
 )
 
-<use  "../../figures/poverty/1970.linear.coefficients.pdf" > [18]
+<use  "../../figures/poverty/1970.linear.coefficients.pdf" > [20]
 File: ../../figures/poverty/1980.linear.coefficients.pdf Graphic file (type QTm
 )
 
-<use  "../../figures/poverty/1980.linear.coefficients.pdf" > [19]
+<use  "../../figures/poverty/1980.linear.coefficients.pdf" > [21]
 File: ../../figures/poverty/1990.linear.coefficients.pdf Graphic file (type QTm
 )
 
-<use  "../../figures/poverty/1990.linear.coefficients.pdf" > [20]
+<use  "../../figures/poverty/1990.linear.coefficients.pdf" > [22]
 File: ../../figures/poverty/2000.linear.coefficients.pdf Graphic file (type QTm
 )
 
-<use  "../../figures/poverty/2000.linear.coefficients.pdf" > [21]
+<use  "../../figures/poverty/2000.linear.coefficients.pdf" > [23]
 File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
 )
 
-<use  "../../figures/poverty/2006.linear.coefficients.pdf" > [22])
+<use  "../../figures/poverty/2006.linear.coefficients.pdf" > [24])
 (./gaussian.lot)
 \tf@lot=\write7
 \openout7 = `gaussian.lot'.
 
- [23
+ [25
 
 
 
@@ -797,11 +801,8 @@ File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
 
 
 
-] (./gaussian.ttt [24
 
-] [25
-
-] [26
+] (./gaussian.ttt [26
 
 ] [27
 
@@ -811,27 +812,34 @@ File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
 
 ] [30
 
-]
-[31
+] [31
 
 ] [32
 
-] [33
+]
+[33
 
 ] [34
 
-] [35] [36]) (./gaussian.aux)
+] [35
+
+] [36
+
+] [37] [38]) (./gaussian.aux)
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 4526 strings out of 494004
- 63806 string characters out of 3150890
- 127154 words of memory out of 3000000
- 7652 multiletter control sequences out of 15000+200000
+ 4537 strings out of 494004
+ 64076 string characters out of 3150890
+ 128154 words of memory out of 3000000
+ 7661 multiletter control sequences out of 15000+200000
  16343 words of font info for 57 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
  42i,15n,40p,1097b,373s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (36 pages).
+Output written on gaussian.pdf (38 pages).

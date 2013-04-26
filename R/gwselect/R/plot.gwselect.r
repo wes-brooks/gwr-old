@@ -1,4 +1,4 @@
-plot.gwselect = function(model, part='coef', var=NULL, type='fitted', locs=NULL, polygons=NULL, s=NULL, group='group', title='', borderlines=NULL, by.locs=NULL, by.polygons=NULL, col.bg='green', col.outline='white') {
+plot.gwselect = function(model, values=NULL, part='coef', var=NULL, type='fitted', locs=NULL, polygons=NULL, s=NULL, group='group', title='', borderlines=NULL, by.locs=NULL, by.polygons=NULL, col.bg='green', col.outline='white') {
     #Prepare something for plotting:
     name.var = var
 
@@ -11,7 +11,8 @@ plot.gwselect = function(model, part='coef', var=NULL, type='fitted', locs=NULL,
             output = sapply(1:nrow(locs), function(k) {model[['model']][['models']][[k]][[part]][name.var,]})
         } else {
             #Generate the output at the given locs
-            locs = unique(locs)   
+            locs = unique(locs)
+            output = values
         }             
 
         #Merge the polygons with the locs:

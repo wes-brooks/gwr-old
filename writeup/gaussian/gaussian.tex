@@ -52,14 +52,19 @@
 
 \section{Introduction}
 	%Varying-coefficients regression
-	Varying-coefficients regression (VCR) \citep{Hastie:1993a} is a technique used to model non-stationary regression processes. Whereas the coefficients in ordinary least squares (OLS) regression are scalar constants, the coefficients in VCR are functions - often \emph{smooth} functions - of some effect-modifying parameter.  Methods for estimating the coefficient functions of VCR are typically divided between spline-based (e.g. \cite{Wood:2006}) and kernel-based (e.g. \cite{Fan:1999, Loader:1999}) methods. 
+	Varying-coefficients regression (VCR) \citep{Hastie:1993a} is a technique used to model non-stationary regression processes. Whereas the coefficients in an ordinary least squares (OLS) regression equation (e.g. $Y = X \beta + \varepsilon$) are scalar constants, the coefficients in a VCR regression equation (e.g. $Y = X \beta(s) + \varepsilon$) are functions - often \emph{smooth} functions - of some effect-modifying parameter $s$.  Methods for estimating the coefficient functions of VCR are typically divided between spline-based (e.g. \cite{Wood:2006}) and kernel-based (e.g. \cite{Fan:1999, Loader:1999}) methods. 
+	
+	%Spatial data
+	We can divide spatial data into three types: areal data, in which observations are made on (or aggregated over) areas like counties or grid cells; geostatistical data, in which one measures the value of a continuous process at some discrete locations; and point-process data, where the locations of observations are not selected but are observed to arise from a process (e.g. data consisting of the location of each tree in a forest plot).
+	A key concept in the analysis of spatial data is that nearby locations are more alike than distant locations. Spatial data may be viewed as 
+	Clustering is a typical form of non-stationarity in spatial data. One way to analyze clustered data is to assume a constant underlying mean with random deviations that are clustered in space. This is the structure of an autoregressive model \citep{}. If the underlying mean is not constant but is given by a regression function with constant coefficients, then a conditionally autoregressive (CAR) model \citep{} is used to simultaneously estimate regression coefficients and clustering of the residuals.
 	
 	%Spatial regression
-	Geostatistical data is the name for observations of a continuous spatial process that are made at discrete locations. 
-	Clustering is a typical form of non-stationarity in spatial data. One way to analyze clustered data is to assume a constant underlying mean with random deviations that are clustered in space. This is the structure of an autoregressive model \citep{}. If the underlying mean is not constant but is given by a regression function with constant coefficients, then a conditionally autoregressive (CAR) model \citep{} is used to simultaneously estimate regression coefficients and clustering of the residuals.
+	Regression models for spatial data may incorporate either or both of endogenous and exogenous variables. Endogenous modeling means using a variable as both an input and an output of the model (e.g. smoothing), while exogenous modeling uses covariates other than the output variable to build a regression model. These two are commonly combined in spatial models - for instance, by combining a systematic effect of exogenous variables with an endogenous spatial random effect.
+	Endogenous regression models for spatial data are tuned by autoregression, while for geospatial data 
 
 	%Spatial VCR
-	Spatially-clustered residuals may indicate that the random error component arises in a spatially-clustered way but it may also indicate oversmoothing, where the small net bias of a global estimate masks larger but offsetting local bias. In this case, smoothing methods that model the mean response as a function of the covariates can reduce or eliminate clustering of the residuals. Where the underlying mean is a regression function but the coefficients are not constants, a spatial VCR model is appropriate. Both spline-based \citep{} and kernel-based \citep{Fotheringham:2002} methods are available for estimating the coefficient functions. 
+	Spatially-clustered residuals may indicate that the random error component arises in a spatially-clustered way but it may also indicate oversmoothing, where the small net bias of a global estimate masks larger but offsetting local bias. In this case, smoothing methods that model the mean response as a function of the covariates can reduce or eliminate clustering of the residuals. Where the underlying mean is a regression function but the coefficients are not constants, a spatial VCR model is appropriate. Both spline-based \citep{Wood:2006} and kernel-based \citep{Fotheringham:2002} methods are available for estimating the coefficient functions. 
 	
 	%Kernel smoothing
 	Geographically weighted regression (GWR) \citep{Fotheringham:2002} is a kernel-based method of estimating the coefficients of a VCR model for spatial data. GWR uses kernel-weighted regression with weights based on the distance between observation locations. The presentation of GWR in \cite{Fotheringham:2002} follows the development of local likelihood in \cite{Loader:1999}.
@@ -67,14 +72,14 @@
 	%Local regression
 	GWR can be thought of as a kernel smoother for regression coefficients, and hence GWR coefficient estimates are likely to exhibit bias near the boundary of the region being modeled \citep{Hastie:1993b}. Modeling the coefficient surface as locally linear rather than locally constant (by including coefficient-by-location interactions) can reduce this boundary-effect bias \citep{Hastie:1993b}. Adding these interactions to the GWR model is analogous to a transition from kernel smoothing to local regression, and was introduced in \cite{Wang:2008b}.
 	
-	%Variable selection for spatial VCR models
+	%Variable selection for VCR models
 	There is interest among practitioners of GWR not only in estimating the spatially-varying coefficient surface, but in doing variable selection to estimate which covariates are important predictors of the output variable, and in what regions they are important (citations?).
 	
 	%Global Variable selection
 	Some recent research has focused on variable selection in varying-coefficients models. In the context of varying-coefficients regression models, global variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero everywhere against the hypothesis that the coefficient is nonzero somewhere) is distinguished from local variable selection (in which one compares the hypothesis that the coefficient on a given variable is zero at a given location against the hypothesis that the coefficient at that location is nonzero). Global variable selection for models where the varying coefficients are estimated using splines is addressed in \cite{Fan:1999} for response variables that belong to an exponential-family distribution (as in the generalized linear model), and in \cite{Wang:2008a} for models with repeated measurements. \cite{Antoniadis:2012a} estimates the coefficient functions with P-splines, and then uses the nonnegative garrote of \cite{Breiman:1995} to do local variable selection by selecting P-spline bases.
 	
 	%Local variable selection
-	Here we discuss a method of local variable selection in GWR models using the adaptive LASSO of \cite{Zou:2006}. The idea first appears in the literature as the geographically-weighted LASSO (GWL) of \cite{Wheeler:2009}, which uses a jackknife criterion for selection of the LASSO tuning parameters. Because the jackknife criterion can only be computed at locations where the response variable is observed, the GWL cannot be used for imputation of missing data nor for interpolation between observation locations. We avoid this limitation of the GWL by using a penalized-likelihood criterion to select the LASSO tuning parameters (specifically the AIC, but in principle one could use the BIC, \emph{et cetera}). The AIC allows us to easily adapt our method to the setting of a generalized linear model. The local AIC presented here is based on an \emph{ad hoc} calculation of the sample size and degrees of freedom for estimating the spatially-varying coefficient surfaces.
+	Here we discuss a method of local variable selection in GWR models using the adaptive lasso of \cite{Zou:2006}. The idea first appears in the literature as the geographically-weighted lasso (GWL) of \cite{Wheeler:2009}, which uses a jackknife criterion for selection of the lasso tuning parameters. Because the jackknife criterion can only be computed at locations where the response variable is observed, the GWL cannot be used for imputation of missing data nor for interpolation between observation locations. We avoid this limitation of the GWL by using a penalized-likelihood criterion to select the lasso tuning parameters (specifically the AIC, but in principle one could use the BIC, \emph{et cetera}). The AIC allows us to easily adapt our method to the setting of a generalized linear model. The local AIC presented here is based on an \emph{ad hoc} calculation of the sample size and degrees of freedom for estimating the spatially-varying coefficient surfaces.
 	
 \section{Geographically-weighted regression \label{section:GWR}}
 
@@ -94,7 +99,7 @@
 	
 	In order to simplify the notation, let subscripts denote the values of data or parameters at the locations where data is observed. Thus, $\bm{x}(\bm{s}_i) \equiv \bm{x}_i \equiv \left( 1, x_{i1}, \dots, x_{ip} \right)'$, $\bm{\beta}(\bm{s}_i) \equiv \bm{\beta}_i \equiv \left(\beta_{i0}, \beta_{i1}, \dots, \beta_{ip} \right)'$, $y(\bm{s}_i) \equiv y_i$, and $\sigma^2(\bm{s}_i) \equiv \sigma^2_i$. Let $\bm{X} = \left( \bm{x}_1, \dots, \bm{x}_n \right)'$ and $\bm{Y} = \left( y_1, \dots, y_n \right)'$. Equations (\ref{eq:lm(s)}) and (\ref{eq:err}) can now be rewritten as
 	\begin{eqnarray}
-		y_i = \bm{x}'_i \bm{\beta}_i + \epsilon_i \text{ and } \epsilon_i \sim \mathcal{N} \left( 0,\sigma_i^2 \right)
+		y_i = \bm{x}'_i \bm{\beta}_i + \varepsilon_i \text{ and } \varepsilon_i \sim \mathcal{N} \left( 0,\sigma_i^2 \right)
 	\end{eqnarray}
 	
 	Assume that, given the design matrix $\bm{X}$, observations of the response variable at different locations are statistically independent of each other. Then the total log-likelihood of the observed data is the sum of the log-likelihood of each individual observation.
@@ -133,7 +138,7 @@
 	
 	And $\hat{\sigma}_i$, which maximizes (\ref{eq:local-log-likelihood}), is:
 	\begin{eqnarray}
-		\hat{\sigma}_i = \left(\bm{1}_n'\bm{w}_i \right)^{-1} \bm{w}_i'\left(\bm{Y}-\bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'\bm{Y}\right)
+		\hat{\sigma}_i = \left(\bm{1}_n'\bm{w}_i \right)^{-1} \bm{w}_i'\left(\bm{Y}-\bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'\bm{W}_i\bm{Y}\right)
 	\end{eqnarray}
 	
 	\begin{comment}
@@ -161,16 +166,19 @@
 	 
 	
 \section{Model selection \label{section:model-selection}}
-	\subsection{Variable selection}
-	Traditional GWR relies on \emph{a priori} model selection to decide which variables should be included in the model. In the context of ordinary least squares regression, regularization methods such as the adaptive LASSO \citep{Zou:2006} have been shown to have appealing properties for automating variable selection, sometimes including the ``oracle" property of asymptotically selecting exactly the correct variables for inclusion in a regression model.\\
+	\subsection{Variable selection}	
+	Traditional GWR relies on \emph{a priori} model selection to decide which variables should be included in the model. In the context of ordinary least squares regression, regularization methods such as the adaptive lasso \citep{Zou:2006} have been shown to have appealing properties for automating variable selection, sometimes including the ``oracle" property of asymptotically selecting exactly the correct variables for inclusion in a regression model.\\
 	
-	The adaptive LASSO is applied to GWR by first multiplying the design matrix $\bm{X}$ by $\bm{W}_i^{1/2}$, the diagonal matrix of geographic weights centered at $s_i$. Since some of the weights $w_{ii'}$ may be zero, the matrix $\bm{W}_i^{1/2}\bm{X}$ is not of full rank. The matrices $\bm{Y}_i^*$, $\bm{X}_i^*$, and $\bm{W}_i^*$ are formed by dropping the rows of $\bm{X}$  and $\bm{W}_i$ that correspond to observations with zero weight in the regression model at location $\bm{s}_i$. Now, letting $\bm{U}_i^* = \bm{W}_i^{*1/2} \bm{X}_i^*$ and $\bm{V}_i^* = \bm{W}_i^{*1/2} \bm{Y}_i^*$, we seek the coefficients $\bm{\beta}_i$ of the regression model:
+	Three regularization methods were used in this work. The adaptive lasso was implemented in two ways - once via the lars algorithm \citep{Efron:2004b} which uses least squares, and once via doordinate descent using the R package glmnet \citep{Friedman:2010}. The third regularization method implemented here uses the adaptive elastic net penalty \citep{Zou:2009}, also via coordinate descent using the glmnet package.
+	
+	\subsubsection{Adaptive lasso}
+	The adaptive lasso is applied to GWR by first multiplying the design matrix $\bm{X}$ by $\bm{W}_i^{1/2}$, the diagonal matrix of geographic weights centered at $s_i$. Since some of the weights $w_{ii'}$ may be zero, the matrix $\bm{W}_i^{1/2}\bm{X}$ is not of full rank. The matrices $\bm{Y}_i^*$, $\bm{X}_i^*$, and $\bm{W}_i^*$ are formed by dropping the rows of $\bm{X}$  and $\bm{W}_i$ that correspond to observations with zero weight in the regression model at location $\bm{s}_i$. Now, letting $\bm{U}_i^* = \bm{W}_i^{*1/2} \bm{X}_i^*$ and $\bm{V}_i^* = \bm{W}_i^{*1/2} \bm{Y}_i^*$, we seek the coefficients $\bm{\beta}_i$ of the regression model:
 	
 	\begin{eqnarray}
-		\bm{V}_i^* = \bm{U}_i^* \bm{\beta}_i + \epsilon
+		\bm{V}_i^* = \bm{U}_i^* \bm{\beta}_i + \bm{\varepsilon}
 	\end{eqnarray}
 	
-	To apply the adaptive LASSO for estimating these regression coefficients, each column of $\bm{U}_i^*$ is centered around zero and rescaled to have an $\mbox{L}_2$-norm of one. Let $\widetilde{\bm{U}}_i^*$ be the centered-and-scaled version of $\bm{U}_i^*$. Adaptive weights are calculated using the OLS regression coefficients $\bm{\gamma}_i^*$ via ordinary least squares (OLS):
+	To apply the adaptive lasso for estimating these regression coefficients, each column of $\bm{U}_i^*$ is centered around zero and rescaled to have an $\mbox{L}_2$-norm of one. Let $\widetilde{\bm{U}}_i^*$ be the centered-and-scaled version of $\bm{U}_i^*$. Adaptive weights are calculated using the OLS regression coefficients $\bm{\gamma}_i^*$ via ordinary least squares (OLS):
 	
 	\begin{eqnarray}\label{eq:adaptive-weights-regression}
 		\bm{\gamma}_i^* = \left( \widetilde{\bm{U}}_i^{*'} \widetilde{\bm{U}}_i^* \right)^{-1} \widetilde{\bm{U}}_i^{*'} \bm{V}_i^*
@@ -178,10 +186,24 @@
 	
 	Now a final scaling step is done: for $j=1, \dots, p$, the $j$th column of $\tilde{\bm{U}}_i^*$ is multiplied by $\left(\gamma_i^*\right)_j$, the corresponding coefficient from (\ref{eq:adaptive-weights-regression}). Call this rescaled matrix $\widecheck{\bm{U}}_i^*$.\\
 	
-	Finally, the adaptive LASSO coefficient estimates at location $\bm{s}_i$ are found by using the \verb!lars! algorithm \citep{Efron:2004b} to model $\bm{V}_i^*$ as a function of $\widecheck{\bm{U}}_i^*$.
+	Finally, the adaptive lasso coefficient estimates at location $\bm{s}_i$ are found, either by using the \verb!lars! algorithm \citep{Efron:2004b} to model $\bm{V}_i^*$ as a function of $\widecheck{\bm{U}}_i^*$ or by using the \verb!glmnet! package to implement coordinate descent.	Either way, the objective being minimized is the same:
+	
+	\begin{eqnarray}
+		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 &+&  \lambda_i \sum_{j=1}^p |\beta_{ij} / \gamma_{ij}^*|\\
+	\end{eqnarray}
+
+	\subsubsection{Adaptive elastic net}
+	To implement the adaptive elastic net \citep{Zou:2009}, the adaptive weights $\bm{\gamma}_i^*$ are calculated as for the adaptive lasso, but there is an additional elastic net parameter $\alpha$ that controls the balance between the $\ell_1$ and $\ell_2$ penalties, so that the objective to be minimized is:
+
+	\begin{eqnarray}
+		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \alpha \lambda_i \sum_{j=1}^p |\beta_{ij} / \gamma_{ij}^*| + (1-\alpha) \lambda_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij}^* \right)^2\\
+		= \sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \lambda_i \left(\alpha  \sum_{j=1}^p |\beta_{ij} / \gamma_{ij}^*| + (1-\alpha) \sum_{j=1}^p  \left[ \beta_{ij} / \gamma_{ij}^* \right]^2 \right)
+	\end{eqnarray}
+	
+	In the simulation study (Section \ref{sec:simulation}), $\alpha$ is calculated from the maximum global (i.e. for all data without weighting) Pearson correlation between any two covariates, $\rho_{\text{max}}$: $\alpha = 1-\rho_{\text{max}}$.
 
 	\subsection{Tuning parameter selection}	
-	At each location $\bm{s}_i$, it is necessary to select the LASSO tuning parameter $\lambda_i$. To compare different values of $\lambda_i$, we propose a locally-weighted version of the Akaike information criterion (AIC \citep{Akaike:1974}) which we call the local AIC, or $\mbox{AIC}_{\text{loc}}$. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$, playing the role of the sample size and the ``degrees of freedom" $\left( \df_i \right)$ at $\bm{s}_i$ given by the number of nonzero coefficients in $\bm{\beta}_i$ \citep{Zou:2007}.\\
+	At each location $\bm{s}_i$, it is necessary to select the lasso tuning parameter $\lambda_i$. To compare different values of $\lambda_i$, we propose a locally-weighted version of the Akaike information criterion (AIC) \citep{Akaike:1974} which we call the local AIC, or $\mbox{AIC}_{\text{loc}}$. The local AIC is calculated by adding a penalty to the local likelihood, with the sum of the weights around $s_i$, $\sum_{i'=1}^n w_{ii'}$, playing the role of the sample size and the ``degrees of freedom" $\left( \df_i \right)$ at $\bm{s}_i$ given by the number of nonzero coefficients in $\bm{\beta}_i$ \citep{Zou:2007}.\\
 	
 	\begin{eqnarray}
 		\mbox{AIC}_{\text{loc}, i} &=& -2 \sum_{i'=1}^n \ell_{ii'}  + 2 \mbox{df}_i\\
@@ -192,28 +214,28 @@
 	
 	Where the estimated local variance $\hat{\sigma}_i^2$ is the variance estimate from the unpenalized local model \citep{Zou:2007}, so $C_i$ does not depend on the choice of tuning parameter and can be ignored.
 	
-	\cite{Wheeler:2009} proposed selecting the tuning parameter for the LASSO at location $\bm{s}_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$. Because the jackknife prediction error is undefined everywhere except for at observation locations, this choice restricts coefficient estimation to occur at the locations where data has been observed. By contrast, the local AIC can be calculated at any location where we can calculate the local likelihood. As a practical matter this allows for variable selection and coefficient surface estimation to be done at locations where no data was observed (interpolation) and for imputation of missing values of the response variable.
+	\cite{Wheeler:2009} proposed selecting the tuning parameter for the lasso at location $\bm{s}_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$. Because the jackknife prediction error is undefined everywhere except for at observation locations, this choice restricts coefficient estimation to occur at the locations where data has been observed. By contrast, the local AIC can be calculated at any location where we can calculate the local likelihood. As a practical matter this allows for variable selection and coefficient surface estimation to be done at locations where no data was observed (interpolation) and for imputation of missing values of the response variable.
 	 
 	\subsection{Bandwidth selection}
 	The bandwidth parameter is global and so we need a global statistic for comparing prospective bandwidths. The objective minimized by GWL is:	
 	\begin{eqnarray}
-		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \sum_{j=1}^p \lambda_{ij} \beta_{ij}
+		\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \sum_{j=1}^p \lambda_{ij} |\beta_{ij}|
 	\end{eqnarray}
 	
-	Where $\lambda_{ij}, j =1, \dots, p$ are penalties from the adaptive LASSO \citep{Zou:2006}. Taking the derivatives with respect to $\beta$ and setting to zero, we see that
+	Where $\lambda_{ij}, j =1, \dots, p$ are penalties from the adaptive lasso \citep{Zou:2006}. Taking the derivatives with respect to $\beta$ and setting to zero, we see that
 	\begin{eqnarray}
 		\hat{\bm{\beta}}_{i, \text{GWL}} &=& \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i\\
 		\hat{y}_i = \bm{x}_i' \hat{\bm{\beta}}_{i, \text{GWL}} &=&  \bm{x}_i' \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{Y}  - \frac{1}{2} \bm{x}_i' \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i
 	\end{eqnarray}
 	
-	Unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GWL is not a linear smoother it is not possible to calculate the AIC as in \cite{Fotheringham:2002} \citep{Zou:2006}. We propose a statistic called the total AIC ($\mbox{AIC}_{\text{tot}}$) for the purpose of selecting the bandwidth parameter. Because of the kernel weights and the application of the adaptive LASSO, the sample size and the degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:	
+	Unlike in the case of ordinary geographically-weighted regression, the fitted values $\hat{\bm{Y}}$ are not a linear combination of the observations $\bm{Y}$. Because GWL is not a linear smoother it is not possible to calculate the AIC as in \cite{Fotheringham:2002} \citep{Zou:2006}. We propose a statistic called the total AIC ($\mbox{AIC}_{\text{tot}}$) for the purpose of selecting the bandwidth parameter. Because of the kernel weights and the application of the adaptive lasso, the sample size and the degrees of freedom are different at each location. The total AIC is found by taking the sum over all of the observed data:	
 		
 	\begin{eqnarray}
-		\mbox{AIC}_{\mbox{tot}} &=& -2 \times \sum_{i=1}^n \ell_i + 2 \times \mbox{df}\\
-		&=& \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}_i' \hat{\bm{\beta}}_i \right)^2 \right\} + 2 \times \mbox{df}\label{eq:total-AIC1}
+		\mbox{AIC}_{\mbox{tot}} &=& -2 \times \sum_{i=1}^n \ell_i + 2 \mbox{df}\\
+		&=& \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}_i' \hat{\bm{\beta}}_i \right)^2 \right\} + 2 \mbox{df}\label{eq:total-AIC1}
 	\end{eqnarray}	
 	
-	What remains is to calculate $\mbox{df}$, the number of degrees of freedom used by the model. Classical GWR, as developed in \cite{Loader:1999} and \cite{Fotheringham:2002} calculates $\mbox{df}$ using the trace of the ``hat" matrix, but because the GWL is not a linear smoother, there is no ``hat" matrix associated with GWL. Instead, notice that $\mbox{df}$ can be pulled into the summation in (\ref{eq:total-AIC1}):
+	What remains is to calculate $\mbox{df}$, the number of degrees of freedom used by the model. Ordinary GWR, as developed in \cite{Loader:1999} and \cite{Fotheringham:2002} calculates $\mbox{df}$ using the trace of the ``hat" matrix, but because the GWL is not a linear smoother, there is no ``hat" matrix associated with GWL. Instead, notice that $\mbox{df}$ can be pulled into the summation in (\ref{eq:total-AIC1}):
 		
 	%This is different from the formulas for the AIC as proposed in \cite{Fotheringham:2002} and \cite{Loader:1999}. The reason is that the basic GWR estimator is linear, so the degrees of freedom can be approximated using the trace of the ``hat" matrix. The GWL, though, is not a linear estimator so some...\ However, since the GWL does local variable selection, the model may use a different number of parameters at each location $s_i$. 
 			
@@ -224,7 +246,7 @@
 	Now, because we are considering the sum of local weights to be the sample size for the local models, we estimate $\mbox{df}$ by $\sum_{i=1}^n \left\{ \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \mbox{df}_i \right\}$, and the total AIC is then:
 	
 	\begin{eqnarray}\label{eq:total-AIC2}
-		\mbox{AIC}_{\mbox{tot}} &=& \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + 2 \times \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \mbox{df}_i \right\}
+		\mbox{AIC}_{\mbox{tot}} &=& \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + 2 \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \mbox{df}_i \right\}
 	\end{eqnarray}
 			
 	The bandwidth that minimizes (\ref{eq:total-AIC2}) is found by a line search.\\
@@ -232,7 +254,7 @@
 	\subsection{Confidence interval construction}	
 	Confidence intervals for the GWL's coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by exploiting an assumption of normally-distributed residuals. Then the, e.g., 95\% confidence interval for each regression coefficient is defined by the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
 	 
-	 	To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive LASSO tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate.\\
+	 	To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive lasso tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate.\\
 	
 		 Unshrunk coefficient estimates are found by using the GWL at each location for variable selection only and then estimating the coefficients for the selected variables by weighted least squares. An unshrunk bootstrap confidence interval is found by estimating the unshrunk coefficients for each of the $n_B$ bootstrap replicates and then calculating the percentiles as above.\\
 		 
@@ -245,21 +267,21 @@
 
 
 
-\section{Simulation}
+\section{Simulation \label{sec:simulation}}
 	\subsection{Simulation setup}
-	A simulation study was conducted to assess the performance of the method described in Sections \ref{section:GWR}-\ref{section:model-selection}.
+	A simulation study was conducted to assess the performance of the method described in Sections \ref{section:GWR}-\ref{section:model-selection}. There were twelve simulation settings, each of which was simulated 100 times. For each of the twelve settings, $\bm{\beta}_1$, the true coefficient surface for $\bm{Z}_1$, was nonzero in at least part of the simulation domain. There were four other simulated covariates, but their true coefficient surfaces were zero across the area under simulation.
 	
 	Data was simulated on $[0,1] \times [0,1]$, which was divided into a $30 \times 30$ grid. Each of $p=5$ covariates $Z_1, \dots, Z_p$ was simulated by a Gaussian random field (GRF) with mean zero and exponential spatial covariance $Cov \left(Z_{ji}, Z_{ji'} \right) = \sigma_z^2 \exp{\left( -\tau_z^{-1} \delta_{ii'} \right)}$ where $\sigma_z^2=1$ is the variance, $\tau_z$ is the range parameter, and $\delta_{ii'}$ is the Euclidean distance $\|\bm{s}_i - \bm{s}_{i'}\|_2$. Correlation was induced between the covariates by multiplying the $\bm{Z}$ matrix by $\bm{R}$, where $\bm{R}$ is the Cholesky decomposition of the covariance matrix $\Sigma = \bm{R}'\bm{R}$. The covariance matrix $\bm{\Sigma}$ is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.
 		
-	The simulated response is $y_i = \bm{z}'_i \bm{\beta}_i + \epsilon_i$ for $i=1, \dots, 900$ where the vector of additive errors $\bm{\epsilon}$ is generated from a GRF with spatial covariance $Cov \left(\epsilon_{i}, \epsilon_{i'} \right) = \sigma_{\epsilon}^2 \exp{\left( -\tau_{\epsilon}^{-1} \delta_{ii'} \right)}$ where $\sigma_{\epsilon}^2=1$.
+	The simulated response is $y_i = \bm{z}'_i \bm{\beta}_i + \varepsilon_i$ for $i=1, \dots, 900$ where for simplicity the vector of additive errors $\bm{\varepsilon}$ were iid Gaussian.%is generated from a GRF with spatial covariance $Cov \left(\varepsilon_{i}, \varepsilon_{i'} \right) = \sigma_{\varepsilon}^2 \exp{\left( -\tau_{\varepsilon}^{-1} \delta_{ii'} \right)}$ where $\sigma_{\varepsilon}^2=1$.
 	
 	The simulated data include the output $y$ and five covariates $Z_1, \dots, Z_5$. The true data-generating model uses only $Z_1$, so $Z_2, \dots, Z_5$ are included to test the variable-selection properties of GWL.
 	
-	Data was simulated under 12 different settings (Table \ref{table:simulation_settings}): three functional forms (step, gradient, and parabola; Figure \ref{sim-actual}) were used for the coefficient surface $\beta_1$; data was simulated with ($\rho = 0.5$) and without ($\rho = 0$) correlation between the covariates; and simulations were made with low ($\sigma^2 = 0.25$) and high ($\sigma^2 = 1$) variance for the random error term. Each of the twelve settings was simulated 100 times.\\
+	The twelve simulation settings are described in Table \ref{table:simulation_settings}. Three parameters were varied to produce the twelve settings: there were three functional forms for the coefficient surface $\beta_1$ (step, gradient, and parabola - see Figure \ref{sim-actual}); data was simulated both with ($\rho = 0.5$) and without ($\rho = 0$) correlation between the covariates; and simulations were made with low ($\sigma^2 = 0.25$) and high ($\sigma^2 = 1$) variance for the random noise term.\\
 	
-	The performance of the  was compared to oracular GWR (O-GWR), which is ordinary GWR with ``oracular" variable selection, meaning that exactly the correct set of predictors was used to fit the GWR model at each location in the simulation.\\
+	The performance of the penalized GWR methods (adaptive lasso via \verb!lars! and via\verb!glmnet!, and the adaptive elastic net [\verb!enet!) was compared to that of oracular GWR (O-GWR), which is ordinary GWR with ``oracular" variable selection, meaning that exactly the correct set of predictors was used to fit the GWR model at each location in the simulation. Also included in the comparison was the GWR algorithm of \cite{Fotheringham:2002} without variable selection (\verb!gwr!). Finally, there is a category of simulation results using the three penalized GWR methods for local variable selection and then ordinary GWR for coefficient estimation.\\
 	
-	% latex table generated in R 2.15.1 by xtable 1.7-0 package
+% latex table generated in R 2.15.1 by xtable 1.7-0 package
 % Fri Jan 18 10:19:47 2013
 \begin{table}[h!]
 	\begin{center}
@@ -293,13 +315,20 @@
 		\end{center}
 	\end{figure}
 	
+	\begin{figure}
+		\begin{center}
+			\includegraphics[width=0.5\textwidth]{../../figures/simulation/illustrations/summary-locations.pdf}
+			\caption{Locations where the variable selection and coefficient estimation of GWL were summarized.\label{fig:summary-locations}}
+		\end{center}
+	\end{figure}
+	
 	\subsection{Results}
-	Results from the simulation were summarized at five locations on the simulated grid. The five key locations were chosen because they represent interesting regions of the $\beta_1$ coefficient surface. The results of variable selection (Tables \ref{table:loc1-selection} - \ref{table:loc5-selection}) and coefficient estimation (Tables \ref{table:loc1-X1-MSEX} - \ref{table:loc5-estimation}) are presented in the tables below.
+	Results from the simulation were summarized at five locations on the simulated grid (see Figure \ref{fig:summary-locations}). The five key locations were chosen because they represent interesting regions of the $\beta_1$ coefficient surfaces. The results of variable selection (Tables \ref{table:loc1-selection} - \ref{table:loc5-selection}) and coefficient estimation (Tables \ref{table:loc1-X1-MSEX} - \ref{table:loc5-estimation}) are presented in the tables below.
 	%Results of the simulation experiment were summarized to asses the consistency in selection and estimation, as well as the coverage properties of the confidence intervals. The confidence intervals based on the bootstrap (without shrinkage) were used for the GWL because they seemed to uniformly outperform the other options.\\
 	
 		
 	\subsection{Discussion}
-	
+	There is no clear winner among the methods tested. In most cases, the mean squared error of the penalized GWR coefficient estimates is quite similar to that of the ordinary GWR coefficient estimates for $\beta_1(\bm{s})$. 
 	
 	
 	\subsection{Tables}
@@ -570,9 +599,9 @@
 			
 \section{Data analysis}
 	\subsection{Census poverty data}
-	An example analysis is presented to demonstrate application of the geographically-weighted lasso. The analysis focuses on creating a varying-coefficients regression model to describe how poverty is related to a list of demographic and social variables. The data is from the U.S. Census Bureau's decennial census  from 1990. This analysis looks specifically at the upper midwest states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. All data is aggregated at the county level.
+	An example data analysis is presented to demonstrate application of penalized GWR. In this example we use penalized GWR to do local variable selection and coefficient estimation for a  varying-coefficients model of how poverty is related to a list of demographic and social variables. The data is from the U.S. Census Bureau's decennial census  from 1970. This analysis looks specifically at the upper midwest states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. This is areal data, aggregated at the county level.
 	
-	Table \ref{table:census-vars} lists the variables that were considered as potential predictors of county-level poverty rate. The outcome of interest (poverty rate) is a proportion and so takes values on $[0,1]$, but to demonstrate the geographically-weighted lasso in a linear regression context, we model the logit-transformed poverty rate. The predictor variables were not transformed - county-level proportions were used.
+	Table \ref{table:census-vars} lists the variables that were considered as potential predictors of county-level poverty rate. The outcome of interest (poverty rate) is a proportion and so takes values on $[0,1]$, but to demonstrate the geographically-weighted lasso in a linear regression context, we model the logit-transformed poverty rate. The predictor variables were not transformed - raw proportions were used.
 	
 	\begin{table}
 		\begin{center}
@@ -595,69 +624,17 @@
 	\end{table}
 	
 	\subsection{Modeling}	
-	Variable selection and coefficient estimation using the geographically-weighted lasso were done for each census separately (no attempt is made here to borrow strength across years). Therefore the bandwidth was chosen independently for the model of each census. Table \ref{table:census-bandwidth} lists the bandwidth that were selected for each census.
-	
-	\begin{table}
-		\begin{center}
-		\begin{tabular}{ll}
-			Year & Bandwidth \\
-			\hline
-			1960 & 0.033\\
-			1970 &  0.381\\
-			1980 & 0.122\\
-			1990 & 0.802\\
-			2000 & 0.854\\
-			2006 & 0.976\\
-		\end{tabular}
-		\caption{Bandwidth selected for each year's model.\label{table:census-bandwidth}}
-		\end{center}		
-	\end{table}
+	The adaptive elastic net was used for variable selection and coefficient estimation. 
 	
 	\subsection{Figures}
 	The coefficient estimates are plotted on maps of the upper midwest in Figures \ref{fig:census-coefs-1960} - \ref{fig:census-coefs-2006}. It is immediately apparent that the estimated coefficient surfaces are non-constant for most variables.\\
-		
-	\begin{figure}
-		\begin{center}
-			\includegraphics[height=8in]{../../figures/poverty/1960.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 1960 census.\label{fig:census-coefs-1960}}
-		\end{center}		
-	\end{figure}
 
 	\begin{figure}
 		\begin{center}
 			\includegraphics[height=8in]{../../figures/poverty/1970.linear.coefficients.pdf}
 			\caption{Estimated coefficient surfaces for the 1970 census.\label{fig:census-coefs-1970}}
 		\end{center}
-	\end{figure}
-	
-	\begin{figure}
-		\begin{center}
-			\includegraphics[height=8in]{../../figures/poverty/1980.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 1980 census.\label{fig:census-coefs-1980}}
-		\end{center}
-	\end{figure}
-	
-	\begin{figure}
-		\begin{center}
-			\includegraphics[height=8in]{../../figures/poverty/1990.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 1990 census.\label{fig:census-coefs-1990}}
-		\end{center}
-	\end{figure}
-	
-	\begin{figure}
-		\begin{center}
-			\includegraphics[height=8in]{../../figures/poverty/2000.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 2000 census.\label{fig:census-coefs-2000}}
-		\end{center}
-	\end{figure}
-
-	\begin{figure}
-		\begin{center}
-			\includegraphics[height=8in]{../../figures/poverty/2006.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 2006 census.\label{fig:census-coefs-2006}}
-		\end{center}
-	\end{figure}
-			
+	\end{figure}			
 	\subsection{Discussion}
 	If the model is to be believed, then it is onto uncommon for the same variable to have both positive and negative effects on poverty in different geographical areas - see, for instance, the coefficient surface for \verb!pex! (mining employment) in the 1970 census. That surface indicates an interaction whereby the proportion of people working in mining in southern parts of the studied area is associated with an increase in the poverty rate, while in northern parts of the studied area it is associated with a decrease in the poverty rate. Often, a variable is found to be associated with an effect on poverty in some counties but not in others (see, for instance, the coefficient surface for \verb!pserve! (services employment) in 1980 - 
 	

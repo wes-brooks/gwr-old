@@ -10,6 +10,14 @@
  
 \begin{figure}
 \begin{center}
+\includegraphics[width=0.5\textwidth]{../../figures/simulation/illustrations/summary-locations.pdf}
+\caption{Locations where the variable selection and coefficient estimation of GWL were summarized.\label{fig:summary-locations}}
+\end{center}
+\end{figure}
+\efloatseparator
+ 
+\begin{figure}
+\begin{center}
 \includegraphics[height=8in]{../../figures/poverty/1960.linear.coefficients.pdf}
 \caption{Estimated coefficient surfaces for the 1960 census.\label{fig:census-coefs-1960}}
 \end{center}

@@ -10,7 +10,7 @@ gwglmnet.sel = function(formula, data=list(), family, range=NULL, weights=NULL, 
         beta1 = min(range)
         beta2 = max(range)
     } else {
-        if (method == "distance") {
+        if (method == "dist") {
             bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
             difmin <- spDistsN1(bbox, bbox[2, ], longlat)[1]
             if (any(!is.finite(difmin))) 

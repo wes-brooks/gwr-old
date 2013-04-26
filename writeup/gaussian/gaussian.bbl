@@ -43,6 +43,13 @@ Fotheringham, A., C.~Brunsdon, and M.~Charlton (2002).
   varying relationships}.
 \newblock Wiley.
 
+\bibitem[\protect\citeauthoryear{Friedman, Hastie, and Tibshirani}{Friedman
+  et~al.}{2010}]{Friedman:2010}
+Friedman, J., T.~Hastie, and R.~Tibshirani (2010).
+\newblock Regularization paths for generalized linear models via coordinate
+  descent.
+\newblock {\em journal of Statistical Software\/}~{\em 33\/}(1), 1--22.
+
 \bibitem[\protect\citeauthoryear{Hastie and Loader}{Hastie and
   Loader}{1993}]{Hastie:1993b}
 Hastie, T. and C.~Loader (1993).
@@ -98,5 +105,10 @@ Zou, H. (2006).
 Zou, H., T.~Hastie, and R.~Tibshirani (2007).
 \newblock On the ``degrees of freedom" of the lasso.
 \newblock {\em Annals of Statistics\/}~{\em 35\/}(5), 2173--2192.
+
+\bibitem[\protect\citeauthoryear{Zou and Zhang}{Zou and Zhang}{2009}]{Zou:2009}
+Zou, H. and H.~Zhang (2009).
+\newblock On the adaptive elastic net with a diverging number of parameters.
+\newblock {\em The Annals of Statistics\/}~{\em 37\/}(4), 1733--1751.
 
 \end{thebibliography}
