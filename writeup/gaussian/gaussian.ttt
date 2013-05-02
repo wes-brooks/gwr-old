@@ -8,10 +8,12 @@ Setting & function & $\rho$ & $\sigma^2$ \\
 2 & step & 0 & 1 \\
 3 & step & 0.5 & 0.25 \\
 4 & step & 0.5 & 1 \\
+\hline
 5 & gradient & 0 & 0.25 \\
 6 & gradient & 0 & 1 \\
 7 & gradient & 0.5 & 0.25 \\
 8 & gradient & 0.5 & 1 \\
+\hline
 9 & parabola & 0 & 0.25 \\
 10 & parabola & 0 & 1 \\
 11 & parabola & 0.5 & 0.25 \\
@@ -24,24 +26,24 @@ Setting & function & $\rho$ & $\sigma^2$ \\
  
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{cc|cc|cc}
-\multicolumn{2}{c}{\texttt{lars}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
- $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ \\
-  \hline
-0.98 & 0.04 & 1.00 & 0.04 & 1.00 & 0.05 \\
-  0.89 & 0.09 & 0.86 & 0.09 & 0.82 & 0.07 \\
-  0.96 & 0.07 & 0.99 & 0.10 & 0.96 & 0.09 \\
-  0.84 & 0.04 & 0.84 & 0.07 & 0.88 & 0.05 \\
-  \hline
-  1.00 & 0.04 & 1.00 & 0.03 & 1.00 & 0.03 \\
-  0.99 & 0.08 & 0.97 & 0.07 & 0.97 & 0.07 \\
-  1.00 & 0.07 & 1.00 & 0.06 & 1.00 & 0.04 \\
-  0.90 & 0.08 & 0.92 & 0.08 & 0.92 & 0.08 \\
-  \hline
-  0.94 & 0.06 & 0.95 & 0.06 & 0.94 & 0.06 \\
-  0.80 & 0.06 & 0.81 & 0.07 & 0.80 & 0.06 \\
-  0.95 & 0.06 & 0.94 & 0.09 & 0.95 & 0.04 \\
-  0.78 & 0.12 & 0.79 & 0.12 & 0.80 & 0.12 \\
+\begin{tabular}{ccc|cc|cc}
+& \multicolumn{2}{c}{\texttt{lars}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
+& $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ \\
+  \cline{2-7}
+  \multirow{4}{*}{step} & 0.98 & 0.04 & 1.00 & 0.04 & 1.00 & 0.05 \\
+  & 0.89 & 0.09 & 0.86 & 0.09 & 0.82 & 0.07 \\
+  & 0.96 & 0.07 & 0.99 & 0.10 & 0.96 & 0.09 \\
+  & 0.84 & 0.04 & 0.84 & 0.07 & 0.88 & 0.05 \\
+  \cline{2-7}
+  \multirow{4}{*}{gradient} & 1.00 & 0.04 & 1.00 & 0.03 & 1.00 & 0.03 \\
+  & 0.99 & 0.08 & 0.97 & 0.07 & 0.97 & 0.07 \\
+  & 1.00 & 0.07 & 1.00 & 0.06 & 1.00 & 0.04 \\
+  & 0.90 & 0.08 & 0.92 & 0.08 & 0.92 & 0.08 \\
+  \cline{2-7}
+  \multirow{4}{*}{parabola} & 0.94 & 0.06 & 0.95 & 0.06 & 0.94 & 0.06 \\
+  & 0.80 & 0.06 & 0.81 & 0.07 & 0.80 & 0.06 \\
+  & 0.95 & 0.06 & 0.94 & 0.09 & 0.95 & 0.04 \\
+  & 0.78 & 0.12 & 0.79 & 0.12 & 0.80 & 0.12 \\
   \end{tabular}
 \caption{Selection frequency at location 1\label{table:loc1-selection}}
 \end{center}
@@ -50,24 +52,24 @@ Setting & function & $\rho$ & $\sigma^2$ \\
  
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{cc|cc|cc}
-\multicolumn{2}{c}{\texttt{lars}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
- $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ \\
-  \hline
-1.00 & 0.07 & 1.00 & 0.07 & 1.00 & 0.07 \\
-  1.00 & 0.06 & 1.00 & 0.06 & 1.00 & 0.07 \\
-  1.00 & 0.05 & 1.00 & 0.06 & 1.00 & 0.05 \\
-  0.99 & 0.03 & 1.00 & 0.07 & 0.99 & 0.04 \\
-  \hline
-  1.00 & 0.10 & 1.00 & 0.08 & 1.00 & 0.07 \\
-  0.98 & 0.07 & 0.98 & 0.08 & 0.99 & 0.07 \\
-  1.00 & 0.07 & 1.00 & 0.06 & 1.00 & 0.05 \\
-  0.98 & 0.06 & 0.99 & 0.08 & 0.99 & 0.05 \\
-  \hline
-  1.00 & 0.09 & 1.00 & 0.08 & 1.00 & 0.08 \\
-  0.97 & 0.12 & 0.98 & 0.11 & 0.98 & 0.10 \\
-  1.00 & 0.06 & 1.00 & 0.05 & 1.00 & 0.05 \\
-  0.94 & 0.08 & 0.94 & 0.10 & 0.94 & 0.08 \\
+\begin{tabular}{ccc|cc|cc}
+& \multicolumn{2}{c}{\texttt{lars}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
+& $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ \\
+  \cline{2-7}
+  \multirow{4}{*}{step} & 1.00 & 0.07 & 1.00 & 0.07 & 1.00 & 0.07 \\
+  & 1.00 & 0.06 & 1.00 & 0.06 & 1.00 & 0.07 \\
+  & 1.00 & 0.05 & 1.00 & 0.06 & 1.00 & 0.05 \\
+  & 0.99 & 0.03 & 1.00 & 0.07 & 0.99 & 0.04 \\
+  \cline{2-7}
+  \multirow{4}{*}{gradient} & 1.00 & 0.10 & 1.00 & 0.08 & 1.00 & 0.07 \\
+  & 0.98 & 0.07 & 0.98 & 0.08 & 0.99 & 0.07 \\
+  & 1.00 & 0.07 & 1.00 & 0.06 & 1.00 & 0.05 \\
+  & 0.98 & 0.06 & 0.99 & 0.08 & 0.99 & 0.05 \\
+  \cline{2-7}
+  \multirow{4}{*}{parabola} & 1.00 & 0.09 & 1.00 & 0.08 & 1.00 & 0.08 \\
+  & 0.97 & 0.12 & 0.98 & 0.11 & 0.98 & 0.10 \\
+  & 1.00 & 0.06 & 1.00 & 0.05 & 1.00 & 0.05 \\
+  & 0.94 & 0.08 & 0.94 & 0.10 & 0.94 & 0.08 \\
   \end{tabular}
 \caption{Selection frequency at location 2\label{table:loc2-selection}}
 \end{center}
@@ -76,24 +78,24 @@ Setting & function & $\rho$ & $\sigma^2$ \\
  
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{cc|cc|cc}
-\multicolumn{2}{c}{\texttt{lars}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
- $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ \\
-  \hline
-0.99 & 0.05 & 0.99 & 0.06 & 0.99 & 0.06 \\
-  0.84 & 0.08 & 0.84 & 0.08 & 0.82 & 0.07 \\
-  0.96 & 0.05 & 0.97 & 0.08 & 0.92 & 0.04 \\
-  0.78 & 0.08 & 0.81 & 0.11 & 0.80 & 0.08 \\
-  \hline
-  1.00 & 0.09 & 1.00 & 0.08 & 1.00 & 0.07 \\
-  0.98 & 0.08 & 0.95 & 0.08 & 0.96 & 0.07 \\
-  1.00 & 0.07 & 1.00 & 0.06 & 1.00 & 0.04 \\
-  0.93 & 0.09 & 0.95 & 0.09 & 0.94 & 0.09 \\
-  \hline
-  1.00 & 0.09 & 1.00 & 0.09 & 1.00 & 0.09 \\
-  0.96 & 0.10 & 0.97 & 0.09 & 0.97 & 0.10 \\
-  1.00 & 0.08 & 1.00 & 0.07 & 1.00 & 0.07 \\
-  0.93 & 0.10 & 0.94 & 0.10 & 0.96 & 0.10 \\
+\begin{tabular}{ccc|cc|cc}
+& \multicolumn{2}{c}{\texttt{lars}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
+& $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ \\
+  \cline{2-7}
+  \multirow{4}{*}{step} & 0.99 & 0.05 & 0.99 & 0.06 & 0.99 & 0.06 \\
+  & 0.84 & 0.08 & 0.84 & 0.08 & 0.82 & 0.07 \\
+  & 0.96 & 0.05 & 0.97 & 0.08 & 0.92 & 0.04 \\
+  & 0.78 & 0.08 & 0.81 & 0.11 & 0.80 & 0.08 \\
+  \cline{2-7}
+  \multirow{4}{*}{gradient} & 1.00 & 0.09 & 1.00 & 0.08 & 1.00 & 0.07 \\
+  & 0.98 & 0.08 & 0.95 & 0.08 & 0.96 & 0.07 \\
+  & 1.00 & 0.07 & 1.00 & 0.06 & 1.00 & 0.04 \\
+  & 0.93 & 0.09 & 0.95 & 0.09 & 0.94 & 0.09 \\
+  \cline{2-7}
+  \multirow{4}{*}{parabola} & 1.00 & 0.09 & 1.00 & 0.09 & 1.00 & 0.09 \\
+  & 0.96 & 0.10 & 0.97 & 0.09 & 0.97 & 0.10 \\
+  & 1.00 & 0.08 & 1.00 & 0.07 & 1.00 & 0.07 \\
+  & 0.93 & 0.10 & 0.94 & 0.10 & 0.96 & 0.10 \\
   \end{tabular}
 \caption{Selection frequency at location 3\label{table:loc3-selection}}
 \end{center}
@@ -102,24 +104,24 @@ Setting & function & $\rho$ & $\sigma^2$ \\
  
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{cc|cc|cc}
-\multicolumn{2}{c}{\texttt{lars}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
- $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ \\
-  \hline
-0.57 & 0.08 & 0.64 & 0.06 & 0.59 & 0.06 \\
-  0.48 & 0.07 & 0.48 & 0.07 & 0.49 & 0.07 \\
-  0.45 & 0.08 & 0.51 & 0.12 & 0.40 & 0.07 \\
-  0.53 & 0.08 & 0.52 & 0.07 & 0.51 & 0.07 \\
-  \hline
-  1.00 & 0.06 & 1.00 & 0.06 & 1.00 & 0.06 \\
-  0.98 & 0.07 & 0.95 & 0.07 & 0.93 & 0.06 \\
-  1.00 & 0.09 & 1.00 & 0.08 & 1.00 & 0.10 \\
-  0.96 & 0.07 & 0.95 & 0.11 & 0.95 & 0.08 \\
-  \hline
-  1.00 & 0.09 & 1.00 & 0.08 & 1.00 & 0.08 \\
-  0.93 & 0.07 & 0.92 & 0.08 & 0.94 & 0.08 \\
-  1.00 & 0.08 & 1.00 & 0.08 & 1.00 & 0.08 \\
-  0.96 & 0.08 & 0.96 & 0.09 & 0.96 & 0.09 \\
+\begin{tabular}{ccc|cc|cc}
+& \multicolumn{2}{c}{\texttt{lars}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
+& $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ \\
+  \cline{2-7}
+  \multirow{4}{*}{step} & 0.57 & 0.08 & 0.64 & 0.06 & 0.59 & 0.06 \\
+  & 0.48 & 0.07 & 0.48 & 0.07 & 0.49 & 0.07 \\
+  & 0.45 & 0.08 & 0.51 & 0.12 & 0.40 & 0.07 \\
+  & 0.53 & 0.08 & 0.52 & 0.07 & 0.51 & 0.07 \\
+  \cline{2-7}
+  \multirow{4}{*}{gradient} & 1.00 & 0.06 & 1.00 & 0.06 & 1.00 & 0.06 \\
+  & 0.98 & 0.07 & 0.95 & 0.07 & 0.93 & 0.06 \\
+  & 1.00 & 0.09 & 1.00 & 0.08 & 1.00 & 0.10 \\
+  & 0.96 & 0.07 & 0.95 & 0.11 & 0.95 & 0.08 \\
+  \cline{2-7}
+  \multirow{4}{*}{parabola} & 1.00 & 0.09 & 1.00 & 0.08 & 1.00 & 0.08 \\
+  & 0.93 & 0.07 & 0.92 & 0.08 & 0.94 & 0.08 \\
+  & 1.00 & 0.08 & 1.00 & 0.08 & 1.00 & 0.08 \\
+  & 0.96 & 0.08 & 0.96 & 0.09 & 0.96 & 0.09 \\
   \end{tabular}
 \caption{Selection frequency at location 4\label{table:loc4-selection}}
 \end{center}
@@ -128,24 +130,24 @@ Setting & function & $\rho$ & $\sigma^2$ \\
  
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{cc|cc|cc}
-\multicolumn{2}{c}{\texttt{lars}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
- $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ \\
-  \hline
-0.04 & 0.03 & 0.03 & 0.03 & 0.03 & 0.03 \\
-  0.07 & 0.05 & 0.06 & 0.04 & 0.04 & 0.05 \\
-  0.02 & 0.04 & 0.02 & 0.03 & 0.03 & 0.05 \\
-  0.05 & 0.04 & 0.04 & 0.03 & 0.06 & 0.06 \\
-  \hline
-  0.92 & 0.05 & 0.93 & 0.05 & 0.94 & 0.04 \\
-  0.71 & 0.08 & 0.70 & 0.07 & 0.70 & 0.07 \\
-  0.93 & 0.10 & 0.95 & 0.14 & 0.95 & 0.10 \\
-  0.60 & 0.07 & 0.63 & 0.13 & 0.64 & 0.06 \\
-  \hline
-  0.93 & 0.10 & 0.93 & 0.09 & 0.92 & 0.10 \\
-  0.80 & 0.05 & 0.81 & 0.05 & 0.79 & 0.05 \\
-  0.93 & 0.07 & 0.94 & 0.12 & 0.94 & 0.07 \\
-  0.81 & 0.09 & 0.81 & 0.11 & 0.83 & 0.08 \\
+\begin{tabular}{ccc|cc|cc}
+& \multicolumn{2}{c}{\texttt{lars}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
+& $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ & $\beta_1$ & $\beta_4$ - $\beta_5$ \\
+  \cline{2-7}
+  \multirow{4}{*}{step} & 0.04 & 0.03 & 0.03 & 0.03 & 0.03 & 0.03 \\
+  & 0.07 & 0.05 & 0.06 & 0.04 & 0.04 & 0.05 \\
+  & 0.02 & 0.04 & 0.02 & 0.03 & 0.03 & 0.05 \\
+  & 0.05 & 0.04 & 0.04 & 0.03 & 0.06 & 0.06 \\
+  \cline{2-7}
+  \multirow{4}{*}{gradient} & 0.92 & 0.05 & 0.93 & 0.05 & 0.94 & 0.04 \\
+  & 0.71 & 0.08 & 0.70 & 0.07 & 0.70 & 0.07 \\
+  & 0.93 & 0.10 & 0.95 & 0.14 & 0.95 & 0.10 \\
+  & 0.60 & 0.07 & 0.63 & 0.13 & 0.64 & 0.06 \\
+  \cline{2-7}
+  \multirow{4}{*}{parabola} & 0.93 & 0.10 & 0.93 & 0.09 & 0.92 & 0.10 \\
+  & 0.80 & 0.05 & 0.81 & 0.05 & 0.79 & 0.05 \\
+  & 0.93 & 0.07 & 0.94 & 0.12 & 0.94 & 0.07 \\
+  & 0.81 & 0.09 & 0.81 & 0.11 & 0.83 & 0.08 \\
   \end{tabular}
 \caption{Selection frequency at location 5\label{table:loc5-selection}}
 \end{center}
@@ -154,115 +156,500 @@ Setting & function & $\rho$ & $\sigma^2$ \\
  
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{cccccccc}
- lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
-  \hline
-0.046 & 0.025 & \emph{0.023} & 0.151 & 0.127 & 0.124 & 0.082 & \textbf{0.005} \\
-  0.146 & 0.186 & 0.216 & 0.290 & 0.376 & 0.375 & \emph{0.134} & \textbf{0.009} \\
-  0.072 & \emph{0.045} & 0.073 & 0.172 & 0.134 & 0.205 & 0.101 & \textbf{0.011} \\
-  0.214 & 0.218 & 0.179 & 0.441 & 0.425 & 0.369 & \emph{0.154} & \textbf{0.022} \\
-  0.066 & 0.069 & 0.070 & 0.007 & \textbf{0.007} & \emph{0.007} & 0.010 & 0.016 \\
-  0.084 & 0.094 & 0.096 & 0.161 & 0.078 & 0.085 & \emph{0.045} & \textbf{0.042} \\
-  0.065 & 0.070 & 0.069 & 0.009 & \textbf{0.007} & \emph{0.008} & 0.009 & 0.019 \\
-  0.161 & 0.149 & 0.144 & 0.149 & 0.123 & 0.121 & \textbf{0.040} & \emph{0.050} \\
-  0.074 & 0.075 & 0.074 & 0.020 & \emph{0.020} & \textbf{0.020} & 0.022 & 0.105 \\
-  0.079 & 0.078 & 0.077 & 0.041 & \emph{0.040} & \textbf{0.039} & 0.063 & 0.106 \\
-  0.077 & 0.069 & 0.076 & 0.024 & \textbf{0.018} & 0.023 & \emph{0.023} & 0.099 \\
-  0.083 & 0.072 & 0.083 & \emph{0.048} & \textbf{0.044} & 0.050 & 0.067 & 0.110 \\
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.046 & 0.025 & \emph{0.023} & 0.151 & 0.127 & 0.124 & 0.082 & \textbf{0.005} \\
+  & 0.146 & 0.186 & 0.216 & 0.290 & 0.376 & 0.375 & \emph{0.134} & \textbf{0.009} \\
+  & 0.072 & \emph{0.045} & 0.073 & 0.172 & 0.134 & 0.205 & 0.101 & \textbf{0.011} \\
+  & 0.214 & 0.218 & 0.179 & 0.441 & 0.425 & 0.369 & \emph{0.154} & \textbf{0.022} \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.066 & 0.069 & 0.070 & 0.007 & \textbf{0.007} & \emph{0.007} & 0.010 & 0.016 \\
+  & 0.084 & 0.094 & 0.096 & 0.161 & 0.078 & 0.085 & \emph{0.045} & \textbf{0.042} \\
+  & 0.065 & 0.070 & 0.069 & 0.009 & \textbf{0.007} & \emph{0.008} & 0.009 & 0.019 \\
+  & 0.161 & 0.149 & 0.144 & 0.149 & 0.123 & 0.121 & \textbf{0.040} & \emph{0.050} \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.074 & 0.075 & 0.074 & 0.020 & \emph{0.020} & \textbf{0.020} & 0.022 & 0.105 \\
+  & 0.079 & 0.078 & 0.077 & 0.041 & \emph{0.040} & \textbf{0.039} & 0.063 & 0.106 \\
+  & 0.077 & 0.069 & 0.076 & 0.024 & \textbf{0.018} & 0.023 & \emph{0.023} & 0.099 \\
+  & 0.083 & 0.072 & 0.083 & \emph{0.048} & \textbf{0.044} & 0.050 & 0.067 & 0.110 \\
   \end{tabular}
-\caption{Mean squared error of estimates for $\beta_1$ at location 1 (\textbf{minimum}, \emph{next best}).\label{loc1-X1-MSEX}}
+\caption{Mean squared error of estimates for $\beta_1$ at location 1 (\textbf{minimum}, \emph{next best}).\label{table:loc1-X1-MSEX}}
 \end{center}
 \end{table}
 \efloatseparator
  
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{cccccccc}
- lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
-  \hline
-0.024 & 0.024 & 0.024 & \textbf{0.020} & 0.021 & \emph{0.021} & 0.021 & 0.042 \\
-  0.061 & 0.063 & 0.068 & \emph{0.050} & 0.054 & 0.056 & \textbf{0.042} & 0.070 \\
-  0.022 & 0.027 & 0.021 & \textbf{0.017} & 0.021 & \emph{0.017} & 0.018 & 0.044 \\
-  0.069 & 0.071 & 0.071 & 0.057 & \emph{0.056} & 0.061 & \textbf{0.043} & 0.075 \\
-  0.003 & 0.003 & 0.003 & \emph{0.001} & 0.001 & 0.001 & \textbf{0.001} & 0.001 \\
-  0.014 & 0.013 & 0.008 & 0.015 & 0.013 & 0.009 & \emph{0.002} & \textbf{0.002} \\
-  0.003 & 0.003 & 0.003 & 0.001 & \emph{0.001} & \textbf{0.001} & 0.001 & 0.002 \\
-  0.015 & 0.012 & 0.012 & 0.014 & 0.011 & 0.011 & \textbf{0.003} & \emph{0.004} \\
-  \emph{0.005} & 0.005 & 0.005 & 0.007 & 0.007 & 0.007 & \textbf{0.004} & 0.007 \\
-  0.018 & 0.016 & 0.016 & 0.026 & 0.021 & 0.022 & \emph{0.008} & \textbf{0.007} \\
-  0.007 & 0.007 & \emph{0.007} & 0.011 & 0.010 & 0.009 & \textbf{0.004} & 0.008 \\
-  0.020 & 0.022 & 0.020 & 0.022 & 0.022 & 0.023 & \textbf{0.007} & \emph{0.009} \\
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.024 & 0.024 & 0.024 & \textbf{0.020} & 0.021 & \emph{0.021} & 0.021 & 0.042 \\
+  & 0.061 & 0.063 & 0.068 & \emph{0.050} & 0.054 & 0.056 & \textbf{0.042} & 0.070 \\
+  & 0.022 & 0.027 & 0.021 & \textbf{0.017} & 0.021 & \emph{0.017} & 0.018 & 0.044 \\
+  & 0.069 & 0.071 & 0.071 & 0.057 & \emph{0.056} & 0.061 & \textbf{0.043} & 0.075 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.003 & 0.003 & 0.003 & \emph{0.001} & 0.001 & 0.001 & \textbf{0.001} & 0.001 \\
+  & 0.014 & 0.013 & 0.008 & 0.015 & 0.013 & 0.009 & \emph{0.002} & \textbf{0.002} \\
+  & 0.003 & 0.003 & 0.003 & 0.001 & \emph{0.001} & \textbf{0.001} & 0.001 & 0.002 \\
+  & 0.015 & 0.012 & 0.012 & 0.014 & 0.011 & 0.011 & \textbf{0.003} & \emph{0.004} \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & \emph{0.005} & 0.005 & 0.005 & 0.007 & 0.007 & 0.007 & \textbf{0.004} & 0.007 \\
+  & 0.018 & 0.016 & 0.016 & 0.026 & 0.021 & 0.022 & \emph{0.008} & \textbf{0.007} \\
+  & 0.007 & 0.007 & \emph{0.007} & 0.011 & 0.010 & 0.009 & \textbf{0.004} & 0.008 \\
+  & 0.020 & 0.022 & 0.020 & 0.022 & 0.022 & 0.023 & \textbf{0.007} & \emph{0.009} \\
   \end{tabular}
-\caption{Mean squared error of estimates for $\beta_1$ at location 2 (\textbf{minimum}, \emph{next best}).\label{loc2-X1-MSEX}}
+\caption{Mean squared error of estimates for $\beta_1$ at location 2 (\textbf{minimum}, \emph{next best}).\label{table:loc2-X1-MSEX}}
 \end{center}
 \end{table}
 \efloatseparator
  
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{cccccccc}
- lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
-  \hline
-0.011 & 0.011 & 0.010 & 0.007 & 0.007 & 0.007 & \textbf{0.004} & \emph{0.005} \\
-  0.043 & 0.043 & 0.047 & 0.049 & 0.049 & 0.054 & \emph{0.009} & \textbf{0.008} \\
-  0.016 & 0.014 & 0.022 & 0.013 & 0.011 & 0.021 & \textbf{0.005} & \emph{0.005} \\
-  0.048 & 0.047 & 0.045 & 0.049 & 0.045 & 0.044 & \emph{0.008} & \textbf{0.008} \\
-  0.001 & 0.001 & 0.001 & \textbf{0.001} & 0.001 & 0.001 & \emph{0.001} & 0.001 \\
-  0.007 & 0.017 & 0.015 & 0.007 & 0.019 & 0.017 & \emph{0.002} & \textbf{0.002} \\
-  0.001 & 0.001 & 0.000 & 0.000 & \emph{0.000} & \textbf{0.000} & 0.001 & 0.002 \\
-  0.022 & 0.017 & 0.019 & 0.023 & 0.017 & 0.021 & \textbf{0.002} & \emph{0.003} \\
-  0.015 & 0.015 & 0.015 & 0.015 & 0.015 & \emph{0.015} & \textbf{0.005} & 0.022 \\
-  0.032 & 0.029 & 0.029 & 0.030 & 0.027 & 0.027 & \textbf{0.012} & \emph{0.023} \\
-  0.019 & 0.018 & 0.019 & 0.018 & \emph{0.017} & 0.018 & \textbf{0.005} & 0.024 \\
-  0.037 & 0.037 & 0.030 & 0.037 & 0.034 & 0.029 & \textbf{0.012} & \emph{0.024} \\
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.011 & 0.011 & 0.010 & 0.007 & 0.007 & 0.007 & \textbf{0.004} & \emph{0.005} \\
+  & 0.043 & 0.043 & 0.047 & 0.049 & 0.049 & 0.054 & \emph{0.009} & \textbf{0.008} \\
+  & 0.016 & 0.014 & 0.022 & 0.013 & 0.011 & 0.021 & \textbf{0.005} & \emph{0.005} \\
+  & 0.048 & 0.047 & 0.045 & 0.049 & 0.045 & 0.044 & \emph{0.008} & \textbf{0.008} \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.001 & 0.001 & 0.001 & \textbf{0.001} & 0.001 & 0.001 & \emph{0.001} & 0.001 \\
+  & 0.007 & 0.017 & 0.015 & 0.007 & 0.019 & 0.017 & \emph{0.002} & \textbf{0.002} \\
+  & 0.001 & 0.001 & 0.000 & 0.000 & \emph{0.000} & \textbf{0.000} & 0.001 & 0.002 \\
+  & 0.022 & 0.017 & 0.019 & 0.023 & 0.017 & 0.021 & \textbf{0.002} & \emph{0.003} \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.015 & 0.015 & 0.015 & 0.015 & 0.015 & \emph{0.015} & \textbf{0.005} & 0.022 \\
+  & 0.032 & 0.029 & 0.029 & 0.030 & 0.027 & 0.027 & \textbf{0.012} & \emph{0.023} \\
+  & 0.019 & 0.018 & 0.019 & 0.018 & \emph{0.017} & 0.018 & \textbf{0.005} & 0.024 \\
+  & 0.037 & 0.037 & 0.030 & 0.037 & 0.034 & 0.029 & \textbf{0.012} & \emph{0.024} \\
   \end{tabular}
-\caption{Mean squared error of estimates for $\beta_1$ at location 3 (\textbf{minimum}, \emph{next best}).\label{loc3-X1-MSEX}}
+\caption{Mean squared error of estimates for $\beta_1$ at location 3 (\textbf{minimum}, \emph{next best}).\label{table:loc3-X1-MSEX}}
 \end{center}
 \end{table}
 \efloatseparator
  
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{cccccccc}
- lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
-  \hline
-\emph{0.014} & 0.014 & \textbf{0.014} & 0.017 & 0.019 & 0.018 & 0.021 & 0.042 \\
-  \emph{0.037} & \textbf{0.036} & 0.039 & 0.039 & 0.042 & 0.046 & 0.047 & 0.074 \\
-  \textbf{0.010} & 0.012 & \emph{0.011} & 0.013 & 0.016 & 0.014 & 0.020 & 0.044 \\
-  \emph{0.038} & \textbf{0.028} & 0.038 & 0.048 & 0.047 & 0.048 & 0.043 & 0.082 \\
-  0.003 & 0.003 & 0.003 & 0.002 & 0.001 & \emph{0.001} & \textbf{0.001} & 0.001 \\
-  0.009 & 0.014 & 0.016 & 0.007 & 0.012 & 0.015 & \textbf{0.002} & \emph{0.003} \\
-  0.003 & 0.002 & 0.003 & 0.002 & 0.001 & \emph{0.001} & \textbf{0.001} & 0.002 \\
-  0.013 & 0.015 & 0.014 & 0.013 & 0.014 & 0.014 & \textbf{0.003} & \emph{0.004} \\
-  0.006 & 0.006 & \emph{0.006} & 0.009 & 0.009 & 0.009 & \textbf{0.004} & 0.008 \\
-  0.025 & 0.027 & 0.023 & 0.027 & 0.029 & 0.024 & \emph{0.010} & \textbf{0.009} \\
-  \emph{0.008} & 0.008 & 0.008 & 0.011 & 0.011 & 0.011 & \textbf{0.004} & 0.010 \\
-  0.018 & 0.020 & 0.017 & 0.022 & 0.022 & 0.022 & \textbf{0.009} & \emph{0.010} \\
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & \emph{0.014} & 0.014 & \textbf{0.014} & 0.017 & 0.019 & 0.018 & 0.021 & 0.042 \\
+  & \emph{0.037} & \textbf{0.036} & 0.039 & 0.039 & 0.042 & 0.046 & 0.047 & 0.074 \\
+  & \textbf{0.010} & 0.012 & \emph{0.011} & 0.013 & 0.016 & 0.014 & 0.020 & 0.044 \\
+  & \emph{0.038} & \textbf{0.028} & 0.038 & 0.048 & 0.047 & 0.048 & 0.043 & 0.082 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.003 & 0.003 & 0.003 & 0.002 & 0.001 & \emph{0.001} & \textbf{0.001} & 0.001 \\
+  & 0.009 & 0.014 & 0.016 & 0.007 & 0.012 & 0.015 & \textbf{0.002} & \emph{0.003} \\
+  & 0.003 & 0.002 & 0.003 & 0.002 & 0.001 & \emph{0.001} & \textbf{0.001} & 0.002 \\
+  & 0.013 & 0.015 & 0.014 & 0.013 & 0.014 & 0.014 & \textbf{0.003} & \emph{0.004} \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.006 & 0.006 & \emph{0.006} & 0.009 & 0.009 & 0.009 & \textbf{0.004} & 0.008 \\
+  & 0.025 & 0.027 & 0.023 & 0.027 & 0.029 & 0.024 & \emph{0.010} & \textbf{0.009} \\
+  & \emph{0.008} & 0.008 & 0.008 & 0.011 & 0.011 & 0.011 & \textbf{0.004} & 0.010 \\
+  & 0.018 & 0.020 & 0.017 & 0.022 & 0.022 & 0.022 & \textbf{0.009} & \emph{0.010} \\
   \end{tabular}
-\caption{Mean squared error of estimates for $\beta_1$ at location 4 (\textbf{minimum}, \emph{next best}).\label{loc4-X1-MSEX}}
+\caption{Mean squared error of estimates for $\beta_1$ at location 4 (\textbf{minimum}, \emph{next best}).\label{table:loc4-X1-MSEX}}
 \end{center}
 \end{table}
 \efloatseparator
  
 \begin{table}[ht]
 \begin{center}
-\begin{tabular}{cccccccc}
- lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
-  \hline
-0.002 & \emph{0.001} & 0.002 & 0.006 & 0.004 & 0.004 & \textbf{0.000} & 0.007 \\
-  0.003 & 0.006 & \emph{0.002} & 0.016 & 0.024 & 0.009 & \textbf{0.000} & 0.011 \\
-  \emph{0.002} & 0.002 & 0.003 & 0.009 & 0.009 & 0.009 & \textbf{0.000} & 0.010 \\
-  0.017 & \emph{0.004} & 0.022 & 0.046 & 0.038 & 0.043 & \textbf{0.000} & 0.015 \\
-  0.067 & 0.068 & 0.069 & 0.004 & 0.004 & \emph{0.004} & \textbf{0.000} & 0.016 \\
-  0.054 & 0.051 & 0.052 & \emph{0.019} & 0.019 & 0.019 & \textbf{0.000} & 0.044 \\
-  0.062 & 0.060 & 0.064 & 0.009 & 0.010 & \emph{0.007} & \textbf{0.000} & 0.021 \\
-  0.050 & 0.047 & 0.053 & \emph{0.017} & 0.020 & 0.017 & \textbf{0.000} & 0.051 \\
-  0.074 & 0.075 & 0.075 & \textbf{0.018} & 0.020 & 0.021 & \emph{0.020} & 0.104 \\
-  0.075 & 0.074 & 0.073 & 0.024 & \textbf{0.022} & \emph{0.023} & 0.055 & 0.104 \\
-  0.077 & 0.069 & 0.076 & \emph{0.021} & 0.023 & \textbf{0.020} & 0.025 & 0.099 \\
-  0.081 & 0.075 & 0.081 & 0.037 & \emph{0.036} & \textbf{0.035} & 0.042 & 0.113 \\
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.002 & \emph{0.001} & 0.002 & 0.006 & 0.004 & 0.004 & \textbf{0.000} & 0.007 \\
+  & 0.003 & 0.006 & \emph{0.002} & 0.016 & 0.024 & 0.009 & \textbf{0.000} & 0.011 \\
+  & \emph{0.002} & 0.002 & 0.003 & 0.009 & 0.009 & 0.009 & \textbf{0.000} & 0.010 \\
+  & 0.017 & \emph{0.004} & 0.022 & 0.046 & 0.038 & 0.043 & \textbf{0.000} & 0.015 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.067 & 0.068 & 0.069 & 0.004 & 0.004 & \emph{0.004} & \textbf{0.000} & 0.016 \\
+  & 0.054 & 0.051 & 0.052 & \emph{0.019} & 0.019 & 0.019 & \textbf{0.000} & 0.044 \\
+  & 0.062 & 0.060 & 0.064 & 0.009 & 0.010 & \emph{0.007} & \textbf{0.000} & 0.021 \\
+  & 0.050 & 0.047 & 0.053 & \emph{0.017} & 0.020 & 0.017 & \textbf{0.000} & 0.051 \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.074 & 0.075 & 0.075 & \textbf{0.018} & 0.020 & 0.021 & \emph{0.020} & 0.104 \\
+  & 0.075 & 0.074 & 0.073 & 0.024 & \textbf{0.022} & \emph{0.023} & 0.055 & 0.104 \\
+  & 0.077 & 0.069 & 0.076 & \emph{0.021} & 0.023 & \textbf{0.020} & 0.025 & 0.099 \\
+  & 0.081 & 0.075 & 0.081 & 0.037 & \emph{0.036} & \textbf{0.035} & 0.042 & 0.113 \\
   \end{tabular}
-\caption{Mean squared error of estimates for $\beta_1$ at location 5 (\textbf{minimum}, \emph{next best}).\label{loc5-X1-MSEX}}
+\caption{Mean squared error of estimates for $\beta_1$ at location 5 (\textbf{minimum}, \emph{next best}).\label{table:loc5-X1-MSEX}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & -0.057 & -0.029 & -0.020 & \textbf{-0.003} & 0.038 & 0.033 & 0.034 & \emph{-0.004} \\
+  & -0.150 & -0.195 & -0.211 & \textbf{-0.004} & -0.082 & -0.075 & 0.053 & \emph{-0.017} \\
+  & -0.090 & -0.077 & -0.073 & \textbf{0.002} & 0.028 & \emph{-0.014} & 0.050 & -0.017 \\
+  & -0.208 & -0.214 & -0.167 & -0.053 & -0.067 & -0.068 & \emph{0.035} & \textbf{0.006} \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & -0.246 & -0.248 & -0.253 & \textbf{0.008} & \emph{0.010} & 0.011 & 0.011 & -0.111 \\
+  & -0.233 & -0.242 & -0.248 & 0.026 & \emph{-0.014} & -0.022 & \textbf{-0.007} & -0.182 \\
+  & -0.245 & -0.259 & -0.255 & -0.004 & \emph{-0.003} & \textbf{-0.000} & 0.003 & -0.112 \\
+  & -0.306 & -0.290 & -0.287 & -0.083 & \emph{-0.055} & -0.080 & \textbf{0.017} & -0.197 \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.252 & 0.254 & 0.252 & 0.091 & 0.090 & \emph{0.090} & \textbf{0.029} & 0.323 \\
+  & 0.240 & 0.241 & 0.236 & 0.130 & 0.129 & \emph{0.126} & \textbf{0.070} & 0.322 \\
+  & 0.262 & 0.245 & 0.259 & 0.091 & \emph{0.083} & 0.101 & \textbf{0.041} & 0.313 \\
+  & 0.239 & 0.222 & 0.242 & 0.121 & \emph{0.095} & 0.115 & \textbf{0.068} & 0.323 \\
+  \end{tabular}
+\caption{Bias of estimates for $\beta_1$ at location 1 (\textbf{minimum}, \emph{next best}).\label{table:loc1-X1-BiasX}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & -0.117 & -0.119 & -0.119 & \textbf{-0.106} & -0.110 & \emph{-0.110} & -0.124 & -0.196 \\
+  & -0.178 & -0.178 & -0.186 & \emph{-0.145} & \textbf{-0.145} & -0.150 & -0.175 & -0.253 \\
+  & -0.103 & -0.130 & -0.099 & \textbf{-0.083} & -0.103 & \emph{-0.083} & -0.110 & -0.199 \\
+  & -0.212 & -0.221 & -0.216 & \emph{-0.175} & \textbf{-0.167} & -0.184 & -0.182 & -0.263 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & -0.046 & -0.047 & -0.048 & \textbf{0.000} & 0.002 & \emph{0.001} & 0.004 & 0.002 \\
+  & -0.034 & -0.044 & -0.035 & 0.009 & \textbf{0.003} & 0.011 & \emph{0.008} & -0.011 \\
+  & -0.039 & -0.046 & -0.043 & 0.003 & 0.003 & 0.003 & \textbf{0.002} & \emph{0.002} \\
+  & -0.058 & -0.062 & -0.056 & -0.016 & -0.011 & \emph{-0.009} & \textbf{-0.002} & -0.020 \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & -0.062 & -0.063 & \emph{-0.062} & -0.073 & -0.074 & -0.072 & \textbf{-0.048} & -0.079 \\
+  & -0.067 & -0.066 & \textbf{-0.063} & -0.069 & -0.068 & \emph{-0.065} & -0.072 & -0.078 \\
+  & \emph{-0.073} & -0.079 & -0.076 & -0.087 & -0.091 & -0.087 & \textbf{-0.052} & -0.085 \\
+  & -0.093 & -0.104 & -0.097 & -0.101 & -0.102 & -0.101 & \textbf{-0.065} & \emph{-0.078} \\
+  \end{tabular}
+\caption{Bias of estimates for $\beta_1$ at location 2 (\textbf{minimum}, \emph{next best}).\label{table:loc2-X1-BiasX}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & -0.014 & \emph{-0.014} & \textbf{-0.010} & 0.018 & 0.017 & 0.015 & 0.021 & 0.040 \\
+  & -0.026 & -0.027 & -0.031 & \emph{0.006} & 0.009 & \textbf{0.004} & 0.050 & 0.059 \\
+  & -0.044 & -0.056 & -0.056 & \emph{-0.013} & \textbf{-0.009} & -0.030 & 0.017 & 0.034 \\
+  & -0.083 & -0.094 & -0.077 & -0.059 & -0.056 & -0.056 & \textbf{0.017} & \emph{0.055} \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.007 & 0.005 & 0.005 & 0.003 & \emph{0.002} & \textbf{0.001} & 0.003 & 0.002 \\
+  & -0.004 & -0.017 & -0.012 & \textbf{-0.003} & -0.013 & -0.007 & \emph{0.003} & 0.006 \\
+  & 0.006 & 0.005 & 0.006 & 0.001 & \emph{0.000} & 0.000 & 0.003 & \textbf{0.000} \\
+  & -0.019 & -0.029 & -0.018 & -0.012 & -0.022 & -0.013 & \textbf{-0.002} & \emph{0.003} \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & -0.107 & -0.107 & -0.106 & -0.103 & -0.103 & \emph{-0.102} & \textbf{-0.057} & -0.148 \\
+  & -0.141 & -0.136 & -0.132 & -0.129 & -0.122 & \emph{-0.121} & \textbf{-0.090} & -0.147 \\
+  & -0.125 & -0.127 & -0.125 & -0.123 & \emph{-0.121} & -0.121 & \textbf{-0.060} & -0.154 \\
+  & -0.147 & -0.156 & -0.131 & -0.137 & -0.136 & \emph{-0.121} & \textbf{-0.092} & -0.147 \\
+  \end{tabular}
+\caption{Bias of estimates for $\beta_1$ at location 3 (\textbf{minimum}, \emph{next best}).\label{table:loc3-X1-BiasX}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & \textbf{0.047} & 0.059 & \emph{0.049} & 0.058 & 0.074 & 0.065 & 0.129 & 0.196 \\
+  & \textbf{0.072} & \emph{0.075} & 0.076 & 0.080 & 0.088 & 0.090 & 0.193 & 0.263 \\
+  & \emph{0.014} & 0.027 & \textbf{0.010} & 0.027 & 0.043 & 0.020 & 0.129 & 0.199 \\
+  & 0.091 & \textbf{0.073} & \emph{0.089} & 0.108 & 0.105 & 0.105 & 0.189 & 0.275 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.047 & 0.043 & 0.045 & 0.009 & \emph{0.006} & 0.007 & \textbf{0.004} & 0.008 \\
+  & 0.021 & 0.006 & \textbf{0.002} & \emph{-0.003} & -0.014 & -0.023 & 0.004 & 0.020 \\
+  & 0.039 & 0.038 & 0.039 & \emph{0.001} & -0.001 & -0.001 & \textbf{0.000} & -0.001 \\
+  & \textbf{0.000} & -0.009 & 0.003 & -0.009 & -0.021 & -0.013 & \emph{-0.003} & 0.014 \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & \emph{-0.066} & -0.070 & -0.069 & -0.078 & -0.083 & -0.081 & \textbf{-0.051} & -0.088 \\
+  & -0.113 & -0.119 & -0.110 & -0.119 & -0.126 & -0.115 & \textbf{-0.081} & \emph{-0.088} \\
+  & -0.080 & -0.085 & \emph{-0.078} & -0.092 & -0.095 & -0.090 & \textbf{-0.055} & -0.095 \\
+  & -0.088 & -0.099 & -0.088 & -0.094 & -0.099 & -0.094 & \textbf{-0.079} & \emph{-0.086} \\
+  \end{tabular}
+\caption{Bias of estimates for $\beta_1$ at location 4 (\textbf{minimum}, \emph{next best}).\label{table:loc4-X1-BiasX}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & -0.009 & \emph{-0.006} & -0.006 & -0.015 & -0.009 & -0.010 & \textbf{0.000} & -0.006 \\
+  & 0.001 & -0.009 & \emph{-0.000} & -0.018 & -0.025 & -0.008 & \textbf{0.000} & -0.011 \\
+  & -0.006 & \emph{-0.005} & -0.009 & -0.010 & -0.009 & -0.012 & \textbf{0.000} & -0.009 \\
+  & -0.012 & -0.011 & -0.011 & -0.026 & -0.036 & -0.021 & \textbf{0.000} & \emph{-0.007} \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.246 & 0.249 & 0.253 & 0.002 & \emph{0.002} & 0.003 & \textbf{0.000} & 0.113 \\
+  & 0.191 & 0.182 & 0.186 & 0.007 & \emph{-0.001} & 0.004 & \textbf{0.000} & 0.187 \\
+  & 0.234 & 0.234 & 0.243 & 0.007 & \emph{-0.001} & 0.008 & \textbf{0.000} & 0.115 \\
+  & 0.168 & 0.165 & 0.179 & 0.030 & \emph{0.024} & 0.029 & \textbf{0.000} & 0.190 \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.253 & 0.256 & 0.253 & \emph{0.085} & 0.091 & 0.089 & \textbf{0.022} & 0.321 \\
+  & 0.234 & 0.233 & 0.228 & 0.095 & \emph{0.088} & 0.089 & \textbf{0.004} & 0.319 \\
+  & 0.257 & 0.243 & 0.257 & 0.093 & \emph{0.079} & 0.088 & \textbf{0.052} & 0.313 \\
+  & 0.243 & 0.232 & 0.246 & 0.120 & \emph{0.096} & 0.110 & \textbf{0.069} & 0.328 \\
+  \end{tabular}
+\caption{Bias of estimates for $\beta_1$ at location 5 (\textbf{minimum}, \emph{next best}).\label{table:loc5-X1-BiasX}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.043 & 0.024 & \emph{0.023} & 0.152 & 0.127 & 0.124 & 0.081 & \textbf{0.005} \\
+  & \emph{0.125} & 0.149 & 0.173 & 0.293 & 0.373 & 0.373 & 0.133 & \textbf{0.009} \\
+  & 0.064 & \emph{0.040} & 0.068 & 0.173 & 0.134 & 0.207 & 0.099 & \textbf{0.011} \\
+  & 0.173 & 0.174 & \emph{0.153} & 0.443 & 0.424 & 0.368 & 0.154 & \textbf{0.022} \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & \emph{0.006} & 0.007 & 0.006 & 0.008 & 0.007 & 0.007 & 0.010 & \textbf{0.004} \\
+  & \emph{0.030} & 0.035 & 0.035 & 0.162 & 0.079 & 0.085 & 0.046 & \textbf{0.009} \\
+  & 0.005 & \textbf{0.003} & \emph{0.004} & 0.009 & 0.007 & 0.008 & 0.009 & 0.007 \\
+  & 0.068 & 0.066 & 0.062 & 0.143 & 0.121 & 0.116 & \emph{0.040} & \textbf{0.011} \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.010 & \emph{0.010} & 0.010 & 0.012 & 0.012 & 0.012 & 0.022 & \textbf{0.001} \\
+  & 0.021 & \emph{0.020} & 0.021 & 0.024 & 0.024 & 0.024 & 0.058 & \textbf{0.002} \\
+  & \emph{0.009} & 0.009 & 0.009 & 0.015 & 0.011 & 0.013 & 0.021 & \textbf{0.001} \\
+  & 0.026 & \emph{0.023} & 0.025 & 0.034 & 0.035 & 0.037 & 0.064 & \textbf{0.006} \\
+  \end{tabular}
+\caption{Variance of estimates for $\beta_1$ at location 1 (\textbf{minimum}, \emph{next best}).\label{table:loc1-X1-varx}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.010 & 0.010 & 0.010 & 0.009 & 0.009 & 0.009 & \emph{0.006} & \textbf{0.003} \\
+  & 0.029 & 0.032 & 0.034 & 0.029 & 0.033 & 0.034 & \emph{0.012} & \textbf{0.006} \\
+  & 0.011 & 0.011 & 0.012 & 0.010 & 0.010 & 0.010 & \emph{0.006} & \textbf{0.005} \\
+  & 0.024 & 0.022 & 0.025 & 0.026 & 0.028 & 0.028 & \emph{0.010} & \textbf{0.006} \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & \emph{0.001} & 0.001 & 0.001 & 0.001 & 0.001 & 0.001 & \textbf{0.001} & 0.001 \\
+  & 0.013 & 0.011 & 0.007 & 0.016 & 0.013 & 0.009 & \emph{0.002} & \textbf{0.002} \\
+  & 0.001 & \emph{0.001} & 0.001 & 0.001 & 0.001 & \textbf{0.001} & 0.001 & 0.002 \\
+  & 0.011 & 0.008 & 0.009 & 0.014 & 0.011 & 0.011 & \textbf{0.003} & \emph{0.003} \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & \emph{0.001} & 0.001 & 0.001 & 0.002 & 0.002 & 0.002 & 0.001 & \textbf{0.000} \\
+  & 0.014 & 0.012 & 0.012 & 0.021 & 0.017 & 0.018 & \emph{0.003} & \textbf{0.001} \\
+  & 0.001 & 0.001 & \emph{0.001} & 0.003 & 0.002 & 0.002 & 0.001 & \textbf{0.000} \\
+  & 0.012 & 0.011 & 0.011 & 0.012 & 0.012 & 0.013 & \emph{0.003} & \textbf{0.003} \\
+  \end{tabular}
+\caption{Variance of estimates for $\beta_1$ at location 2 (\textbf{minimum}, \emph{next best}).\label{table:loc2-X1-varx}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.011 & 0.011 & 0.010 & 0.007 & 0.007 & 0.007 & \emph{0.004} & \textbf{0.003} \\
+  & 0.043 & 0.043 & 0.047 & 0.050 & 0.050 & 0.055 & \emph{0.007} & \textbf{0.004} \\
+  & 0.014 & 0.011 & 0.019 & 0.013 & 0.011 & 0.020 & \emph{0.004} & \textbf{0.004} \\
+  & 0.041 & 0.039 & 0.039 & 0.046 & 0.043 & 0.042 & \emph{0.008} & \textbf{0.005} \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.001 & 0.001 & 0.001 & \textbf{0.001} & 0.001 & 0.001 & \emph{0.001} & 0.001 \\
+  & 0.007 & 0.017 & 0.015 & 0.007 & 0.019 & 0.017 & \emph{0.002} & \textbf{0.002} \\
+  & 0.001 & 0.001 & 0.000 & 0.000 & \emph{0.000} & \textbf{0.000} & 0.001 & 0.002 \\
+  & 0.022 & 0.016 & 0.019 & 0.023 & 0.016 & 0.021 & \textbf{0.002} & \emph{0.003} \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.004 & 0.004 & 0.004 & 0.005 & 0.005 & 0.005 & \emph{0.002} & \textbf{0.000} \\
+  & 0.012 & 0.010 & 0.012 & 0.014 & 0.013 & 0.013 & \emph{0.004} & \textbf{0.001} \\
+  & 0.003 & 0.002 & 0.003 & 0.003 & 0.003 & 0.003 & \emph{0.002} & \textbf{0.000} \\
+  & 0.016 & 0.013 & 0.013 & 0.018 & 0.016 & 0.015 & \emph{0.004} & \textbf{0.002} \\
+  \end{tabular}
+\caption{Variance of estimates for $\beta_1$ at location 3 (\textbf{minimum}, \emph{next best}).\label{table:loc3-X1-varx}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.012 & 0.011 & 0.012 & 0.014 & 0.014 & 0.014 & \emph{0.004} & \textbf{0.003} \\
+  & 0.032 & 0.030 & 0.033 & 0.033 & 0.035 & 0.038 & \emph{0.009} & \textbf{0.005} \\
+  & 0.010 & 0.011 & 0.011 & 0.013 & 0.014 & 0.013 & \textbf{0.003} & \emph{0.004} \\
+  & 0.029 & 0.023 & 0.031 & 0.037 & 0.037 & 0.037 & \emph{0.007} & \textbf{0.006} \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.001 & 0.001 & 0.001 & 0.002 & 0.001 & \emph{0.001} & \textbf{0.001} & 0.001 \\
+  & 0.008 & 0.014 & 0.017 & 0.007 & 0.012 & 0.014 & \textbf{0.002} & \emph{0.002} \\
+  & 0.001 & 0.001 & 0.001 & 0.002 & 0.001 & \emph{0.001} & \textbf{0.001} & 0.002 \\
+  & 0.013 & 0.015 & 0.014 & 0.013 & 0.014 & 0.014 & \textbf{0.003} & \emph{0.004} \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.002 & \emph{0.001} & 0.001 & 0.003 & 0.002 & 0.002 & 0.001 & \textbf{0.000} \\
+  & 0.012 & 0.013 & 0.011 & 0.013 & 0.013 & 0.011 & \emph{0.003} & \textbf{0.001} \\
+  & 0.001 & \emph{0.001} & 0.002 & 0.003 & 0.001 & 0.003 & 0.001 & \textbf{0.001} \\
+  & 0.011 & 0.010 & 0.010 & 0.014 & 0.012 & 0.013 & \emph{0.003} & \textbf{0.003} \\
+  \end{tabular}
+\caption{Variance of estimates for $\beta_1$ at location 4 (\textbf{minimum}, \emph{next best}).\label{table:loc4-X1-varx}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.002 & \emph{0.001} & 0.002 & 0.006 & 0.004 & 0.004 & \textbf{0.000} & 0.007 \\
+  & 0.003 & 0.006 & \emph{0.002} & 0.016 & 0.024 & 0.009 & \textbf{0.000} & 0.011 \\
+  & \emph{0.002} & 0.002 & 0.003 & 0.009 & 0.009 & 0.009 & \textbf{0.000} & 0.010 \\
+  & 0.017 & \emph{0.004} & 0.022 & 0.045 & 0.037 & 0.043 & \textbf{0.000} & 0.015 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.007 & 0.006 & 0.005 & 0.004 & 0.004 & 0.004 & \textbf{0.000} & \emph{0.003} \\
+  & 0.018 & 0.018 & 0.018 & 0.019 & 0.020 & 0.020 & \textbf{0.000} & \emph{0.009} \\
+  & 0.007 & 0.005 & \emph{0.005} & 0.009 & 0.010 & 0.007 & \textbf{0.000} & 0.008 \\
+  & 0.022 & 0.020 & 0.021 & 0.016 & 0.020 & 0.016 & \textbf{0.000} & \emph{0.015} \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.010 & \emph{0.010} & 0.011 & 0.011 & 0.012 & 0.013 & 0.019 & \textbf{0.001} \\
+  & 0.021 & 0.019 & 0.021 & 0.016 & \emph{0.014} & 0.015 & 0.056 & \textbf{0.003} \\
+  & 0.011 & 0.010 & \emph{0.010} & 0.013 & 0.017 & 0.012 & 0.023 & \textbf{0.001} \\
+  & 0.022 & 0.021 & \emph{0.021} & 0.023 & 0.027 & 0.023 & 0.038 & \textbf{0.005} \\
+  \end{tabular}
+\caption{Variance of estimates for $\beta_1$ at location 5 (\textbf{minimum}, \emph{next best}).\label{table:loc5-X1-varx}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.130 & \textbf{0.100} & 0.101 & 0.130 & \emph{0.100} & 0.101 & 0.111 & 0.118 \\
+  & \textbf{0.483} & 0.594 & 0.564 & \emph{0.483} & 0.594 & 0.564 & 0.694 & 0.850 \\
+  & 0.196 & \emph{0.151} & 0.169 & 0.196 & \textbf{0.151} & 0.169 & 0.213 & 0.247 \\
+  & 0.563 & 0.559 & \textbf{0.552} & 0.563 & 0.559 & \emph{0.552} & 0.757 & 0.895 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.235 & 0.224 & 0.232 & 0.235 & 0.224 & 0.232 & \emph{0.223} & \textbf{0.222} \\
+  & 0.693 & \textbf{0.669} & 0.671 & 0.693 & \emph{0.669} & 0.671 & 0.723 & 0.757 \\
+  & 0.257 & 0.258 & 0.260 & 0.257 & 0.258 & 0.260 & \emph{0.237} & \textbf{0.210} \\
+  & \textbf{0.724} & 0.733 & 0.731 & \emph{0.724} & 0.733 & 0.731 & 0.815 & 0.784 \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.145 & 0.142 & \textbf{0.140} & 0.145 & 0.142 & \emph{0.140} & 0.157 & 0.248 \\
+  & 1.275 & \emph{1.257} & 1.266 & 1.275 & 1.257 & 1.266 & \textbf{1.153} & 1.466 \\
+  & 0.299 & \emph{0.285} & 0.295 & 0.299 & 0.285 & 0.295 & \textbf{0.270} & 0.434 \\
+  & 0.835 & \textbf{0.801} & 0.806 & 0.835 & \emph{0.801} & 0.806 & 0.862 & 0.986 \\
+  \end{tabular}
+\caption{Mean squared error of estimates for $Y$ at location 1 (\textbf{minimum}, \emph{next best}).\label{table:loc1-MSEY}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & \textbf{0.193} & 0.196 & 0.194 & \emph{0.193} & 0.196 & 0.194 & 0.225 & 0.244 \\
+  & 1.023 & 1.019 & \textbf{1.001} & 1.023 & 1.019 & \emph{1.001} & 1.171 & 1.123 \\
+  & \textbf{0.270} & 0.275 & 0.273 & \emph{0.270} & 0.275 & 0.273 & 0.311 & 0.332 \\
+  & 0.973 & \textbf{0.897} & 0.953 & 0.973 & \emph{0.897} & 0.953 & 1.000 & 1.048 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.218 & 0.216 & 0.218 & 0.218 & \emph{0.216} & 0.218 & 0.221 & \textbf{0.210} \\
+  & 0.828 & \textbf{0.814} & 0.836 & 0.828 & \emph{0.814} & 0.836 & 0.863 & 0.832 \\
+  & 0.257 & 0.257 & 0.257 & 0.257 & 0.257 & 0.257 & \emph{0.257} & \textbf{0.247} \\
+  & \textbf{0.795} & 0.819 & 0.803 & \emph{0.795} & 0.819 & 0.803 & 0.822 & 0.799 \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & \emph{0.192} & 0.195 & 0.193 & \textbf{0.192} & 0.195 & 0.193 & 0.204 & 0.199 \\
+  & \textbf{1.139} & 1.193 & 1.152 & \emph{1.139} & 1.193 & 1.152 & 1.204 & 1.214 \\
+  & \emph{0.248} & 0.254 & 0.250 & 0.248 & 0.254 & 0.250 & \textbf{0.246} & 0.257 \\
+  & 1.165 & \textbf{1.150} & 1.181 & 1.165 & \emph{1.150} & 1.181 & 1.180 & 1.199 \\
+  \end{tabular}
+\caption{Mean squared error of estimates for $Y$ at location 2 (\textbf{minimum}, \emph{next best}).\label{table:loc2-MSEY}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & 0.238 & \emph{0.232} & 0.233 & 0.238 & \textbf{0.232} & 0.233 & 0.255 & 0.262 \\
+  & 0.852 & 0.850 & \textbf{0.833} & 0.852 & 0.850 & \emph{0.833} & 1.025 & 1.020 \\
+  & \textbf{0.246} & 0.257 & 0.246 & \emph{0.246} & 0.257 & 0.246 & 0.275 & 0.265 \\
+  & 0.622 & \textbf{0.620} & 0.652 & 0.622 & \emph{0.620} & 0.652 & 0.673 & 0.664 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.241 & 0.241 & \emph{0.241} & 0.241 & 0.241 & 0.241 & 0.249 & \textbf{0.229} \\
+  & 1.113 & \textbf{1.094} & 1.096 & 1.113 & \emph{1.094} & 1.096 & 1.135 & 1.117 \\
+  & 0.311 & 0.311 & 0.313 & 0.311 & \emph{0.311} & 0.313 & 0.314 & \textbf{0.305} \\
+  & 1.256 & \textbf{1.244} & 1.252 & 1.256 & \emph{1.244} & 1.252 & 1.289 & 1.259 \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.214 & 0.214 & \emph{0.213} & 0.214 & 0.214 & \textbf{0.213} & 0.221 & 0.233 \\
+  & \textbf{1.022} & 1.024 & 1.029 & \emph{1.022} & 1.024 & 1.029 & 1.075 & 1.081 \\
+  & 0.241 & 0.241 & 0.243 & \emph{0.241} & 0.241 & 0.243 & \textbf{0.238} & 0.252 \\
+  & 0.982 & 0.977 & \emph{0.975} & 0.982 & 0.977 & \textbf{0.975} & 0.990 & 1.006 \\
+  \end{tabular}
+\caption{Mean squared error of estimates for $Y$ at location 3 (\textbf{minimum}, \emph{next best}).\label{table:loc3-MSEY}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & \textbf{0.234} & 0.241 & 0.250 & \emph{0.234} & 0.241 & 0.250 & 0.269 & 0.288 \\
+  & 0.984 & 0.950 & \textbf{0.950} & 0.984 & 0.950 & \emph{0.950} & 1.045 & 1.053 \\
+  & 0.260 & 0.293 & \textbf{0.259} & 0.260 & 0.293 & \emph{0.259} & 0.304 & 0.333 \\
+  & \textbf{0.715} & 0.748 & 0.743 & \emph{0.715} & 0.748 & 0.743 & 0.815 & 0.802 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.277 & 0.276 & 0.277 & 0.277 & \emph{0.276} & 0.277 & 0.281 & \textbf{0.262} \\
+  & \emph{0.874} & 0.882 & 0.875 & 0.874 & 0.882 & 0.875 & 0.885 & \textbf{0.870} \\
+  & 0.204 & 0.204 & 0.202 & 0.204 & 0.204 & \emph{0.202} & 0.206 & \textbf{0.201} \\
+  & 0.776 & 0.785 & \textbf{0.776} & 0.776 & 0.785 & \emph{0.776} & 0.807 & 0.810 \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & 0.249 & 0.246 & 0.247 & 0.249 & \emph{0.246} & 0.247 & 0.247 & \textbf{0.245} \\
+  & 1.417 & 1.405 & \textbf{1.378} & 1.417 & 1.405 & \emph{1.378} & 1.387 & 1.383 \\
+  & 0.306 & 0.306 & 0.304 & 0.306 & 0.306 & 0.304 & \textbf{0.297} & \emph{0.303} \\
+  & 1.031 & \textbf{0.999} & 1.022 & 1.031 & \emph{0.999} & 1.022 & 1.072 & 1.058 \\
+  \end{tabular}
+\caption{Mean squared error of estimates for $Y$ at location 4 (\textbf{minimum}, \emph{next best}).\label{table:loc4-MSEY}}
+\end{center}
+\end{table}
+\efloatseparator
+ 
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccccccccc}
+  & lars & enet & glmnet & unshrunk.lars & unshrunk.enet & unshrunk.glmnet & oracular & gwr \\
+  \cline{2-9}
+  \multirow{4}{*}{step} & \textbf{0.219} & 0.231 & 0.224 & \emph{0.219} & 0.231 & 0.224 & 0.293 & 0.234 \\
+  & 0.701 & \textbf{0.675} & 0.697 & 0.701 & \emph{0.675} & 0.697 & 0.782 & 0.716 \\
+  & 0.206 & 0.259 & \textbf{0.203} & 0.206 & 0.259 & \emph{0.203} & 0.278 & 0.238 \\
+  & \emph{0.889} & 0.961 & 0.915 & \textbf{0.889} & 0.961 & 0.915 & 1.127 & 0.972 \\
+  \cline{2-9}
+  \multirow{4}{*}{gradient} & 0.198 & \textbf{0.197} & 0.202 & 0.198 & \emph{0.197} & 0.202 & 0.222 & 0.202 \\
+  & \textbf{1.245} & 1.257 & 1.256 & \emph{1.245} & 1.257 & 1.256 & 1.289 & 1.275 \\
+  & \emph{0.216} & 0.219 & 0.220 & 0.216 & 0.219 & 0.220 & 0.231 & \textbf{0.204} \\
+  & \textbf{0.877} & 0.919 & 0.884 & \emph{0.877} & 0.919 & 0.884 & 1.068 & 0.996 \\
+  \cline{2-9}
+  \multirow{4}{*}{parabola} & \textbf{0.223} & 0.230 & 0.225 & \emph{0.223} & 0.230 & 0.225 & 0.223 & 0.328 \\
+  & 0.950 & 0.952 & \emph{0.948} & 0.950 & 0.952 & \textbf{0.948} & 0.963 & 1.037 \\
+  & 0.199 & \emph{0.192} & 0.201 & 0.199 & 0.192 & 0.201 & \textbf{0.190} & 0.282 \\
+  & \textbf{0.842} & 0.861 & 0.848 & \emph{0.842} & 0.861 & 0.848 & 0.870 & 1.016 \\
+  \end{tabular}
+\caption{Mean squared error of estimates for $Y$ at location 5 (\textbf{minimum}, \emph{next best}).\label{table:loc5-MSEY}}
 \end{center}
 \end{table}
 \efloatseparator
@@ -284,23 +671,6 @@ Variable name & Description \\
 \verb!metro! & Is the county in a metropolitan area?\\
 \end{tabular}
 \caption{Description of the variables used in the census-data example\label{table:census-vars}}
-\end{center}
-\end{table}
-\efloatseparator
- 
-\begin{table}
-\begin{center}
-\begin{tabular}{ll}
-Year & Bandwidth \\
-\hline
-1960 & 0.033\\
-1970 &  0.381\\
-1980 & 0.122\\
-1990 & 0.802\\
-2000 & 0.854\\
-2006 & 0.976\\
-\end{tabular}
-\caption{Bandwidth selected for each year's model.\label{table:census-bandwidth}}
 \end{center}
 \end{table}
 \efloatseparator

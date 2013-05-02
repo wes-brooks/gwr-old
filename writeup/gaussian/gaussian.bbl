@@ -18,6 +18,31 @@ Breiman, L. (1995).
 \newblock Better subset regression using the nonnegative garrote.
 \newblock {\em Technometrics\/}~{\em 51}, 373--384.
 
+\bibitem[\protect\citeauthoryear{Brundson, Fotheringham, and Charlton}{Brundson
+  et~al.}{1998}]{Brundson:1998b}
+Brundson, C., S.~Fotheringham, and M.~Charlton (1998).
+\newblock Geographically weighted regression - modeling spatial
+  nonstationarity.
+\newblock {\em The Statistician\/}~{\em 47\/}(3), 431--443.
+
+\bibitem[\protect\citeauthoryear{Brundson, Fotheringham, and
+  Charltonn}{Brundson et~al.}{1998}]{Brundson:1998a}
+Brundson, C., S.~Fotheringham, and M.~Charltonn (1998).
+\newblock Geographically weighted regression: a natural evolution of the
+  expansion method for spatial data analysis.
+\newblock {\em Environment and Planning A\/}~{\em 30}, 1905--1927.
+
+\bibitem[\protect\citeauthoryear{Cressie}{Cressie}{1993}]{Cressie:1993}
+Cressie, N. (1993).
+\newblock {\em Statistics for spatial data}.
+\newblock Wiley.
+
+\bibitem[\protect\citeauthoryear{Diggle and Ribeiro}{Diggle and
+  Ribeiro}{2007}]{Diggle:2007}
+Diggle, P. and P.~Ribeiro (2007).
+\newblock {\em Model-based geostatistics}.
+\newblock Springer New York.
+
 \bibitem[\protect\citeauthoryear{Efron, Hastie, Johnstone, and
   Tibshirani}{Efron et~al.}{2004}]{Efron:2004b}
 Efron, B., T.~Hastie, I.~Johnstone, and R.~Tibshirani (2004).
@@ -30,6 +55,13 @@ Efron, B. and R.~Tibshirani (1986).
 \newblock Bootstrap methods for standard errors, confidence intervals, and
   other measures of statistical accuracy.
 \newblock {\em Statistical Science\/}~{\em 1\/}(1), 54--75.
+
+\bibitem[\protect\citeauthoryear{Fan and Li}{Fan and Li}{2001}]{Fan:2001}
+Fan, J. and R.~Li (2001).
+\newblock Variable selection via nonconcave penalized likelihood and its oracle
+  properties.
+\newblock {\em Journal of the American Statistical Association\/}~{\em
+  96\/}(456), 1348--1360.
 
 \bibitem[\protect\citeauthoryear{Fan and Zhang}{Fan and Zhang}{1999}]{Fan:1999}
 Fan, J. and W.~Zhang (1999).

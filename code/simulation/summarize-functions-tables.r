@@ -1,5 +1,6 @@
 library(xtable)
 source("~/git/brooks/code/xtable.printbold.r")
+load('~/git/gwr/funcsim2.Rdata')
 
 N = 30
 settings = 1:12
@@ -145,9 +146,9 @@ for (j in 1:length(vars)) {
     for (l in 1:length(locs)) {
         bx.table[[vars[j]]][[l]] = as.matrix(sapply(bx[[vars[j]]][[l]], identity))
         bxbold = matrix(FALSE, nrow=dim(bx.table[[vars[j]]][[l]])[1], ncol=dim(bx.table[[vars[j]]][[l]])[2])
-        for (i in 1:(dim(bx.table[[vars[j]]][[l]])[1])) {bxbold[i,order(bx.table[[vars[j]]][[l]][i,])[1]] = TRUE}
+        for (i in 1:(dim(bx.table[[vars[j]]][[l]])[1])) {bxbold[i,order(abs(bx.table[[vars[j]]][[l]][i,]))[1]] = TRUE}
         bxital = matrix(FALSE, nrow=dim(bx.table[[vars[j]]][[l]])[1], ncol=dim(bx.table[[vars[j]]][[l]])[2])
-        for (i in 1:(dim(bx.table[[vars[j]]][[l]])[1])) {bxital[i,order(bx.table[[vars[j]]][[l]][i,])[2]] = TRUE}
+        for (i in 1:(dim(bx.table[[vars[j]]][[l]])[1])) {bxital[i,order(abs(bx.table[[vars[j]]][[l]][i,]))[2]] = TRUE}
         bx.fancytable[[vars[j]]][[l]] = xtable.printbold(xtable(bx.table[[vars[j]]][[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Bias of estimates for $\\beta_", j, "$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{table:loc", l, "-", vars[[j]], "-BiasX}", sep="")), which.bold=bxbold, which.ital=bxital, include.rownames=FALSE, hline.after=c(0))
     }
 }
@@ -176,9 +177,9 @@ by.table = list()
 for (l in 1:length(locs)) {
     by.table[[l]] = as.matrix(sapply(by[[l]], identity))
     bybold = matrix(FALSE, nrow=dim(by.table[[l]])[1], ncol=dim(by.table[[l]])[2])
-    for (i in 1:(dim(by.table[[l]])[1])) {bybold[i,order(by.table[[l]][i,])[1]] = TRUE}
+    for (i in 1:(dim(by.table[[l]])[1])) {bybold[i,order(abs(by.table[[l]][i,]))[1]] = TRUE}
     byital = matrix(FALSE, nrow=dim(by.table[[l]])[1], ncol=dim(by.table[[l]])[2])
-    for (i in 1:(dim(by.table[[l]])[1])) {byital[i,order(by.table[[l]][i,])[2]] = TRUE}
+    for (i in 1:(dim(by.table[[l]])[1])) {byital[i,order(abs(by.table[[l]][i,]))[2]] = TRUE}
     xtable.printbold(xtable(by.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Bias of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{table:loc", l, "-BiasY}", sep="")), which.bold=bybold, which.ital=byital, include.rownames=FALSE, hline.after=c(0))
 }
 
