@@ -1,3 +1,4 @@
-\contentsline {figure}{\numberline {1}{\ignorespaces The actual $\beta _1$ coefficient surface used in the simulation.\relax }}{19}
-\contentsline {figure}{\numberline {2}{\ignorespaces Locations where the variable selection and coefficient estimation of GWL were summarized.\relax }}{20}
-\contentsline {figure}{\numberline {3}{\ignorespaces Estimated coefficient surfaces for the 1970 census.\relax }}{21}
+\contentsline {figure}{\numberline {1}{\ignorespaces The actual $\beta _1$ coefficient surface used in the simulation.\relax }}{20}
+\contentsline {figure}{\numberline {2}{\ignorespaces Locations where the variable selection and coefficient estimation of GWL were summarized.\relax }}{21}
+\contentsline {figure}{\numberline {3}{\ignorespaces Coefficient surfaces for the logit of poverty rate, based on the 1970 census and estimated by the unshrunk adaptive elastic net. \relax }}{22}
+\contentsline {figure}{\numberline {4}{\ignorespaces Coefficient surfaces for the logit of poverty rate based on the 1970 census and estimated by base GWR. \relax }}{23}

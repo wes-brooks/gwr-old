@@ -325,8 +325,13 @@
 	
 		
 	\subsection{Discussion}
-	There is no clear winner among the methods tested. In most cases, the mean squared error of the penalized GWR coefficient estimates is quite similar to that of the ordinary GWR coefficient estimates for $\beta_1(\bm{s})$. 
+	At locations where $\beta_1$ is nonzero, $X_1$ usually selected for inclusion in all or nearly all of the model runs. An exception is at location four for the step function, where $X_1$ was included in about half of the model runs. This is probably because location four is at the very point where $\beta_1$ transitions from zero to nonzero. Selection performance was relatively poor for the step function at location one, especially for data with $\sigma^2 = 1$. For those simulations, $X_1$ was correctly included in around 85\% of the simulations. The bias, variance, and MSE of $\hat{\beta}_1$ under the same settings were also much larger than the baseline established by the standard \verb!gwr! algorithm. The reason(s) for the poor performance under those particular conditions is currently unknown.\\
 	
+	Otherwise, selection performance was good, with the rate of false positive selections for $X_2 - X_5$ (and for $X_1$ where its true coefficient was zero) usually below 0.10. Selection (also bias, variance, and MSE of $\hat{\beta}_1$) tended to suffer worse by the change from low to high error variance than by the change from low to high collinearity amongst the predictors.\\
+	
+	There was not a clear and consistent difference in performance between the three selection methods. It might be expected that the adaptive elastic net would outperform the adaptive lasso under greater covariate collinearity, but if such effect is real it is not apparent from this simulation. The unshrunk coefficient-estimation methods tended to exhibit more bias than the selection-plus-shrinkage methods when the true coefficient value was near zero, and vice versa when the true coefficient was not near zero. The unshrunk methods were perhaps more consistent in their performance and for that reason they are probably preferable in practice.\\
+	
+	Bias in coefficient estimation was greater and variance less for the standard \verb!gwr! algorithm than for the methods described here. This is probably due to the fact that the methods described here show a preference for smaller bandwidths than those select by \verb!gwr!. Accuracy (as measured by MSE) in fitting the true Y variables was comparable for all the methods. \\	
 	
 	\subsection{Tables}
 		\subsubsection{Selection}
@@ -1021,19 +1026,28 @@
 	\end{table}
 	
 	\subsection{Modeling}	
-	The adaptive elastic net was used for variable selection and coefficient estimation. 
+	The adaptive elastic net was used for variable selection, and then coefficients for the selected variables were estimated by weighted least squares without shrinkage. The standard \verb!gwr! algorithm was used to fit a model to the same data for the sake of comparison.
 	
 	\subsection{Figures}
-	The coefficient estimates are plotted on maps of the upper midwest in Figures \ref{fig:census-coefs-1960} - \ref{fig:census-coefs-2006}. It is immediately apparent that the estimated coefficient surfaces are non-constant for most variables.\\
-
+	The coefficient estimates are plotted on maps of the upper midwest in Figure \ref{fig:unshrunk-enet-coefs-1970} (based on the adaptive elastic net) and Figure \ref{fig:gwr-coefs-1970} (for standard GWR).
 	\begin{figure}
 		\begin{center}
-			\includegraphics[height=8in]{../../figures/poverty/1970.linear.coefficients.pdf}
-			\caption{Estimated coefficient surfaces for the 1970 census.\label{fig:census-coefs-1970}}
+			\includegraphics[height=8in]{../../figures/poverty/1970.linear.coefficients.unshrunk.pdf}
+			\caption{Coefficient surfaces for the logit of poverty rate, based on the 1970 census and estimated by the unshrunk adaptive elastic net. \label{fig:unshrunk-enet-coefs-1970}}
 		\end{center}
-	\end{figure}			
+	\end{figure}	
+	
+	\begin{figure}
+		\begin{center}
+			\includegraphics[height=8in]{../../figures/poverty/1970.gwr.pdf}
+			\caption{Coefficient surfaces for the logit of poverty rate based on the 1970 census and estimated by base GWR. \label{fig:gwr-coefs-1970}}
+		\end{center}
+	\end{figure}	
+			
 	\subsection{Discussion}
-	If the model is to be believed, then it is not uncommon for the same variable to have both positive and negative effects on poverty in different geographical areas - see, for instance, the coefficient surface for \verb!pex! (mining employment) in the 1970 census. That surface indicates an interaction whereby the proportion of people working in mining in southern parts of the studied area is associated with an increase in the poverty rate, while in northern parts of the studied area it is associated with a decrease in the poverty rate. Often, a variable is found to be associated with an effect on poverty in some counties but not in others (see, for instance, the coefficient surface for \verb!pserve! (services employment) in 1980).
+	It is immediately apparent that the estimated coefficient surfaces are non-constant for most variables. The same large-scale patterns appear in both figures, but with differences. First of all, the adaptive elastic net has selected a larger bandwidth than base GWR, so there is less variability in the coefficient estimates from the adaptive elastic net. This may be one reason that the adaptive elastic net coefficient estimates are less extreme than those for base GWR. In a model with a logit-transformed proportion as the output, the coefficients can be interpreted as log odds ratios, so, e.g., the estimate of -100 as the coefficient of \verb!phisp! (albeit at the edge of the domain) seems unrealistic.\\
+	
+	Assessing variable selection for this data is difficult, since the adaptive elastic net almost never removed any variables from the model. Indeed, some coefficients seem nearly constant across the domain. An exception is the coefficient surface for \verb!pex! (mining employment). That surface indicates an interaction whereby the proportion of people working in mining in southern parts of the domain is associated with an increase in the poverty rate, while in northern parts of the domain it is associated with a decrease in the poverty rate.\\
 
 \section{References}
 \bibliographystyle{chicago}
