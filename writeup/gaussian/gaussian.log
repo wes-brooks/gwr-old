@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  2 MAY 2013 13:52
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  10 MAY 2013 17:14
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -634,121 +634,110 @@ Package: booktabs 2005/04/14 v1.61803 publication quality tables
 \@lastruleclass=\count121
 \@thisrulewidth=\dimen138
 )
+(/usr/local/texlive/2012/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
+)
 (./gaussian.aux)
 \openout1 = `gaussian.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
+LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 47.
+LaTeX Font Info:    ... okay on input line 47.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 45.
+LaTeX Font Info:    Try loading font information for U+msa on input line 48.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 45.
+LaTeX Font Info:    Try loading font information for U+msb on input line 48.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
-)
-Underfull \hbox (badness 10000) in paragraph at lines 55--56
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 58--59
-
- []
-
-[1
+) [1
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 60--61
+Underfull \hbox (badness 10000) in paragraph at lines 71--72
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 63--64
+Underfull \hbox (badness 10000) in paragraph at lines 74--75
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 65--66
+Underfull \hbox (badness 10000) in paragraph at lines 76--77
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 68--69
-
- []
-
-[2] [3]
-Underfull \hbox (badness 10000) in paragraph at lines 102--103
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 79--80
 
  []
 
-[4]
-Underfull \hbox (badness 10000) in paragraph at lines 159--160
+[3] [4]
+Underfull \hbox (badness 10000) in paragraph at lines 115--116
 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 176--177
+Underfull \hbox (badness 10000) in paragraph at lines 172--173
 
  []
 
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 195--196
+[6] [7]
+Underfull \hbox (badness 10000) in paragraph at lines 189--190
 
  []
 
-[7] [8]
-Underfull \hbox (badness 10000) in paragraph at lines 241--242
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 208--209
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 244--245
-
- []
-
-[9]
-Underfull \hbox (badness 10000) in paragraph at lines 246--247
+[9] [10] [11]
+Underfull \hbox (badness 10000) in paragraph at lines 254--255
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 248--249
+Underfull \hbox (badness 10000) in paragraph at lines 257--258
 
  []
 
-[10]
-Overfull \hbox (3.02835pt too wide) in paragraph at lines 267--268
+
+Underfull \hbox (badness 10000) in paragraph at lines 259--260
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 261--262
+
+ []
+
+[12] [13]
+Overfull \hbox (3.02835pt too wide) in paragraph at lines 280--281
 \OT1/cmr/m/n/10.95 model uses only $\OML/cmm/m/it/10.95 Z[]$\OT1/cmr/m/n/10.95 
 , so $\OML/cmm/m/it/10.95 Z[]; [] ; Z[]$ \OT1/cmr/m/n/10.95 are in-cluded to te
 st the variable-selection prop-er-ties of GWL. 
  []
 
 
-LaTeX Warning: Reference `table:simulation_settings' on page 11 undefined on in
-put line 269.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 269--270
+Underfull \hbox (badness 10000) in paragraph at lines 282--283
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 271--272
+Underfull \hbox (badness 10000) in paragraph at lines 284--285
 
  []
 
@@ -757,129 +746,74 @@ Underfull \hbox (badness 10000) in paragraph at lines 271--272
 (gaussian.ttt)
 \openout4 = `gaussian.fff'.
 
- (gaussian.fff) [11]
-
-LaTeX Warning: Reference `table:loc1-selection' on page 12 undefined on input l
-ine 318.
-
-
-LaTeX Warning: Reference `table:loc5-selection' on page 12 undefined on input l
-ine 318.
-
-
-LaTeX Warning: Reference `table:loc1-MSEY' on page 12 undefined on input line 3
-19.
-
-
-LaTeX Warning: Reference `table:loc5-MSEY' on page 12 undefined on input line 3
-19.
-
-
-LaTeX Warning: Reference `table:loc1-X1-MSEX' on page 12 undefined on input lin
-e 320.
-
-
-LaTeX Warning: Reference `table:loc5-X1-MSEX' on page 12 undefined on input lin
-e 320.
-
-
-LaTeX Warning: Reference `table:loc1-X1-BiasX' on page 12 undefined on input li
-ne 321.
-
-
-LaTeX Warning: Reference `table:loc5-X1-BiasX' on page 12 undefined on input li
-ne 321.
-
-
-LaTeX Warning: Reference `table:loc1-X1-varx' on page 12 undefined on input lin
-e 322.
-
-
-LaTeX Warning: Reference `table:loc5-X1-varx' on page 12 undefined on input lin
-e 322.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 317--323
+ (gaussian.fff) [14]
+Underfull \hbox (badness 10000) in paragraph at lines 330--336
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 328--329
+Underfull \hbox (badness 10000) in paragraph at lines 341--342
+
+ []
+
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 343--344
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 330--331
+Underfull \hbox (badness 10000) in paragraph at lines 345--346
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 332--333
+Underfull \hbox (badness 10000) in paragraph at lines 347--348
 
  []
 
-[12]
-Underfull \hbox (badness 10000) in paragraph at lines 334--335
+[16] [17] [18]
+Underfull \hbox (badness 10000) in paragraph at lines 1061--1062
 
  []
 
-[13]
-
-LaTeX Warning: Reference `table:census-vars' on page 14 undefined on input line
- 1006.
-
-[14]
-
-LaTeX Warning: Reference `fig:unshrunk-enet-coefs-1970' on page 15 undefined on
- input line 1032.
-
-
-LaTeX Warning: Reference `fig:gwr-coefs-1970' on page 15 undefined on input lin
-e 1032.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 1048--1049
+[19]
+Underfull \hbox (badness 10000) in paragraph at lines 1063--1064
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 1050--1051
-
- []
-
-[15] (./gaussian.bbl [16] [17])
-AED endfloat: Processing end Figures and Tables [18] (./gaussian.lof)
+(./gaussian.bbl [20] [21]) AED endfloat: Processing end Figures and Tables
+[22] (./gaussian.lof)
 \tf@lof=\write6
 \openout6 = `gaussian.lof'.
 
- [19
+ [23
 
 
-]
-(./gaussian.fff
+] (./gaussian.fff
 File: ../../figures/simulation/step.pdf Graphic file (type QTm)
- <use  "../../figures/simulation/step.pdf" >
+
+<use  "../../figures/simulation/step.pdf" >
 File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/gradient.pdf" >
 File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/parabola.pdf" > [20]
+<use  "../../figures/simulation/parabola.pdf" > [24]
 File: ../../figures/simulation/illustrations/summary-locations.pdf Graphic file
  (type QTm)
 
-<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [21]
+<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [25]
 File: ../../figures/poverty/1970.linear.coefficients.unshrunk.pdf Graphic file 
 (type QTm)
 
-<use  "../../figures/poverty/1970.linear.coefficients.unshrunk.pdf" > [22]
+<use  "../../figures/poverty/1970.linear.coefficients.unshrunk.pdf" > [26]
 File: ../../figures/poverty/1970.gwr.pdf Graphic file (type QTm)
 
-<use  "../../figures/poverty/1970.gwr.pdf" > [23]) (./gaussian.lot)
+<use  "../../figures/poverty/1970.gwr.pdf" > [27]) (./gaussian.lot)
 \tf@lot=\write7
 \openout7 = `gaussian.lot'.
 
- [24
+ [28
 
 
 
@@ -887,173 +821,166 @@ File: ../../figures/poverty/1970.gwr.pdf Graphic file (type QTm)
 
 
 ]
-(./gaussian.ttt [25
-
-] [26
-
-] [27
-
-] [28
-
-] [29
+(./gaussian.ttt [29
 
 ] [30
+
+] [31
+
+] [32
+
+] [33
+
+] [34
 
 ]
 Overfull \hbox (46.23pt too wide) in paragraph at lines 159--177
  [] 
  []
 
-[31
+[35
 
 ]
 Overfull \hbox (46.23pt too wide) in paragraph at lines 184--202
  [] 
  []
 
-[32
+[36
 
 ]
 Overfull \hbox (43.94286pt too wide) in paragraph at lines 209--227
  [] 
  []
 
-[33
+[37
 
 ]
 Overfull \hbox (51.42488pt too wide) in paragraph at lines 234--252
  [] 
  []
 
-[34
+[38
 
 ]
 Overfull \hbox (44.77612pt too wide) in paragraph at lines 259--277
  [] 
  []
 
-[35
+[39
 
 ]
 Overfull \hbox (53.7066pt too wide) in paragraph at lines 284--302
  [] 
  []
 
-[36
+[40
 
 ]
 Overfull \hbox (56.2915pt too wide) in paragraph at lines 309--327
  [] 
  []
 
-[37
+[41
 
 ]
 Overfull \hbox (53.82774pt too wide) in paragraph at lines 334--352
  [] 
  []
 
-[38
+[42
 
 ]
 Overfull \hbox (56.3524pt too wide) in paragraph at lines 359--377
  [] 
  []
 
-[39
+[43
 
 ]
 Overfull \hbox (56.26138pt too wide) in paragraph at lines 384--402
  [] 
  []
 
-[40
+[44
 
 ]
 Overfull \hbox (49.97101pt too wide) in paragraph at lines 409--427
  [] 
  []
 
-[41
+[45
 
 ]
 Overfull \hbox (48.51714pt too wide) in paragraph at lines 434--452
  [] 
  []
 
-[42
+[46
 
 ]
 Overfull \hbox (43.94286pt too wide) in paragraph at lines 459--477
  [] 
  []
 
-[43
+[47
 
 ]
 Overfull \hbox (46.23pt too wide) in paragraph at lines 484--502
  [] 
  []
 
-[44
+[48
 
 ]
 Overfull \hbox (48.51714pt too wide) in paragraph at lines 509--527
  [] 
  []
 
-[45
+[49
 
 ]
 Overfull \hbox (51.42488pt too wide) in paragraph at lines 534--552
  [] 
  []
 
-[46
+[50
 
 ]
 Overfull \hbox (51.42488pt too wide) in paragraph at lines 559--577
  [] 
  []
 
-[47
+[51
 
 ]
 Overfull \hbox (51.42488pt too wide) in paragraph at lines 584--602
  [] 
  []
 
-[48
+[52
 
 ]
 Overfull \hbox (51.42488pt too wide) in paragraph at lines 609--627
  [] 
  []
 
-[49
+[53
 
 ]
 Overfull \hbox (51.42488pt too wide) in paragraph at lines 634--652
  [] 
  []
 
-[50
+[54
 
-] [51]) (./gaussian.aux)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+] [55]) (./gaussian.aux) ) 
 Here is how much of TeX's memory you used:
- 4547 strings out of 494004
- 64206 string characters out of 3150890
- 128154 words of memory out of 3000000
- 7680 multiletter control sequences out of 15000+200000
+ 4574 strings out of 494004
+ 64735 string characters out of 3150890
+ 127154 words of memory out of 3000000
+ 7703 multiletter control sequences out of 15000+200000
  16343 words of font info for 57 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
  42i,15n,40p,1187b,373s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (51 pages).
+Output written on gaussian.pdf (55 pages).
