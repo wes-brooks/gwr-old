@@ -65,9 +65,7 @@ gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL,
         if (any(!is.finite(difmin))) 
             difmin[which(!is.finite(difmin))] <- 0
         beta1 = difmin/300
-        beta2 = 10*difmin 
-
-        print(paste("beta1:", beta1, ", beta2:", beta2, sep=""))
+        beta2 = 10*difmin
 
         if (method=='nen') {
             if (parallel) {

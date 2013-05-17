@@ -1,0 +1,13 @@
+\subsection{Confidence Intervals}	
+	We consider three approaches to construct confidence intervals for the GWL's coefficient estimates can be calculated either by the bootstrap \citep{Efron:1986} or by exploiting an assumption of normally-distributed residuals. Then the, e.g., 95\% confidence interval for each regression coefficient is defined by the (2.5, 97.5) percentiles of the coefficient estimates from the bootstrap replicates.\\
+	 
+	 	To compute coefficient confidence intervals via the bootstrap, the observations with non-zero geographic weights are resampled uniformly with replacement for each of $n_B$ bootstrap replicates. For each bootstrap replicate, the GWL is used to estimate regression coefficients. The local likelihood of the bootstrap replicates may be different from that of the original sample, so the adaptive Lasso tuning parameter may differ for each bootstrap replicate. Since the GWL is applied independently to each bootstrap replicate, the variables selected by GWL may be different for each replicate.\\
+	
+		 Unshrunk coefficient estimates are found by using the GWL at each location for variable selection only and then estimating the coefficients for the selected variables by weighted least squares. An unshrunk bootstrap confidence interval is found by estimating the unshrunk coefficients for each of the $n_B$ bootstrap replicates and then calculating the percentiles as above.\\
+		 
+		A third way to estimate the coefficient confidence intervals is to use the GWL for variable selection only and then to use weighted least squares for both coefficient estimation and confidence interval construction. In that case, the 
+		\begin{align}
+			\hat{\mbox{se}}_{\hat{\beta}_{ij}} &=& \left( \tilde{\bm{X}}_i'\bm{W}_i \tilde{\bm{X}}_i \right)^{-1}  \tilde{\bm{X}}_i'\bm{W}_i\bm{y}
+		\end{align}
+	
+		where $\tilde{\bm{X}}_i$ is the model matrix including only those variables that are selected by GWL at location $\bm{s}_i$.
