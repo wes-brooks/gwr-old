@@ -1,13 +1,27 @@
-\contentsline {table}{\numberline {1}{\ignorespaces Simulation parameters for each setting.\relax }}{26}
-\contentsline {table}{\numberline {2}{\ignorespaces Selection frequency at location 1\relax }}{27}
-\contentsline {table}{\numberline {3}{\ignorespaces Selection frequency at location 2\relax }}{28}
-\contentsline {table}{\numberline {4}{\ignorespaces Selection frequency at location 3\relax }}{29}
-\contentsline {table}{\numberline {5}{\ignorespaces Selection frequency at location 4\relax }}{30}
-\contentsline {table}{\numberline {6}{\ignorespaces Selection frequency at location 5\relax }}{31}
-\contentsline {table}{\numberline {7}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 1 (\textbf {minimum}, \emph {next best}).\relax }}{32}
-\contentsline {table}{\numberline {8}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 2 (\textbf {minimum}, \emph {next best}).\relax }}{33}
-\contentsline {table}{\numberline {9}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 3 (\textbf {minimum}, \emph {next best}).\relax }}{34}
-\contentsline {table}{\numberline {10}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 4 (\textbf {minimum}, \emph {next best}).\relax }}{35}
-\contentsline {table}{\numberline {11}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 5 (\textbf {minimum}, \emph {next best}).\relax }}{36}
-\contentsline {table}{\numberline {12}{\ignorespaces Description of the variables used in the census-data example\relax }}{37}
-\contentsline {table}{\numberline {13}{\ignorespaces Bandwidth selected for each year's model.\relax }}{38}
+\contentsline {table}{\numberline {1}{\ignorespaces Simulation parameters for each setting.\relax }}{29}
+\contentsline {table}{\numberline {2}{\ignorespaces Selection frequency at location 1\relax }}{30}
+\contentsline {table}{\numberline {3}{\ignorespaces Selection frequency at location 2\relax }}{31}
+\contentsline {table}{\numberline {4}{\ignorespaces Selection frequency at location 3\relax }}{32}
+\contentsline {table}{\numberline {5}{\ignorespaces Selection frequency at location 4\relax }}{33}
+\contentsline {table}{\numberline {6}{\ignorespaces Selection frequency at location 5\relax }}{34}
+\contentsline {table}{\numberline {7}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 1 (\textbf {minimum}, \emph {next best}).\relax }}{35}
+\contentsline {table}{\numberline {8}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 2 (\textbf {minimum}, \emph {next best}).\relax }}{36}
+\contentsline {table}{\numberline {9}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 3 (\textbf {minimum}, \emph {next best}).\relax }}{37}
+\contentsline {table}{\numberline {10}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 4 (\textbf {minimum}, \emph {next best}).\relax }}{38}
+\contentsline {table}{\numberline {11}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 5 (\textbf {minimum}, \emph {next best}).\relax }}{39}
+\contentsline {table}{\numberline {12}{\ignorespaces Bias of estimates for $\beta _1$ at location 1 (\textbf {minimum}, \emph {next best}).\relax }}{40}
+\contentsline {table}{\numberline {13}{\ignorespaces Bias of estimates for $\beta _1$ at location 2 (\textbf {minimum}, \emph {next best}).\relax }}{41}
+\contentsline {table}{\numberline {14}{\ignorespaces Bias of estimates for $\beta _1$ at location 3 (\textbf {minimum}, \emph {next best}).\relax }}{42}
+\contentsline {table}{\numberline {15}{\ignorespaces Bias of estimates for $\beta _1$ at location 4 (\textbf {minimum}, \emph {next best}).\relax }}{43}
+\contentsline {table}{\numberline {16}{\ignorespaces Bias of estimates for $\beta _1$ at location 5 (\textbf {minimum}, \emph {next best}).\relax }}{44}
+\contentsline {table}{\numberline {17}{\ignorespaces Variance of estimates for $\beta _1$ at location 1 (\textbf {minimum}, \emph {next best}).\relax }}{45}
+\contentsline {table}{\numberline {18}{\ignorespaces Variance of estimates for $\beta _1$ at location 2 (\textbf {minimum}, \emph {next best}).\relax }}{46}
+\contentsline {table}{\numberline {19}{\ignorespaces Variance of estimates for $\beta _1$ at location 3 (\textbf {minimum}, \emph {next best}).\relax }}{47}
+\contentsline {table}{\numberline {20}{\ignorespaces Variance of estimates for $\beta _1$ at location 4 (\textbf {minimum}, \emph {next best}).\relax }}{48}
+\contentsline {table}{\numberline {21}{\ignorespaces Variance of estimates for $\beta _1$ at location 5 (\textbf {minimum}, \emph {next best}).\relax }}{49}
+\contentsline {table}{\numberline {22}{\ignorespaces Mean squared error of estimates for $Y$ at location 1 (\textbf {minimum}, \emph {next best}).\relax }}{50}
+\contentsline {table}{\numberline {23}{\ignorespaces Mean squared error of estimates for $Y$ at location 2 (\textbf {minimum}, \emph {next best}).\relax }}{51}
+\contentsline {table}{\numberline {24}{\ignorespaces Mean squared error of estimates for $Y$ at location 3 (\textbf {minimum}, \emph {next best}).\relax }}{52}
+\contentsline {table}{\numberline {25}{\ignorespaces Mean squared error of estimates for $Y$ at location 4 (\textbf {minimum}, \emph {next best}).\relax }}{53}
+\contentsline {table}{\numberline {26}{\ignorespaces Mean squared error of estimates for $Y$ at location 5 (\textbf {minimum}, \emph {next best}).\relax }}{54}
+\contentsline {table}{\numberline {27}{\ignorespaces Description of the variables used in the census-data example\relax }}{55}

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  25 APR 2013 17:56
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2012.6.30)  16 MAY 2013 22:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -634,91 +634,74 @@ Package: booktabs 2005/04/14 v1.61803 publication quality tables
 \@lastruleclass=\count121
 \@thisrulewidth=\dimen138
 )
+(/usr/local/texlive/2012/texmf-dist/tex/latex/rotating/rotating.sty
+Package: rotating 2009/03/28 v2.16a rotated objects in LaTeX
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\c@r@tfl@t=\count122
+\rotFPtop=\skip54
+\rotFPbot=\skip55
+\rot@float@box=\box32
+\rot@mess@toks=\toks30
+)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/setspace/setspace.sty
+Package: setspace 2011/12/19 v6.7a set line spacing
+)
 (./gaussian.aux)
 \openout1 = `gaussian.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
-LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 44.
-LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
+LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 48.
+LaTeX Font Info:    ... okay on input line 48.
 Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: rotating package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 45.
+LaTeX Font Info:    Try loading font information for U+msa on input line 49.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 45.
+LaTeX Font Info:    Try loading font information for U+msb on input line 49.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
-) [1
+)
+Overfull \hbox (1.61143pt too wide) in paragraph at lines 62--63
+[]\OT1/cmr/m/n/10.95 This doc-u-ment in-ves-ti-gates an ap-pli-ca-tion of VCR m
+od-els for spa-tial data where the effect-modifying
+ []
+
+[1
 
 
-] [2]
-[3]
-Underfull \hbox (badness 10000) in paragraph at lines 113--114
+] [2] [3] [4] [5] [6]
+Underfull \hbox (badness 10000) in paragraph at lines 172--173
 
  []
 
-[4]
-Underfull \hbox (badness 10000) in paragraph at lines 170--171
-
- []
-
-[5]
-Underfull \hbox (badness 10000) in paragraph at lines 187--188
-
- []
-
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 206--207
-
- []
-
-[7] [8]
-Underfull \hbox (badness 10000) in paragraph at lines 252--253
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 255--256
-
- []
-
-[9]
-Underfull \hbox (badness 10000) in paragraph at lines 257--258
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 259--260
-
- []
-
-[10]
-Overfull \hbox (3.02835pt too wide) in paragraph at lines 278--279
-\OT1/cmr/m/n/10.95 model uses only $\OML/cmm/m/it/10.95 Z[]$\OT1/cmr/m/n/10.95 
-, so $\OML/cmm/m/it/10.95 Z[]; [] ; Z[]$ \OT1/cmr/m/n/10.95 are in-cluded to te
+[7] [8] [9] [10] [11]
+Overfull \hbox (7.81898pt too wide) in paragraph at lines 249--250
+\OT1/cmr/m/n/10.95 model uses only $\OML/cmm/m/it/10.95 X[]$\OT1/cmr/m/n/10.95 
+, so $\OML/cmm/m/it/10.95 X[]; [] ; X[]$ \OT1/cmr/m/n/10.95 are in-cluded to te
 st the variable-selection prop-er-ties of GWL. 
  []
 
-
-LaTeX Warning: Reference `sim-actual' on page 11 undefined on input line 280.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 280--281
+[12]
+Underfull \hbox (badness 10000) in paragraph at lines 251--252
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 282--283
+Underfull \hbox (badness 10000) in paragraph at lines 253--254
 
  []
 
@@ -729,27 +712,68 @@ Underfull \hbox (badness 10000) in paragraph at lines 282--283
 
  (gaussian.fff)
 
-LaTeX Warning: Reference `table:loc1-X1-MSEX' on page 11 undefined on input lin
-e 326.
+LaTeX Warning: Reference `table:loc5-selection' on page 13 undefined on input l
+ine 300.
 
 
-LaTeX Warning: Reference `table:loc5-estimation' on page 11 undefined on input 
-line 326.
-
-[11] [12]
-Underfull \hbox (badness 10000) in paragraph at lines 646--647
+Underfull \hbox (badness 10000) in paragraph at lines 299--305
 
  []
 
-[13] (./gaussian.bbl [14]) AED endfloat: Processing end Figures and Tables
-[15] (./gaussian.lof)
-\tf@lof=\write6
-\openout6 = `gaussian.lof'.
+[13]
+Underfull \hbox (badness 10000) in paragraph at lines 310--311
 
- [16
+ []
 
 
-] (./gaussian.fff
+Underfull \hbox (badness 10000) in paragraph at lines 312--313
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 314--315
+
+ []
+
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 316--317
+
+ []
+
+
+Overfull \hbox (116.32689pt too wide) in paragraph at lines 324--354
+ [] 
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 875.
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 875.
+
+Underfull \hbox (badness 10000) in paragraph at lines 875--876
+
+ []
+
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 876--877
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 901--902
+
+ []
+
+[16]
+Underfull \hbox (badness 10000) in paragraph at lines 903--904
+
+ []
+
+(./gaussian.bbl [17] [18] [19])
+AED endfloat: Processing end Figures and Tables [20] [21] (./gaussian.fff
 File: ../../figures/simulation/step.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/step.pdf" >
@@ -758,40 +782,18 @@ File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
 <use  "../../figures/simulation/gradient.pdf" >
 File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/parabola.pdf" > [17]
+<use  "../../figures/simulation/parabola.pdf" > [22]
 File: ../../figures/simulation/illustrations/summary-locations.pdf Graphic file
  (type QTm)
 
-<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [18]
-File: ../../figures/poverty/1960.linear.coefficients.pdf Graphic file (type QTm
-)
+<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [23]
+File: ../../figures/poverty/1970.linear.coefficients.unshrunk.pdf Graphic file 
+(type QTm)
 
-<use  "../../figures/poverty/1960.linear.coefficients.pdf" > [19]
-File: ../../figures/poverty/1970.linear.coefficients.pdf Graphic file (type QTm
-)
+<use  "../../figures/poverty/1970.linear.coefficients.unshrunk.pdf" > [24]
+File: ../../figures/poverty/1970.gwr.pdf Graphic file (type QTm)
 
-<use  "../../figures/poverty/1970.linear.coefficients.pdf" > [20]
-File: ../../figures/poverty/1980.linear.coefficients.pdf Graphic file (type QTm
-)
-
-<use  "../../figures/poverty/1980.linear.coefficients.pdf" > [21]
-File: ../../figures/poverty/1990.linear.coefficients.pdf Graphic file (type QTm
-)
-
-<use  "../../figures/poverty/1990.linear.coefficients.pdf" > [22]
-File: ../../figures/poverty/2000.linear.coefficients.pdf Graphic file (type QTm
-)
-
-<use  "../../figures/poverty/2000.linear.coefficients.pdf" > [23]
-File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
-)
-
-<use  "../../figures/poverty/2006.linear.coefficients.pdf" > [24])
-(./gaussian.lot)
-\tf@lot=\write7
-\openout7 = `gaussian.lot'.
-
- [25
+<use  "../../figures/poverty/1970.gwr.pdf" > [25]) (./gaussian.ttt [26
 
 
 
@@ -799,12 +801,8 @@ File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
 
 
 
-
-
-
-] (./gaussian.ttt [26
-
-] [27
+]
+[27
 
 ] [28
 
@@ -816,8 +814,7 @@ File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
 
 ] [32
 
-]
-[33
+] [33
 
 ] [34
 
@@ -825,7 +822,24 @@ File: ../../figures/poverty/2006.linear.coefficients.pdf Graphic file (type QTm
 
 ] [36
 
-] [37] [38]) (./gaussian.aux)
+] [37
+
+] [38
+
+] [39
+
+] [40
+
+] [41
+
+]
+[42
+
+] [43
+
+] [44
+
+]) (./gaussian.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -834,12 +848,12 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 4537 strings out of 494004
- 64076 string characters out of 3150890
- 128154 words of memory out of 3000000
- 7661 multiletter control sequences out of 15000+200000
+ 4695 strings out of 494004
+ 66452 string characters out of 3150890
+ 144171 words of memory out of 3000000
+ 7820 multiletter control sequences out of 15000+200000
  16343 words of font info for 57 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,15n,40p,1097b,373s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,17n,40p,1148b,391s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (38 pages).
+Output written on gaussian.pdf (44 pages).
