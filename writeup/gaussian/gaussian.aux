@@ -68,14 +68,17 @@
 \newlabel{section:data-analysis}{{5}{15}}
 \@writefile{toc}{\contentsline {section}{\numberline {5}Data Analysis}{15}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Census Poverty Data}{15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Modeling}{16}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Figures}{16}}
+\newlabel{RF1}{16}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Selection frequency at location 1\relax }}{16}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{table:loc1-selection}{{1}{16}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Modeling}{18}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Figures}{18}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Discussion}{18}}
 \bibstyle{chicago}
 \bibdata{../../references/gwr}
 \bibcite{Akaike:1974}{{1}{1974}{{Akaike}}{{Akaike}}}
 \bibcite{Antoniadis:2012a}{{2}{2012}{{Antoniadas et~al.}}{{Antoniadas, Gijbels, and Verhasselt}}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Discussion}{17}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}References}{17}}
 \bibcite{Breiman:1995}{{3}{1995}{{Breiman}}{{Breiman}}}
 \bibcite{Brundson:1998a}{{4}{1998}{{Brundson et~al.}}{{Brundson, Fotheringham, and Charltonn}}}
 \bibcite{Cressie:1993}{{5}{1993}{{Cressie}}{{Cressie}}}
@@ -83,6 +86,7 @@
 \bibcite{Efron:2004b}{{7}{2004}{{Efron et~al.}}{{Efron, Hastie, Johnstone, and Tibshirani}}}
 \bibcite{Fan:2001}{{8}{2001}{{Fan and Li}}{{Fan and Li}}}
 \bibcite{Fan:1999}{{9}{1999}{{Fan and Zhang}}{{Fan and Zhang}}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}References}{19}}
 \bibcite{Fotheringham:2002}{{10}{2002}{{Fotheringham et~al.}}{{Fotheringham, Brunsdon, and Charlton}}}
 \bibcite{Friedman:2010}{{11}{2010}{{Friedman et~al.}}{{Friedman, Hastie, and Tibshirani}}}
 \bibcite{Hastie:1993b}{{12}{1993}{{Hastie and Loader}}{{Hastie and Loader}}}
@@ -98,10 +102,6 @@
 \bibcite{Zou:2006}{{22}{2006}{{Zou}}{{Zou}}}
 \bibcite{Zou:2007}{{23}{2007}{{Zou et~al.}}{{Zou, Hastie, and Tibshirani}}}
 \bibcite{Zou:2009}{{24}{2009}{{Zou and Zhang}}{{Zou and Zhang}}}
-\newlabel{RF1}{21}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Selection frequency at location 1\relax }}{21}}
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{table:loc1-selection}{{1}{21}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The actual $\beta _1$ coefficient surface used in the simulation.\relax }}{22}}
 \newlabel{fig:sim-actual}{{1}{22}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Locations where the variable selection and coefficient estimation of GWL were summarized.\relax }}{23}}
@@ -112,39 +112,52 @@
 \newlabel{fig:gwr-coefs-1970}{{4}{25}}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Simulation parameters for each setting.\relax }}{26}}
 \newlabel{table:simulation_settings}{{2}{26}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Mean squared error of estimates for $\beta _1$ at locations 1,2,3 (\textbf  {minimum}, \emph  {next best}).\relax }}{27}}
-\newlabel{table:loc1-X1-MSEX}{{3}{27}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 4 (\textbf  {minimum}, \emph  {next best}).\relax }}{28}}
-\newlabel{table:loc4-X1-MSEX}{{4}{28}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Mean squared error of estimates for $\beta _1$ at location 5 (\textbf  {minimum}, \emph  {next best}).\relax }}{29}}
-\newlabel{table:loc5-X1-MSEX}{{5}{29}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Bias of estimates for $\beta _1$ at location 1 (\textbf  {minimum}, \emph  {next best}).\relax }}{30}}
-\newlabel{table:loc1-X1-BiasX}{{6}{30}}
-\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Bias of estimates for $\beta _1$ at location 2 (\textbf  {minimum}, \emph  {next best}).\relax }}{31}}
-\newlabel{table:loc2-X1-BiasX}{{7}{31}}
-\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Bias of estimates for $\beta _1$ at location 3 (\textbf  {minimum}, \emph  {next best}).\relax }}{32}}
-\newlabel{table:loc3-X1-BiasX}{{8}{32}}
-\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Bias of estimates for $\beta _1$ at location 4 (\textbf  {minimum}, \emph  {next best}).\relax }}{33}}
-\newlabel{table:loc4-X1-BiasX}{{9}{33}}
-\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Bias of estimates for $\beta _1$ at location 5 (\textbf  {minimum}, \emph  {next best}).\relax }}{34}}
-\newlabel{table:loc5-X1-BiasX}{{10}{34}}
-\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Variance of estimates for $\beta _1$ at location 1 (\textbf  {minimum}, \emph  {next best}).\relax }}{35}}
-\newlabel{table:loc1-X1-varx}{{11}{35}}
-\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Variance of estimates for $\beta _1$ at location 2 (\textbf  {minimum}, \emph  {next best}).\relax }}{36}}
-\newlabel{table:loc2-X1-varx}{{12}{36}}
-\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces Variance of estimates for $\beta _1$ at location 3 (\textbf  {minimum}, \emph  {next best}).\relax }}{37}}
-\newlabel{table:loc3-X1-varx}{{13}{37}}
-\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces Variance of estimates for $\beta _1$ at location 4 (\textbf  {minimum}, \emph  {next best}).\relax }}{38}}
-\newlabel{table:loc4-X1-varx}{{14}{38}}
-\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces Variance of estimates for $\beta _1$ at location 5 (\textbf  {minimum}, \emph  {next best}).\relax }}{39}}
-\newlabel{table:loc5-X1-varx}{{15}{39}}
-\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Mean squared error of estimates for $Y$ at location 1 (\textbf  {minimum}, \emph  {next best}).\relax }}{40}}
-\newlabel{table:loc1-MSEY}{{16}{40}}
-\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces Mean squared error of estimates for $Y$ at location 2 (\textbf  {minimum}, \emph  {next best}).\relax }}{41}}
-\newlabel{table:loc2-MSEY}{{17}{41}}
-\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces Mean squared error of estimates for $Y$ at location 3 (\textbf  {minimum}, \emph  {next best}).\relax }}{42}}
-\newlabel{table:loc3-MSEY}{{18}{42}}
-\@writefile{lot}{\contentsline {table}{\numberline {19}{\ignorespaces Mean squared error of estimates for $Y$ at location 4 (\textbf  {minimum}, \emph  {next best}).\relax }}{43}}
-\newlabel{table:loc4-MSEY}{{19}{43}}
-\@writefile{lot}{\contentsline {table}{\numberline {20}{\ignorespaces Mean squared error of estimates for $Y$ at location 5 (\textbf  {minimum}, \emph  {next best}).\relax }}{44}}
-\newlabel{table:loc5-MSEY}{{20}{44}}
+\gdef \LT@i {\LT@entry 
+    {3}{53.70131pt}\LT@entry 
+    {1}{50.02089pt}\LT@entry 
+    {1}{40.68271pt}\LT@entry 
+    {1}{40.68271pt}\LT@entry 
+    {1}{44.85005pt}\LT@entry 
+    {1}{40.68271pt}\LT@entry 
+    {1}{41.20004pt}\LT@entry 
+    {1}{53.97507pt}\LT@entry 
+    {1}{50.99422pt}\LT@entry 
+    {1}{40.68271pt}}
+\newlabel{table:X1-MSEX}{{3}{28}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Mean squared error of estimates for $\beta _1$ (\textbf  {minimum}, \emph  {next best}).}}{28}}
+\gdef \LT@ii {\LT@entry 
+    {3}{53.70131pt}\LT@entry 
+    {1}{50.02089pt}\LT@entry 
+    {3}{43.14647pt}\LT@entry 
+    {1}{43.14647pt}\LT@entry 
+    {1}{44.88017pt}\LT@entry 
+    {1}{44.88017pt}\LT@entry 
+    {1}{44.88017pt}\LT@entry 
+    {1}{53.97507pt}\LT@entry 
+    {1}{50.99422pt}\LT@entry 
+    {1}{43.14647pt}}
+\newlabel{table:X1-bias}{{4}{30}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Bias of estimates for $\beta _1$ (\textbf  {minimum}, \emph  {next best}).}}{30}}
+\gdef \LT@iii {\LT@entry 
+    {3}{53.70131pt}\LT@entry 
+    {1}{50.02089pt}\LT@entry 
+    {1}{39.22884pt}\LT@entry 
+    {2}{40.68271pt}\LT@entry 
+    {1}{44.85005pt}\LT@entry 
+    {2}{40.68271pt}\LT@entry 
+    {1}{41.20004pt}\LT@entry 
+    {1}{53.97507pt}\LT@entry 
+    {1}{50.99422pt}\LT@entry 
+    {1}{40.68271pt}}
+\newlabel{table:X1-varx}{{5}{32}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Variance of estimates for $\beta _1$ (\textbf  {minimum}, \emph  {next best}).}}{32}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Mean squared error of estimates for $Y$ at location 1 (\textbf  {minimum}, \emph  {next best}).\relax }}{33}}
+\newlabel{table:loc1-MSEY}{{6}{33}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Mean squared error of estimates for $Y$ at location 2 (\textbf  {minimum}, \emph  {next best}).\relax }}{34}}
+\newlabel{table:loc2-MSEY}{{7}{34}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Mean squared error of estimates for $Y$ at location 3 (\textbf  {minimum}, \emph  {next best}).\relax }}{35}}
+\newlabel{table:loc3-MSEY}{{8}{35}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Mean squared error of estimates for $Y$ at location 4 (\textbf  {minimum}, \emph  {next best}).\relax }}{36}}
+\newlabel{table:loc4-MSEY}{{9}{36}}
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Mean squared error of estimates for $Y$ at location 5 (\textbf  {minimum}, \emph  {next best}).\relax }}{37}}
+\newlabel{table:loc5-MSEY}{{10}{37}}
