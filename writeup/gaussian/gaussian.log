@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  6 JUN 2013 16:58
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  7 JUN 2013 13:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -575,15 +575,27 @@ Package: longtable 2004/02/01 v4.11 Multi-page Table package (DPC)
 \c@LT@chunks=\count115
 \LT@p@ftn=\toks30
 )
+(/usr/local/texlive/2012/texmf-dist/tex/latex/rotating/rotating.sty
+Package: rotating 2009/03/28 v2.16a rotated objects in LaTeX
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\c@r@tfl@t=\count116
+\rotFPtop=\skip57
+\rotFPbot=\skip58
+\rot@float@box=\box36
+\rot@mess@toks=\toks31
+)
 (/usr/local/texlive/2012/texmf-dist/tex/latex/endfloat/endfloat.sty
 Package: endfloat 2011/12/25 v2.5d LaTeX2e package puts figures and tables at e
 nd (jdm)
-\c@postfigure=\count116
+\c@postfigure=\count117
 \efloat@postfff=\write4
-\@ef@fffopen=\count117
-\c@posttable=\count118
+\@ef@fffopen=\count118
+\c@posttable=\count119
 \efloat@postttt=\write5
-\@ef@tttopen=\count119
+\@ef@tttopen=\count120
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/relsize/relsize.sty
 Package: relsize 2011/09/21 ver 4.0
@@ -614,18 +626,20 @@ Package: caption3 2013/02/03 v1.5-62 caption3 kernel (AR)
 \caption@parindent=\dimen126
 \caption@hangindent=\dimen127
 )
-\c@ContinuedFloat=\count120
+\c@ContinuedFloat=\count121
 Package caption Info: longtable package is loaded.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/caption/ltcaption.sty
 Package: ltcaption 2013/02/03 v1.3-62 longtable captions (AR)
-))
-\c@subfigure=\count121
-\c@subtable=\count122
+)
+Package caption Info: rotating package is loaded.
+)
+\c@subfigure=\count122
+\c@subtable=\count123
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/preprint/fullpage.sty
 Package: fullpage 1999/02/23 1.1 (PWD)
-\FP@margin=\skip57
+\FP@margin=\skip59
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/booktabs/booktabs.sty
 Package: booktabs 2005/04/14 v1.61803 publication quality tables
@@ -639,25 +653,13 @@ Package: booktabs 2005/04/14 v1.61803 publication quality tables
 \cmidrulesep=\dimen135
 \cmidrulekern=\dimen136
 \defaultaddspace=\dimen137
-\@cmidla=\count123
-\@cmidlb=\count124
+\@cmidla=\count124
+\@cmidlb=\count125
 \@aboverulesep=\dimen138
 \@belowrulesep=\dimen139
-\@thisruleclass=\count125
-\@lastruleclass=\count126
+\@thisruleclass=\count126
+\@lastruleclass=\count127
 \@thisrulewidth=\dimen140
-)
-(/usr/local/texlive/2012/texmf-dist/tex/latex/rotating/rotating.sty
-Package: rotating 2009/03/28 v2.16a rotated objects in LaTeX
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/ifthen.sty
-Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
-)
-\c@r@tfl@t=\count127
-\rotFPtop=\skip58
-\rotFPbot=\skip59
-\rot@float@box=\box36
-\rot@mess@toks=\toks31
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2011/12/19 v6.7a set line spacing
@@ -665,30 +667,29 @@ Package: setspace 2011/12/19 v6.7a set line spacing
 (./gaussian.aux)
 \openout1 = `gaussian.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
-LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 49.
-LaTeX Font Info:    ... okay on input line 49.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 50.
+LaTeX Font Info:    ... okay on input line 50.
 Package caption Info: Begin \AtBeginDocument code.
-Package caption Info: rotating package is loaded.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 50.
+LaTeX Font Info:    Try loading font information for U+msa on input line 51.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 50.
+LaTeX Font Info:    Try loading font information for U+msb on input line 51.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (1.61143pt too wide) in paragraph at lines 63--64
+Overfull \hbox (1.61143pt too wide) in paragraph at lines 68--69
 []\OT1/cmr/m/n/10.95 This doc-u-ment in-ves-ti-gates an ap-pli-ca-tion of VCR m
 od-els for spa-tial data where the effect-modifying
  []
@@ -696,25 +697,13 @@ od-els for spa-tial data where the effect-modifying
 [1
 
 
-] [2] [3] [4] [5] [6]
-Underfull \hbox (badness 10000) in paragraph at lines 173--174
+] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11]
+Underfull \hbox (badness 10000) in paragraph at lines 259--260
 
- []
-
-[7] [8] [9] [10] [11]
-Overfull \hbox (7.81898pt too wide) in paragraph at lines 250--251
-\OT1/cmr/m/n/10.95 model uses only $\OML/cmm/m/it/10.95 X[]$\OT1/cmr/m/n/10.95 
-, so $\OML/cmm/m/it/10.95 X[]; [] ; X[]$ \OT1/cmr/m/n/10.95 are in-cluded to te
-st the variable-selection prop-er-ties of GWL. 
  []
 
 [12]
-Underfull \hbox (badness 10000) in paragraph at lines 252--253
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 254--255
+Underfull \hbox (badness 10000) in paragraph at lines 261--262
 
  []
 
@@ -724,89 +713,59 @@ Underfull \hbox (badness 10000) in paragraph at lines 254--255
 \openout4 = `gaussian.fff'.
 
  (gaussian.fff)
-
-LaTeX Warning: Reference `table:loc5-selection' on page 13 undefined on input l
-ine 301.
-
-
-LaTeX Warning: Reference `table:loc1-X1-MSEX' on page 13 undefined on input lin
-e 303.
-
-
-LaTeX Warning: Reference `table:loc5-X1-MSEX' on page 13 undefined on input lin
-e 303.
-
-
-LaTeX Warning: Reference `table:loc1-X1-BiasX' on page 13 undefined on input li
-ne 304.
-
-
-LaTeX Warning: Reference `table:loc5-X1-BiasX' on page 13 undefined on input li
-ne 304.
-
-
-LaTeX Warning: Reference `table:loc1-X1-varx' on page 13 undefined on input lin
-e 305.
-
-
-LaTeX Warning: Reference `table:loc5-X1-varx' on page 13 undefined on input lin
-e 305.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 300--306
+Underfull \hbox (badness 10000) in paragraph at lines 307--313
 
  []
 
 [13]
-Underfull \hbox (badness 10000) in paragraph at lines 311--312
+Underfull \hbox (badness 10000) in paragraph at lines 318--319
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 313--314
+Underfull \hbox (badness 10000) in paragraph at lines 320--321
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 315--316
+Underfull \hbox (badness 10000) in paragraph at lines 322--323
 
  []
 
 [14]
-Underfull \hbox (badness 10000) in paragraph at lines 317--318
+Underfull \hbox (badness 10000) in paragraph at lines 324--325
 
  []
 
-[15] [16]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 772.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 750.
 
- (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 772.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 750.
 
-Underfull \hbox (badness 10000) in paragraph at lines 772--773
+Underfull \hbox (badness 10000) in paragraph at lines 750--751
+
+ []
+
+[15]
+Underfull \hbox (badness 10000) in paragraph at lines 751--752
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 773--774
+Underfull \hbox (badness 10000) in paragraph at lines 776--777
 
  []
 
-[17]
-Underfull \hbox (badness 10000) in paragraph at lines 798--799
+[16]
+Underfull \hbox (badness 10000) in paragraph at lines 778--779
 
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 800--801
-
- []
-
-[18] (./gaussian.bbl [19] [20])
-AED endfloat: Processing end Figures and Tables [21] (./gaussian.fff
+(./gaussian.bbl [17] [18] [19])
+AED endfloat: Processing end Figures and Tables [20] (./gaussian.fff
 File: ../../figures/simulation/step.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/step.pdf" >
@@ -815,85 +774,67 @@ File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
 <use  "../../figures/simulation/gradient.pdf" >
 File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/parabola.pdf" > [22]
+<use  "../../figures/simulation/parabola.pdf" > [21]
 File: ../../figures/simulation/illustrations/summary-locations.pdf Graphic file
  (type QTm)
 
-<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [23]
+<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [22]
 File: ../../figures/poverty/1970.linear.coefficients.unshrunk.pdf Graphic file 
 (type QTm)
 
-<use  "../../figures/poverty/1970.linear.coefficients.unshrunk.pdf" > [24]
+<use  "../../figures/poverty/1970.linear.coefficients.unshrunk.pdf" > [23]
 File: ../../figures/poverty/1970.gwr.pdf Graphic file (type QTm)
 
 <use  "../../figures/poverty/1970.gwr.pdf" >
 
-LaTeX Warning: Text page 25 contains only floats.
+LaTeX Warning: Text page 24 contains only floats.
 
 
 Overfull \vbox (5.72998pt too high) has occurred while \output is active []
 
 
-[25
+[24
 
 
 
 
 
-]) (./gaussian.ttt [26
+]) (./gaussian.ttt [25
 
 
-] [27
-
-] [28]
-Overfull \hbox (3.01639pt too wide) in alignment at lines 110--136
- [] [] [] [] [] [] [] [] [] [] 
+]
+Overfull \hbox (5.5777pt too wide) in paragraph at lines 30--62
+ [] 
  []
 
+[26]
 
-Overfull \hbox (3.01639pt too wide) in alignment at lines 136--161
- [] [] [] [] [] [] [] [] [] [] 
- []
+LaTeX Warning: Float too large for page by 78.97926pt on input line 153.
 
+[27]
 
-Overfull \hbox (3.01639pt too wide) in alignment at lines 161--186
- [] [] [] [] [] [] [] [] [] [] 
- []
+LaTeX Warning: Float too large for page by 78.97926pt on input line 240.
 
+[28]
 
-Overfull \hbox (3.01639pt too wide) in alignment at lines 186--189
- [] [] [] [] [] [] [] [] [] [] 
- []
+LaTeX Warning: Float too large for page by 78.97926pt on input line 329.
 
-[29
+[29]
 
-] [30] [31
+LaTeX Warning: Float too large for page by 78.97926pt on input line 416.
 
-] [32] [33
-
-] [34
-
-] [35
-
-] [36
-
-] [37
-
-]) (./gaussian.aux)
-
-LaTeX Warning: There were undefined references.
-
+[30]) (./gaussian.aux)
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 4871 strings out of 493994
- 68805 string characters out of 3150335
- 156548 words of memory out of 3000000
- 7976 multiletter control sequences out of 15000+200000
+ 4857 strings out of 493994
+ 68576 string characters out of 3150335
+ 165002 words of memory out of 3000000
+ 7962 multiletter control sequences out of 15000+200000
  22164 words of font info for 77 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,17n,43p,1148b,456s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,17n,40p,1019b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (37 pages).
+Output written on gaussian.pdf (30 pages).
