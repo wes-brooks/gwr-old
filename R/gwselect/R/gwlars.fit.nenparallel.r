@@ -1,4 +1,4 @@
-gwlars.fit.nenparallel = function(x, y, coords, D, N=N, s, mode.select, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE) {
+gwlars.fit.nenparallel = function(x, y, coords, D, N=N, s, mode.select, verbose, prior.weights, gweight, target, beta1, beta2, tol=1e-25, longlat=FALSE, adapt, mode, precondition=FALSE, AICc) {
     if (!is.null(fit.loc)) {
         coords.unique = fit.loc
     } else {
@@ -33,7 +33,7 @@ gwlars.fit.nenparallel = function(x, y, coords, D, N=N, s, mode.select, verbose,
 		if (verbose) {
 	        cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
         }
-        return(gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, N=N, s=s, mode.select=mode.select, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition))
+        return(gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, N=N, s=s, mode.select=mode.select, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition, AICc=AICc))
     }
 
     gwlars.object[['models']] = models

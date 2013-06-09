@@ -1,4 +1,4 @@
-gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL, gweight, D=NULL, bw=NULL, N=1, verbose=FALSE, longlat, tol, method, tuning=FALSE, predict=FALSE, simulation=FALSE, adapt=FALSE, s=NULL, mode.select="AIC", parallel=FALSE, precondition=FALSE, oracle=NULL, interact=FALSE, shrunk.fit=TRUE) {
+gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL, gweight, D=NULL, bw=NULL, N=1, verbose=FALSE, longlat, tol, method, tuning=FALSE, predict=FALSE, simulation=FALSE, adapt=FALSE, s=NULL, mode.select="AIC", parallel=FALSE, precondition=FALSE, oracle=NULL, interact=FALSE, shrunk.fit=TRUE, AICc=FALSE) {
     if (!is.logical(adapt)) 
         stop("adapt must be logical")
     if (is.null(longlat) || !is.logical(longlat)) 
@@ -55,9 +55,9 @@ gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL,
     if (method=='dist') {
         weight.matrix = gweight(D, bw)
         if (parallel) {
-            res[['model']] = gwlars.fit.fixedbwparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, adapt=adapt, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit)
+            res[['model']] = gwlars.fit.fixedbwparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, adapt=adapt, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit, AICc=AICc)
         } else {
-            res[['model']] = gwlars.fit.fixedbw(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, adapt=adapt, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit)
+            res[['model']] = gwlars.fit.fixedbw(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, bw=bw, N=N, gwr.weights=weight.matrix, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, adapt=adapt, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit, AICc=AICc)
         }
     } else {        
         bbox <- cbind(range(coords[, 1]), range(coords[, 2]))
@@ -69,15 +69,15 @@ gwlars <- function(formula, data, weights=NULL, coords, indx=NULL, fit.loc=NULL,
 
         if (method=='nen') {
             if (parallel) {
-                res[['model']] = gwlars.fit.nenparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit)
+                res[['model']] = gwlars.fit.nenparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit, AICc=AICc)
             } else {
-                res[['model']] = gwlars.fit.nen(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit)
+                res[['model']] = gwlars.fit.nen(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit, AICc=AICc)
             }
         } else if (method=='knn') {
             if (parallel) {
-                res[['model']] = gwlars.fit.knnparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit)
+                res[['model']] = gwlars.fit.knnparallel(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit, AICc=AICc)
             } else {
-                res[['model']] = gwlars.fit.knn(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit)
+                res[['model']] = gwlars.fit.knn(x=x, y=y, prior.weights=weights, coords=coords, indx=indx, fit.loc=fit.loc, D=D, N=N, longlat=longlat, s=s, mode.select=mode.select, tuning=tuning, simulation=simulation, predict=predict, verbose=verbose, adapt=adapt, target=bw, gweight=gweight, beta1=beta1, beta2=beta2, tol=tol, precondition=precondition, oracle=oracle, interact=interact, shrunk.fit=shrunk.fit, AICc=AICc)
             }
         }
     }

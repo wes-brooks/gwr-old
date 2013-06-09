@@ -1,4 +1,4 @@
-gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaussian', dist=NULL, oracle=NULL, tuning=FALSE, predict=FALSE, simulation=FALSE, verbose=FALSE, interact=FALSE, mode.select, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, N=N) {
+gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaussian', dist=NULL, oracle=NULL, tuning=FALSE, predict=FALSE, simulation=FALSE, verbose=FALSE, interact=FALSE, mode.select, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, N=N, AICc) {
     if (!is.null(indx)) {
         colocated = which(round(coords[indx,1],5)==round(as.numeric(loc[1]),5) & round(coords[indx,2],5) == round(as.numeric(loc[2]),5))
     }
@@ -135,10 +135,14 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
 	
 				} else if (mode.select=='AIC') {                           
 					fitted = predict(model, newdata=localdata)
-					s2 = sum(w[permutation]*model$residuals**2) / sum(w)   
-				
+					s2 = sum(w[permutation]*model$residuals**2) / (sum(w) - ncol(xx) - 1)   
+				    Xh = diag(sqrt(w[permutation])) %*% as.matrix(cbind(rep(1,length(permutation)), xx))
+                    H = Xh %*% solve(t(Xh) %*% Xh) %*% t(Xh)
+                    Hii = sum(H[colocated,colocated])
+					
 					if (length(colocated)>0) {
-						loss.local = log(s2) + 2*df/sum(w)
+						if (!AICc) {loss.local = log(s2) + 2*df/sum(w)}
+						else {loss.local = Hii}
 					} else {
 						loss.local = NA
 					}                     
