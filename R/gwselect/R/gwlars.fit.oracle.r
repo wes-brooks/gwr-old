@@ -68,7 +68,7 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
     yy = as.matrix(yy[weighted])
     w = w[weighted]
     colocated = which(gwr.weights[weighted]==1)
-    fitdata = data.frame(y=yy, xx)    
+    fitdata = data.frame(y=yy, xx)
     localdata = data.frame(fitdata[colocated,])
     colnames(fitdata) = colnames(localdata) = c("y", oracle)
     
@@ -142,11 +142,18 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
 					
 					if (length(colocated)>0) {
 						if (!AICc) {loss.local = log(s2) + 2*df/sum(w)}
-						else {loss.local = Hii}
+						else {
+                            loss.local = Hii
+                            #s2 = model$residuals[colocated]**2
+                            #cat(paste("model$residuals[colocated]: ", model$residuals[colocated], "\n", sep=""))
+                            #cat(paste("predict(model, type='link')[colocated]: ", predict(model, type='link')[colocated], "\n", sep=""))
+                            #cat(paste("colocated: ", colocated, "\n", sep=""))
+                            #print(permuted[colocated,])
+                            #cat("\n")
+                        }
 					} else {
 						loss.local = NA
-					}                     
-				
+					}				
 				} else if (mode.select=='BIC') {   
 					fitted = predict(model, newdata=localdata)
 					s2 = sum(w[permutation]*model$residuals**2) / (sum(w) - dim(permuted)[2] - 1) 

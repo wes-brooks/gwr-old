@@ -5,11 +5,12 @@ gwlars.cv.f = function(formula, data, weights, bw, N=N, coords, fit.loc, indx, g
 
     if (!AICc) {loss = sum(sapply(gwlars.model[['model']][['models']], function(x) {x[['loss.local']]}))}
     else {
-        trH = mean(sapply(gwlars.model[['model']][['models']], function(x) {x[['loss.local']]})) 
-        print(mean(sapply(gwlars.model[['model']][['models']], function(x) {log(x[['sigma2']])})))
-        print(trH)
-        print((2*(trH+1))/(nrow(data)-trH-2))
-        loss = mean(sapply(gwlars.model[['model']][['models']], function(x) {log(x[['sigma2']])})) + 1 + (2*(trH+1))/(nrow(data)-trH-2)
+        trH = sum(sapply(gwlars.model[['model']][['models']], function(x) {x[['loss.local']]})) 
+        #print(log(mean(sapply(gwlars.model[['model']][['models']], function(x) {x[['sigma2']]}))))
+        #print(nrow(data))
+        #print(trH)
+        #print((2*(trH+1))/(nrow(data)-trH-2))
+        loss = nrow(data) * (mean(sapply(gwlars.model[['model']][['models']], function(x) {log(x[['sigma2']])})) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
     }
 
     cat(paste('Bandwidth: ', round(bw, 3), '. Loss: ', round(loss, 3), '\n', sep=''))

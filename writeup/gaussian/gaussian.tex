@@ -43,7 +43,7 @@
 \newcommand{\E}{\mathop{\mathbb E}}
 
 
-\title{Local Variable Selection and Parameter Estimation of Spatially Varying Coefficient Models for Geographically Weighted Regression}
+\title{Local Variable Selection and Parameter Estimation of Spatially Varying Coefficient Models}
 \author{Wesley Brooks}
 \date{}                                           % Activate to display a given date or no date
 
@@ -52,30 +52,33 @@
 %\section{}
 %\subsection{}
 
-
-
+%Pastebin:
+%Spatial association - meaning that nearby locations are more alike than distant locations - is a key concept in spatial statistics.\
+%for univariate output $y$, $p$-vector of covariates $\bm{x}$, and random noise $\varepsilon$ all indexed by location $\bm{s}
+%where $\phi$ is a bandwidth parameter and $\delta(\bm{s}, \bm{t})$ is the Euclidean distance between locations $\bm{s}$ and $\bm{t}$.
 
 %\begin{spacing}{2}
 \section{Introduction}
 	%Varying coefficient regression
-	Varying coefficient regression (VCR) is a technique used to model non-stationary regression processes \citep{Hastie:1993a}. Whereas the coefficients in traditional linear regression are scalar constants, the coefficients in a VCR model are functions - often \emph{smooth} functions - of some effect modifying variable. When the effect modifying variable $\bm{s}$ represents location in a spatial domain, a VCR model implies that, for univariate output $y$, $p$-vector of covariates $\bm{x}$, and random noise $\varepsilon$ all indexed by location $\bm{s}$, there is a local regression model
-\[
-y(\bm{s}) = \bm{x}(\bm{s})' \bm{\beta}(\bm{s}) + \varepsilon(\bm{s})
-\]
-at each location $\bm{s}$. These local models are in contrast to a global linear regression model, where the coefficients are constant across the domain. Estimating the coefficient functions of a VCR model is therefore more complicated than estimating the coefficients in a global linear regression model.
+	Whereas the coefficients in traditional linear regression are scalar constants, the coefficients in a varying coefficient regression VCR model are functions - often \emph{smooth} functions - of some effect modifying variable \citep{Hastie:1993a}. When the effect modifying variable represents location in a spatial domain, a VCR model implies a spatially local regression model such that the regression coefficients vary over space and will be referred to as a spatially varying coefficient model (SVCR). Statistical inference for the coefficients as functions of location in an SVCR model is more complicated than estimating the coefficients in a global linear regression model where the coefficients are constant across the spatial domain. This document concerns the development of new methodologies for the analysis of spatial data using SVCR.
 	
 	%Spatial data / spatial regression
-	This document investigates an application of VCR models for spatial data where the effect-modifying variable is spatial location. It is a method for analyzing geostatistical data, which consists of observations of a continuous process, made at a set of discrete locations. The data example in section \ref{section:data-analysis} uses areal data, such as the poverty rate in a county, but treats it as geostatistical data by assuming that each measurement was made at the county's centroid.
+	It is a method for analyzing geostatistical data, which consists of observations of a continuous process, made at a set of discrete locations. The data example in section \ref{section:data-analysis} uses areal data, such as the poverty rate in a county, but treats it as geostatistical data by assuming that each measurement was made at the county's centroid.
 	
-	Spatial association - meaning that nearby locations are more alike than distant locations - is a key concept in spatial statistics. Common practice in the analysis of geostatistical data is to write a spatial model as the sum of systematic and random components, as in: 
+	 Common practice is to model the response variable with a spatial linear regression model consisting of the sum of a fixed mean function, a spatial random effect, and random error, as in: 
 \begin{align}\label{eq:spatial-regression}
     y(\bm{s}) = \bm{x}(\bm{s})'\bm{\beta} + W(\bm{s}) + \varepsilon(\bm{s})
 \end{align}
-where $\bm{x}(\bm{s})'\bm{\beta}$ denotes the model's systematic portion, which consists of $\bm{x}(\bm{s})$, a possibly multivariate spatial covariate process, and $\bm{\beta}$, a vector of regression coefficients. The term $\varepsilon(\bm{s})$ denotes a white noise process, and $W(\bm{s})$ denotes a second-order stationary mean-zero process that is independent of the white noise process, called the spatial random effect process \citep{Cressie:1993}. Fitting such a model then proceeds by specifying a covariance function for the spatial random effect \citep{Diggle:2007}. For example, the exponential covariance function has the form
-\[
-    \text{Cov}(W(\bm{s}), W(\bm{t})) = \exp\left(-\phi^{-1} \delta(\bm{s}, \bm{t}) \right)
-\]
-where $\phi$ is a bandwidth parameter and $\delta(\bm{s}, \bm{t})$ is the Euclidean distance between locations $\bm{s}$ and $\bm{t}$.
+where $\bm{x}(\bm{s})'\bm{\beta}$ is the mean function consisting of $\bm{x}(\bm{s})$, a possibly multivariate spatial covariate process, and $\bm{\beta}$, a vector of regression coefficients. The random error $\varepsilon(\bm{s})$ denotes white noise such that the errors are independent and identically distributed with mean zero and variance $\sigma^2$, while the spatial random effect $W(\bm{s})$ denotes a second-order stationary mean-zero process that is independent of the random error., called the spatial random effect process \citep{Cressie:1993}. Fitting such a model then proceeds by specifying a covariance function for the spatial random effect \citep{Diggle:2007}. For example, the exponential covariance function has the form
+\begin{eqnarray\label{eq:exponential-covariance}}
+    \text{Cov}(W(\bm{s}), W(\bm{t})) = \exp\left\{-\phi^{-1} \delta(\bm{s}, \bm{t}) \right\}
+\end{eqnarray}
+The exponential covariance model (\ref{eq:exponential-covariance}) is a special case of the Matérn class of covariance functions, which have the form
+\begin{eqnarray\label{eq:matern-covarinace}}
+    \text{Cov}(W(\bm{s}), W(\bm{t})) = \sigma^2 \Gamma(\nu)^{-1} 2^{1-\nu} \left(\sqrt{2\nu}\delta(\bm{s}, \bm{t}) \rho^{-1}\right)^\nu \exp\left\{-\phi^{-1} \delta(\bm{s}, \bm{t}) \right\}
+\end{eqnarray}
+
+
 
 	The spatial random effect describes the spatial pattern in the deviations from the systematic part of the model. When fitting the spatial regression model (\ref{eq:spatial-regression}), it is usually required that the the fitted values of the spatial random effect and of the residuals sum to zero, i.e. $\sum\limits_{i=1}^n\hat{W}(\bm{s}_i) = 0$ and $\sum\limits_{i=1}^n\hat{\varepsilon}(\bm{s}_i) = 0$. This mode of analysis is appropriate when the systematic part of the regression model does not vary between locations. On the other hand, a VCR model is appropriate for the case where the systematic part of the regression model does vary across locations.
 
