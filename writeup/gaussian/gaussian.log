@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  12 JUN 2013 15:50
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  13 JUN 2013 16:39
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -689,231 +689,20 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 51.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-
-Package natbib Warning: Citation `Hastie:1993a' on page 1 undefined on input li
-ne 62.
-
-
-LaTeX Warning: Reference `section:data-analysis' on page 1 undefined on input l
-ine 65.
+Overfull \hbox (77.08286pt too wide) in paragraph at lines 66--67
+[]$\OT1/cmr/m/n/10.95 . Let the ob-served data be de-noted $[]$. 
+ []
 
 [1
 
 
-]
-
-Package natbib Warning: Citation `Cressie:1993' on page 2 undefined on input li
-ne 71.
-
-
-Package natbib Warning: Citation `Diggle:2007' on page 2 undefined on input lin
-e 71.
-
-
-LaTeX Warning: Reference `eq:spatial-regression' on page 2 undefined on input l
-ine 77.
-
-
-Package natbib Warning: Citation `Wood:2006' on page 2 undefined on input line 
-80.
-
-
-Package natbib Warning: Citation `Loader:1999' on page 2 undefined on input lin
-e 80.
-
-
-Package natbib Warning: Citation `Fan:1999' on page 2 undefined on input line 8
-0.
-
-[2]
-
-Package natbib Warning: Citation `Wang:2008a' on page 3 undefined on input line
- 82.
-
-
-Package natbib Warning: Citation `Fan:2001' on page 3 undefined on input line 8
-2.
-
-
-Package natbib Warning: Citation `Antoniadis:2012a' on page 3 undefined on inpu
-t line 82.
-
-
-Package natbib Warning: Citation `Breiman:1995' on page 3 undefined on input li
-ne 82.
-
-
-Package natbib Warning: Citation `Zou:2006' on page 3 undefined on input line 8
-5.
-
-
-Package natbib Warning: Citation `Wheeler:2009' on page 3 undefined on input li
-ne 87.
-
-
-Package natbib Warning: Citation `Loader:1999' on page 3 undefined on input lin
-e 87.
-
-[3]
-
-Package natbib Warning: Citation `Brundson:1998a' on page 4 undefined on input 
-line 91.
-
-
-Package natbib Warning: Citation `Fotheringham:2002' on page 4 undefined on inp
-ut line 91.
-
-
-Package natbib Warning: Citation `Fotheringham:2002' on page 4 undefined on inp
-ut line 91.
-
-
-Package natbib Warning: Citation `Loader:1999' on page 4 undefined on input lin
-e 91.
-
-
-Package natbib Warning: Citation `Hastie:1993b' on page 4 undefined on input li
-ne 91.
-
-
-Package natbib Warning: Citation `Hastie:1993b' on page 4 undefined on input li
-ne 91.
-
-
-Package natbib Warning: Citation `Wang:2008b' on page 4 undefined on input line
- 91.
-
-
-Package natbib Warning: Citation `Efron:2004b' on page 4 undefined on input lin
-e 93.
-
-
-Package natbib Warning: Citation `Friedman:2010' on page 4 undefined on input l
-ine 93.
-
-
-Package natbib Warning: Citation `Zou:2009' on page 4 undefined on input line 9
-3.
-
-[4]
-
-LaTeX Warning: Reference `eq:lm(s)' on page 5 undefined on input line 106.
-
-
-LaTeX Warning: Reference `eq:err' on page 5 undefined on input line 106.
-
-[5]
-
-Package natbib Warning: Citation `Fotheringham:2002' on page 6 undefined on inp
-ut line 125.
-
-
-LaTeX Warning: Reference `eq:local-likelihood' on page 6 undefined on input lin
-e 135.
-
-
-LaTeX Warning: Reference `eq:local-log-likelihood' on page 6 undefined on input
- line 135.
-
-[6]
-
-LaTeX Warning: Reference `eq:local-log-likelihood' on page 7 undefined on input
- line 145.
-
-
-Package natbib Warning: Citation `Zou:2006' on page 7 undefined on input line 1
-82.
-
-
-Package natbib Warning: Citation `Tibshirani:1996' on page 7 undefined on input
- line 182.
-
-[7]
-
-LaTeX Warning: Reference `eq:adaptive-lasso-WLS' on page 8 undefined on input l
-ine 200.
-
-
-Package natbib Warning: Citation `Efron:2004b' on page 8 undefined on input lin
-e 200.
-
-
-Package natbib Warning: Citation `Zou:2009' on page 8 undefined on input line 2
-04.
-
-
-Package natbib Warning: Citation `Hoerl:1970' on page 8 undefined on input line
- 204.
-
-
-Package natbib Warning: Citation `Hastie:2009' on page 8 undefined on input lin
-e 204.
-
-[8]
-
-LaTeX Warning: Reference `sec:simulation' on page 9 undefined on input line 211
-.
-
-
-Package natbib Warning: Citation `Akaike:1974' on page 9 undefined on input lin
-e 214.
-
-
-Package natbib Warning: Citation `Zou:2007' on page 9 undefined on input line 2
-14.
-
-
-Package natbib Warning: Citation `Zou:2007' on page 9 undefined on input line 2
-23.
-
-[9]
-
-Package natbib Warning: Citation `Wheeler:2009' on page 10 undefined on input l
-ine 225.
-
-
-LaTeX Warning: Reference `eq:bisquare' on page 10 undefined on input line 228.
-
-
-Package natbib Warning: Citation `Fotheringham:2002' on page 10 undefined on in
-put line 232.
-
-
-LaTeX Warning: Reference `eq:adaptive-lasso-WLS' on page 10 undefined on input 
-line 232.
-
-
-Package natbib Warning: Citation `Zou:2007' on page 10 undefined on input line 
-232.
-
-[10]
-
-LaTeX Warning: Reference `section:GWR' on page 11 undefined on input line 248.
-
-
-LaTeX Warning: Reference `section:model-selection' on page 11 undefined on inpu
-t line 248.
-
-[11]
-
-LaTeX Warning: Reference `table:simulation_settings' on page 12 undefined on in
-put line 256.
-
-
-LaTeX Warning: Reference `fig:sim-actual' on page 12 undefined on input line 25
-6.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 256--257
+] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12]
+Underfull \hbox (badness 10000) in paragraph at lines 271--272
 
  []
 
-
-Package natbib Warning: Citation `Fotheringham:2002' on page 12 undefined on in
-put line 258.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 258--259
+[13]
+Underfull \hbox (badness 10000) in paragraph at lines 273--274
 
  []
 
@@ -923,96 +712,59 @@ Underfull \hbox (badness 10000) in paragraph at lines 258--259
 \openout4 = `gaussian.fff'.
 
  (gaussian.fff)
-
-LaTeX Warning: Reference `fig:summary-locations' on page 12 undefined on input 
-line 304.
-
-
-LaTeX Warning: Reference `table:selection' on page 12 undefined on input line 3
-05.
-
-
-LaTeX Warning: Reference `table:X1-MSEX' on page 12 undefined on input line 306
-.
-
-
-LaTeX Warning: Reference `table:X1-bias' on page 12 undefined on input line 307
-.
-
-
-LaTeX Warning: Reference `table:X1-varx' on page 12 undefined on input line 308
-.
-
-
-LaTeX Warning: Reference `table:MSEY' on page 12 undefined on input line 309.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 304--310
-
- []
-
-[12]
-Underfull \hbox (badness 10000) in paragraph at lines 315--316
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 317--318
-
- []
-
-[13]
-Underfull \hbox (badness 10000) in paragraph at lines 319--320
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 321--322
+Underfull \hbox (badness 10000) in paragraph at lines 319--325
 
  []
 
 [14]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 747.
-
- (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 747.
-
-Underfull \hbox (badness 10000) in paragraph at lines 747--748
+Underfull \hbox (badness 10000) in paragraph at lines 330--331
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 748--749
+Underfull \hbox (badness 10000) in paragraph at lines 332--333
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 334--335
 
  []
 
 [15]
+Underfull \hbox (badness 10000) in paragraph at lines 336--337
 
-LaTeX Warning: Reference `fig:unshrunk-enet-coefs-1970' on page 16 undefined on
- input line 757.
+ []
 
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 762.
 
-LaTeX Warning: Reference `fig:gwr-coefs-1970' on page 16 undefined on input lin
-e 757.
+(/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 762.
 
+Underfull \hbox (badness 10000) in paragraph at lines 762--763
 
-Underfull \hbox (badness 10000) in paragraph at lines 773--774
+ []
+
+[16]
+Underfull \hbox (badness 10000) in paragraph at lines 763--764
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 775--776
+Underfull \hbox (badness 10000) in paragraph at lines 788--789
 
  []
 
-(./gaussian.bbl [16] [17] [18])
+[17]
+Underfull \hbox (badness 10000) in paragraph at lines 790--791
 
-Package natbib Warning: There were undefined citations.
+ []
 
-AED endfloat: Processing end Figures and Tables [19] (./gaussian.fff
+(./gaussian.bbl [18] [19] [20])
+AED endfloat: Processing end Figures and Tables [21] (./gaussian.fff
 File: ../../figures/simulation/step.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/step.pdf" >
@@ -1021,32 +773,32 @@ File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
 <use  "../../figures/simulation/gradient.pdf" >
 File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/parabola.pdf" > [20]
+<use  "../../figures/simulation/parabola.pdf" > [22]
 File: ../../figures/simulation/illustrations/summary-locations.pdf Graphic file
  (type QTm)
 
-<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [21]
+<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [23]
 File: ../../figures/poverty/1970.linear.coefficients.unshrunk.pdf Graphic file 
 (type QTm)
 
-<use  "../../figures/poverty/1970.linear.coefficients.unshrunk.pdf" > [22]
+<use  "../../figures/poverty/1970.linear.coefficients.unshrunk.pdf" > [24]
 File: ../../figures/poverty/1970.gwr.pdf Graphic file (type QTm)
 
 <use  "../../figures/poverty/1970.gwr.pdf" >
 
-LaTeX Warning: Text page 23 contains only floats.
+LaTeX Warning: Text page 25 contains only floats.
 
 
 Overfull \vbox (5.72998pt too high) has occurred while \output is active []
 
 
-[23
+[25
 
 
 
 
 
-]) (./gaussian.ttt [24
+]) (./gaussian.ttt [26
 
 
 ]
@@ -1054,42 +806,30 @@ Overfull \hbox (5.5777pt too wide) in paragraph at lines 30--62
  [] 
  []
 
-[25]
+[27]
 
 LaTeX Warning: Float too large for page by 78.97926pt on input line 153.
 
-[26]
+[28]
 
 LaTeX Warning: Float too large for page by 78.97926pt on input line 240.
 
-[27]
+[29]
 
 LaTeX Warning: Float too large for page by 78.97926pt on input line 329.
 
-[28]
+[30]
 
 LaTeX Warning: Float too large for page by 78.97926pt on input line 416.
 
-[29]) (./gaussian.aux
-
-Package natbib Warning: Citation(s) may have changed.
-(natbib)                Rerun to get citations correct.
-
-)
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+[31]) (./gaussian.aux) ) 
 Here is how much of TeX's memory you used:
- 4857 strings out of 493994
- 68576 string characters out of 3150335
+ 4863 strings out of 493994
+ 68693 string characters out of 3150335
  165002 words of memory out of 3000000
- 7962 multiletter control sequences out of 15000+200000
+ 7968 multiletter control sequences out of 15000+200000
  22164 words of font info for 77 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,17n,40p,1019b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,17n,40p,1058b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (29 pages).
+Output written on gaussian.pdf (31 pages).
