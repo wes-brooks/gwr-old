@@ -23,6 +23,7 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
             which.oracle = c(which.oracle, which(vars==v))
     }
     df = length(oracle) + 1
+    ssr.local = NA
     
     if (interact) {
         newnames = vector()
@@ -144,6 +145,7 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
 						if (!AICc) {loss.local = log(s2) + 2*df/sum(w)}
 						else {
                             loss.local = Hii
+                            ssr.local = sum((w[permutation]*model$residuals**2)[colocated])
                             #s2 = model$residuals[colocated]**2
                             #cat(paste("model$residuals[colocated]: ", model$residuals[colocated], "\n", sep=""))
                             #cat(paste("predict(model, type='link')[colocated]: ", predict(model, type='link')[colocated], "\n", sep=""))
@@ -177,7 +179,7 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
     
     #Return the results
     if (tuning) {
-        return(list(loss.local=loss.local, s=NULL, sigma2=s2, nonzero=NULL, weightsum=sum(w)))
+        return(list(loss.local=loss.local, ssr.local=ssr.local, s=NULL, sigma2=s2, nonzero=NULL, weightsum=sum(w)))
     } else if (predict) {
         return(list(loss.local=loss.local, coef=coefs))
     } else if (simulation) {

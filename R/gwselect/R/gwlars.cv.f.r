@@ -10,7 +10,12 @@ gwlars.cv.f = function(formula, data, weights, bw, N=N, coords, fit.loc, indx, g
         #print(nrow(data))
         #print(trH)
         #print((2*(trH+1))/(nrow(data)-trH-2))
-        loss = nrow(data) * (mean(sapply(gwlars.model[['model']][['models']], function(x) {log(x[['sigma2']])})) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
+        
+        #Local sigma^2:
+        #loss = nrow(data) * (mean(sapply(gwlars.model[['model']][['models']], function(x) {log(x[['sigma2']])})) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
+
+        #Global sigma^2:
+        loss = nrow(data) * (log(mean(sapply(gwlars.model[['model']][['models']], function(x) {x[['ssr.local']]}))) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
     }
 
     cat(paste('Bandwidth: ', round(bw, 3), '. Loss: ', round(loss, 3), '\n', sep=''))

@@ -60,6 +60,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
     coef.list = list()
     coef.unshrunk.list=list()   
     coef.unshrunk.interacted.list=list()    
+    ssr.local = NA
 
     for (i in 1:N) {
         #Final permutation is the original ordering of the data:
@@ -288,7 +289,10 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 
                 if (length(colocated)>0) {
                     if (!AICc) {loss.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])/s2 + log(s2) + 2*df/sum(w[permutation])}
-                    else {loss.local = Hii}
+                    else {
+                        loss.local = Hii
+                        ssr.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])
+                    }
                 } else {
                     loss.local = NA
                 }                     
@@ -402,7 +406,10 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 
                 if (length(colocated)>0) {
                     if (!AICc) {loss.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])/s2 + log(s2) + log(sum(w[permutation]))*df/sum(w[permutation])}
-                    else {loss.local = Hii}
+                    else {
+                        loss.local = Hii
+                        ssr.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])
+                    }
                 } else {
                     loss.local = NA
                 }                     
@@ -486,7 +493,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
     }
     
     if (tuning) {
-        return(list(loss.local=loss.local, s=s.optimal, sigma2=s2, nonzero=colnames(x)[vars[[s.optimal]]], weightsum=sum(w)))
+        return(list(loss.local=loss.local, ssr.local=ssr.local, s=s.optimal, sigma2=s2, nonzero=colnames(x)[vars[[s.optimal]]], weightsum=sum(w)))
     } else if (predict) {
         return(list(loss.local=loss.local, coef=coefs))
     } else if (simulation) {
