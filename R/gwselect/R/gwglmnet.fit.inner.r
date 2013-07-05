@@ -181,7 +181,8 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
         fitx = xs
         fity = yyy
 
-        model = glmnet(x=fitx, y=fity, standardize=FALSE, intercept=TRUE, family=family, weights=w[permutation], alpha=alpha)
+		if (family == 'binomial') { model = glmnet(x=fitx, y=cbind(1-fity, fity), standardize=FALSE, intercept=TRUE, family=family, weights=w[permutation], alpha=alpha) }
+        else { model = glmnet(x=fitx, y=fity, standardize=FALSE, intercept=TRUE, family=family, weights=w[permutation], alpha=alpha) }
         nsteps = length(model$lambda) + 1   
     
         if (mode.select=='CV') {
@@ -208,7 +209,11 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                 s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / (sum(w)-ncol(x))  
                 #s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w)  
                 #loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + log(s2) + 2*df)
-                loss = as.vector(deviance(model) + 2*df)
+                if (family=='binomial') { loss = as.vector(apply(fitted, 2, function(x) { 2*sum(w[permutation] * (fity*log(x) + (1-fity)*log(1-log(x)))) })) + 2*df }
+                else { loss = as.vector(deviance(model) + 2*df) }
+                print(deviance(model))
+                print(df)
+                print(loss)
                 k = which.min(loss)
                 fitted = fitted[,k]
                 localfit = fitted[colocated]
@@ -321,7 +326,11 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                 s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / (sum(w)-ncol(x))  
                 #s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w)  
                 #loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + log(s2) + log(sum(w[permutation])*df)
-                loss = as.vector(deviance(model) + log(sum(w[permutation]))*df)
+                if (family=='binomial') { loss = as.vector(apply(fitted, 2, function(x) { 2*sum(w[permutation] * (fity*log(x) + (1-fity)*log(1-log(x)))) })) + log(sum(w[permutation]))*df }
+                else { loss = as.vector(deviance(model) + log(sum(w[permutation]))*df) }
+                print(deviance(model))
+                print(df)
+                print(loss)
                 k = which.min(loss)
                 fitted = fitted[,k]
                 localfit = fitted[colocated]
