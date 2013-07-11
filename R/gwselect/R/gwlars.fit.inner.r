@@ -160,7 +160,6 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
 				}
 				predx.interacted = as.matrix((xx.interacted[permutation,] - meanx.interacted) * adapt.weight.interacted / normx.interacted)
 			}
-            
         } else {
             meanx = rep(0, ncol(x))
             adapt.weight = rep(1, ncol(x))
@@ -194,7 +193,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             predx = cbind(1, as.matrix(xx[permutation,]))
             predy = as.matrix(yy[permutation])
 
-            if (sum(w[permutation]) > ncol(x)) {               
+            if (sum(w[permutation]) > ncol(x)+1) {               
                 #Get the un-penalized intercept
                 wcm = apply(predx[,-1], 2, function(x) {sum(x*w[permutation])})/sum(w[permutation])
                 coefs = as.matrix(coef(model))
@@ -206,7 +205,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
 				vars = apply(coefs, 1, function(x) {which(abs(x[-1])>0)})
 				df = sapply(vars, length) + 1
                 
-                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - yy[permutation])**2) / (sum(w[permutation]) - ncol(x) - 1)#ncol(x))  
+                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - yy[permutation])**2) / (sum(w[permutation]) - df)#(sum(w[permutation]) - ncol(x) - 1)#ncol(x))  
                 loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + log(s2) + 2*df)
                 k = which.min(loss)
                 fitted = fitted[,k]
@@ -311,7 +310,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
             predx = cbind(1, as.matrix(xx[permutation,]))
             predy = as.matrix(yy[permutation])
 
-            if (sum(w[permutation]) > ncol(x)) {               
+            if (sum(w[permutation]) > ncol(x)+1) {               
                 #Get the un-penalized intercept
                 wcm = apply(predx[,-1], 2, function(x) {sum(x*w[permutation])})/sum(w[permutation])
                 coefs = as.matrix(coef(model))
@@ -323,7 +322,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
 				vars = apply(coefs, 1, function(x) {which(abs(x[-1])>0)})
 				df = sapply(vars, length) + 1
                 
-                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - yy[permutation])**2) / (sum(w[permutation]) - ncol(x) - 1)  
+                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - yy[permutation])**2) / (sum(w[permutation]) - df)#(sum(w[permutation]) - ncol(x) - 1)#ncol(x))  
                 loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + log(s2) + log(sum(w[permutation]))*df)
                 k = which.min(loss)
                 fitted = fitted[,k]

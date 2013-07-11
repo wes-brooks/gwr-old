@@ -3,7 +3,7 @@ source("~/git/brooks/code/xtable.printbold.r")
 
 N = 30
 B = list()
-settings = 1:18
+settings = 1:12
 nsims = 100
 
 coord = seq(0, 1, length.out=N)
@@ -21,33 +21,33 @@ columns = list(lars="LARS", enet="enet", glmnet="glmnet", gwr="gwr",
                         unshrunk.glmnet="glmnet-U", oracular="Oracle")
 
 
-mse = list()
+msex = list()
 locs = c(30, 228, 435, 643, 871)
 for (l in 1:length(locs)) {
-    mse[[l]] = list()
+    msex[[l]] = list()
 
     for (m in sim.modes) {
-        mse[[l]][[m]] = vector()
+        msex[[l]][[m]] = vector()
     }
 }
 
 for (s in 1:18) {
     for (l in 1:length(locs)) {
         for (m in sim.modes) {
-            mse[[l]][[m]] = c(mse[[l]][[m]], mean(sapply(X1.err[[m]][[s]], function(x) {x[locs[l]]**2}), na.rm=TRUE))
+            msex[[l]][[m]] = c(msex[[l]][[m]], mean(sapply(X1.err[[m]][[s]], function(x) {x[locs[l]]**2}), na.rm=TRUE))
         }
     }
 }
 
-mse.table = list()
+msex.table = matrix(NA, nrow=0, ncol=length(sim.modes))
 for (l in 1:length(locs)) {
-    mse.table[[l]] = as.matrix(sapply(mse[[l]], identity))
-    msebold = matrix(FALSE, nrow=dim(mse.table[[l]])[1], ncol=dim(mse.table[[l]])[2])
-    for (i in 1:(dim(mse.table[[l]])[1])) {msebold[i,order(mse.table[[l]][i,])[1]] = TRUE}
-    mseital = matrix(FALSE, nrow=dim(mse.table[[l]])[1], ncol=dim(mse.table[[l]])[2])
-    for (i in 1:(dim(mse.table[[l]])[1])) {mseital[i,order(mse.table[[l]][i,])[2]] = TRUE}
-    xtable.printbold(xtable(mse.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Mean squared error of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{MSEX}", sep="")), which.bold=msebold, which.ital=mseital, include.rownames=FALSE, hline.after=c(0))
+    msex.table[[l]] = as.matrix(sapply(msex[[l]], identity))
 }
+msexbold = matrix(FALSE, nrow=nrow(msex.table), ncol=ncol(msex.table))
+for (i in 1:nrow(msex.table)) {msexbold[i,order(msex.table[i,])[1]] = TRUE}
+msexital = matrix(FALSE, nrow=nrow(msex.table), ncol=ncol(msex.table))
+for (i in 1:nrow(msex.table)) {msexital[i,order(msex.table[i,])[2]] = TRUE}
+xtable.printbold(xtable(msex.table, digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Mean squared error of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{MSEX}", sep="")), which.bold=msexbold, which.ital=msexital, include.rownames=FALSE, hline.after=c(0))
 
 
 
@@ -73,15 +73,15 @@ for (s in 1:18) {
     }
 }
 
-msey.table = list()
+msey.table = matrix(NA, nrow=0, ncol=length(sim.modes))
 for (l in 1:length(locs)) {
-    msey.table[[l]] = as.matrix(sapply(msey[[l]], identity))
-    mseybold = matrix(FALSE, nrow=dim(msey.table[[l]])[1], ncol=dim(msey.table[[l]])[2])
-    for (i in 1:(dim(msey.table[[l]])[1])) {mseybold[i,order(msey.table[[l]][i,])[1]] = TRUE}
-    mseyital = matrix(FALSE, nrow=dim(msey.table[[l]])[1], ncol=dim(msey.table[[l]])[2])
-    for (i in 1:(dim(msey.table[[l]])[1])) {mseyital[i,order(msey.table[[l]][i,])[2]] = TRUE}
-    xtable.printbold(xtable(msey.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Mean squared error of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{MSEY}", sep="")), which.bold=mseybold, which.ital=mseyital, include.rownames=FALSE, hline.after=c(0))
+    msey.table = rbind(msey.table, as.matrix(sapply(msey[[l]], identity)))
 }
+mseybold = matrix(FALSE, nrow=nrow(msey.table), ncol=ncol(msey.table))
+for (i in 1:nrow(msey.table)) {mseybold[i,order(msey.table[i,])[1]] = TRUE}
+mseyital = matrix(FALSE, nrow=nrow(msey.table), ncol=ncol(msey.table))
+for (i in 1:nrow(msey.table)) {mseyital[i,order(msey.table[i,])[2]] = TRUE}
+xtable.printbold(xtable(msey.table, digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Mean squared error of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{MSEY}", sep="")), which.bold=mseybold, which.ital=mseyital, include.rownames=FALSE, hline.after=c(0))
 
 
 
@@ -106,15 +106,16 @@ for (s in 1:18) {
     }
 }
 
-bx.table = list()
+bx.table = matrix(NA, nrow=0, ncol=length(sim.modes))
 for (l in 1:length(locs)) {
-    bx.table[[l]] = as.matrix(sapply(bx[[l]], identity))
-    bxbold = matrix(FALSE, nrow=dim(bx.table[[l]])[1], ncol=dim(bx.table[[l]])[2])
-    for (i in 1:(dim(bx.table[[l]])[1])) {bxbold[i,order(bx.table[[l]][i,])[1]] = TRUE}
-    bxital = matrix(FALSE, nrow=dim(bx.table[[l]])[1], ncol=dim(bx.table[[l]])[2])
-    for (i in 1:(dim(bx.table[[l]])[1])) {bxital[i,order(bx.table[[l]][i,])[2]] = TRUE}
-    xtable.printbold(xtable(bx.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Bias of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{BiasX}", sep="")), which.bold=bxbold, which.ital=bxital, include.rownames=FALSE, hline.after=c(0))
+    bx.table = rbind(bx.table, as.matrix(sapply(bx[[l]], identity)))
 }
+
+bxbold = matrix(FALSE, nrow=nrow(bx.table), ncol=ncol(bx.table))
+for (i in 1:nrow(bx.table)) {bxbold[i,order(bx.table[i,])[1]] = TRUE}
+bxital = matrix(FALSE, nrow=nrow(bx.table), ncol=ncol(bx.table))
+for (i in 1:nrow(bx.table)) {bxital[i,order(bx.table[i,])[2]] = TRUE}
+xtable.printbold(xtable(bx.table, digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Bias of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{BiasX}", sep="")), which.bold=bxbold, which.ital=bxital, include.rownames=FALSE, hline.after=c(0))
 
 
 
@@ -137,15 +138,16 @@ for (s in 1:18) {
     }
 }
 
-by.table = list()
+by.table = matrix(NA, nrow=0, ncol=length(sim.modes))
 for (l in 1:length(locs)) {
-    by.table[[l]] = as.matrix(sapply(by[[l]], identity))
-    bybold = matrix(FALSE, nrow=dim(by.table[[l]])[1], ncol=dim(by.table[[l]])[2])
-    for (i in 1:(dim(by.table[[l]])[1])) {bybold[i,order(by.table[[l]][i,])[1]] = TRUE}
-    byital = matrix(FALSE, nrow=dim(by.table[[l]])[1], ncol=dim(by.table[[l]])[2])
-    for (i in 1:(dim(by.table[[l]])[1])) {byital[i,order(by.table[[l]][i,])[2]] = TRUE}
-    xtable.printbold(xtable(by.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Bias of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{BiasY}", sep="")), which.bold=bybold, which.ital=byital, include.rownames=FALSE, hline.after=c(0))
+    by.table = rbind(by.table, as.matrix(sapply(by, identity)))
 }
+
+bybold = matrix(FALSE, nrow=nrow(by.table), ncol=ncol(by.table))
+for (i in 1:nrow(by.table)) {bybold[i,order(by.table[i,])[1]] = TRUE}
+byital = matrix(FALSE, nrow=nrow(by.table), ncol=ncol(by.table))
+for (i in 1:nrow(by.table)) {byital[i,order(by.table[i,])[2]] = TRUE}
+xtable.printbold(xtable(by.table, digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Bias of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{BiasY}", sep="")), which.bold=bybold, which.ital=byital, include.rownames=FALSE, hline.after=c(0))
 
 
 
@@ -170,15 +172,16 @@ for (s in 1:18) {
     }
 }
 
-varx.table = list()
+varx.table = matrix(NA, nrow=0, ncol=length(sim.modes))
 for (l in 1:length(locs)) {
-    varx.table[[l]] = as.matrix(sapply(varx[[l]], identity))
-    varxbold = matrix(FALSE, nrow=dim(varx.table[[l]])[1], ncol=dim(varx.table[[l]])[2])
-    for (i in 1:(dim(varx.table[[l]])[1])) {varxbold[i,order(varx.table[[l]][i,])[1]] = TRUE}
-    varxital = matrix(FALSE, nrow=dim(varx.table[[l]])[1], ncol=dim(varx.table[[l]])[2])
-    for (i in 1:(dim(varx.table[[l]])[1])) {varxital[i,order(varx.table[[l]][i,])[2]] = TRUE}
-    xtable.printbold(xtable(varx.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Variance of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{VarX}", sep="")), which.bold=varxbold, which.ital=varxital, include.rownames=FALSE, hline.after=c(0))
+    varx.table = rbind(varx.table, as.matrix(sapply(varx[[l]], identity)))
 }
+
+varxbold = matrix(FALSE, nrow=nrow(varx.table), ncol=ncol(varx.table))
+for (i in 1:nrow(varx.table)) {varxbold[i,order(varx.table[i,])[1]] = TRUE}
+varxital = matrix(FALSE, nrow=nrow(varx.table), ncol=ncol(varx.table))
+for (i in 1:nrow(varx.table)) {varxital[i,order(varx.table[i,])[2]] = TRUE}
+xtable.printbold(xtable(varx.table, digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Variance of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{VarX}", sep="")), which.bold=varxbold, which.ital=varxital, include.rownames=FALSE, hline.after=c(0))
 
 
 
@@ -203,57 +206,17 @@ for (s in 1:18) {
     }
 }
 
-vary.table = list()
+vary.table = matrix(NA, nrow=0, ncol=length(sim.modes))
 for (l in 1:length(locs)) {
-    vary.table[[l]] = as.matrix(sapply(vary[[l]], identity))
-    varybold = matrix(FALSE, nrow=dim(vary.table[[l]])[1], ncol=dim(vary.table[[l]])[2])
-    for (i in 1:(dim(vary.table[[l]])[1])) {varybold[i,order(vary.table[[l]][i,])[1]] = TRUE}
-    varyital = matrix(FALSE, nrow=dim(vary.table[[l]])[1], ncol=dim(vary.table[[l]])[2])
-    for (i in 1:(dim(vary.table[[l]])[1])) {varyital[i,order(vary.table[[l]][i,])[2]] = TRUE}
-    xtable.printbold(xtable(vary.table[[l]], digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Variance of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{VarY}", sep="")), which.bold=varybold, which.ital=varyital, include.rownames=FALSE, hline.after=c(0))
+    vary.table = rbind(vary.table, as.matrix(sapply(vary[[l]], identity)))
 }
 
+varybold = matrix(FALSE, nrow=nrow(vary.table), ncol=ncol(vary.table))
+for (i in 1:nrow(vary.table)) {varybold[i,order(vary.table[i,])[1]] = TRUE}
+varyital = matrix(FALSE, nrow=nrow(vary.table), ncol=ncol(vary.table))
+for (i in 1:nrow(vary.table)) {varyital[i,order(vary.table[i,])[2]] = TRUE}
+xtable.printbold(xtable(vary.table, digits=3, align=rep('c', length(sim.modes)+1), caption=paste("Variance of estimates for $Y$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).\\label{VarY}", sep="")), which.bold=varybold, which.ital=varyital, include.rownames=FALSE, hline.after=c(0))
 
-
-
-
-comprehensive.table = list()
-for (l in 1:length(locs)) {
-    for (m in sim.modes) {
-        comprehensive.table[[l]] = cbind(mse.loc[[l]][['GWL']], bx.loc[[l]][['GWL']], varx.loc[[l]][['GWL']], mse.loc[[l]][['unshrunk']], bx.loc[[l]][['unshrunk']], varx.loc[[l]][['unshrunk']], mse.loc[[l]][['precon']], bx.loc[[l]][['precon']], varx.loc[[l]][['precon']], mse.loc[[l]][['unshrunk-precon']], bx.loc[[l]][['unshrunk-precon']], varx.loc[[l]][['unshrunk-precon']], mse.loc[[l]][['oracular']], bx.loc[[l]][['oracular']], varx.loc[[l]][['oracular']])
-        colnames(comprehensive.table[[l]]) = c(rep("GWL", 3), rep("GWL-U", 3), rep("GWL-P", 3), rep("GWL-P-U", 3), rep("Oracle", 3))
-        compbold = matrix(FALSE, nrow=dim(comprehensive.loc.table2[[l]])[1], ncol=dim(comprehensive.loc.table2[[l]])[2])
-        for (j in 1:3) {
-            cols = dim(comprehensive.loc.table2[[l]])[2]
-            indx = which((1:cols - 1) %% 3 + 1 == j)        
-            for (i in 1:(dim(comprehensive.loc.table2[[l]])[1])) {
-                minloc = indx[order(abs(comprehensive.loc.table2[[l]][i,indx]))[1]]
-                compbold[i,minloc] = TRUE
-            }
-        }
-    }
-    compital = matrix(FALSE, nrow=dim(comprehensive.loc.table2[[l]])[1], ncol=dim(comprehensive.loc.table2[[l]])[2])
-    for (j in 1:3) {
-        cols = dim(comprehensive.loc.table2[[l]])[2]
-        indx = which((1:cols - 1) %% 3 + 1 == j)        
-        for (i in 1:(dim(comprehensive.loc.table2[[l]])[1])) {
-            minloc = indx[order(abs(comprehensive.loc.table2[[l]][i,indx]))[2]]
-            compital[i,minloc] = TRUE
-        }
-    }
-    xtable.printbold(xtable(comprehensive.loc.table2[[l]], digits=3, align=c('c','c','c','c','c','c','c','c','c','c','c','c','c','c','c','c'), caption=paste("MSE, bias, and variance of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).", sep="")), include.rownames=FALSE, hline.after=c(0), which.bold=compbold, which.ital=compital)
-    #print(xtable(comprehensive.loc.table[[l]], digits=3, align=c('c','c','c','c','c','c','c','c','c','c'), caption=paste("MSE, bias, and variance of estimates for $\\beta_1$ at location ", l, " (\\textbf{minimum}, \\emph{next best}).", sep="")), include.rownames=FALSE, hline.after=c(0))
-}
-
-comp = list()
-for (l in 1:length(locs)) {
-    comp[[l]] = matrix(NA, nrow=length(settings), ncol=length(sim.modes)*3)
-    for (m in 1:length(sim.modes)) {
-        comp[[l]][,(m-1)*3+1] = mse[[l]][[sim.modes[m]]] #MSE    
-        comp[[l]][,(m-1)*3+2] = bx[[l]][[sim.modes[m]]] #bias
-        comp[[l]][,(m-1)*3+3] = varx[[l]][[sim.modes[m]]] #variance    
-    }
-}
 
 
 vv = c('X1', 'X2', 'X3', 'X4', 'X5')
@@ -270,7 +233,7 @@ for (l in 1:length(locs)) {
     }
 }
 
-for (s in 1:18) {
+for (s in settings) {
     for (l in 1:length(locs)) {
         for (m in selection.modes) {
             for (v in vv) {
@@ -280,11 +243,11 @@ for (s in 1:18) {
     }
 }
 
-selection.table = list()
+selection.table = matrix(NA, nrow=0, ncol=2*3*selection.modes)
 for (j in 1:length(locs)) {
     for (m in selection.modes) {
-        selection.table[[j]] = cbind(selected[[j]][[m]][['X1']], rowMeans(sapply(vv[-1], function(x) {selected[[j]][[m]][[x]]})))
-        colnames(selection.table[[j]]) = c("$\\beta_1$", "$\\beta_2$ - $\\beta_5$")    
-        print(xtable(selection.table[[j]], digits=2, align=c('c','c','c'), caption=paste("Selection frequency for the indicated variables at location ", j, sep="")), sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0))
+        selection.table = rbind(selection.table, cbind(selected[[j]][[m]][['X1']], rowMeans(sapply(vv[-1], function(x) {selected[[j]][[m]][[x]]}))))
     }
 }
+colnames(selection.table) = rep(c("$\\beta_1$", "$\\beta_2$ - $\\beta_5$"), 3*selection.modes)
+print(xtable(selection.table, digits=2, align=c('c','c','c'), caption=paste("Selection frequency for the indicated variables at location ", j, sep="")), sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0))

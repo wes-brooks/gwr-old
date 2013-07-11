@@ -152,7 +152,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
 			
 				glm.step = try(glm(yyy~xs.interacted, weights=w[permutation], family=family)) #-1))  # mle fit on standardized
 		
-				if(class(glm.step) == "try-error") { 
+				if("try-error" %in%  class(glm.step)) { 
 					cat(paste("Couldn't make a model for finding the SSR at location ", i, ", bandwidth ", bw, "\n", sep=""))
 					return(return(list(loss.local=Inf, resid=Inf)))
 				}
@@ -206,14 +206,11 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                 coefs = t(as.matrix(coef(model)))
                 #coefs[,1] = coefs[,1] + meany
                 fitted = predict(model, newx=predx, type="response")   
-                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / (sum(w)-ncol(x))  
+                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / (sum(w) - df)#ncol(x))  
                 #s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w)  
                 #loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + log(s2) + 2*df)
                 if (family=='binomial') { loss = as.vector(apply(fitted, 2, function(x) { 2*sum(w[permutation] * (fity*log(x) + (1-fity)*log(1-log(x)))) })) + 2*df }
                 else { loss = as.vector(deviance(model) + 2*df) }
-                print(deviance(model))
-                print(df)
-                print(loss)
                 k = which.min(loss)
                 fitted = fitted[,k]
                 localfit = fitted[colocated]
@@ -323,14 +320,11 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                 coefs = t(as.matrix(coef(model)))
                 #coefs[,1] = coefs[,1] + meany
                 fitted = predict(model, newx=predx, type="response")   
-                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / (sum(w)-ncol(x))  
+                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / (sum(w) - df)#ncol(x))  
                 #s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w)  
                 #loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + log(s2) + log(sum(w[permutation])*df)
                 if (family=='binomial') { loss = as.vector(apply(fitted, 2, function(x) { 2*sum(w[permutation] * (fity*log(x) + (1-fity)*log(1-log(x)))) })) + log(sum(w[permutation]))*df }
                 else { loss = as.vector(deviance(model) + log(sum(w[permutation]))*df) }
-                print(deviance(model))
-                print(df)
-                print(loss)
                 k = which.min(loss)
                 fitted = fitted[,k]
                 localfit = fitted[colocated]
