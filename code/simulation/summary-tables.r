@@ -31,17 +31,17 @@ for (l in 1:length(locs)) {
     }
 }
 
-for (s in 1:18) {
+for (s in settings) {
     for (l in 1:length(locs)) {
         for (m in sim.modes) {
-            msex[[l]][[m]] = c(msex[[l]][[m]], mean(sapply(X1.err[[m]][[s]], function(x) {x[locs[l]]**2}), na.rm=TRUE))
+            msex[[l]][[m]] = c(msex[[l]][[m]], mean(sapply(X.err[[1]][[m]][[s]], function(x) {x[locs[l]]**2}), na.rm=TRUE))
         }
     }
 }
 
 msex.table = matrix(NA, nrow=0, ncol=length(sim.modes))
 for (l in 1:length(locs)) {
-    msex.table[[l]] = as.matrix(sapply(msex[[l]], identity))
+    msex.table = rbind(msex.table, as.matrix(sapply(msex[[l]], identity)))
 }
 msexbold = matrix(FALSE, nrow=nrow(msex.table), ncol=ncol(msex.table))
 for (i in 1:nrow(msex.table)) {msexbold[i,order(msex.table[i,])[1]] = TRUE}
@@ -65,7 +65,7 @@ for (l in 1:length(locs)) {
     }
 }
 
-for (s in 1:18) {
+for (s in settings) {
     for (l in 1:length(locs)) {
         for (m in sim.modes) {
             msey[[l]][[m]] = c(msey[[l]][[m]], mean(sapply(Y.err[[m]][[s]], function(x) {x[locs[l]]**2})))
@@ -98,10 +98,10 @@ for (l in 1:length(locs)) {
     }
 }
 
-for (s in 1:18) {
+for (s in settings) {
     for (l in 1:length(locs)) {
         for (m in sim.modes) {
-            bx[[l]][[m]] = c(bx[[l]][[m]], mean(sapply(X1.err[[m]][[s]], function(x) {-x[locs[l]]})))
+            bx[[l]][[m]] = c(bx[[l]][[m]], mean(sapply(X.err[[1]][[m]][[s]], function(x) {-x[locs[l]]})))
         }
     }
 }
@@ -130,7 +130,7 @@ for (l in 1:length(locs)) {
     }
 }
 
-for (s in 1:18) {
+for (s in settings) {
     for (l in 1:length(locs)) {
         for (m in sim.modes) {
             by[[l]][[m]] = c(by[[l]][[m]], mean(sapply(Y.err[[m]][[s]], function(x) {-x[locs[l]]})))
@@ -140,7 +140,7 @@ for (s in 1:18) {
 
 by.table = matrix(NA, nrow=0, ncol=length(sim.modes))
 for (l in 1:length(locs)) {
-    by.table = rbind(by.table, as.matrix(sapply(by, identity)))
+    by.table = rbind(by.table, as.matrix(sapply(by[[l]], identity)))
 }
 
 bybold = matrix(FALSE, nrow=nrow(by.table), ncol=ncol(by.table))
@@ -164,10 +164,10 @@ for (l in 1:length(locs)) {
     }
 }
 
-for (s in 1:18) {
+for (s in settings) {
     for (l in 1:length(locs)) {
         for (m in sim.modes) {
-            varx[[l]][[m]] = c(varx[[l]][[m]], var(sapply(X1.err[[m]][[s]], function(x) {x[locs[l]]})))
+            varx[[l]][[m]] = c(varx[[l]][[m]], var(sapply(X.err[[1]][[m]][[s]], function(x) {x[locs[l]]})))
         }
     }
 }
@@ -198,10 +198,10 @@ for (l in 1:length(locs)) {
     }
 }
 
-for (s in 1:18) {
+for (s in settings) {
     for (l in 1:length(locs)) {
         for (m in sim.modes) {
-            vary[[l]][[m]] = c(vary[[l]][[m]], var(sapply(X1.err[[m]][[s]], function(x) {x[locs[l]]})))
+            vary[[l]][[m]] = c(vary[[l]][[m]], var(sapply(Y.err[[m]][[s]], function(x) {x[locs[l]]})))
         }
     }
 }
@@ -243,11 +243,15 @@ for (s in settings) {
     }
 }
 
-selection.table = matrix(NA, nrow=0, ncol=2*3*selection.modes)
-for (j in 1:length(locs)) {
+selection.table = matrix(NA, nrow=4*length(locs), ncol=0)
+for (j in 1:3) {
+    selection.block = matrix(NA, nrow=4, ncol=0)
     for (m in selection.modes) {
-        selection.table = rbind(selection.table, cbind(selected[[j]][[m]][['X1']], rowMeans(sapply(vv[-1], function(x) {selected[[j]][[m]][[x]]}))))
+        for (l in 1:length(locs)) {
+            selection.block = 
+        }
+        selection.table = cbind(selection.table, cbind(selected[[l]][[m]][['X1']], rowMeans(sapply(vv[-1], function(x) {selected[[l]][[m]][[x]]}))))
     }
 }
-colnames(selection.table) = rep(c("$\\beta_1$", "$\\beta_2$ - $\\beta_5$"), 3*selection.modes)
-print(xtable(selection.table, digits=2, align=c('c','c','c'), caption=paste("Selection frequency for the indicated variables at location ", j, sep="")), sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0))
+colnames(selection.table) = rep(c("$\\beta_1$", "$\\beta_2$ - $\\beta_5$"), length(locs)*length(selection.modes))
+print(xtable(selection.table, digits=2, align=rep('c',1+2*length(locs)*length(selection.modes)), caption=paste("Selection frequency for the indicated variables at location ", j, sep="")), sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0))
