@@ -3,8 +3,22 @@ library(plotrix)
 vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
 params = c('bw', 'sigma2', 'loss.local', 's')
 
-output_dir = "~/misc/function-simulations-bic-output/output/"
-cluster = 9
+#source('code/matplot.r')
+
+#args = commandArgs(trailingOnly=TRUE)
+#cluster = as.integer(args[1])
+#cluster = 'NA'
+cluster = 66
+
+B = 100
+N = 30
+coord = seq(0, 1, length.out=N)
+
+#Establish the simulation parameters
+tau = rep(0.03, 8)
+rho = rep(0, 8)
+sigma.tau = rep(0, 8)
+params = data.frame(tau, rho, sigma.tau)
 
 N = 30
 settings = 1:12
@@ -73,6 +87,7 @@ for (setting in settings) {
         for (i in 1:nvars) {X.err[[i]][[m]][[setting]] = list()}
     }
 
+
     vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
 
     for (k in sims[[setting]]) {
@@ -80,18 +95,18 @@ for (setting in settings) {
         cat(paste("Begin simulation ", sim, ".\n", sep=""))
 
         #Get the raw data
-        filename = paste(output_dir, "Data.", cluster, ".", sim, ".csv", sep="")
+        filename = paste("output/Data.", cluster, ".", sim, ".csv", sep="")
         raw = read.csv(filename, header=TRUE)
 
         for (m in sim.modes) {
-            filename = paste(output_dir, "CoefEstimates.", cluster, ".", sim, file.endings[[m]], sep="")
+            filename = paste("output/CoefEstimates.", cluster, ".", sim, file.endings[[m]], sep="")
             estimates = read.csv(filename, header=TRUE)
             colnames(estimates) = vars
             
             if (!is.na(pmatch("unshrunk", m))) {
                 fitted = diag(as.matrix(estimates) %*% t(as.matrix(cbind(rep(1,N**2), raw[,c('X1','X2','X3','X4','X5')]))))
             } else {
-                filename = paste(output_dir, "Stripped.MiscParams.", cluster, ".", sim, file.endings[[m]], sep="")
+                filename = paste("output/MiscParams.", cluster, ".", sim, file.endings[[m]], sep="")
                 params = read.csv(filename, header=TRUE)
                 fitted = params$fitted
             }
@@ -103,7 +118,7 @@ for (setting in settings) {
             Y.err[[m]][[setting]][[k]] = as.vector(raw$Y - fitted)
 
             if (m %in% selection.modes) {
-                filename = paste(output_dir, "Stripped.MiscParams.", cluster, ".", sim, file.endings[[m]], sep="")
+                filename = paste("output/MiscParams.", cluster, ".", sim, file.endings[[m]], sep="")
                 params = read.csv(filename, header=TRUE)
                 bandwidth[[m]][[setting]][[k]] = params$bw
 
