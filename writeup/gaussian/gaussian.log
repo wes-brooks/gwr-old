@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  18 JUL 2013 11:43
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  18 JUL 2013 16:57
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -696,19 +696,13 @@ Overfull \hbox (77.08286pt too wide) in paragraph at lines 66--67
 [1
 
 
-] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11]
-Overfull \hbox (4.57669pt too wide) in paragraph at lines 241--242
-\OT1/cmr/m/n/10.95 band-widths can be com-pared. We pro-pose the fol-low-ing st
-atis-tic, called the to-tal BIC ($[][]$): 
- []
-
-[12]
-Underfull \hbox (badness 10000) in paragraph at lines 269--270
+] [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12]
+Underfull \hbox (badness 10000) in paragraph at lines 277--278
 
  []
 
-[13]
-Underfull \hbox (badness 10000) in paragraph at lines 271--272
+
+Underfull \hbox (badness 10000) in paragraph at lines 279--280
 
  []
 
@@ -718,40 +712,40 @@ Underfull \hbox (badness 10000) in paragraph at lines 271--272
 \openout4 = `gaussian.fff'.
 
  (gaussian.fff)
-Underfull \hbox (badness 10000) in paragraph at lines 317--323
+Underfull \hbox (badness 10000) in paragraph at lines 325--331
 
  []
 
-[14]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 763.
+[13]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 771.
 
  (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 763.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 771.
 
-Underfull \hbox (badness 10000) in paragraph at lines 763--764
+Underfull \hbox (badness 10000) in paragraph at lines 771--772
+
+ []
+
+[14]
+Underfull \hbox (badness 10000) in paragraph at lines 772--773
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 764--765
+Underfull \hbox (badness 10000) in paragraph at lines 797--798
 
  []
 
 [15]
-Underfull \hbox (badness 10000) in paragraph at lines 789--790
+Underfull \hbox (badness 10000) in paragraph at lines 799--800
 
  []
 
-[16]
-Underfull \hbox (badness 10000) in paragraph at lines 791--792
-
- []
-
-(./gaussian.bbl [17] [18] [19])
-AED endfloat: Processing end Figures and Tables [20] (./gaussian.fff
+(./gaussian.bbl [16] [17] [18])
+AED endfloat: Processing end Figures and Tables [19] (./gaussian.fff
 File: ../../figures/simulation/step.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/step.pdf" >
@@ -760,32 +754,32 @@ File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
 <use  "../../figures/simulation/gradient.pdf" >
 File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/parabola.pdf" > [21]
+<use  "../../figures/simulation/parabola.pdf" > [20]
 File: ../../figures/simulation/illustrations/summary-locations.pdf Graphic file
  (type QTm)
 
-<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [22]
+<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [21]
 File: ../../figures/poverty/1970.linear.coefficients.unshrunk.pdf Graphic file 
 (type QTm)
 
-<use  "../../figures/poverty/1970.linear.coefficients.unshrunk.pdf" > [23]
+<use  "../../figures/poverty/1970.linear.coefficients.unshrunk.pdf" > [22]
 File: ../../figures/poverty/1970.gwr.pdf Graphic file (type QTm)
 
 <use  "../../figures/poverty/1970.gwr.pdf" >
 
-LaTeX Warning: Text page 24 contains only floats.
+LaTeX Warning: Text page 23 contains only floats.
 
 
 Overfull \vbox (5.72998pt too high) has occurred while \output is active []
 
 
-[24
+[23
 
 
 
 
 
-]) (./gaussian.ttt [25
+]) (./gaussian.ttt [24
 
 
 ]
@@ -793,34 +787,30 @@ Overfull \hbox (5.5777pt too wide) in paragraph at lines 30--62
  [] 
  []
 
-[26]
+[25]
 
 LaTeX Warning: Float too large for page by 79.90431pt on input line 151.
 
-[27]
+[26]
 
 LaTeX Warning: Float too large for page by 79.90431pt on input line 238.
 
-[28]
+[27]
 
 LaTeX Warning: Float too large for page by 79.90431pt on input line 325.
 
-[29]
+[28]
 
 LaTeX Warning: Float too large for page by 79.80429pt on input line 412.
 
-[30]) (./gaussian.aux)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+[29]) (./gaussian.aux) ) 
 Here is how much of TeX's memory you used:
- 4863 strings out of 493994
- 68692 string characters out of 3150335
+ 4865 strings out of 493994
+ 68738 string characters out of 3150335
  165002 words of memory out of 3000000
- 7968 multiletter control sequences out of 15000+200000
+ 7970 multiletter control sequences out of 15000+200000
  22164 words of font info for 77 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
  42i,17n,40p,1058b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (30 pages).
+Output written on gaussian.pdf (29 pages).

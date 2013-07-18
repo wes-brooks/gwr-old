@@ -101,6 +101,14 @@ Hoerl, A.~E. and R.~W. Kennard (1970).
 \newblock Ridge regression: Biased estimation for nonorthogonal problems.
 \newblock {\em Technometrics\/}~{\em 12\/}(1), 55--67.
 
+\bibitem[\protect\citeauthoryear{Hurvich, Simonoff, and Tsai}{Hurvich
+  et~al.}{1998}]{Hurvich:1998}
+Hurvich, C.~M., J.~S. Simonoff, and C.-L. Tsai (1998).
+\newblock Smoothing parameter selection in nonparametric regression using an
+  improved akaike information criterion.
+\newblock {\em Journal of the Royal Statistical Society. Series B (Statistical
+  Methodology)\/}~{\em 60\/}(2), pp. 271--293.
+
 \bibitem[\protect\citeauthoryear{Loader}{Loader}{1999}]{Loader:1999}
 Loader, C. (1999).
 \newblock {\em Local regression and likelihood}.

@@ -238,23 +238,31 @@ where $\phi$ denotes a range parameter, $\nu$ denotes the degree of smoothness, 
 	\cite{Wheeler:2009} proposed selecting the tuning parameter for the Lasso at location $\bm{s}_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$. Because the jackknife prediction error is undefined everywhere except for at observation locations, this choice restricts coefficient estimation to occur at the locations where data has been observed. By contrast, the local BIC can be calculated at any location where we can calculate the local likelihood. As a practical matter this allows for variable selection and coefficient surface estimation to be done at locations where no data was observed (interpolation) and for imputation of missing values of the response variable.
 	 
 	\subsection{Bandwidth Selection}
-	The bandwidth parameter $\phi$ in (\ref{eq:bisquare}) is global and so a global statistic is needed, by which prospective bandwidths can be compared. We propose the following statistic, called the total BIC ($\mbox{BIC}_{\text{tot}}$):
-	\begin{align}\label{eq:total-BIC}
-		\mbox{BIC}_{\mbox{tot}} &= \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \left( \sum_{i'=1}^n w_{ii'}\right) \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \mbox{df}_i \right\}
-	\end{align}	
-	which is different than the BIC for traditional GWR \citep{Fotheringham:2002}. The BIC for traditional GWR is based on the trace of the projection matrix of the GWR model. But using an $\ell_1$ penalty (as in the adaptive Lasso or the adaptive elastic net) results in a non-linear smoother, as can be seen by equating the derivatives of (\ref{eq:adaptive-lasso-WLS}) with respect to $\bm{\beta}$ to zero to obtain the maximum likelihood estimates $\hat{\bm{\beta}}_i$ \citep{Zou:2007}.
-	\begin{align}
-		\hat{\bm{\beta}}_i &= \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{y}  - (1/2) \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i \notag \\
-		\hat{y}_i = \bm{x}_i' \hat{\bm{\beta}}_i &=  \bm{x}_i' \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{y}  - (1/2) \bm{x}_i' \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i \notag
-	\end{align}
-	where $\bm{\lambda}_i$ is a vector of adaptive Lasso penalties, the $j^{\text{th}}$ component of which is $|\lambda_i / \gamma_{ij}|$.
+	The global bandwidth parameter $\phi$ in (\ref{eq:bisquare}) is selected by minimizing the total AIC:
 	
-	Because of the kernel weights and the application of the adaptive Lasso, the sample size and the degrees of freedom are different for each local model. The total BIC is found by summing the local likelihood and local penalty over all of the locations $\bm{s}_i$. The local penalty requires that we calculate $\text{df}_{\text{tot}}$, the total degrees of freedom used by the local models.
-	
-	The expression for $\text{df}_{\text{tot}}$ is derived by analogy. It is certainly true that $\text{df}_{\text{tot}} = \sum\limits_{i=1}^n \left( n^{-1} \text{df}_{\text{tot}} \right)$, which suggests that the total degrees of freedom is the sum of the local degrees of freedom. Rather than using the mean local degrees of freedom, $n^{-1} \text{df}_{\text{tot}}$ at each location, substitute $\text{df}_i$ for $\text{df}_{\text{tot}}$ and $\sum\limits_{i'=1}^n w_{ii'}$ for $n$ to get 
 	\begin{align}
-		\text{df}_{\text{tot}} &= \sum\limits_{i=1}^n \text{df}_i  \left( \sum\limits_{i'=1}^n w_{ii'} \right)^{-1}
+		\text{AIC}_{\text{tot}} = 2 n \log{\sigma} + n \left\{\frac{n + \nu}{n - 2 - \nu}\right\}
 	\end{align}
+	
+	where $\nu$ is the trace of the smoothing matrix $S$ \citep{Hurvich:1998}.
+	
+	%The bandwidth parameter $\phi$ in (\ref{eq:bisquare}) is global and so a global statistic is needed, by which prospective bandwidths can be compared. We propose the following statistic, called the total BIC ($\mbox{BIC}_{\text{tot}}$):
+	%\begin{align}\label{eq:total-BIC}
+	%	\mbox{BIC}_{\mbox{tot}} &= \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \left( \sum_{i'=1}^n w_{ii'}\right) \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \mbox{df}_i \right\}
+	%\end{align}
+	%which is different than the BIC for traditional GWR \citep{Fotheringham:2002}. The BIC for traditional GWR is based on the trace of the projection matrix of the GWR model. But using an $\ell_1$ penalty (as in the adaptive Lasso or the adaptive elastic net) results in a non-linear smoother, as can be seen by equating the derivatives of (\ref{eq:adaptive-lasso-WLS}) with respect to $\bm{\beta}$ to zero to obtain the maximum likelihood estimates $\hat{\bm{\beta}}_i$ \citep{Zou:2007}.
+	%\begin{align}
+	%	\hat{\bm{\beta}}_i &= \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{y}  - (1/2) \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i \notag \\
+	%	\hat{y}_i = \bm{x}_i' \hat{\bm{\beta}}_i &=  \bm{x}_i' \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1}  \bm{X}'\bm{W}_i\bm{y}  - (1/2) \bm{x}_i' \left(\bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{\lambda}_i \notag
+	%\end{align}
+	%where $\bm{\lambda}_i$ is a vector of adaptive Lasso penalties, the $j^{\text{th}}$ component of which is $|\lambda_i / \gamma_{ij}|$.
+	
+	%Because of the kernel weights and the application of the adaptive Lasso, the sample size and the degrees of freedom are different for each local model. The total BIC is found by summing the local likelihood and local penalty over all of the locations $\bm{s}_i$. The local penalty requires that we calculate $\text{df}_{\text{tot}}$, the total degrees of freedom used by the local models.
+	
+	%The expression for $\text{df}_{\text{tot}}$ is derived by analogy. It is certainly true that $\text{df}_{\text{tot}} = \sum\limits_{i=1}^n \left( n^{-1} \text{df}_{\text{tot}} \right)$, which suggests that the total degrees of freedom is the sum of the local degrees of freedom. Rather than using the mean local degrees of freedom, $n^{-1} \text{df}_{\text{tot}}$ at each location, substitute $\text{df}_i$ for $\text{df}_{\text{tot}}$ and $\sum\limits_{i'=1}^n w_{ii'}$ for $n$ to get 
+	%\begin{align}
+	%	\text{df}_{\text{tot}} &= \sum\limits_{i=1}^n \text{df}_i  \left( \sum\limits_{i'=1}^n w_{ii'} \right)^{-1}
+	%\end{align}
 
 \section{Simulation \label{sec:simulation}}
 	\subsection{Simulation setup}
@@ -335,7 +343,7 @@ where $\phi$ denotes a range parameter, $\nu$ denotes the degree of smoothness, 
 	
 	%There was not a clear and consistent difference in performance between the three selection methods. It might be expected that the adaptive elastic net would outperform the adaptive Lasso under greater covariate collinearity, but if such effect is real it is not apparent from this simulation. The unshrunk coefficient-estimation methods tended to exhibit more bias than the selection-plus-shrinkage methods when the true coefficient value was near zero, and vice versa when the true coefficient was not near zero. The unshrunk methods were perhaps more consistent in their performance and for that reason they are probably preferable in practice.\\
 	
-	In terms of MSE and bias, the estimates of $\beta_i$ using local variable selection outperformed 
+	In terms of MSE and bias, the estimates of $\beta_i$ using local variable selection outperformed GWR without selection, and 
 	
 	%Bias in coefficient estimation was greater and variance less for the standard \verb!gwr! algorithm than for the methods described here. This is probably due to the fact that the methods described here show a preference for smaller bandwidths than those select by \verb!gwr!. Accuracy (as measured by MSE) in fitting the true Y variables was comparable for all the methods. \\	
 	
