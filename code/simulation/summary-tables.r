@@ -31,7 +31,7 @@ for (l in 1:length(locs)) {
     }
 }
 
-for (s in 1:18) {
+for (s in settings) {
     for (l in 1:length(locs)) {
         for (m in sim.modes) {
             msex[[l]][[m]] = c(msex[[l]][[m]], mean(sapply(X1.err[[m]][[s]], function(x) {x[locs[l]]**2}), na.rm=TRUE))
