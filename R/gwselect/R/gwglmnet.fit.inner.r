@@ -408,7 +408,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                 }
                 
                 if (length(colocated)>0) {
-                    if (!AICc) { loss.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])/s2 + log(s2) + 2*df/sum(w[permutation]) }
+                    if (!AICc) { loss.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])/s2 + log(s2) + log(sum(w[permutation]))*df/sum(w[permutation]) }
                     else {
                         loss.local = Hii
                         ssr.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])

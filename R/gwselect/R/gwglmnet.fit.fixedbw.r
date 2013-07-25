@@ -30,7 +30,7 @@ gwglmnet.fit.fixedbw = function(x, y, family, coords, fit.loc=NULL, oracle, bw, 
         }
         
         if (verbose) {
-	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw, 3), "; loss=", round(models[[i]][['loss.local']],3), "; s=", models[[i]][['s']], "; sigma2=", round(models[[i]][['sigma2']],3), "; nonzero=", paste(models[[i]][['nonzero']], collapse=","), "; weightsum=", round(models[[i]][['weightsum']],3), "; alpha=", round(models[[i]][['alpha']], 3), ".\n", sep=''))
+	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw, 3), "; loss=", round(models[[i]][['loss.local']],3), "; s=", models[[i]][['s']], "; sigma2=", round(tail(models[[i]][['sigma2']],1),3), "; nonzero=", paste(models[[i]][['nonzero']], collapse=","), "; weightsum=", round(models[[i]][['weightsum']],3), "; alpha=", round(models[[i]][['alpha']], 3), ".\n", sep=''))
 		}
     }
 
