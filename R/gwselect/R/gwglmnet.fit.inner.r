@@ -78,15 +78,11 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
         }
 
         colocated = which(gwr.weights[weighted][permutation]==1)
-        sqrt.w <- diag(sqrt(w[permutation]))        
-        #yyy = sqrt.w %*% yy[permutation,]
-        yyy = yy[permutation,]
+        sqrt.w <- diag(sqrt(w[permutation]))
+
+        yyy = yy[permutation]
         meany = sum((w*yy)[permutation])/sum(w)
-        yyy = yyy #- meany   
-        #normy = sqrt(sum(yyy**2))
-        #yyy = yyy / normy
-     
-        #xxx = sqrt.w %*% xx[permutation,]
+
         xxx = xx[permutation,]
         if (interact) {xxx.interacted = xx.interacted[permutation,]}
 
@@ -315,16 +311,17 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
             vars = apply(as.matrix(coef(model)[-1,]), 2, function(x) {which(abs(x)>0)})
             df = sapply(vars, length) + 1
 
-            if (sum(w) > ncol(x)) {      
-            	wcm = apply(predx[,-1], 2, function(x) {sum(x*w[permutation])})/sum(w)         
+            if (sum(w) > ncol(x)) {
+                #Extract the fitted values for each lambda:
                 coefs = t(as.matrix(coef(model)))
-                #coefs[,1] = coefs[,1] + meany
                 fitted = predict(model, newx=predx, type="response")   
-                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / (sum(w) - df)#ncol(x))  
-                #s2 = sum(w[permutation]*lsfit(y=predy, x=predx, wt=w[permutation])$residuals**2) / sum(w)  
-                #loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + log(s2) + log(sum(w[permutation])*df)
+                s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / (sum(w) - df) 
+                
+                #Compute the loss (varies by family)
                 if (family=='binomial') { loss = as.vector(apply(fitted, 2, function(x) { 2*sum(w[permutation] * (fity*log(x) + (1-fity)*log(1-log(x)))) })) + log(sum(w[permutation]))*df }
                 else { loss = as.vector(deviance(model) + log(sum(w[permutation]))*df) }
+
+                #Pick the lambda that minimizes the loss:
                 k = which.min(loss)
                 fitted = fitted[,k]
                 localfit = fitted[colocated]
@@ -408,10 +405,16 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                 }
                 
                 if (length(colocated)>0) {
-                    if (!AICc) { loss.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])/s2 + log(s2) + log(sum(w[permutation]))*df/sum(w[permutation]) }
+                    if (!AICc) {
+                        if (family=='gaussian') {loss.local = sum((w[permutation]*(fitted - yyy)**2)[colocated])/s2 + log(s2) + log(sum(w[permutation]))*df/sum(w[permutation])}
+                        else if (family=='poisson') {loss.local = sum((2*w[permutation]*(ylogy(yyy) - yyy*log(fitted) - (yyy-fitted)))[colocated]) + log(sum(w[permutation]))*df/sum(w[permutation])}
+                        else if (family=='binomial') {loss.local = sum((2*w[permutation]*(ylogy(yyy) - yyy*log(fitted) - ylogy(1-yyy) + (1-yyy)*log(1-fitted)))[colocated]) + log(sum(w[permutation]))*df/sum(w[permutation])}
+                    }
                     else {
                         loss.local = Hii
-                        ssr.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])
+                        if (family=='gaussian') {ssr.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])}
+                        else if (family=='poisson') {ssr.local = sum((2*w[permutation]*(ylogy(yyy) - yyy*log(fitted) - (yyy-fitted)))[colocated])}
+                        else if (family=='binomial') {ssr.local = sum((2*w[permutation]*(ylogy(yyy) - yyy*log(fitted) - ylogy(1-yyy) + (1-yyy)*log(1-fitted)))[colocated])}
                     }
                 } else {
                     loss.local = NA

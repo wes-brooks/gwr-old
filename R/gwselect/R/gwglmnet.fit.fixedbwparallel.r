@@ -30,7 +30,7 @@ gwglmnet.fit.fixedbwparallel = function(x, y, family, coords, fit.loc=NULL, indx
         }
         
         if (verbose) {
-	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw,3), "; s=", m[['s']], "; sigma2=", round(m[['sigma2']],3), "; nonzero=", paste(m[['nonzero']], collapse=","), "; weightsum=", round(m[['weightsum']],3), "; alpha=", round(m[['alpha']], 3), ".\n", sep=''))
+	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw,3), "; s=", m[['s']], "; sigma2=", round(tail(m[['sigma2']],1),3), "; nonzero=", paste(m[['nonzero']], collapse=","), "; weightsum=", round(m[['weightsum']],3), "; alpha=", round(m[['alpha']], 3), ".\n", sep=''))
         }
         return(m)
     }
