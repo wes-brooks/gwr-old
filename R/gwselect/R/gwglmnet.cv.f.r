@@ -4,7 +4,7 @@ gwglmnet.cv.f = function(formula, data, weights, indx, family, bw, coords, gweig
     gwglmnet.model = gwglmnet(formula=formula, data=data, family=family, weights=weights, tuning=TRUE, indx=indx, coords=coords, gweight=gweight, bw=bw, N=N, mode.select=mode.select, verbose=verbose, longlat=longlat, adapt=adapt, s=s, method=method, parallel=parallel, precondition=precondition, interact=interact, alpha=alpha, shrunk.fit=shrunk.fit, AICc=AICc)
 
     if (!AICc) { loss = sum(sapply(gwglmnet.model[['model']][['models']], function(x) {min(x[['loss.local']])})) }
-        else {
+    else {
         trH = sum(sapply(gwglmnet.model[['model']][['models']], function(x) {x[['loss.local']]})) 
         #print(log(mean(sapply(gwlars.model[['model']][['models']], function(x) {x[['sigma2']]}))))
         #print(nrow(data))
@@ -15,9 +15,18 @@ gwglmnet.cv.f = function(formula, data, weights, indx, family, bw, coords, gweig
         #loss = nrow(data) * (mean(sapply(gwglmnet.model[['model']][['models']], function(x) {log(x[['sigma2']])})) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
 
         #Global sigma^2:
-        loss = nrow(data) * (log(mean(sapply(gwglmnet.model[['model']][['models']], function(x) {x[['ssr.local']]}))) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
+        if (family=='gaussian') {
+        	#Use the AICc
+        	loss = nrow(data) * (log(mean(sapply(gwglmnet.model[['model']][['models']], function(x) {x[['ssr.local']]}))) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
+        }
+        else if (family %in% c('binomial', 'poisson')) {
+        	#Use GCV (OSullivan et al. 1986)
+        	print(sum(sapply(gwglmnet.model[['model']][['models']], function(x) {x[['ssr.local']]})))
+        	print(trH)
+        	loss = sum(sapply(gwglmnet.model[['model']][['models']], function(x) {x[['ssr.local']]})) / (nrow(data)-trH)**2
+        }
     }
 
-    cat(paste('Bandwidth: ', round(bw, 3), '. Loss: ', round(loss, 3), '\n', sep=''))
+    cat(paste('Bandwidth: ', round(bw, 3), '. Loss: ', signif(loss, 5), '\n', sep=''))
     return(loss)
 }
