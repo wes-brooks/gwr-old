@@ -119,6 +119,12 @@ Schwarz, G. (1978).
 \newblock Estimating the dimensions of a model.
 \newblock {\em The Annals of Statistics\/}~{\em 6\/}(2), 461--464.
 
+\bibitem[\protect\citeauthoryear{Shang}{Shang}{2011}]{Shang-2011}
+Shang, Z. (2011).
+\newblock {\em Bayesian Variable Selection}.
+\newblock Ph.\ D. thesis, University of Wisconsin-Madison.
+\newblock Ph.D Dissertation (Murray Clayton advisor).
+
 \bibitem[\protect\citeauthoryear{Tibshirani}{Tibshirani}{1996}]{Tibshirani:1996}
 Tibshirani, R. (1996).
 \newblock Regression shrinkage and selection via the lasso.

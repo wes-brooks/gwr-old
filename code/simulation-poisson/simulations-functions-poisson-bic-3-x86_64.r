@@ -1,23 +1,23 @@
-library(sp, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(shapefiles, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(plotrix, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(ggplot2, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(RandomFields, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(scales, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-
-library(foreach, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(iterators, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(multicore, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(doMC, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-
-library(lars, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(glmnet, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(gwselect, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-
-library(splancs, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(geoR, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(maptools, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-library(spgwr, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(sp, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(shapefiles, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(plotrix, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(ggplot2, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(RandomFields, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(scales, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#
+#library(foreach, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(iterators, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(multicore, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(doMC, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#
+#library(lars, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(glmnet, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(gwselect, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#
+#library(splancs, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(geoR, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(maptools, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+#library(spgwr, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
 
 
 library(geoR)
@@ -31,15 +31,13 @@ N = 30
 coord = seq(0, 1, length.out=N)
 
 #Establish the simulation parameters
-settings = 12
+settings = 6
 tau = rep(0, settings)
-rho = rep(c(rep(0,2), rep(0.5,2)), settings/4)
-sigma.tau = rep(0, settings)
-sigma = rep(c(0.5,1), settings/2)
+rho = rep(c(0,0.5), settings/2)
 
 b = 25
 
-params = data.frame(tau, rho, sigma.tau, sigma)
+params = data.frame(tau, rho)
 
 #Read command-line parameters
 args = commandArgs(trailingOnly=TRUE)
@@ -52,6 +50,8 @@ process=50
 setting = process %/% B + 1
 parameters = params[setting,]
 set.seed(seeds[process+1])
+
+parameters = list(tau=0, rho=0, sigma.tau=0, sigma=0.5)
 
 #Generate the covariates:
 if (parameters[['tau']] > 0) {
@@ -86,10 +86,6 @@ X3 = matrix(D[,3], N, N)
 X4 = matrix(D[,4], N, N)
 X5 = matrix(D[,5], N, N)
 
-if (parameters[['sigma.tau']] == 0) {epsilon = rnorm(N**2, mean=0, sd=parameters[['sigma']])}
-if (parameters[['sigma.tau']] > 0) {epsilon = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(parameters[['sigma']],parameters[['sigma.tau']]))$data}
-
-
 if ((setting-1) %/% 4 == 0) {
     B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)
 } else if ((setting-1) %/% 4 == 1) {
@@ -102,24 +98,10 @@ if ((setting-1) %/% 4 == 0) {
     B1 = matrix(max(d)-d, N, N)
 }
 
-#if (((setting-1) %/%2) %% 2 == 1) {
-#    B2 = matrix(rep(coord, N), N, N)
-#} else {
-#    B2 = matrix(0, N, N)
-#}
-
-#if (((setting-1) %/%4) %% 2 == 1) {
-#    Xmat = matrix(rep(rep(coord, times=N), times=N), N**2, N**2)
-#    Ymat = matrix(rep(rep(coord, each=N), times=N), N**2, N**2)
-#    D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
-#    d = D[435,]
-#    B3 = matrix(max(d)-d, N, N)
-#} else {
-#    B3 = matrix(0, N, N)
-#}
 
 mu = X1*B1
-Y = rpois(length(mu), lambda=exp(mu + epsilon))
+Y = rpois(length(mu), lambda=exp(mu))
+print(matrix(Y,N,N))
 
 sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), X3=as.vector(X3), X4=as.vector(X4), X5=as.vector(X5), loc.x, loc.y)
 fitloc = cbind(rep(seq(0,1, length.out=N), each=N), rep(seq(0,1, length.out=N), times=N))
@@ -129,8 +111,6 @@ oracle = list()
 for (i in 1:N**2) { 
     oracle[[i]] = character(0)
     if (vars[i,'B1']) { oracle[[i]] = c(oracle[[i]] , "X1") }
-    #if (vars[i,'B2']) { oracle[[i]] = c(oracle[[i]] , "X2") }
-    #if (vars[i,'B3']) { oracle[[i]] = c(oracle[[i]] , "X3") }
 }
 
 
@@ -138,11 +118,11 @@ for (i in 1:N**2) {
 #bw.lars = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 #model.lars = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.lars, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
-model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-#bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
-#model.enet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.enet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+#bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+#model.enet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.enet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
 #bw.oracular = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 #model.oracular = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
@@ -151,8 +131,8 @@ model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha=1,
 #bw.gwr = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle2, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=FALSE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 #model.gwr = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle2, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.gwr, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=FALSE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-#bw.spgwr = gwr.sel(Y~X1+X2+X3+X4+X5, data=sim, coords=as.matrix(sim[,c('loc.x','loc.y')]), gweight=gwr.bisquare, method="aic")
-#model.spgwr = gwr(Y~X1+X2+X3+X4+X5, data=sim, coords=as.matrix(sim[,c('loc.x','loc.y')]), bandwidth=bw.spgwr, gweight=gwr.bisquare)
+#bw.spgwr = ggwr.sel(Y~X1+X2+X3+X4+X5, family='poisson', data=sim, coords=as.matrix(sim[,c('loc.x','loc.y')]), gweight=gwr.bisquare, RMSE=FALSE, verbose=TRUE)
+#model.spgwr = ggwr(Y~X1+X2+X3+X4+X5, data=sim, coords=as.matrix(sim[,c('loc.x','loc.y')]), bandwidth=bw.spgwr, gweight=gwr.bisquare)
 
 #First, write the data
 write.table(sim, file=paste("output/Data.", cluster, ".", process, ".csv", sep=""), sep=',', row.names=FALSE)

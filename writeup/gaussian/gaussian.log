@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  25 JUL 2013 13:19
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  15 AUG 2013 14:18
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -688,75 +688,36 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 LaTeX Font Info:    Try loading font information for U+msb on input line 51.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-Overfull \hbox (77.08286pt too wide) in paragraph at lines 66--67
-[]$\OT1/cmr/m/n/10.95 . Let the ob-served data be de-noted $[]$. 
- []
-
-[1
+) [1
 
 
-] [2] [3]
-
-Package natbib Warning: Citation `Shang-2011' on page 4 undefined on input line
- 103.
-
-
-Package natbib Warning: Citation `Shang-2011' on page 4 undefined on input line
- 103.
-
-[4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
-Underfull \hbox (badness 10000) in paragraph at lines 314--315
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 316--317
-
- []
-
+] [2]
+[3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
 \openout5 = `gaussian.ttt'.
 
-(gaussian.ttt)
+ (gaussian.ttt)
 \openout4 = `gaussian.fff'.
 
  (gaussian.fff)
-Underfull \hbox (badness 10000) in paragraph at lines 362--363
-
- []
-
 [14] [15] [16]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 811.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 802.
 
  (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 811.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 802.
 
-Underfull \hbox (badness 10000) in paragraph at lines 811--812
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 812--813
-
- []
-
-[17]
-Underfull \hbox (badness 10000) in paragraph at lines 837--838
+Underfull \hbox (badness 10000) in paragraph at lines 802--803
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 839--840
+Underfull \hbox (badness 10000) in paragraph at lines 803--804
 
  []
 
-[18] (./gaussian.bbl [19] [20] [21])
-
-Package natbib Warning: There were undefined citations.
-
+[17] [18] (./gaussian.bbl [19] [20] [21])
 AED endfloat: Processing end Figures and Tables [22] (./gaussian.fff
 File: ../../figures/simulation/step.pdf Graphic file (type QTm)
 
@@ -777,21 +738,12 @@ File: ../../figures/poverty/1970-linear-coefficients-unshrunk.pdf Graphic file
 <use  "../../figures/poverty/1970-linear-coefficients-unshrunk.pdf" > [25]
 File: ../../figures/poverty/1970-gwr.pdf Graphic file (type QTm)
 
-<use  "../../figures/poverty/1970-gwr.pdf" >
-
-LaTeX Warning: Text page 26 contains only floats.
-
-
-Overfull \vbox (5.72998pt too high) has occurred while \output is active []
-
-
-[26
+<use  "../../figures/poverty/1970-gwr.pdf" > [26]) (./gaussian.ttt [27
 
 
 
 
 
-]) (./gaussian.ttt [27
 
 
 ]
@@ -817,12 +769,12 @@ LaTeX Warning: Float too large for page by 79.80429pt on input line 412.
 
 [32]) (./gaussian.aux) ) 
 Here is how much of TeX's memory you used:
- 4870 strings out of 493994
- 68797 string characters out of 3150335
+ 4872 strings out of 493994
+ 68839 string characters out of 3150335
  165002 words of memory out of 3000000
- 7976 multiletter control sequences out of 15000+200000
+ 7978 multiletter control sequences out of 15000+200000
  22164 words of font info for 77 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,17n,40p,1058b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,17n,40p,1019b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
 
 Output written on gaussian.pdf (32 pages).
