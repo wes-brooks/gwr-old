@@ -41,10 +41,10 @@ params = data.frame(tau, rho)
 
 #Read command-line parameters
 args = commandArgs(trailingOnly=TRUE)
-cluster = as.integer(args[1])
-process = as.integer(args[2])
-#cluster=NA
-#process=50
+#cluster = as.integer(args[1])
+#process = as.integer(args[2])
+cluster=NA
+process=1
 
 #Simulation parameters are based on the value of process
 setting = process %/% B + 1
@@ -99,8 +99,8 @@ if ((setting-1) %/% 2 == 0) {
 }
 
 
-mu = X1*B1
-Y = rpois(length(mu), lambda=exp(mu))
+eta = X1*B1
+Y = rbinom(n=length(eta), size=10, p=exp(eta)/(1+exp(eta)))/10
 print(matrix(Y,N,N))
 
 sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), X3=as.vector(X3), X4=as.vector(X4), X5=as.vector(X5), loc.x, loc.y)
@@ -118,21 +118,21 @@ for (i in 1:N**2) {
 #bw.lars = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 #model.lars = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.lars, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
-model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
-model.enet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.enet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+model.enet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.enet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-#bw.oracular = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
-#model.oracular = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='poisson', oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+bw.oracular = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+model.oracular = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
 #oracle2 = lapply(1:900, function(x) {return(c("X1", "X2", "X3", "X4", "X5"))})
 #bw.gwr = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle2, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=FALSE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 #model.gwr = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle2, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.gwr, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=FALSE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-bw.spgwr = ggwr.sel(Y~X1+X2+X3+X4+X5, family='poisson', data=sim, coords=as.matrix(sim[,c('loc.x','loc.y')]), gweight=gwr.bisquare, RMSE=FALSE, verbose=FALSE)
-model.spgwr = ggwr(Y~X1+X2+X3+X4+X5, data=sim, coords=as.matrix(sim[,c('loc.x','loc.y')]), bandwidth=bw.spgwr, gweight=gwr.bisquare)
+bw.spgwr = ggwr.sel(Y~X1+X2+X3+X4+X5, family='binomial', data=sim, coords=as.matrix(sim[,c('loc.x','loc.y')]), gweight=gwr.bisquare, RMSE=FALSE, verbose=FALSE)
+model.spgwr = ggwr(Y~X1+X2+X3+X4+X5, data=sim, family='binomial', coords=as.matrix(sim[,c('loc.x','loc.y')]), bandwidth=bw.spgwr, gweight=gwr.bisquare)
 
 #First, write the data
 write.table(sim, file=paste("output/Data.", cluster, ".", process, ".csv", sep=""), sep=',', row.names=FALSE)
