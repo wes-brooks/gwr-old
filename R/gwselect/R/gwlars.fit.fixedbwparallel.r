@@ -26,7 +26,7 @@ gwlars.fit.fixedbwparallel = function(x, y, coords, indx, fit.loc, bw, D=NULL, N
         if (is.null(oracle)) {
             m = gwlars.fit.inner(x=x, y=y, bw=bw, coords=coords, loc=loc, indx=indx, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, interact=interact, shrunk.fit=shrunk.fit, AICc=AICc)
         } else {
-            m = gwlars.fit.oracle(x=x, y=y, family='gaussian', bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, interact=interact, AICc=AICc)
+            m = gwselect.fit.oracle(x=x, y=y, family='gaussian', bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, interact=interact, AICc=AICc)
         }
         
         if (verbose) {

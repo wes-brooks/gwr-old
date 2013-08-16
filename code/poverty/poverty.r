@@ -62,7 +62,7 @@ plots.logistic = list()
 model.logistic = list()
 bw.logistic = list()
 
-for (year in c(2000)) { #c(1970, 1980, 1990, 2000, 2006)) {
+for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
     #Use the lasso for GWR models of poverty with 2006 data:
     df = pov2[pov2$year==year,]
     df = merge(x=df, y=pops, by.x="fips", by.y="FIPS")
@@ -85,15 +85,24 @@ for (year in c(2000)) { #c(1970, 1980, 1990, 2000, 2006)) {
     #bw[[as.character(year)]] = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode.select='AIC', method="knn", tol=0.001, precondition=FALSE, adapt=TRUE, verbose=FALSE, parallel=TRUE, interact=TRUE, shrunk.fit=FALSE)
     #model[[as.character(year)]] = gwlars(formula=f, data=df, N=1, coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw[[as.character(year)]], mode.select='AIC', s=NULL, method="knn", tol=0.001, precondition=FALSE, adapt=TRUE, verbose=FALSE, parallel=TRUE, interact=TRUE, shrunk.fit=FALSE)
 
-    #f = as.formula(paste("pindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
-    #bw.logistic[[as.character(year)]] = gwglmnet.sel(formula=f, data=df, family='binomial', coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode.select='AIC', method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
-    #model.logistic[[as.character(year)]] = gwglmnet(formula=f, data=df, N=1, family='binomial', coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.logistic[[as.character(year)]], mode.select='AIC', s=NULL, method="knn", tol=0.001, parallel=TRUE, precondition=FALSE, adapt=TRUE, verbose=FALSE)
-    
-    f.spgwr = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))
-    bw.spgwr = gwr.sel(formula=f.spgwr, data=df, coords=as.matrix(df[,c('x','y')]), gweight=gwr.bisquare, method="aic", show.error.messages=TRUE)
-    model.spgwr = gwr(formula=f.spgwr, data=df, coords=as.matrix(df[,c('x','y')]), bandwidth=bw.spgwr, gweight=gwr.bisquare)
+    #f.spgwr = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))
+    #bw.spgwr = gwr.sel(formula=f.spgwr, data=df, coords=as.matrix(df[,c('x','y')]), gweight=gwr.bisquare, method="aic", show.error.messages=TRUE)
+    #model.spgwr = gwr(formula=f.spgwr, data=df, coords=as.matrix(df[,c('x','y')]), bandwidth=bw.spgwr, gweight=gwr.bisquare)
 
-	#Corect the locations of some small counties (only affect plotting)
+
+    f = as.formula(paste("pindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
+    bw.logistic[[as.character(year)]] = gwglmnet.sel(formula=f, data=df, family='binomial', coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode.select='AIC', alpha=1, method="knn", tol=0.001, parallel=TRUE, adapt=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+    model.logistic[[as.character(year)]] = gwglmnet(formula=f, data=df, family='binomial', coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.logistic[[as.character(year)]], mode.select='AIC', alpha=1, method="knn", parallel=FALSE, adapt=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+    
+    f.spgwr = as.formula(paste("pindpov ~ ", paste(predictors, collapse="+"), sep=""))
+    bw.spgwr = ggwr.sel(formula=f.spgwr, data=df, coords=as.matrix(df[,c('x','y')]), longlat=TRUE, adapt=TRUE, family='binomial', gweight=gwr.bisquare, RMSE=FALSE, verbose=TRUE)
+    model.spgwr = ggwr(formula=f.spgwr, data=df, coords=as.matrix(df[,c('x','y')]), longlat=TRUE, family='binomial', bandwidth=bw.spgwr, gweight=gwr.bisquare)
+}
+
+stop()
+
+for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
+	#Correct the locations of some small counties (only affect plotting)
 	cluster_id = which(df$COUNTY=="WI_CLUSTER")
 	n.counties = nrow(df)
 	model[[as.character(year)]][['model']][['models']][[n.counties+1]] = model[[as.character(year)]][['model']][['models']][[cluster_id]]
@@ -104,17 +113,17 @@ for (year in c(2000)) { #c(1970, 1980, 1990, 2000, 2006)) {
     #Put the county names into a form that can be matched.
     county = map_data('county')
 
-    plots[[as.character(year)]] = list()
-    plots.unshrunk[[as.character(year)]] = list()
-    for (v in predictors) {
-        plots[[as.character(year)]][[v]] = plot.gwselect(model[[as.character(year)]], var=v, polygons=county, title=v, col.bg='gray85') + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
-        plots.unshrunk[[as.character(year)]][[v]] = plot.gwselect(model[[as.character(year)]], part='coef.unshrunk', var=v, polygons=county, title=v, col.bg='gray85') + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
-    }
-
-    #plots.logistic[[as.character(year)]] = list()
+    #plots[[as.character(year)]] = list()
+    #plots.unshrunk[[as.character(year)]] = list()
     #for (v in predictors) {
-    #    plots.logistic[[as.character(year)]][[v]] = plot.gwselect(model.logistic[[as.character(year)]], var=v, polygons=county, title=v) + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
+    #    plots[[as.character(year)]][[v]] = plot.gwselect(model[[as.character(year)]], var=v, polygons=county, title=v, col.bg='gray85') + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
+    #    plots.unshrunk[[as.character(year)]][[v]] = plot.gwselect(model[[as.character(year)]], part='coef.unshrunk', var=v, polygons=county, title=v, col.bg='gray85') + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
     #}
+
+    plots.logistic[[as.character(year)]] = list()
+    for (v in predictors) {
+        plots.logistic[[as.character(year)]][[v]] = plot.gwselect(model.logistic[[as.character(year)]], var=v, polygons=county, title=v) + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
+    }
     
     #pp = plots[[as.character(year)]]
     #dev.new()

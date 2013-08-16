@@ -26,11 +26,11 @@ gwglmnet.fit.fixedbw = function(x, y, family, coords, fit.loc=NULL, oracle, bw, 
 		if (is.null(oracle)) {
 	        models[[i]] = gwglmnet.fit.inner(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, s=s, verbose=verbose, mode.select=mode.select, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, predict=predict, tuning=tuning, simulation=simulation, alpha=alpha, interact=interact, N=N, shrunk.fit=shrunk.fit, AICc=AICc)
 		} else {
-            models[[i]] = gwlars.fit.oracle(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, AICc=AICc)
+            models[[i]] = gwselect.fit.oracle(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, AICc=AICc)
         }
         
         if (verbose) {
-	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw, 3), "; loss=", round(models[[i]][['loss.local']],3), "; s=", models[[i]][['s']], "; sigma2=", round(tail(models[[i]][['sigma2']],1),3), "; nonzero=", paste(models[[i]][['nonzero']], collapse=","), "; weightsum=", round(models[[i]][['weightsum']],3), "; alpha=", round(models[[i]][['alpha']], 3), ".\n", sep=''))
+	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bw, 3), "; loss=", round(models[[i]][['loss.local']],3), "; s=", models[[i]][['s']], "; sigma2=", round(tail(models[[i]][['sigma2']],1),3), "; nonzero=", paste(models[[i]][['nonzero']], collapse=","), "; weightsum=", round(models[[i]][['weightsum']],3), ".\n", sep=''))
 		}
     }
 

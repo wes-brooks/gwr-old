@@ -1,4 +1,4 @@
-gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaussian', dist=NULL, oracle=NULL, tuning=FALSE, predict=FALSE, simulation=FALSE, verbose=FALSE, interact=FALSE, mode.select, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, N=N, AICc) {
+gwselect.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaussian', dist=NULL, oracle=NULL, tuning=FALSE, predict=FALSE, simulation=FALSE, verbose=FALSE, interact=FALSE, mode.select, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, N=N, AICc) {
     if (!is.null(indx)) {
         colocated = which(round(coords[indx,1],5)==round(as.numeric(loc[1]),5) & round(coords[indx,2],5) == round(as.numeric(loc[2]),5))
     }
@@ -87,6 +87,8 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
         permuted = data.frame(fitdata[permutation,])
         colnames(permuted) = colnames(fitdata)
         model = glm(y~., data=permuted, weights=w, family=family)
+        colocated = which(gwr.weights[weighted][permutation]==1)
+        yyy = yy[permutation]
                 
         #Get the coefficients:
         coefs = rep(0, ncol(x)+1)
@@ -106,7 +108,6 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
         }   
         
         coef.list[[i]] = coefs
-        if (verbose) {print(coefs)}
     
     	if (i==N) { 
 	    	if (sum(w) > dim(permuted)[2])  {  		
@@ -135,7 +136,7 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
 					loss.local = abs(Matrix(predictions - y[colocated], ncol=1))      
 	
 				} else if (mode.select=='AIC') {                           
-					fitted = predict(model, newdata=localdata)
+					fitted = predict(model, newdata=localdata, type='response')
 					s2 = sum(w[permutation]*model$residuals**2) / (sum(w) - ncol(xx) - 1)   
 				    Xh = diag(sqrt(w[permutation])) %*% as.matrix(cbind(rep(1,length(permutation)), xx))
                     H = Xh %*% solve(t(Xh) %*% Xh) %*% t(Xh)
@@ -157,14 +158,24 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
 						loss.local = NA
 					}				
 				} else if (mode.select=='BIC') {   
-					fitted = predict(model, newdata=localdata)
-					s2 = sum(w[permutation]*model$residuals**2) / (sum(w) - dim(permuted)[2] - 1) 
-	
+					fitted = predict(model, newdata=localdata, type='response')
+					s2 = sum(w[permutation]*model$residuals**2) / (sum(w) - ncol(xx) - 1)   
+				    Xh = diag(sqrt(w[permutation])) %*% as.matrix(cbind(rep(1,length(permutation)), xx))
+                    H = Xh %*% solve(t(Xh) %*% Xh) %*% t(Xh)
+                    Hii = sum(H[colocated,colocated])
+					
 					if (length(colocated)>0) {
-						loss.local = log(s2) + 2*log(sum(w))/sum(w)
+						if (!AICc) {loss.local = log(s2) + 2*df/sum(w)}
+						else {
+                            loss.local = Hii
+                            ssr.local = sum((w[permutation]*model$residuals**2)[colocated])
+                            if (family=='gaussian') {ssr.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])}
+                            else if (family=='poisson') {ssr.local = sum((2*w[permutation]*(ylogy(yyy) - yyy*log(fitted) - (yyy-fitted)))[colocated])}
+                            else if (family=='binomial') {ssr.local = sum((2*w[permutation]*(ylogy(yyy) - yyy*log(fitted) - ylogy(1-yyy) + (1-yyy)*log(1-fitted)))[colocated])}
+                        }
 					} else {
 						loss.local = NA
-					}
+					}	
 				}
 			} else {
 				loss.local = Inf
@@ -179,7 +190,7 @@ gwlars.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='gaus
     
     #Return the results
     if (tuning) {
-        return(list(loss.local=loss.local, ssr.local=ssr.local, s=NULL, sigma2=s2, nonzero=NULL, weightsum=sum(w)))
+        return(list(loss.local=loss.local, ssr.local=ssr.local, s=NULL, sigma2=s2, nonzero=oracle, weightsum=sum(w)))
     } else if (predict) {
         return(list(loss.local=loss.local, coef=coefs))
     } else if (simulation) {
