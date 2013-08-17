@@ -1,30 +1,30 @@
-#library(sp, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(shapefiles, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(plotrix, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(ggplot2, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(RandomFields, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(scales, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(sp, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(shapefiles, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(plotrix, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(ggplot2, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(RandomFields, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(scales, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
 
-#library(foreach, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(iterators, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(multicore, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(doMC, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(foreach, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(iterators, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(multicore, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(doMC, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
 
-#library(lars, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(glmnet, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(gwselect, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(lars, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(glmnet, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(gwselect, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
 
-#library(splancs, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(geoR, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(maptools, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
-#library(spgwr, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(splancs, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(geoR, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(maptools, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
+library(spgwr, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
 
 
-library(geoR)
-library(gwselect)
-library(doMC)
-library(spgwr)
-registerCores(n=3)
+#library(geoR)
+#library(gwselect)
+#library(doMC)
+#library(spgwr)
+#registerCores(n=3)
 
 seeds = as.vector(read.csv("seeds.csv", header=FALSE)[,1])
 B = 100
@@ -115,17 +115,20 @@ for (i in 1:N**2) {
 
 
 #Find the optimal bandwidth and use it to generate a model:
-bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
-model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-#bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
-#model.enet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.enet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+model.enet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.enet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-#bw.oracular = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
-#model.oracular = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+bw.oracular = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+model.oracular = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-#bw.spgwr = ggwr.sel(Y~X1+X2+X3+X4+X5, family='binomial', data=sim, coords=as.matrix(sim[,c('loc.x','loc.y')]), gweight=gwr.bisquare, RMSE=FALSE, verbose=FALSE)
-#model.spgwr = ggwr(Y~X1+X2+X3+X4+X5, data=sim, family='binomial', coords=as.matrix(sim[,c('loc.x','loc.y')]), bandwidth=bw.spgwr, gweight=gwr.bisquare)
+bw.spgwr = ggwr.sel(Y~X1+X2+X3+X4+X5, family='binomial', data=sim, coords=as.matrix(sim[,c('loc.x','loc.y')]), gweight=gwr.bisquare, RMSE=FALSE, verbose=FALSE)
+model.spgwr = ggwr(Y~X1+X2+X3+X4+X5, data=sim, family='binomial', coords=as.matrix(sim[,c('loc.x','loc.y')]), bandwidth=bw.spgwr, gweight=gwr.bisquare)
+
+
+
 
 #First, write the data
 write.table(sim, file=paste("output/Data.", cluster, ".", process, ".csv", sep=""), sep=',', row.names=FALSE)
@@ -167,9 +170,6 @@ for (i in 2:length(params)) {
 }
 write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".glmnet.csv", sep=""), col.names=params, sep=',', row.names=FALSE)
 
-
-
-stop()
 
 
 #enet:

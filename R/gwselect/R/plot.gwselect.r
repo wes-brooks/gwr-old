@@ -6,14 +6,14 @@ plot.gwselect = function(model, values=NULL, part='coef', var=NULL, type='fitted
         #Plot on a regular grid using locs
     } else {
         if (is.null(locs)) {
-            locs = model[['coords']]
-            locs = unique(locs)   
+            locs = data.frame(model[['coords']])
+            locs = unique(locs)
             output = sapply(1:nrow(locs), function(k) {model[['model']][['models']][[k]][[part]][name.var,]})
         } else {
             #Generate the output at the given locs
             locs = unique(locs)
             output = values
-        }             
+        }
 
         #Merge the polygons with the locs:
         mergedata = data.frame()
@@ -29,12 +29,12 @@ plot.gwselect = function(model, values=NULL, part='coef', var=NULL, type='fitted
         #Draw the map
         map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))
         map <- map + scale_fill_gradient2(low = muted("blue"), mid = "white", high = "orange", limits=range(mergedata$output, na.rm=TRUE), name='coef') + coord_map(project='globular')   
-        map <- map + opts(panel.background=theme_rect(fill=col.bg, colour=col.outline))
+        map <- map + theme(panel.background=element_rect(fill=col.bg, colour=col.outline))
         
         #Annotate the map with borderlines
         if (!is.null(borderlines)) {map <- map + geom_path(data=borderlines, colour='white', size=0.75)}
 
         #Plot the map
-        map + opts(title=title) #+ guides(fill=guide_legend(reverse=TRUE))
+        map + ggtitle(title) #+ guides(fill=guide_legend(reverse=TRUE))
     }
 }
