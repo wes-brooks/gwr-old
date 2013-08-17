@@ -92,8 +92,7 @@ for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
 
 
     f = as.formula(paste("pindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
-    #bw.logistic[[as.character(year)]] = gwglmnet.sel(formula=f, data=df, family='binomial', coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode.select='AIC', alpha=1, method="knn", tol=0.001, parallel=TRUE, adapt=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
-    bw.logistic[[as.character(year)]] = 0.5
+    bw.logistic[[as.character(year)]] = gwglmnet.sel(formula=f, data=df, family='binomial', coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, mode.select='AIC', alpha=1, method="knn", tol=0.001, parallel=TRUE, adapt=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
     model.logistic[[as.character(year)]] = gwglmnet(formula=f, data=df, family='binomial', coords=df[,c('x','y')], longlat=TRUE, gweight=bisquare, bw=bw.logistic[[as.character(year)]], mode.select='AIC', alpha=1, method="knn", parallel=TRUE, adapt=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
     
     f.spgwr = as.formula(paste("pindpov ~ ", paste(predictors, collapse="+"), sep=""))
