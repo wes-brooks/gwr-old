@@ -6,9 +6,9 @@ then
 	then
 		if $(R --version | grep 'R version 2')
 		then
-			Rscript code/simulations-functions-binomial-bic-x86_64.r $*
+			Rscript code/simulations-functions-logistic-bic-x86_64.r $*
 		else
-			Rscript code/simulations-functions-binomial-bic-3-x86_64.r $*
+			Rscript code/simulations-functions-logistic-bic-3-x86_64.r $*
 		fi
 	else
 		exit 0
