@@ -29,7 +29,7 @@ gwglmnet.fit.knnparallel = function(x, y, family, coords, fit.loc, oracle, D, s,
         }
         
         if (verbose) {
-            cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); target:", round(target,3), ", bw=", round(bandwidth, 3), "; loss=", round(m[['loss.local']],3), "; s=", m[['s']], "; nonzero=", paste(m[['nonzero']], collapse=","), ".\n", sep=''))
+            cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bandwidth,3), "; s=", m[['s']], "; sigma2=", round(tail(m[['sigma2']],1),3), "; nonzero=", paste(m[['nonzero']], collapse=","), "; weightsum=", round(m[['weightsum']],3), ".\n", sep=''))
         }
         return(m)
     }

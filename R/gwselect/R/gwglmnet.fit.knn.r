@@ -30,7 +30,7 @@ gwglmnet.fit.knn = function(x, y, family, coords, fit.loc, oracle, D, s, verbose
         }
         
         if (verbose) {
-            cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); target:", round(target,3), ", bw=", round(bandwidth, 3), "; loss=", round(models[[i]][['loss.local']],3), "; s=", models[[i]][['s']], "; nonzero=", paste(models[[i]][['nonzero']], collapse=","), ".\n", sep=''))
+	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); bw=", round(bandwidth, 3), "; loss=", round(models[[i]][['loss.local']],3), "; s=", models[[i]][['s']], "; sigma2=", round(tail(models[[i]][['sigma2']],1),3), "; nonzero=", paste(models[[i]][['nonzero']], collapse=","), "; weightsum=", round(models[[i]][['weightsum']],3), ".\n", sep=''))
     	}
     }
 
