@@ -70,11 +70,11 @@ for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
 
     #Define which variables we'll use as predictors of poverty:
     predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof', 'pwh', 'pblk', 'phisp', 'metro')
-    #f = as.formula(paste("logitindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
+    f = as.formula(paste("logitindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
 	#f.logit = as.formula(paste("pindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
 
-    #bw[[as.character(year)]] = gwglmnet.sel(formula=f, data=df, family='gaussian', alpha='adaptive', coords=df[,c('x','y')], longlat=TRUE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE)
-    #model[[as.character(year)]] = gwglmnet(formula=f, data=df, family='gaussian', alpha='adaptive', coords=df[,c('x','y')], longlat=TRUE, N=1, mode.select='BIC', bw=bw[[as.character(year)]], gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE)
+    bw[[as.character(year)]] = gwglmnet.sel(formula=f, data=df, family='gaussian', alpha=1, coords=df[,c('x','y')], longlat=TRUE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='knn', adapt=TRUE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
+    model[[as.character(year)]] = gwglmnet(formula=f, data=df, family='gaussian', alpha=1, coords=df[,c('x','y')], longlat=TRUE, N=1, mode.select='BIC', bw=bw[[as.character(year)]], gweight=bisquare, tol=0.01, method='knn', simulation=TRUE, adapt=TRUE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
 
     #bw[[as.character(year)]] = gwlars.sel(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
     #model[[as.character(year)]] = gwlars(formula=f, data=df, coords=df[,c('x','y')], longlat=TRUE, N=1, mode.select='BIC', bw=bw[[as.character(year)]], gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
@@ -117,12 +117,12 @@ for (year in c(1960, 1970, 1980, 1990, 2000, 2006)) {
     #plots.unshrunk[[as.character(year)]] = list()
     #for (v in predictors) {
     #    plots[[as.character(year)]][[v]] = plot.gwselect(model[[as.character(year)]], var=v, polygons=county, title=v, col.bg='gray85') + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
-    #    plots.unshrunk[[as.character(year)]][[v]] = plot.gwselect(model[[as.character(year)]], part='coef.unshrunk', var=v, polygons=county, title=v, col.bg='gray85') + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
+    #    plots.unshrunk[[as.character(year)]][[v]] = plot.gwselect(model[[as.character(year)]], part='coef.unshrunk', var=v, polygons=county, title=v, col.bg='gray85') + theme(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
     #}
 
     plots.logistic[[as.character(year)]] = list()
     for (v in predictors) {
-        plots.logistic[[as.character(year)]][[v]] = plot.gwselect(model.logistic[[as.character(year)]], var=v, polygons=county, title=v) + opts(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
+        plots.logistic[[as.character(year)]][[v]] = plot.gwselect(model.logistic[[as.character(year)]], var=v, polygons=county, title=v) + theme(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
     }
     
     #pp = plots[[as.character(year)]]
