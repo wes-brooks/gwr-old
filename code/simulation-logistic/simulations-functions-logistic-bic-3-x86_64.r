@@ -36,8 +36,6 @@ settings = 6
 tau = rep(0, settings)
 rho = rep(c(0,0.5), settings/2)
 
-b = 25
-
 params = data.frame(tau, rho)
 
 #Read command-line parameters

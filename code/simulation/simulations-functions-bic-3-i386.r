@@ -1,23 +1,24 @@
-library(sp, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(shapefiles, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(plotrix, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(ggplot2, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(RandomFields, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(scales, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(sp, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(shapefiles, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(plotrix, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(ggplot2, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(RandomFields, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(scales, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
 
-library(foreach, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(iterators, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(multicore, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(doMC, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(foreach, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(iterators, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(multicore, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(doMC, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
 
-library(lars, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(glmnet, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(gwselect, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(lars, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(glmnet, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(gwselect, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
 
-library(splancs, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(geoR, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(maptools, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
-library(spgwr, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library'))
+library(splancs, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(geoR, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(maptools, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+library(spgwr, lib.loc=c('R', 'R-libs/i386-redhat-linux-gnu-library/3.0'))
+
 
 #library(geoR)
 #library(gwselect)
@@ -30,11 +31,18 @@ N = 30
 coord = seq(0, 1, length.out=N)
 
 #Establish the simulation parameters
-settings = 12
+#settings = 12
+#tau = rep(0, settings)
+#rho = rep(c(rep(0,2), rep(0.5,2)), settings/4)
+#sigma.tau = rep(0, settings)
+#sigma = rep(c(0.5,1), settings/2)
+
+#Establish the simulation parameters
+settings = 6
 tau = rep(0, settings)
-rho = rep(c(rep(0,2), rep(0.5,2)), settings/4)
+rho = rep(c(0, 0.5), settings/2)
 sigma.tau = rep(0, settings)
-sigma = rep(c(0.5,1), settings/2)
+sigma = rep(0.5, settings)
 
 b = 25
 
@@ -89,33 +97,17 @@ if (parameters[['sigma.tau']] == 0) {epsilon = rnorm(N**2, mean=0, sd=parameters
 if (parameters[['sigma.tau']] > 0) {epsilon = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(parameters[['sigma']],parameters[['sigma.tau']]))$data}
 
 
-if ((setting-1) %/% 4 == 0) {
+if ((setting-1) %/% 2 == 0) {
     B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)
-} else if ((setting-1) %/% 4 == 1) {
+} else if ((setting-1) %/% 2 == 1) {
     B1 = matrix(rep(coord, N), N, N)
-} else if ((setting-1) %/% 4 == 2) {
+} else if ((setting-1) %/% 2 == 2) {
     Xmat = matrix(rep(rep(coord, times=N), times=N), N**2, N**2)
     Ymat = matrix(rep(rep(coord, each=N), times=N), N**2, N**2)
     D = (Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2
     d = D[435,]
     B1 = matrix(max(d)-d, N, N)
 }
-
-#if (((setting-1) %/%2) %% 2 == 1) {
-#    B2 = matrix(rep(coord, N), N, N)
-#} else {
-#    B2 = matrix(0, N, N)
-#}
-
-#if (((setting-1) %/%4) %% 2 == 1) {
-#    Xmat = matrix(rep(rep(coord, times=N), times=N), N**2, N**2)
-#    Ymat = matrix(rep(rep(coord, each=N), times=N), N**2, N**2)
-#    D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
-#    d = D[435,]
-#    B3 = matrix(max(d)-d, N, N)
-#} else {
-#    B3 = matrix(0, N, N)
-#}
 
 mu = X1*B1
 Y = mu + epsilon
@@ -128,14 +120,12 @@ oracle = list()
 for (i in 1:N**2) { 
     oracle[[i]] = character(0)
     if (vars[i,'B1']) { oracle[[i]] = c(oracle[[i]] , "X1") }
-    #if (vars[i,'B2']) { oracle[[i]] = c(oracle[[i]] , "X2") }
-    #if (vars[i,'B3']) { oracle[[i]] = c(oracle[[i]] , "X3") }
 }
 
 
 #Find the optimal bandwidth and use it to generate a model:
-bw.lars = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
-model.lars = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.lars, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+#bw.lars = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+#model.lars = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.lars, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
 bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
@@ -159,40 +149,40 @@ write.table(sim, file=paste("output/Data.", cluster, ".", process, ".csv", sep="
 
 
 
-#LARS:
-vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
-#for (k in 1:6) {
-#    coefs = t(sapply(1:N**2, function(y) {sapply(model.lars[['model']][['models']][[y]][['coeflist']], function(x) {x[k]})}))
-#    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".bootstrap.csv", sep=""), sep=',', row.names=FALSE)
-#}
-
-coefs = t(sapply(1:N**2, function(y) {as.vector(model.lars[['model']][['models']][[y]][['coef']])}))
-write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".lars.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
-
-
-#Write the results to some files:
+##LARS:
 #vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
-#for (k in 1:6) {
-#    coefs = t(sapply(1:N**2, function(y) {sapply(model.lars[['model']][['models']][[y]][['coef.unshrunk.list']], function(x) {x[k]})}))
-#    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".unshrunk-bootstrap.csv", sep=""), sep=',', row.names=FALSE)
+##for (k in 1:6) {
+##    coefs = t(sapply(1:N**2, function(y) {sapply(model.lars[['model']][['models']][[y]][['coeflist']], function(x) {x[k]})}))
+##    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".bootstrap.csv", sep=""), sep=',', row.names=FALSE)
+##}
+#
+#coefs = t(sapply(1:N**2, function(y) {as.vector(model.lars[['model']][['models']][[y]][['coef']])}))
+#write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".lars.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+#
+#
+##Write the results to some files:
+##vars = c('(Intercept)', 'X1', 'X2', 'X3', 'X4', 'X5')
+##for (k in 1:6) {
+##    coefs = t(sapply(1:N**2, function(y) {sapply(model.lars[['model']][['models']][[y]][['coef.unshrunk.list']], function(x) {x[k]})}))
+##    write.table(coefs, file=paste("output/", vars[k], ".", cluster, ".", process, ".unshrunk-bootstrap.csv", sep=""), sep=',', row.names=FALSE)
+##}
+#
+#coefs = t(sapply(1:N**2, function(y) {as.vector(model.lars[['model']][['models']][[y]][['coef.unshrunk.interacted']])}))
+#write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".unshrunk.lars.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+#
+##ses = t(sapply(1:N**2, function(y) {as.vector(model.lars[['model']][['models']][[y]][['se.unshrunk']])}))
+##write.table(ses, file=paste("output/CoefSEs.", cluster, ".", process, ".unshrunk.lars.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
+#
+#
+#params = c('bw', 'sigma2', 'loss.local', 's', 's2.unshrunk', 'fitted')
+#target = params[1]
+#output = sapply(1:N**2, function(y) {model.lars[['model']][['models']][[y]][[target]]})
+#
+#for (i in 2:length(params)) {
+#    target = params[i]
+#    output = cbind(output, sapply(1:N**2, function(y) {model.lars[['model']][['models']][[y]][[target]]}))
 #}
-
-coefs = t(sapply(1:N**2, function(y) {as.vector(model.lars[['model']][['models']][[y]][['coef.unshrunk.interacted']])}))
-write.table(coefs, file=paste("output/CoefEstimates.", cluster, ".", process, ".unshrunk.lars.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
-
-#ses = t(sapply(1:N**2, function(y) {as.vector(model.lars[['model']][['models']][[y]][['se.unshrunk']])}))
-#write.table(ses, file=paste("output/CoefSEs.", cluster, ".", process, ".unshrunk.lars.csv", sep=""), col.names=vars, sep=',', row.names=FALSE)
-
-
-params = c('bw', 'sigma2', 'loss.local', 's', 's2.unshrunk', 'fitted')
-target = params[1]
-output = sapply(1:N**2, function(y) {model.lars[['model']][['models']][[y]][[target]]})
-
-for (i in 2:length(params)) {
-    target = params[i]
-    output = cbind(output, sapply(1:N**2, function(y) {model.lars[['model']][['models']][[y]][[target]]}))
-}
-write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".lars.csv", sep=""), col.names=params, sep=',', row.names=FALSE)
+#write.table(output, file=paste("output/MiscParams.", cluster, ".", process, ".lars.csv", sep=""), col.names=params, sep=',', row.names=FALSE)
 
 
 
