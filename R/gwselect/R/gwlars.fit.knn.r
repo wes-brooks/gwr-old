@@ -24,7 +24,7 @@ gwlars.fit.knn = function(x, y, coords, indx, fit.loc, D, N=N, s, mode.select, t
         bandwidth = opt$minimum
 
         if (is.null(oracle)) {
-            models[[i]] = gwlars.fit.inner(x=x, y=y, bw=bandwidth, coords=coords, loc=loc, indx=indx, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, dist=dist, prior.weights=prior.weights, gweight=gweight, adapt=adapt, precondition=precondition, interact=interact, shrunk.fit=shrunk.fit, AICc=AICc)
+            models[[i]] = gwlars.fit.inner(x=x, y=y, bw=bandwidth, coords=coords, loc=loc, indx=indx, N=N, s=s, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, dist=dist, prior.weights=prior.weights, gweight=gweight, precondition=precondition, interact=interact, shrunk.fit=shrunk.fit, AICc=AICc)
         } else {
             models[[i]] = gwselect.fit.oracle(x=x, y=y, bw=bandwidth, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, dist=dist, prior.weights=prior.weights, gweight=gweight, interact=interact, AICc=AICc)
         }

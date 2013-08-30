@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  30 AUG 2013 10:53
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  30 AUG 2013 14:01
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -691,21 +691,21 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 
-] [2]
-[3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
+]
+
+Package natbib Warning: Citation `Fotheringham:2002' on page 2 undefined on inp
+ut line 64.
+
 \openout5 = `logistic.ttt'.
 
- (logistic.ttt)
+(logistic.ttt)
 \openout4 = `logistic.fff'.
 
  (logistic.fff)
-[14]
 
-LaTeX Warning: Reference `table:X1-var' on page 15 undefined on input line 363.
+Package natbib Warning: There were undefined citations.
 
-
-[15] (./logistic.bbl [16] [17] [18] [19])
-AED endfloat: Processing end Figures and Tables [20] (./logistic.fff
+AED endfloat: Processing end Figures and Tables [2] [3] (./logistic.fff
 File: ../../figures/simulation/step.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/step.pdf" >
@@ -714,29 +714,25 @@ File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
 <use  "../../figures/simulation/gradient.pdf" >
 File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/parabola.pdf" > [21]
+<use  "../../figures/simulation/parabola.pdf" > [4]
 File: ../../figures/simulation/illustrations/summary-locations.pdf Graphic file
  (type QTm)
 
-<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [22])
-(./logistic.ttt [23
+<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [5])
+(./logistic.ttt [6
 
 
 
 
 
-] [24] [25] [26] [27] [28]) (./logistic.aux)
-
-LaTeX Warning: There were undefined references.
-
- ) 
+] [7] [8] [9] [10] [11]) (./logistic.aux) ) 
 Here is how much of TeX's memory you used:
- 4847 strings out of 493994
- 68298 string characters out of 3150335
+ 4743 strings out of 493994
+ 66356 string characters out of 3150335
  136002 words of memory out of 3000000
- 7959 multiletter control sequences out of 15000+200000
+ 7858 multiletter control sequences out of 15000+200000
  22164 words of font info for 77 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,17n,40p,1019b,453s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,10n,40p,1019b,453s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on logistic.pdf (28 pages).
+Output written on logistic.pdf (11 pages).

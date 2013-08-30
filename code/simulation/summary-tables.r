@@ -14,14 +14,25 @@ nsims = 100
 #B[['X4']] = rep(0, N**2)
 #B[['X5']] = rep(0, N**2)
 
+#functions = c('step', 'gradient', 'parabola')
+#sim.modes = c("lars", "enet", "glmnet", "unshrunk.lars", "unshrunk.enet", "unshrunk.glmnet", "oracular", "gwr")
+#sim.modes.output = c("lars", "enet", "glmnet", "u.lars", "u.enet", "u.glmnet", "oracular", "gwr")
+#selection.modes = c("lars", "enet", "glmnet")
+#columns = list(lars="LARS", enet="enet", glmnet="glmnet", gwr="gwr",
+#                        unshrunk.lars=".LARS-U", unshrunk.enet="enet-U",
+#                        unshrunk.glmnet="glmnet-U", oracular="Oracle")
+#groupings = list('1'=c(1,2,3,4), '2'=c(5,6,7,8), '3'=c(9,10,11,12))
+
+
+#no lars:
 functions = c('step', 'gradient', 'parabola')
-sim.modes = c("lars", "enet", "glmnet", "unshrunk.lars", "unshrunk.enet", "unshrunk.glmnet", "oracular", "gwr")
-sim.modes.output = c("lars", "enet", "glmnet", "u.lars", "u.enet", "u.glmnet", "oracular", "gwr")
-selection.modes = c("lars", "enet", "glmnet")
-columns = list(lars="LARS", enet="enet", glmnet="glmnet", gwr="gwr",
-                        unshrunk.lars=".LARS-U", unshrunk.enet="enet-U",
+sim.modes = c("enet", "glmnet", "unshrunk.enet", "unshrunk.glmnet", "oracular", "gwr")
+sim.modes.output = c("enet", "glmnet", "u.enet", "u.glmnet", "oracular", "gwr")
+selection.modes = c("enet", "glmnet")
+columns = list(enet="enet", glmnet="glmnet", gwr="gwr",
+                        unshrunk.enet="enet-U",
                         unshrunk.glmnet="glmnet-U", oracular="Oracle")
-groupings = list('1'=c(1,2,3,4), '2'=c(5,6,7,8), '3'=c(9,10,11,12))
+groupings = list('1'=c(1,2), '2'=c(3,4), '3'=c(5,6))
 
 
 msex = list()
@@ -308,13 +319,14 @@ for (s in settings) {
     }
 }
 
-selection.table = matrix(NA, nrow=4*length(locs), ncol=0)
+selection.table = matrix(NA, nrow=length(groupings[[1]])*length(locs), ncol=0)
 for (j in 1:3) {    
     for (m in selection.modes) {
         selection.block = matrix(NA, nrow=0, ncol=2)
         for (l in 1:length(locs)) {
-            for (i in 1:4) {
-                selection.block = rbind(selection.block, c(selected[[l]][[m]][['X1']][(j-1)*4 + i], mean(sapply(vv[-1], function(x) {selected[[l]][[m]][[x]][(j-1)*4 + i]}))))
+            k = length(groupings[[j]])
+            for (i in 1:k) {
+                selection.block = rbind(selection.block, c(selected[[l]][[m]][['X1']][(j-1)*k + i], mean(sapply(vv[-1], function(x) {selected[[l]][[m]][[x]][(j-1)*k + i]}))))
             }
         }
         selection.table = cbind(selection.table, selection.block)

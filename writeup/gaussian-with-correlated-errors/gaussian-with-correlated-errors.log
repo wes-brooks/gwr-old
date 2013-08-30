@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  30 AUG 2013 12:26
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  30 AUG 2013 14:05
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**gaussian.tex
-(./gaussian.tex
+**gaussian-with-correlated-errors.tex
+(./gaussian-with-correlated-errors.tex
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, ge
 rman-x-2012-05-30, ngerman-x-2012-05-30, afrikaans, ancientgreek, ibycus, arabi
@@ -91,8 +91,9 @@ File: upsy.fd 2001/06/04 font definitions for U/psy.
 \@enLab=\toks16
 \@sep=\skip43
 \@@sep=\skip44
- (./gaussian.spl) (/usr/local/texlive/2012/texmf-dist/tex/latex/natbib/natbib.s
-ty
+
+(./gaussian-with-correlated-errors.spl)
+(/usr/local/texlive/2012/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip45
 \bibsep=\skip46
@@ -100,7 +101,7 @@ LaTeX Info: Redefining \cite on input line 694.
 \c@NAT@ctr=\count94
 )
 \splwrite=\write3
-\openout3 = `gaussian.spl'.
+\openout3 = `gaussian-with-correlated-errors.spl'.
 
 )
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsmath/amsmath.sty
@@ -664,8 +665,8 @@ Package: booktabs 2005/04/14 v1.61803 publication quality tables
 (/usr/local/texlive/2012/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2011/12/19 v6.7a set line spacing
 )
-(./gaussian.aux)
-\openout1 = `gaussian.aux'.
+(./gaussian-with-correlated-errors.aux)
+\openout1 = `gaussian-with-correlated-errors.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 50.
 LaTeX Font Info:    ... okay on input line 50.
@@ -682,43 +683,27 @@ LaTeX Font Info:    ... okay on input line 50.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
 LaTeX Font Info:    Try loading font information for U+msa on input line 51.
- (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 51.
- (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
+
+(/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-) [1
-
-
-] [2]
-[3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
-\openout5 = `gaussian.ttt'.
-
- (gaussian.ttt)
-\openout4 = `gaussian.fff'.
-
- (gaussian.fff)
-[14] [15] [16]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 802.
-
- (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 802.
-
-Underfull \hbox (badness 10000) in paragraph at lines 802--803
-
- []
+\openout5 = `gaussian-with-correlated-errors.ttt'.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 803--804
+(gaussian-with-correlated-errors.ttt)
+\openout4 = `gaussian-with-correlated-errors.fff'.
 
- []
+ (gaussian-with-correlated-errors.fff)
+AED endfloat: Processing end Figures and Tables [1
 
-[17] [18] (./gaussian.bbl [19] [20] [21])
-AED endfloat: Processing end Figures and Tables [22] (./gaussian.fff
+
+]
+(./gaussian-with-correlated-errors.fff
 File: ../../figures/simulation/step.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/step.pdf" >
@@ -727,54 +712,30 @@ File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
 <use  "../../figures/simulation/gradient.pdf" >
 File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/parabola.pdf" > [23]
+<use  "../../figures/simulation/parabola.pdf" > [2]
 File: ../../figures/simulation/illustrations/summary-locations.pdf Graphic file
  (type QTm)
 
-<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [24]
-File: ../../figures/poverty/1970-linear-coefficients-unshrunk.pdf Graphic file 
-(type QTm)
-
-<use  "../../figures/poverty/1970-linear-coefficients-unshrunk.pdf" > [25]
-File: ../../figures/poverty/1970-gwr.pdf Graphic file (type QTm)
-
-<use  "../../figures/poverty/1970-gwr.pdf" > [26]) (./gaussian.ttt [27
+<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [3])
+(./gaussian-with-correlated-errors.ttt [4
 
 
 
 
 
+] [5] [6] [7] [8] [9])
+(./gaussian-with-correlated-errors.aux)
 
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
-]
-Overfull \hbox (5.5777pt too wide) in paragraph at lines 30--62
- [] 
- []
-
-[28]
-
-LaTeX Warning: Float too large for page by 79.90431pt on input line 151.
-
-[29]
-
-LaTeX Warning: Float too large for page by 79.90431pt on input line 238.
-
-[30]
-
-LaTeX Warning: Float too large for page by 79.90431pt on input line 325.
-
-[31]
-
-LaTeX Warning: Float too large for page by 79.80429pt on input line 412.
-
-[32]) (./gaussian.aux) ) 
+ ) 
 Here is how much of TeX's memory you used:
- 4872 strings out of 493994
- 68839 string characters out of 3150335
- 165002 words of memory out of 3000000
- 7978 multiletter control sequences out of 15000+200000
+ 4745 strings out of 493994
+ 66763 string characters out of 3150335
+ 136025 words of memory out of 3000000
+ 7860 multiletter control sequences out of 15000+200000
  22164 words of font info for 77 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,17n,40p,1019b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,10n,40p,911b,453s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (32 pages).
+Output written on gaussian-with-correlated-errors.pdf (9 pages).

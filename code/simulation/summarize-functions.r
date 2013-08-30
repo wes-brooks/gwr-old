@@ -8,7 +8,7 @@ params = c('bw', 'sigma2', 'loss.local', 's')
 #args = commandArgs(trailingOnly=TRUE)
 #cluster = as.integer(args[1])
 #cluster = 'NA'
-cluster = 66
+cluster = 78
 
 B = 100
 N = 30
@@ -27,11 +27,19 @@ nvars = 5
 
 coord = seq(0, 1, length.out=N)
 
-sim.modes = c("gwr", "lars", "enet", "glmnet", "unshrunk.lars", "unshrunk.enet", "unshrunk.glmnet", "oracular")
-selection.modes = c("lars", "enet", "glmnet")
-file.endings = list(gwr=".gwr.csv", lars=".lars.csv", enet=".enet.csv", glmnet=".glmnet.csv",
-                        unshrunk.lars=".unshrunk.lars.csv", unshrunk.enet=".unshrunk.enet.csv",
+
+sim.modes = c("gwr", "enet", "glmnet", "unshrunk.enet", "unshrunk.glmnet", "oracular")
+selection.modes = c("enet", "glmnet")
+file.endings = list(gwr=".gwr.csv", enet=".enet.csv", glmnet=".glmnet.csv",
+                        unshrunk.enet=".unshrunk.enet.csv",
                         unshrunk.glmnet=".unshrunk.glmnet.csv", oracular=".oracle.csv")
+
+#Use this section if lars is one of the exstimations methods used:
+#sim.modes = c("gwr", "lars", "enet", "glmnet", "unshrunk.enet", "unshrunk.lars", "unshrunk.glmnet", "oracular")
+#selection.modes = c("lars", "enet", "glmnet")
+#file.endings = list(gwr=".gwr.csv", gwr=".lars.csv", enet=".enet.csv", glmnet=".glmnet.csv",
+#                        unshrunk.lars=".unshrunk.lars.csv", unshrunk.enet=".unshrunk.enet.csv",
+#                        unshrunk.glmnet=".unshrunk.glmnet.csv", oracular=".oracle.csv")
 
 Y.err = list()
 X.err = lapply(1:nvars, function(x) {list()})
@@ -96,41 +104,43 @@ for (setting in settings) {
 
         #Get the raw data
         filename = paste("output/Data.", cluster, ".", sim, ".csv", sep="")
-        raw = read.csv(filename, header=TRUE)
+        if (file.exists(filename)) {
+            raw = read.csv(filename, header=TRUE)
 
-        for (m in sim.modes) {
-            filename = paste("output/CoefEstimates.", cluster, ".", sim, file.endings[[m]], sep="")
-            estimates = read.csv(filename, header=TRUE)
-            colnames(estimates) = vars
+            for (m in sim.modes) {
+                filename = paste("output/CoefEstimates.", cluster, ".", sim, file.endings[[m]], sep="")
+                estimates = read.csv(filename, header=TRUE)
+                colnames(estimates) = vars
             
-            if (!is.na(pmatch("unshrunk", m))) {
-                fitted = diag(as.matrix(estimates) %*% t(as.matrix(cbind(rep(1,N**2), raw[,c('X1','X2','X3','X4','X5')]))))
-            } else {
-                filename = paste("output/MiscParams.", cluster, ".", sim, file.endings[[m]], sep="")
-                params = read.csv(filename, header=TRUE)
-                fitted = params$fitted
-            }
+                if (!is.na(pmatch("unshrunk", m))) {
+                    fitted = diag(as.matrix(estimates) %*% t(as.matrix(cbind(rep(1,N**2), raw[,c('X1','X2','X3','X4','X5')]))))
+                } else {
+                    filename = paste("output/MiscParams.", cluster, ".", sim, file.endings[[m]], sep="")
+                    params = read.csv(filename, header=TRUE)
+                    fitted = params$fitted
+                }
 
-            for (i in 1:nvars) {
-                name = paste("X", i, sep="")
-                X.err[[i]][[m]][[setting]][[k]] = as.vector(B[[name]] - estimates[,name])
-            }
-            Y.err[[m]][[setting]][[k]] = as.vector(raw$Y - fitted)
+                for (i in 1:nvars) {
+                    name = paste("X", i, sep="")
+                    X.err[[i]][[m]][[setting]][[k]] = as.vector(B[[name]] - estimates[,name])
+                }
+                Y.err[[m]][[setting]][[k]] = as.vector(raw$Y - fitted)
 
-            if (m %in% selection.modes) {
-                filename = paste("output/MiscParams.", cluster, ".", sim, file.endings[[m]], sep="")
-                params = read.csv(filename, header=TRUE)
-                bandwidth[[m]][[setting]][[k]] = params$bw
+                if (m %in% selection.modes) {
+                    filename = paste("output/MiscParams.", cluster, ".", sim, file.endings[[m]], sep="")
+                    params = read.csv(filename, header=TRUE)
+                    bandwidth[[m]][[setting]][[k]] = params$bw
 
-                for (v in vars[-1]) {
-                    cat(paste("Begin variable ", v, "\n", sep=""))
+                    for (v in vars[-1]) {
+                        cat(paste("Begin variable ", v, "\n", sep=""))
 
-                    #Calculate how often each variable was selected for inclusion in the local models
-                    col = which(colnames(estimates) == v)
-                    if (k==1) {
-                        selection[[m]][[setting]][[v]] = as.matrix(ifelse(estimates[,col]==0, 0, 1))
-                    } else {
-                        selection[[m]][[setting]][[v]] = cbind(selection[[m]][[setting]][[v]], as.matrix(ifelse(estimates[,col]==0, 0, 1)))
+                        #Calculate how often each variable was selected for inclusion in the local models
+                        col = which(colnames(estimates) == v)
+                        if (k==1) {
+                            selection[[m]][[setting]][[v]] = as.matrix(ifelse(estimates[,col]==0, 0, 1))
+                        } else {
+                            selection[[m]][[setting]][[v]] = cbind(selection[[m]][[setting]][[v]], as.matrix(ifelse(estimates[,col]==0, 0, 1)))
+                        }
                     }
                 }
             }

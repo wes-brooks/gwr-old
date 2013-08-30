@@ -17,11 +17,11 @@ gwlars.fit.nen = function(x, y, coords, D, N=N, s, mode.select, shrink, verbose,
 
         opt = optimize(gwlars.ssr, lower=beta1, upper=beta2, 
             maximum=FALSE, tol=target/1000, x=x, y=y, N=1, coords=coords, loc=loc, s=s,
-            gweight=gweight, verbose=verbose, dist=dist, adapt=adapt, mode.select=mode.select,
+            gweight=gweight, verbose=verbose, dist=dist, mode.select=mode.select,
             prior.weights=prior.weights, target=target, precondition=precondition)
         bandwidth = opt$minimum
 
-        models[[i]] = gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, N=N, s=s, mode.select=mode.select, shrink=shrink, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, adapt=adapt, mode=mode, precondition=precondition, AICc=AICc)
+        models[[i]] = gwlars.fit.inner(x=x, y=y, coords=coords, loc=loc, bw=bandwidth, dist=dist, N=N, s=s, mode.select=mode.select, shrink=shrink, verbose=verbose, gwr.weights=NULL, prior.weights=prior.weights, gweight=gweight, precondition=precondition, AICc=AICc)
 
 		if (verbose) {
 	        cat(paste("For i=", i, ", target: ", target, ", bw=", bandwidth, ", tolerance=", target/1000, ", miss=", opt$objective, ".\n", sep=''))
