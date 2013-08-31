@@ -122,10 +122,11 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
     
         fitx = cbind(sqrt(w[permutation]), xs)
         fity = yyy
+        if (interact) {xest = xx.interacted[permutation,]}
+        else {xest = xx[permutation,]}
     
         model = lars(x=fitx, y=fity, type='lar', normalize=FALSE, intercept=FALSE)
         nsteps = length(model$lambda) + 1   
-    
 
         if (mode.select=='CV') {
         	reps = length(colocated)
@@ -161,7 +162,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
 				df = sapply(vars, length) + 1
                 
                 s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - yy[permutation])**2) / (sum(w[permutation]) - df)
-                loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + log(s2) + log(sum(w[permutation]))*df)
+                loss = as.vector(apply(fitted, 2, function(z) {sum(w[permutation]*(z - yy[permutation])**2)})/s2 + log(s2) + penalty*df)
                 k = which.min(loss)
                 fitted = fitted[,k]
                 localfit = fitted[colocated]      
@@ -175,10 +176,10 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                         }
                     }
 
-                    modeldata = data.frame(y=yy[permutation], xx.interacted[permutation,varset])
+                    modeldata = data.frame(y=yy[permutation], xest[,varset])
                     m = lm(y~., data=modeldata, weights=w[permutation])
                     result = tryCatch({
-                        Xh = diag(sqrt(w[permutation])) %*% as.matrix(cbind(rep(1,length(permutation)), xx.interacted[permutation,varset]))
+                        Xh = diag(sqrt(w[permutation])) %*% as.matrix(cbind(rep(1,length(permutation)), xest[,varset]))
                         H = Xh %*% solve(t(Xh) %*% Xh) %*% t(Xh)
                         Hii = H[colocated,colocated]
                     }, error = function(e) {
@@ -209,7 +210,7 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 }
                 
                 if (length(colocated)>0) {
-                    if (!AICc) {loss.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])/s2 + log(s2) + log(sum(w[permutation]))*df/sum(w[permutation])}
+                    if (!AICc) {loss.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])/s2 + log(s2) + penalty*df/sum(w[permutation])}
                     else {
                         loss.local = Hii
                         ssr.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])
@@ -227,7 +228,6 @@ gwlars.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=
                 localfit = meany
             }
         }
-
     
         #Get the tuning parameter to minimize the loss:
         s.optimal = which.min(loss)
