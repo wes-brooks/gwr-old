@@ -20,10 +20,10 @@ library(maptools, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
 library(spgwr, lib.loc=c('R', 'R-libs/x86_64-redhat-linux-gnu-library/3.0'))
 
 
-#library(geoR)
-#library(gwselect)
-#library(doMC)
-#registerCores(n=3)
+library(geoR)
+library(gwselect)
+library(doMC)
+registerCores(n=3)
 
 seeds = as.vector(read.csv("seeds.csv", header=FALSE)[,1])
 B = 100
@@ -41,7 +41,7 @@ coord = seq(0, 1, length.out=N)
 settings = 6
 tau = rep(0, settings)
 rho = rep(c(0, 0.5), settings/2)
-sigma.tau = rep(0, settings)
+sigma.tau = rep(0.01, settings)
 sigma = rep(0.5, settings)
 
 b = 25
@@ -49,11 +49,11 @@ b = 25
 params = data.frame(tau, rho, sigma.tau, sigma)
 
 #Read command-line parameters
-args = commandArgs(trailingOnly=TRUE)
-cluster = as.integer(args[1])
-process = as.integer(args[2])
-#cluster=NA
-#process=1150
+#args = commandArgs(trailingOnly=TRUE)
+#cluster = as.integer(args[1])
+#process = as.integer(args[2])
+cluster=NA
+process=15
 
 #Simulation parameters are based on the value of process
 setting = process %/% B + 1
@@ -127,7 +127,7 @@ for (i in 1:N**2) {
 #bw.lars = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 #model.lars = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.lars, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
-bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
 model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
 bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
