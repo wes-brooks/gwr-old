@@ -187,12 +187,12 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                     if (!shrunk.fit) {
                         fitted = m$fitted
                         localfit = fitted[colocated]
-                            df = length(varset) + 1
-                            s2 = sum((m$residuals*w[permutation])**2) / (sum(w) - df)  
+                        df = length(varset) + 1
+                        s2 = sum((w[permutation]*m$residuals**2) / (sum(w) - df))
                     }
                     coefs.unshrunk = rep(0, ncol(x) + 1)
                     coefs.unshrunk[c(1, varset + 1)] = coef(m)
-                    s2.unshrunk = sum(m$residuals**2)/sum(w[permutation])
+                    s2.unshrunk = sum(w[permutation]*m$residuals**2)/sum(w[permutation])
 
                     se.unshrunk = rep(0, ncol(x) + 1)
                     se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']
@@ -212,12 +212,12 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                         loss.local = Hii
                         
                         #These are for deviance residuals:
-                        if (family=='gaussian') {ssr.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])}
+                        if (family=='gaussian') {ssr.local = sum((w[permutation]*(fitted - yyy)**2)[colocated])}
                         else if (family=='poisson') {ssr.local = sum((2*w[permutation]*(ylogy(yyy) - yyy*log(fitted) - (yyy-fitted)))[colocated])}
                         else if (family=='binomial') {ssr.local = sum((2*w[permutation]*(ylogy(yyy) - yyy*log(fitted) - ylogy(1-yyy) + (1-yyy)*log(1-fitted)))[colocated])}
 
                         #These are for Pearson residuals:
-                        #if (family=='gaussian') {ssr.local = sum((w[permutation]*(fitted - yy[permutation])**2)[colocated])}
+                        #if (family=='gaussian') {ssr.local = sum((w[permutation]*(fitted - yyy)**2)[colocated])}
                         #else if (family=='poisson') {ssr.local = sum((w[permutation]*(yyy - fitted)**2/fitted)[colocated])}
                         #else if (family=='binomial') {ssr.local = sum((w[permutation]*(yyy - fitted)**2/(fitted*(1-fitted)))[colocated])}
                     }

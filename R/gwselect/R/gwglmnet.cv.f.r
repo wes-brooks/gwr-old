@@ -20,8 +20,6 @@ gwglmnet.cv.f = function(formula, data, weights, indx, family, bw, coords, gweig
         }
         else if (family %in% c('binomial', 'poisson')) {
         	#Use GCV (OSullivan et al. 1986)
-        	print(sum(sapply(gwglmnet.model[['model']][['models']], function(x) {x[['ssr.local']]})))
-        	print(trH)
         	loss = sum(sapply(gwglmnet.model[['model']][['models']], function(x) {x[['ssr.local']]})) / (nrow(data)-trH)**2
         }
     }
