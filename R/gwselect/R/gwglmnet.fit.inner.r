@@ -158,8 +158,6 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                 s2 = sum(w[permutation]*(fitted[,ncol(fitted)] - predy)**2) / (sum(w) - df) 
                 
                 #Compute the loss (varies by family)
-                #if (family=='binomial') { loss = as.vector(apply(fitted, 2, function(x) {2*sum(w[permutation] * (fity*log(x) + (1-fity)*log(1-log(x))))})) + penalty*df}
-                #else {loss = as.vector(deviance(model) + penalty*df)}
                 loss = as.vector(deviance(model) + penalty*df)
                 
                 #Pick the lambda that minimizes the loss:
@@ -198,7 +196,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
                     se.unshrunk[c(1, varset + 1)] = summary(m)$coefficients[,'Std. Error']
                 } else {
                     coefs.unshrunk = rep(0, ncol(xx) + 1)
-                    coefs.unshrunk[1] = sum(fity * w[permutation]) / sum(w)
+                    coefs.unshrunk[1] = sum(fity * w[permutation]) / sum(w[permutation])
                     
                     s2.unshrunk = sum((sqrt(w[permutation])*fity)**2)/sum(w[permutation])
                     se.unshrunk = rep(0, ncol(xx) + 1)
