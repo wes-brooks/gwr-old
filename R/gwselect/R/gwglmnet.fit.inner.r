@@ -250,7 +250,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
 						m = glm(y~., data=modeldata, weights=w[permutation], family=family)
                         working.weights = as.vector(m$weights)
                         result = tryCatch({
-                            Xh = diag(sqrt(working.weights)) %*% as.matrix(cbind(rep(1,length(permutation)), xx.interacted[permutation,varset]))
+                            Xh = diag(sqrt(working.weights)) %*% as.matrix(cbind(rep(1,length(permutation)), xx.interacted[permutation,varset.interacted]))
                             H = Xh %*% solve(t(Xh) %*% Xh) %*% t(Xh)
                             Hii = H[colocated,colocated]
                         }, error = function(e) {
@@ -385,7 +385,7 @@ gwglmnet.fit.inner = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
 						m = glm(y~., data=modeldata, weights=w[permutation], family=family)
                         working.weights = as.vector(m$weights)
                         result = tryCatch({
-                            Xh = diag(sqrt(working.weights)) %*% as.matrix(cbind(rep(1,length(permutation)), xx.interacted[permutation,varset]))
+                            Xh = diag(sqrt(working.weights)) %*% as.matrix(cbind(rep(1,length(permutation)), xx.interacted[permutation,varset.interacted]))
                             H = Xh %*% solve(t(Xh) %*% Xh) %*% t(Xh)
                             Hii = H[colocated,colocated]
                         }, error = function(e) {
