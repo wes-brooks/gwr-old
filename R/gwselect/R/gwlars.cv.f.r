@@ -5,16 +5,22 @@ gwlars.cv.f = function(formula, data, weights, bw, N=N, coords, fit.loc, indx, g
 
     if (AICc) {
         trH = sum(sapply(gwlars.model[['model']][['models']], function(x) {x[['loss.local']]})) 
-        print(trH)
-        print((2*(trH+1))/(nrow(data)-trH-2))
-        print(log(mean(sapply(gwlars.model[['model']][['models']], function(x) {x[['ssr.local']]}))))
-        print(log(mean(sapply(gwlars.model[['model']][['models']], function(x) {x[['ssr.local']]}))) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
-        
+
         #Local sigma^2:
         #loss = nrow(data) * (mean(sapply(gwlars.model[['model']][['models']], function(x) {log(x[['sigma2']])})) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
 
         #Global sigma^2:
-        loss = nrow(data) * (log(mean(sapply(gwlars.model[['model']][['models']], function(x) {x[['ssr.local']]}))) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
+        #if (family=='gaussian') {
+        #	#Use the AICc
+        	loss = nrow(data) * (log(mean(sapply(gwlars.model[['model']][['models']], function(x) {x[['ssr.local']]}))) + 1 + (2*(trH+1))/(nrow(data)-trH-2) + log(2*pi))
+        #}
+        #else if (family %in% c('binomial', 'poisson')) {
+        #	#Use GCV (OSullivan et al. 1986)
+        #	loss = sum(sapply(gwlars.model[['model']][['models']], function(x) {x[['ssr.local']]})) / (nrow(data)-trH)**2
+        #}
+        
+        #"Simplistic" BIC - based on eq4.22 from the Fotheringham et al. book:
+        #loss = nrow(data) * (log(mean(sapply(gwlars.model[['model']][['models']], function(x) {x[['ssr.local']]}))) + 1 + log(2*pi)) + trH * log(nrow(data))/2
     }
     else {loss = sum(sapply(gwlars.model[['model']][['models']], function(x) {x[['loss.local']]}))}
 
