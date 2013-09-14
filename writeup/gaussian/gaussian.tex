@@ -112,6 +112,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	Three regularization methods were used in this work. The AL was implemented in two ways - once via the least angle regression (LARS) algorithm \citep{Efron:2004b} which uses least squares, and once via the coordinate descent algorithm using the {\tt R} package {\tt glmnet} \citep{Friedman:2010}. The third regularization method implemented here uses an adaptive elastic net (AEN) penalty \citep{Zou:2009}, also via the coordinate descent algorithm using the {\tt glmnet} package.
 	
+	The remainder of this document is organized as follows: the traditional GWR is presented in Section \ref{section:GWR}. The geographically weighted adaptive Lasso (GWAL) and geographically weighted adaptive elastic net (GWAEN) are introduced in section \ref{section:model-selection}. Section \ref{section:simulation} Section \ref{section:data-analysis}
 
 \section{Geographically Weighted Regression \label{section:GWR}}
 	\subsection{Model}	
@@ -152,8 +153,14 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	\begin{align}\label{eq:local-log-likelihood}
 		\ell_i\left(\bm{\beta}_i\right) &= -(1/2) \sum_{i'=1}^n w_{ii'} \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}.
 	\end{align}
+	From (\ref{eq:local-likelihood}) and (\ref{eq:local-log-likelihood}), it is apparent that the GWR coefficient estimates $\hat{\bm{\beta}}_{i,\text{GWR}}$ maximizing the local likelihood at location $\bm{s}_i$ can be obtained using weighted least squares. 
 	
-	The GWR coefficient estimates $\hat{\bm{\beta}}_{i,\text{GWR}}$ maximize the local likelihood at location $\bm{s}_i$. From (\ref{eq:local-likelihood}) and (\ref{eq:local-log-likelihood}), it is apparent that $\hat{\bm{\beta}}_{i,\text{GWR}}$ can be obtained using weighted least squares. Let $\bm{W}_i$ denote a diagonal weight matrix with diagonal entries $w_{ii'}$ for $i'=1, \dots, n$. That is,
+	 Setting to zero the derivative of (\ref{eq:local-log-likelihood}) with respect to $\sigma_i^2$, the maximum likelihood estimate (MLE) $\hat{\sigma}_i^2$ is found to be:	 
+	 \begin{align}
+	 	\hat{\sigma}_i^2 = \left(\sum \limits_{i'=1}^{n} w_{ii'} \right)^{-1} \sum \limits_{i'=1}^n w_{ii'}\left(y_{i'} - \bm{x}_{i'}'\hat{\bm{\beta}}_i\right)^2
+	\end{align}
+	
+	\paragraph{Algorithmic details} Both $\hat{\bm{\beta}_i}$ and $\hat{\sigma}_i^2$ can be obtained by the method of least squares. Let $\bm{W}_i$ denote a diagonal weight matrix with diagonal entries $w_{ii'}$ for $i'=1, \dots, n$. That is,
 	\begin{align}
 		\bm{W}_i =  {\rm diag}\left\{w_{ii'}\right\}_{i' = 1}^n.
 	\end{align}
@@ -163,12 +170,13 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 		\hat{\bm{\beta}}_{i, \text{GWR}} = \left( \bm{X}'\bm{W}_i\bm{X} \right)^{-1} \bm{X}'\bm{W}_i\bm{y}.
 	\end{align}
 	
-	The estimate of $\sigma_i^2$ is obtained by maximizing (\ref{eq:local-log-likelihood}), and is:
+	and
 	\begin{align}
 		\hat{\sigma}^2_i &= \left(\bm{1}_n'\bm{w}_i \right)^{-1} \left(\bm{y}-\bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'\bm{W}_i\bm{y}\right)' \bm{W}_i \left(\bm{y}-\bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'\bm{W}_i\bm{y}\right) \notag \\
 		&= \left(\bm{1}_n'\bm{w}_i \right)^{-1}  \left(\bm{y}-\hat{\bm{y}}\right)' \bm{W}_i \left(\bm{y}-\hat{\bm{y}}\right),
 	\end{align}	
 	where $\bm{1}_n$ is an $n$-variate vector of ones.
+		
 	
 	\begin{comment}
 	Estimation of $\hat{\bm{\beta}}_i$ and $\hat{\sigma}_i$ is by maximum local likelihood, which is implemented by setting the derivatives of (\ref{eq:local-log-likelihood}) to zero:
@@ -253,26 +261,29 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	\subsection{Coefficient estimation}
 	After the variables are selected for inclusion in the local model, either by the GWAL or the GWAEN, the coefficient estimates are computed via weighted least squares on the selected variables without regularization. That is, letting $\bm{\Omega}_i = \text{diag}\left\{\bm{\omega}_i\right\}$ where $\bm{\omega}_i = \left(\omega_{i1}, \dots \omega_{ip}\right)'$ and $\omega_{ij}= I \left(\beta_{ij} \neq 0\right)$, the local coefficient estimates are:
 	\begin{align} \label{eq:coefficients}
-		\hat{\bm{\beta}}_i &= \argmin \limits_{\beta} \sum_{i'=1}^n w_{ii'} \left( y_{i'} - \bm{x}_{i'}' \bm{\Omega}_i \bm{\beta}_i' \right)^2\\
-		&= \left( \tilde{\bm{X}}'\bm{W}_i \tilde{\bm{X}} \right)^{-1} \tilde{\bm{X}} '\bm{W}_i\bm{y}.
-	\end{align}
-	and $\tilde{\bm{X}}_i$ is the design matrix $\bm{X}$ with columns corresponding to zeroes in $\bm{\omega}_i$ removed.
+		\hat{\bm{\beta}}_i &= \argmax \limits_{\beta} \left\{-(1/2) \sum_{i'=1}^n w_{ii'} \left[ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\Omega}_i \bm{\beta}_i \right)^2 \right]\right\}.
+	\end{align}	
+	As before, the method of least squares is used to obtain the MLE $\hat{\bm{\beta}}_i$.
+	
+	%and $\tilde{\bm{X}}_i$ is the design matrix $\bm{X}$ with columns corresponding to zeroes in $\bm{\omega}_i$ removed.
 	 
 	\subsection{Bandwidth selection}
-	Let $H_i$ denote the $i$th row of the matrix $\bm{W}_i^{1/2} \tilde{\bm{X}} \left( \tilde{\bm{X}}'\bm{W}_i \tilde{\bm{X}} \right)^{-1} \tilde{\bm{X}}'\bm{W}_i^{1/2}$, and let	
+	The global bandwidth parameter $\phi$ in (\ref{eq:bisquare}) is selected by minimizing the corrected AIC:	
 	\begin{align}
-		\bm{H} = \left(H_1 \cdots H_n \right)'.
+		\text{AIC}_{\tt c} = 2 n \log{\sigma} + n \left\{\frac{n + \nu}{n - 2 - \nu}\right\}
 	\end{align}	
+	where $\nu$ is the trace of the linear smoothing matrix $\bm{H}$, and approximates the total degrees of freedom of the SVCR \citep{Hurvich:1998}.
+
 	The fitted values from the model are	
 	\begin{align}
 		\hat{\bm{y}} = \bm{H} \bm{y}
-	\end{align}	
-	The global bandwidth parameter $\phi$ in (\ref{eq:bisquare}) is selected by minimizing an approximation to the global AIC:	
+	\end{align}
+	Letting $H_i$ denote the $i$th row of the matrix $\bm{W}_i^{1/2} \tilde{\bm{X}} \left( \tilde{\bm{X}}'\bm{W}_i \tilde{\bm{X}} \right)^{-1} \tilde{\bm{X}}'\bm{W}_i^{1/2}$, we have that	
 	\begin{align}
-		\text{AIC} = 2 n \log{\sigma} + n \left\{\frac{n + \nu}{n - 2 - \nu}\right\}
+		\bm{H} = \left(H_1 \cdots H_n \right)'.
 	\end{align}	
-	where $\nu$ is the trace of the smoothing matrix $\bm{H}$, and approximates the total degrees of freedom of the SVCR \citep{Hurvich:1998}.
-	
+		
+		
 	%The bandwidth parameter $\phi$ in (\ref{eq:bisquare}) is global and so a global statistic is needed, by which prospective bandwidths can be compared. We propose the following statistic, called the total BIC ($\mbox{BIC}_{\text{tot}}$):
 	%\begin{align}\label{eq:total-BIC}
 	%	\mbox{BIC}_{\mbox{tot}} &= \sum_{i=1}^n \left\{ \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_i - \bm{x}'_i \hat{\bm{\beta}}_i \right)^2 + \left( \sum_{i'=1}^n w_{ii'}\right) \left(\sum_{i'=1}^n w_{ii'} \right)^{-1} \mbox{df}_i \right\}
@@ -299,7 +310,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 		
 	The simulated response was $y_i = \bm{x}'_i \bm{\beta}_i + \varepsilon_i$ for $i=1, \dots, n$ where $n=900$ and for simplicity the $\varepsilon_i$'s were iid Gaussian with mean zero and variance $\sigma_\varepsilon^2$. The simulated data included the response $y$ and five covariates $x_1, \dots, x_5$. The true data-generating model uses only $x_1$, so $x_2, \dots, x_5$ are included to assess performance in variable-selection.
 	
-	There were twelve simulation settings, each of which was simulated 100 times. For each of the twelve settings, $\beta_1(\bm{s})$, the true coefficient surface for $x_1$, was nonzero in at least part of the spatial domain $[0,1]^2$. There were four other simulated covariates, but their true coefficient surfaces were zero across the area under simulation. The twelve simulation settings are described in Table \ref{table:simulation_settings}. Three parameters were varied to produce the twelve settings: there were three functional forms for the coefficient surface $\beta_1(\bm{s})$, data was simulated both with ($\rho = 0.5$) and without ($\rho = 0$) correlation between the covariates, and simulations were made with low ($\sigma_\varepsilon^2 = 0.25$) and high ($\sigma_\varepsilon^2 = 1$) variance for the random error term.
+	There were twelve simulation settings, each of which was simulated 100 times. For each of the twelve settings, $\beta_1(\bm{s})$, the true coefficient surface for $x_1$, was nonzero in at least part of the spatial domain $[0,1]^2$, with a minimum of zero and maximum of one. There were four other simulated covariates, but their true coefficient surfaces were zero across the area under simulation. The twelve simulation settings are described in Table \ref{table:simulation_settings}. Three parameters were varied to produce the twelve settings: there were three functional forms for the coefficient surface $\beta_1(\bm{s})$, data was simulated both with ($\rho = 0.5$) and without ($\rho = 0$) correlation between the covariates, and simulations were made with low ($\sigma_\varepsilon^2 = 0.25$) and high ($\sigma_\varepsilon^2 = 1$) variance for the random error term.
 	
 	The three coefficient surfaces used to produce the response variable in the simulations are pictured in Figure \ref{fig:sim-actual}. The first is a ``step" function, which is equal to zero in 40\% of the spatial domain, equal to one in a different 40\% of the spatial domain, and increases linearly in the middle 20\% of the domain. The second is a gradient function, which increases linearly from zero at one end of the domain to one at the other. The final coefficient function is a parabola taking its maximum value of 0.535 at the center of the domain and falling to zero at each corner of the domain. The parabola is computed by finding the squared distance of each sampling location from the domain's center, multiplying by -1 and then adding an offset so that the corner points are equal to zero.
 	
@@ -348,8 +359,13 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 		\end{center}
 	\end{figure}
 	
+	\paragraph{Summary locations}Results from the simulation were summarized at five locations on the domain (see Figure \ref{fig:summary-locations}). Locations one and five are at opposite corners of the domain, where we expect biased estimation from a kernel smoother like traditional GWR, particularly when the quantity being estimated has a nonzero gradient at the boundary, which is the case for the gradient and parabola functions. Because the GWAL and GWAEN use locally linear fitting, they are expected to exhibit less bias at the boundaries.
 	
-	Results from the simulation were summarized at five locations on the simulated grid (see Figure \ref{fig:summary-locations}). The five key locations were chosen because they represent interesting regions of the $\beta_1$ coefficient surfaces. The results of variable selection and coefficient estimation are presented in the tables below.
+	Locations two and four are at the `corners' of the step function. Because the step function is undifferentiable at these locations, locally linear fitting is not expected to be as effective at reducing bias here as in the case of the boundaries of the gradient and parabola functions. Local variable selection is expected to be ambiguous at location four of the step function because it is at the the boundary where the coefficient transitions from zero to nonzero.
+	
+	All three coefficient functions are zero at location five. The parabola is also zero at location one. In these cases where the coefficient at the boundary but not elsewhere, the local variable selection is expected to be ambiguous because the data come almost entirely from locations where the coefficient is nonzero.
+	
+	Unlike the other two functions, the gradient is actually constant across the domain in terms of the covariate-by-location interaction. As a result, the optimal kernel bandwidth $\phi$ is expected to be larger for estimating the gradient coefficient surface than for the step or the parabola. The result should be that the estimation is more accurate for the gradient function in terms of bias, variance, and MSE.
 	
 	%Results of the simulation experiment were summarized to asses the consistency in selection and estimation, as well as the coverage properties of the confidence intervals. The confidence intervals based on the bootstrap (without shrinkage) were used for the GWL because they seemed to uniformly outperform the other options.\\ table:loc1-X1-BiasX
 	
@@ -370,6 +386,12 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	In general, oracular selection and traditional GWR were quite similar in terms of $\text{var}\left(\hat{\beta_1}\right)$, with notably greater variance for the local selection methods. However, the local selection methods had less bias than traditional GWR, even exhibiting less bias than oracular selection in many settings. There was no simulation setting for which traditional GWR had the smallest or second-smallest bias.
 	
 	It seems, therefore, that the local selection methods reduce bias and increase variance of the coefficient estimates, as compared to traditional GWR. Whether traditional GWR or local selection is better in terms of MSE of the coefficient estimates is not clear in all cases, but when the actual coefficient is equal to zero (or nearly so), local selection does seem to reduce the MSE over traditional GWR.
+	
+	\paragraph{Autocorrelated Errors} Introducing autocorrelation in the errors causes a substantial degradation in the estimation accuracy of the GWAL and GWAEN, accompanied by a tendency to prefer smaller kernel bandwidths. The likely explanation is that when the kernel bandwidth is small, autocorrelated errors are indistinguishable from a varying intercept. The residuals are reduced to the extent that the errors are incorporated in the intercept term. Since this effect is absent in the case of uncorrelated errors, greater autocorrelation in the error term will tend to mean a greater reduction in the errors - and therefore a greater increase in the log likelihood - as the kernel bandwidth decreases.
+	
+	Since the optimal kernel bandwidth is balance between the log likelihood and the degrees of freedom consumed by the model, and because the effect of autocorrelated errors is an increase in log likelihood without an offsetting increase in the consumed degrees of freedom at a given kernel bandwidth, greater autocorrelation will tend to lead to a smaller optimal kernel bandwidth.
+	
+	This is an example of the bias-variance tradeoff: Accounting for the random noise within the systematic portion of the model decreases the bias but increases the variance.
 	
 	%There was not a clear and consistent difference in performance between the three selection methods. It might be expected that the adaptive elastic net would outperform the adaptive Lasso under greater covariate collinearity, but if such effect is real it is not apparent from this simulation. The unshrunk coefficient-estimation methods tended to exhibit more bias than the selection-plus-shrinkage methods when the true coefficient value was near zero, and vice versa when the true coefficient was not near zero. The unshrunk methods were perhaps more consistent in their performance and for that reason they are probably preferable in practice.\\
 	
@@ -430,7 +452,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 		\thispagestyle{empty}
 		\begin{center}
 		\resizebox{!}{12cm}{
-		\begin{tabular}{cccccccccc}
+		\begin{tabular}{ccrrrrrrrr}
 		  function & location & lars & enet & glmnet & u.lars & u.enet & u.glmnet & oracular & gwr \\ 
   \hline
   \multirow{20}{*}{step} & \multirow{4}{*}{1} & 0.016 & \emph{0.009} & \textbf{0.009} & 0.077 & 0.055 & 0.055 & 0.059 & 0.111 \\ 
@@ -518,7 +540,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 		\thispagestyle{empty}
 		\begin{center}
 		\resizebox{!}{12cm}{
-		\begin{tabular}{cccccccccc}
+		\begin{tabular}{ccrrrrrrrr}
 		  function & location & lars & enet & glmnet & u.lars & u.enet & u.glmnet & oracular & gwr \\ 
   \hline
   \multirow{20}{*}{step} & \multirow{4}{*}{1} & -0.027 & -0.024 & \emph{-0.022} & \textbf{-0.001} & 0.024 & 0.025 & 0.237 & -0.333 \\ 
@@ -611,7 +633,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 		\thispagestyle{empty}
 		\begin{center}
 		\resizebox{!}{12cm}{
-		\begin{tabular}{cccccccccc}
+		\begin{tabular}{ccrrrrrrrr}
   function & location & lars & enet & glmnet & u.lars & u.enet & u.glmnet & oracular & gwr \\ 
   \hline
   \multirow{20}{*}{step} & \multirow{4}{*}{1} & 0.016 & 0.008 & 0.008 & 0.077 & 0.055 & 0.055 & \emph{0.003} & \textbf{0.001} \\ 
@@ -701,7 +723,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 		\thispagestyle{empty}
 		\begin{center}
 		\resizebox{!}{12cm}{
-		\begin{tabular}{ccccccccccc}
+		\begin{tabular}{ccrrrrrrrr}
   function & location & lars & enet & glmnet & u.lars & u.enet & u.glmnet & oracular & gwr \\ 
   \hline
   \multirow{20}{*}{step} & \multirow{4}{*}{1} & 0.130 & 0.145 & 0.145 & \textbf{0.097} & 0.118 & \emph{0.118} & 0.194 & 0.285 \\ 

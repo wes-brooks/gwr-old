@@ -68,7 +68,7 @@ location & $\beta_1$ & $\beta_2$ - $\beta_5$ & $\beta_1$ & $\beta_2$ - $\beta_5$
 \thispagestyle{empty}
 \begin{center}
 \resizebox{!}{12cm}{
-\begin{tabular}{cccccccccc}
+\begin{tabular}{ccrrrrrrrr}
   function & location & lars & enet & glmnet & u.lars & u.enet & u.glmnet & oracular & gwr \\
   \hline
   \multirow{20}{*}{step} & \multirow{4}{*}{1} & 0.016 & \emph{0.009} & \textbf{0.009} & 0.077 & 0.055 & 0.055 & 0.059 & 0.111 \\
@@ -155,7 +155,7 @@ location & $\beta_1$ & $\beta_2$ - $\beta_5$ & $\beta_1$ & $\beta_2$ - $\beta_5$
 \thispagestyle{empty}
 \begin{center}
 \resizebox{!}{12cm}{
-\begin{tabular}{cccccccccc}
+\begin{tabular}{ccrrrrrrrr}
   function & location & lars & enet & glmnet & u.lars & u.enet & u.glmnet & oracular & gwr \\
   \hline
   \multirow{20}{*}{step} & \multirow{4}{*}{1} & -0.027 & -0.024 & \emph{-0.022} & \textbf{-0.001} & 0.024 & 0.025 & 0.237 & -0.333 \\
@@ -242,7 +242,7 @@ location & $\beta_1$ & $\beta_2$ - $\beta_5$ & $\beta_1$ & $\beta_2$ - $\beta_5$
 \thispagestyle{empty}
 \begin{center}
 \resizebox{!}{12cm}{
-\begin{tabular}{cccccccccc}
+\begin{tabular}{ccrrrrrrrr}
   function & location & lars & enet & glmnet & u.lars & u.enet & u.glmnet & oracular & gwr \\
   \hline
   \multirow{20}{*}{step} & \multirow{4}{*}{1} & 0.016 & 0.008 & 0.008 & 0.077 & 0.055 & 0.055 & \emph{0.003} & \textbf{0.001} \\
@@ -329,7 +329,7 @@ location & $\beta_1$ & $\beta_2$ - $\beta_5$ & $\beta_1$ & $\beta_2$ - $\beta_5$
 \thispagestyle{empty}
 \begin{center}
 \resizebox{!}{12cm}{
-\begin{tabular}{ccccccccccc}
+\begin{tabular}{ccrrrrrrrr}
   function & location & lars & enet & glmnet & u.lars & u.enet & u.glmnet & oracular & gwr \\
   \hline
   \multirow{20}{*}{step} & \multirow{4}{*}{1} & 0.130 & 0.145 & 0.145 & \textbf{0.097} & 0.118 & \emph{0.118} & 0.194 & 0.285 \\
