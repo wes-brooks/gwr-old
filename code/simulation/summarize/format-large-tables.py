@@ -35,7 +35,7 @@ with open(infile) as input_file:
         if not intable:
             if re.search("\\\\begin{tabular}", line):
                 intable = True
-                line = re.sub("{ccccccccc}", "{ccc | ccc | ccc | ccc }", line)
+                #line = re.sub("{ccccccccc}", "{ccc | ccc | ccc | ccc }", line)
             header.append(line)
         elif not outtable:
             if not re.search("\\\\end{tabular}", line): rows.append(line)

@@ -78,11 +78,57 @@ for (i in 1:nrow(msex.table)) {
 
 msex.table = round(msex.table, 3)
 msex.table = cbind(rep(NA,nrow(msex.table)), rep(NA,nrow(msex.table)), msex.table)
-colnames(msex.table) = c('function','location',sim.modes.output)
-msex = xtable.printbold(xtable(msex.table, digits=3, align=rep('c', length(sim.modes)+3), caption="Mean squared error of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{MSEX}"), which.bold=msexbold, which.ital=msexital, include.rownames=FALSE, hline.after=c(0))
 
+
+msex = list()
+locs = c(30, 228, 435, 643, 871)
+for (l in 1:length(locs)) {
+    msex[[l]] = list()
+
+    for (m in sim.modes) {
+        msex[[l]][[m]] = vector()
+    }
+}
+
+for (s in settings) {
+    for (l in 1:length(locs)) {
+        for (m in sim.modes) {
+            msex[[l]][[m]] = c(msex[[l]][[m]], mean(sapply(X.err[[1]][[m]][[s]], function(x) {x[locs[l]]**2}), na.rm=TRUE))
+        }
+    }
+}
+
+msex.table = matrix(NA, nrow=0, ncol=length(sim.modes))
+for (g in groupings) {
+    for (l in 1:length(locs)) {
+        msex.table = rbind(msex.table, as.matrix(sapply(sim.modes, function(x) {msex[[l]][[x]][g]})))
+    }
+}
+msexbold = matrix(FALSE, nrow=nrow(msex.table), ncol=ncol(msex.table)+2)
+msexital = matrix(FALSE, nrow=nrow(msex.table), ncol=ncol(msex.table)+2)
+for (i in 1:nrow(msex.table)) {
+    row = msex.table[i,]
+    best = sort(unique(row))
+    msexbold[i,-(1:2)][row==best[1]] = TRUE
+    if (sum(row==best[1], na.rm=TRUE)==1) {msexital[i,-(1:2)][row==best[2]] = TRUE}
+}
+
+
+msex.table = round(msex.table, 3)
+msex.table = cbind(rep(NA,nrow(msex.table)), rep(NA,nrow(msex.table)), msex.table)
+
+#Convert the table to strings so we can add annotation (like \multirow{}).
+nr = dim(msex.table)[1]
+nc = dim(msex.table)[2]
+msex.table = matrix(sprintf("%.3f", msex.table), nr, nc)
+colnames(msex.table) = c('function','location',sim.modes.output)
+msex.table[0:14*4 + 1,2]= rep(sapply(1:5, function(x) paste("\\multirow{4}{*}{", x, "}", paste="")),3)
+msex.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) paste("\\multirow{20}{*}{", x, "}", paste=""))
+
+#Write the table to disk
 sink(paste(outdir, "/msex.tex", sep=""))
-print(msex)
+msex.table[msex.table=="NA"]=""
+xtable.printbold(xtable(msex.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Mean squared error of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:msex}"), which.bold=msexbold, which.ital=msexital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\\\\\n", 14)))
 sink()
 
 
@@ -125,10 +171,21 @@ for (i in 1:nrow(msey.table)) {
 
 msey.table = round(msey.table, 3)
 msey.table = cbind(rep(NA,nrow(msey.table)), rep(NA,nrow(msey.table)), msey.table)
+
+
+#Convert the table to strings so we can add annotation (like \multirow{}).
+nr = dim(msey.table)[1]
+nc = dim(msey.table)[2]
+msey.table = matrix(sprintf("%.3f", msey.table), nr, nc)
 colnames(msey.table) = c('function','location',sim.modes.output)
-xtable.printbold(xtable(msey.table, digits=3, align=rep('c', length(sim.modes)+3), caption="Mean squared error of $\\hat{Y}$ (\\textbf{minimum}, \\emph{next best}).\\label{MSEY}"), which.bold=mseybold, which.ital=mseyital, include.rownames=FALSE, hline.after=c(0))
+msey.table[0:14*4 + 1,2]= rep(sapply(1:5, function(x) paste("\\multirow{4}{*}{", x, "}", paste="")),3)
+msey.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) paste("\\multirow{20}{*}{", x, "}", paste=""))
 
-
+#Write the table to disk
+sink(paste(outdir, "/msey.tex", sep=""))
+msey.table[msey.table=="NA"]=""
+xtable.printbold(xtable(msey.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Mean squared error of $\\hat{Y}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:msey}"), which.bold=mseybold, which.ital=mseyital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\\\\\n", 14)))
+sink()
 
 
 
@@ -169,8 +226,20 @@ for (i in 1:nrow(bx.table)) {
 
 bx.table = round(bx.table, 3)
 bx.table = cbind(rep(NA,nrow(bx.table)), rep(NA,nrow(bx.table)),bx.table)
-colnames(bx.table) = c('function','location',sim.modes.output)
-xtable.printbold(xtable(bx.table, digits=3, align=rep('c', length(sim.modes)+3), caption="Bias of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{BiasX}"), which.bold=bxbold, which.ital=bxital, include.rownames=FALSE, hline.after=c(0))
+
+#Convert the table to strings so we can add annotation (like \multirow{}).
+nr = dim(bx.table)[1]
+nc = dim(bx.table)[2]
+bx.table = matrix(sprintf("%.3f", bx.table), nr, nc)
+colnames(msey.table) = c('function','location',sim.modes.output)
+bx.table[0:14*4 + 1,2]= rep(sapply(1:5, function(x) paste("\\multirow{4}{*}{", x, "}", paste="")),3)
+bx.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) paste("\\multirow{20}{*}{", x, "}", paste=""))
+
+#Write the table to disk
+sink(paste(outdir, "/bx.tex", sep=""))
+bx.table[bx.table=="NA"]=""
+xtable.printbold(xtable(bx.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Bias of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:bx}"), which.bold=bxbold, which.ital=bxital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\\\\\n", 14)))
+sink()
 
 
 
@@ -211,8 +280,20 @@ for (i in 1:nrow(by.table)) {
 
 by.table = round(by.table, 3)
 by.table = cbind(rep(NA,nrow(by.table)), rep(NA,nrow(by.table)),by.table)
+
+#Convert the table to strings so we can add annotation (like \multirow{}).
+nr = dim(by.table)[1]
+nc = dim(by.table)[2]
+by.table = matrix(sprintf("%.3f", by.table), nr, nc)
 colnames(by.table) = c('function','location',sim.modes.output)
-xtable.printbold(xtable(by.table, digits=3, align=rep('c', length(sim.modes)+3), caption="Bias of $\\hat{Y}$ (\\textbf{minimum}, \\emph{next best}).\\label{BiasY}"), which.bold=bybold, which.ital=byital, include.rownames=FALSE, hline.after=c(0))
+by.table[0:14*4 + 1,2]= rep(sapply(1:5, function(x) paste("\\multirow{4}{*}{", x, "}", paste="")),3)
+by.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) paste("\\multirow{20}{*}{", x, "}", paste=""))
+
+#Write the table to disk
+sink(paste(outdir, "/by.tex", sep=""))
+by.table[by.table=="NA"]=""
+xtable.printbold(xtable(by.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Bias of $\\hat{Y}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:by}"), which.bold=bybold, which.ital=byital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\\\\\n", 14)))
+sink()
 
 
 
@@ -255,9 +336,20 @@ for (i in 1:nrow(varx.table)) {
 
 varx.table = round(varx.table, 3)
 varx.table = cbind(rep(NA,nrow(varx.table)), rep(NA,nrow(varx.table)), varx.table)
-colnames(varx.table) = c('function','location',sim.modes.output)
-xtable.printbold(xtable(varx.table, digits=3, align=rep('c', length(sim.modes)+3), caption="Variance of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{VarX}"), which.bold=varxbold, which.ital=varxital, include.rownames=FALSE, hline.after=c(0))
 
+#Convert the table to strings so we can add annotation (like \multirow{}).
+nr = dim(varx.table)[1]
+nc = dim(varx.table)[2]
+varx.table = matrix(sprintf("%.3f", varx.table), nr, nc)
+colnames(varx.table) = c('function','location',sim.modes.output)
+varx.table[0:14*4 + 1,2]= rep(sapply(1:5, function(x) paste("\\multirow{4}{*}{", x, "}", paste="")),3)
+varx.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) paste("\\multirow{20}{*}{", x, "}", paste=""))
+
+#Write the table to disk
+sink(paste(outdir, "/varx.tex", sep=""))
+varx.table[varx.table=="NA"]=""
+xtable.printbold(xtable(varx.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Variance of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:varx}"), which.bold=varxbold, which.ital=varxital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\\\\\n", 14)))
+sink()
 
 
 
@@ -299,8 +391,23 @@ for (i in 1:nrow(vary.table)) {
 
 vary.table = round(vary.table, 3)
 vary.table = cbind(rep(NA,nrow(vary.table)), rep(NA,nrow(vary.table)), vary.table)
+
+#Convert the table to strings so we can add annotation (like \multirow{}).
+nr = dim(vary.table)[1]
+nc = dim(vary.table)[2]
+vary.table = matrix(sprintf("%.3f", vary.table), nr, nc)
 colnames(vary.table) = c('function','location',sim.modes.output)
-xtable.printbold(xtable(vary.table, digits=3, align=rep('c', length(sim.modes)+3), caption="Variance of $\\hat{Y}$ (\\textbf{minimum}, \\emph{next best}).\\label{VarY}"), which.bold=varybold, which.ital=varyital, include.rownames=FALSE, hline.after=c(0))
+vary.table[0:14*4 + 1,2]= rep(sapply(1:5, function(x) paste("\\multirow{4}{*}{", x, "}", paste="")),3)
+vary.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) paste("\\multirow{20}{*}{", x, "}", paste=""))
+
+#Write the table to disk
+sink(paste(outdir, "/vary.tex", sep=""))
+vary.table[vary.table=="NA"]=""
+xtable.printbold(xtable(vary.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Variance of $\\hat{Y}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:vary}"), which.bold=varybold, which.ital=varyital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\\\\\n", 14)))
+sink()
+
+
+
 
 
 
@@ -344,5 +451,16 @@ for (j in 1:3) {
 
 selection.table = round(selection.table, 2)
 selection.table = cbind(rep(NA,nrow(selection.table)), selection.table)
+
+#Convert the table to strings so we can add annotation (like \multirow{}).
+nr = dim(selection.table)[1]
+nc = dim(selection.table)[2]
+selection.table = matrix(sprintf("%.2f", selection.table), nr, nc)
 colnames(selection.table) = c('location', rep(c("$\\beta_1$", "$\\beta_2$ - $\\beta_5$"), length(functions)*length(selection.modes)))
-print(xtable(selection.table, digits=2, align=rep('c',ncol(selection.table)+1), caption="Selection frequency for the indicated variables"), sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0))
+selection.table[0:4*4 + 1,1] = sapply(1:5, function(x) paste("\\multirow{4}{*}{", x, "}", paste=""))
+
+#Write the table to disk
+sink(paste(outdir, "/selection.tex", sep=""))
+selection.table[selection.table=="NA"]=""
+print(xtable(selection.table, digits=2, align=paste(c('cccc', rep('|cc',length(functions)*length(selection.modes)-1,)), collapse=""), caption="Selection frequency for the indicated variables.\\label{table:selection}"), floating.environment="sidewaystable", sanitize.text.function=function(x){x}, sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{2-13}\\\\\n", 4)))
+sink()

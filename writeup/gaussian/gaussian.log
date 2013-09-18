@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  13 SEP 2013 16:49
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  18 SEP 2013 16:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -692,90 +692,259 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 ] [2]
-[3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
+[3] [4] [5]
+
+LaTeX Warning: Reference `section:simulation' on page 6 undefined on input line
+ 115.
+
+[6] [7] [8] [9] [10] [11] [12] [13]
 \openout5 = `gaussian.ttt'.
 
  (gaussian.ttt)
 \openout4 = `gaussian.fff'.
 
- (gaussian.fff)
-[14] [15] [16] [17]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 823.
+ (gaussian.fff) [14] [15]
+[16] [17]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 817.
 
-
-(/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
+ (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 823.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 817.
 
-Underfull \hbox (badness 10000) in paragraph at lines 823--824
+Underfull \hbox (badness 10000) in paragraph at lines 817--818
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 824--825
+Underfull \hbox (badness 10000) in paragraph at lines 818--819
 
  []
 
 [18] [19] (./gaussian.bbl [20] [21] [22])
 AED endfloat: Processing end Figures and Tables [23] (./gaussian.fff
+
+LaTeX Warning: File `../../figures/simulation/step.pdf' not found on input line
+ 3.
+
+./gaussian.fff:3: Unable to load picture or PDF file '../../figures/simulation/
+step.pdf'.
+<to be read again> 
+                   }
+l.3 ...xtwidth]{../../figures/simulation/step.pdf}
+                                                  
+? 
+
+./gaussian.fff:3: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.3 ...xtwidth]{../../figures/simulation/step.pdf}
+                                                  
+? 
 File: ../../figures/simulation/step.pdf Graphic file (type QTm)
-
 <use  "../../figures/simulation/step.pdf" >
+./gaussian.fff:3: Unable to load picture or PDF file '../../figures/simulation/
+step.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.3 ...xtwidth]{../../figures/simulation/step.pdf}
+                                                  
+? 
+
+LaTeX Warning: File `../../figures/simulation/gradient.pdf' not found on input 
+line 4.
+
+./gaussian.fff:4: Unable to load picture or PDF file '../../figures/simulation/
+gradient.pdf'.
+<to be read again> 
+                   }
+l.4 ...dth]{../../figures/simulation/gradient.pdf}
+                                                  
+? 
+
+./gaussian.fff:4: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4 ...dth]{../../figures/simulation/gradient.pdf}
+                                                  
+? 
 File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
-
 <use  "../../figures/simulation/gradient.pdf" >
-File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
+./gaussian.fff:4: Unable to load picture or PDF file '../../figures/simulation/
+gradient.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.4 ...dth]{../../figures/simulation/gradient.pdf}
+                                                  
+? 
 
-<use  "../../figures/simulation/parabola.pdf" > [24]
+LaTeX Warning: File `../../figures/simulation/parabola.pdf' not found on input 
+line 5.
+
+./gaussian.fff:5: Unable to load picture or PDF file '../../figures/simulation/
+parabola.pdf'.
+<to be read again> 
+                   }
+l.5 ...dth]{../../figures/simulation/parabola.pdf}
+                                                  
+? 
+
+./gaussian.fff:5: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.5 ...dth]{../../figures/simulation/parabola.pdf}
+                                                  
+? 
+File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
+<use  "../../figures/simulation/parabola.pdf" >
+./gaussian.fff:5: Unable to load picture or PDF file '../../figures/simulation/
+parabola.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.5 ...dth]{../../figures/simulation/parabola.pdf}
+                                                  
+? 
+[24]
+
+LaTeX Warning: File `../../figures/simulation/illustrations/summary-locations.p
+df' not found on input line 13.
+
+./gaussian.fff:13: Unable to load picture or PDF file '../../figures/simulation
+/illustrations/summary-locations.pdf'.
+<to be read again> 
+                   }
+l.13 ...ation/illustrations/summary-locations.pdf}
+                                                  
+? 
+
+./gaussian.fff:13: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.13 ...ation/illustrations/summary-locations.pdf}
+                                                  
+? 
 File: ../../figures/simulation/illustrations/summary-locations.pdf Graphic file
  (type QTm)
+<use  "../../figures/simulation/illustrations/summary-locations.pdf" >
+./gaussian.fff:13: Unable to load picture or PDF file '../../figures/simulation
+/illustrations/summary-locations.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.13 ...ation/illustrations/summary-locations.pdf}
+                                                  
+? 
+[25]
 
-<use  "../../figures/simulation/illustrations/summary-locations.pdf" > [25]
+LaTeX Warning: File `../../figures/poverty/1970-linear-coefficients-unshrunk.pd
+f' not found on input line 21.
+
+./gaussian.fff:21: Unable to load picture or PDF file '../../figures/poverty/19
+70-linear-coefficients-unshrunk.pdf'.
+<to be read again> 
+                   }
+l.21 ...rty/1970-linear-coefficients-unshrunk.pdf}
+                                                  
+? 
+
+./gaussian.fff:21: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.21 ...rty/1970-linear-coefficients-unshrunk.pdf}
+                                                  
+? 
 File: ../../figures/poverty/1970-linear-coefficients-unshrunk.pdf Graphic file 
 (type QTm)
+<use  "../../figures/poverty/1970-linear-coefficients-unshrunk.pdf" >
+./gaussian.fff:21: Unable to load picture or PDF file '../../figures/poverty/19
+70-linear-coefficients-unshrunk.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.21 ...rty/1970-linear-coefficients-unshrunk.pdf}
+                                                  
+? 
+[26]
 
-<use  "../../figures/poverty/1970-linear-coefficients-unshrunk.pdf" > [26]
+LaTeX Warning: File `../../figures/poverty/1970-gwr.pdf' not found on input lin
+e 29.
+
+./gaussian.fff:29: Unable to load picture or PDF file '../../figures/poverty/19
+70-gwr.pdf'.
+<to be read again> 
+                   }
+l.29 ...t=8in]{../../figures/poverty/1970-gwr.pdf}
+                                                  
+? 
+
+./gaussian.fff:29: Package graphics Error: Division by 0.
+
+See the graphics package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.29 ...t=8in]{../../figures/poverty/1970-gwr.pdf}
+                                                  
+? 
 File: ../../figures/poverty/1970-gwr.pdf Graphic file (type QTm)
+<use  "../../figures/poverty/1970-gwr.pdf" >
+./gaussian.fff:29: Unable to load picture or PDF file '../../figures/poverty/19
+70-gwr.pdf'.
+<to be read again> 
+                   \GXT@clipend 
+l.29 ...t=8in]{../../figures/poverty/1970-gwr.pdf}
+                                                  
+? 
+[27]) (./gaussian.ttt [28
 
-<use  "../../figures/poverty/1970-gwr.pdf" > [27]) (./gaussian.ttt [28
 
 
 
 
 
 
+] [29]
 
-]
-Overfull \hbox (5.5777pt too wide) in paragraph at lines 30--62
- [] 
- []
-
-[29]
-
-LaTeX Warning: Float too large for page by 79.90431pt on input line 151.
+LaTeX Warning: Float too large for page by 79.90431pt on input line 145.
 
 [30]
 
-LaTeX Warning: Float too large for page by 79.90431pt on input line 238.
+LaTeX Warning: Float too large for page by 79.90431pt on input line 232.
 
 [31]
 
-LaTeX Warning: Float too large for page by 79.90431pt on input line 325.
+LaTeX Warning: Float too large for page by 79.90431pt on input line 319.
 
 [32]
 
-LaTeX Warning: Float too large for page by 79.80429pt on input line 412.
+LaTeX Warning: Float too large for page by 79.80429pt on input line 406.
 
-[33]) (./gaussian.aux) ) 
+[33]) (./gaussian.aux)
+
+LaTeX Warning: There were undefined references.
+
+ ) 
 Here is how much of TeX's memory you used:
- 4878 strings out of 493994
- 68905 string characters out of 3150335
+ 4879 strings out of 493994
+ 68925 string characters out of 3150335
  167002 words of memory out of 3000000
- 7982 multiletter control sequences out of 15000+200000
+ 7983 multiletter control sequences out of 15000+200000
  22835 words of font info for 81 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,17n,40p,1019b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,17n,40p,1019b,455s stack positions out of 5000i,500n,10000p,200000b,50000s
 
 Output written on gaussian.pdf (33 pages).
