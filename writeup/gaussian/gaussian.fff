@@ -10,7 +10,7 @@
  
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.5\textwidth]{../../figures/simulation/illustrations/summary-locations.pdf}
+\includegraphics[width=0.5\textwidth]{../../figures/simulation/summary-locations.pdf}
 \caption{Locations where the variable selection and coefficient estimation of GWL were summarized.\label{fig:summary-locations}}
 \end{center}
 \end{figure}

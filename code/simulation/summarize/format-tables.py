@@ -24,7 +24,7 @@ with open(infile) as input_file:
             lines.append("\\begin{center}\n")
             lines.append("\\resizebox{!}{" + boxsize + "}{\n")
         elif re.search("\\\\caption{.*}", line):
-            line = re.sub("\\caption{(?P<caption>.*)}", "\\\\caption{\g<caption>}}\n", line)
+            line = re.sub("\\caption{(?P<caption>.*)}", "\\caption{\g<caption>}}\n", line)
             lines.append(line)
             lines.append("\\end{center}\n")
         else: lines.append(line)
