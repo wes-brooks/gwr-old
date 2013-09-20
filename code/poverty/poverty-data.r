@@ -1,4 +1,5 @@
 #Import poverty data
+pops = read.table("~/git/gwr/data/poverty/historicalpops.txt", header=TRUE)
 pov = read.csv("~/git/gwr/data/poverty/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)
 pov$X09pop = as.numeric(gsub(",", "", as.character(pov$X09pop)))
 years = c('60', '70', '80', '90', '00', '06')
@@ -37,11 +38,7 @@ for (year in years) {
     pov2[['year']] = c(pov2[['year']], rep(year, dim(pov)[1]))
 }
 
-#Convert pov2 from a list to a data frame:
+#Convert pov2 from a list to a data frame and correct the Y2K bug:
 pov2 = data.frame(pov2)
-
-#Correct the Y2K bug
 pov2 = within(pov2, year <- as.numeric(as.character(year)) + 1900)
 pov2 = within(pov2, year <- ifelse(year<1960, year+100, year))
-
-pops = read.table("~/git/gwr/data/poverty/historicalpops.txt", header=TRUE)
