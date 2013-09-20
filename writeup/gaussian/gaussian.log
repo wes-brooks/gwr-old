@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  19 SEP 2013 14:53
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  19 SEP 2013 20:04
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -720,22 +720,24 @@ LaTeX Warning: Reference `table:X1-var' on page 16 undefined on input line 384.
 
 LaTeX Warning: Reference `table:Y-mse' on page 17 undefined on input line 400.
 
-[17] (../../output/simulation/varx.tex)
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 737.
+[17] (../../output/simulation/selection.tex) (../../output/simulation/msex.tex)
+(../../output/simulation/bx.tex) (../../output/simulation/varx.tex)
+(../../output/simulation/msey.tex)
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 432.
 
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 737.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 432.
 
-Underfull \hbox (badness 10000) in paragraph at lines 737--738
+Underfull \hbox (badness 10000) in paragraph at lines 432--433
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 738--739
+Underfull \hbox (badness 10000) in paragraph at lines 433--434
 
  []
 
@@ -768,13 +770,11 @@ File: ../../figures/poverty/1970-gwr.pdf Graphic file (type QTm)
 
 
 ]
-Overfull \hbox (5.5777pt too wide) in paragraph at lines 30--62
- [] 
- []
+[29
 
-[29]
+]
 
-LaTeX Warning: Float too large for page by 79.90431pt on input line 155.
+LaTeX Warning: Float too large for page by 79.90431pt on input line 153.
 
 [30]
 
@@ -782,27 +782,24 @@ LaTeX Warning: Float too large for page by 79.90431pt on input line 242.
 
 [31]
 
-LaTeX Warning: Float too large for page by 79.90431pt on input line 329.
+LaTeX Warning: Float too large for page by 79.90431pt on input line 331.
 
 [32]
 
-LaTeX Warning: Float too large for page by 79.80429pt on input line 416.
+LaTeX Warning: Float too large for page by 79.80429pt on input line 420.
 
 [33]) (./gaussian.aux)
 
 LaTeX Warning: There were undefined references.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 4883 strings out of 493994
- 68976 string characters out of 3150335
- 167002 words of memory out of 3000000
- 7984 multiletter control sequences out of 15000+200000
+ 4898 strings out of 493994
+ 69291 string characters out of 3150335
+ 160002 words of memory out of 3000000
+ 7987 multiletter control sequences out of 15000+200000
  22835 words of font info for 81 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,17n,40p,1019b,482s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,17n,40p,1019b,455s stack positions out of 5000i,500n,10000p,200000b,50000s
 
 Output written on gaussian.pdf (33 pages).

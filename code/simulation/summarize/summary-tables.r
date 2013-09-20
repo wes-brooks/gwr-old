@@ -194,7 +194,7 @@ bx.table = cbind(rep(NA,nrow(bx.table)), rep(NA,nrow(bx.table)),bx.table)
 nr = dim(bx.table)[1]
 nc = dim(bx.table)[2]
 bx.table = matrix(sprintf("%.3f", bx.table), nr, nc)
-colnames(msey.table) = c('function','location',sim.modes.output)
+colnames(bx.table) = c('function','location',sim.modes.output)
 bx.table[0:14*4 + 1,2]= rep(sapply(1:5, function(x) paste("\\multirow{4}{*}{", x, "}", paste="")),3)
 bx.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) paste("\\multirow{20}{*}{", x, "}", paste=""))
 
@@ -429,5 +429,5 @@ selection.table[0:4*4 + 1,1] = sapply(1:5, function(x) paste("\\multirow{4}{*}{"
 #Write the table to disk
 sink(paste(outdir, "/selection.tex", sep=""))
 selection.table[selection.table=="NA"]=""
-print(xtable(selection.table, digits=2, align=paste(c('cccc', rep('|cc',length(functions)*length(selection.modes)-1,)), collapse=""), caption="Selection frequency for the indicated variables.\\label{table:selection}"), floating.environment="sidewaystable", sanitize.text.function=function(x){x}, sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{2-13}\n", 4)))
+print(xtable(selection.table, digits=2, align=paste(c('cccc', rep('|cc',length(functions)*length(selection.modes)-1,)), collapse=""), caption="Selection frequency for the indicated variables.\\label{table:selection}"), floating.environment="table", sanitize.text.function=function(x){x}, sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{2-13}\n", 4)))
 sink()
