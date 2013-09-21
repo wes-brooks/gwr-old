@@ -93,8 +93,7 @@ gwselect.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='ga
 				#Find the local loss (for tuning bw)
 				if (mode.select=='CV') {
 					predictions = predict(model, newdata=localdata)
-					loss.local = abs(Matrix(predictions - y[colocated], ncol=1))      
-	
+					loss.local = abs(Matrix(predictions - y[colocated], ncol=1))
 				} else {
                     if (mode.select=='AIC') {penalty=2}
                     else if (mode.select=='BIC') {penalty=log(sum(w[permutation]))}
@@ -104,7 +103,7 @@ gwselect.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='ga
 				    Xh = diag(sqrt(w[permutation])) %*% as.matrix(cbind(rep(1,length(permutation)), xx))
                     H = Xh %*% solve(t(Xh) %*% Xh) %*% t(Xh)
                     Hii = sum(H[colocated,colocated])
-					
+
 					if (length(colocated)>0) {
 						if (!AICc) {loss.local = log(s2) + penalty*df/sum(w)}
 						else {
@@ -131,12 +130,12 @@ gwselect.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='ga
     
     #Return the results
     if (tuning) {
-        return(list(loss.local=loss.local, ssr.local=ssr.local, s=NULL, sigma2=s2, nonzero=oracle, weightsum=sum(w)))
+        return(list(loss.local=drop(loss.local), ssr.local=ssr.local, s=NULL, sigma2=s2, nonzero=oracle, weightsum=sum(w)))
     } else if (predict) {
-        return(list(loss.local=loss.local, coef=coefs))
+        return(list(loss.local=drop(loss.local), coef=coefs))
     } else if (simulation) {
-        return(list(loss.local=loss.local, coef=coefs, coeflist=coef.list, bw=bw, sigma2=s2, se.coef=se.coef, fitted=fitted[1], nonzero=NULL, weightsum=sum(w), s=NULL))
+        return(list(loss.local=drop(loss.local), coef=coefs, coeflist=coef.list, bw=bw, sigma2=s2, se.coef=se.coef, fitted=fitted[1], nonzero=oracle, weightsum=sum(w), s=NULL))
     } else {
-        return(list(model=model, coef=coefs, coeflist=coef.list, loc=loc, bw=bw, loss.local=loss.local, sigma2=s2, sum.weights=sum(w), N=N))
+        return(list(model=model, coef=coefs, coeflist=coef.list, loc=loc, bw=bw, loss.local=drop(loss.local), sigma2=s2, nonzero=oracle, sum.weights=sum(w), N=N))
     }
 }

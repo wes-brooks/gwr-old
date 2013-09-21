@@ -28,21 +28,23 @@
 \citation{Leng-2006}
 \citation{Zou:2006}
 \citation{Wheeler:2009}
+\citation{Zou:2006,Leng-2006}
+\citation{Tibshirani:1996,Zou:2005}
 \citation{Loader:1999}
+\citation{Zou:2009}
 \citation{Efron:2004b}
 \citation{Friedman:2010}
 \citation{Zou:2009}
 \newlabel{section:GWR}{{2}{6}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Geographically Weighted Regression }{6}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Model}{6}}
-\newlabel{eq:lm(s)}{{5}{6}}
-\newlabel{eq:err}{{6}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Estimation}{7}}
+\newlabel{eq:lm(s)}{{5}{7}}
+\newlabel{eq:err}{{6}{7}}
 \citation{Fotheringham:2002}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Estimation}{8}}
 \newlabel{eq:bisquare}{{9}{8}}
 \newlabel{eq:local-likelihood}{{10}{8}}
 \newlabel{eq:local-log-likelihood}{{11}{8}}
-\@writefile{toc}{\contentsline {paragraph}{Algorithmic details}{8}}
 \citation{Zou:2006}
 \citation{Zou:2009}
 \citation{Hoerl:1970}
@@ -51,24 +53,24 @@
 \@writefile{toc}{\contentsline {section}{\numberline {3}Model Selection }{9}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Local Variable Selection}{9}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Local variable selection with the adaptive Lasso}{10}}
-\newlabel{eq:adaptive-lasso-WLS}{{16}{10}}
+\newlabel{eq:adaptive-lasso-WLS}{{13}{10}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Local variable selection with the adaptive elastic net}{10}}
 \citation{Schwarz-1978}
 \citation{Zou:2007}
 \citation{Zou:2007}
-\citation{Wheeler:2009}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Tuning Parameter Selection}{11}}
+\citation{Wheeler:2009}
 \citation{Hurvich:1998}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Coefficient estimation}{12}}
-\newlabel{eq:coefficients}{{19}{12}}
+\newlabel{eq:coefficients}{{16}{12}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Bandwidth selection}{12}}
 \newlabel{sec:simulation}{{4}{13}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Simulation }{13}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Simulation Setup}{13}}
 \citation{Fotheringham:2002}
-\@writefile{toc}{\contentsline {paragraph}{Summary locations}{14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Simulation results}{15}}
-\@writefile{toc}{\contentsline {paragraph}{Selection}{15}}
+\@writefile{toc}{\contentsline {paragraph}{Summary locations}{15}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Simulation results}{16}}
+\@writefile{toc}{\contentsline {paragraph}{Selection}{16}}
 \@writefile{toc}{\contentsline {paragraph}{Coefficient Estimation}{16}}
 \@writefile{toc}{\contentsline {paragraph}{Autocorrelated Errors}{17}}
 \@writefile{toc}{\contentsline {paragraph}{Fitted Values}{18}}
@@ -88,9 +90,9 @@
 \bibcite{Brundson:1998a}{{3}{1998}{{Brundson et~al.}}{{Brundson, Fotheringham, and Charltonn}}}
 \bibcite{Cressie:1993}{{4}{1993}{{Cressie}}{{Cressie}}}
 \bibcite{Diggle:2007}{{5}{2007}{{Diggle and Ribeiro}}{{Diggle and Ribeiro}}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}References}{20}}
 \bibcite{Efron:2004b}{{6}{2004}{{Efron et~al.}}{{Efron, Hastie, Johnstone, and Tibshirani}}}
 \bibcite{Fan:2001}{{7}{2001}{{Fan and Li}}{{Fan and Li}}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}References}{20}}
 \bibcite{Fan:1999}{{8}{1999}{{Fan and Zhang}}{{Fan and Zhang}}}
 \bibcite{Fotheringham:2002}{{9}{2002}{{Fotheringham et~al.}}{{Fotheringham, Brunsdon, and Charlton}}}
 \bibcite{Friedman:2010}{{10}{2010}{{Friedman et~al.}}{{Friedman, Hastie, and Tibshirani}}}
@@ -118,19 +120,17 @@
 \newlabel{fig:sim-actual}{{1}{24}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Locations where the variable selection and coefficient estimation of GWL were summarized.\relax }}{25}}
 \newlabel{fig:summary-locations}{{2}{25}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Coefficient surfaces for the logit of poverty rate, based on the 1970 census and estimated by the unshrunk AEN. \relax }}{26}}
-\newlabel{fig:unshrunk-enet-coefs-1970}{{3}{26}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Coefficient surfaces for the logit of poverty rate based on the 1970 census and estimated by traditional GWR. \relax }}{27}}
-\newlabel{fig:gwr-coefs-1970}{{4}{27}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Simulation parameters for each setting.\relax }}{28}}
-\newlabel{table:simulation_settings}{{1}{28}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Selection frequency for the indicated variables.\relax }}{29}}
-\newlabel{table:selection}{{2}{29}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Mean squared error of $\mathaccentV {hat}05E{\beta _1}$ (\textbf  {minimum}, \emph  {next best}).\relax }}{30}}
-\newlabel{table:msex}{{3}{30}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Bias of $\mathaccentV {hat}05E{\beta _1}$ (\textbf  {minimum}, \emph  {next best}).\relax }}{31}}
-\newlabel{table:bx}{{4}{31}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Variance of $\mathaccentV {hat}05E{\beta _1}$ (\textbf  {minimum}, \emph  {next best}).\relax }}{32}}
-\newlabel{table:varx}{{5}{32}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Mean squared error of $\mathaccentV {hat}05E{Y}$ (\textbf  {minimum}, \emph  {next best}).\relax }}{33}}
-\newlabel{table:msey}{{6}{33}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Coefficient surfaces for the logit of poverty rate, based on the 1960 census and selected by the AEN. \relax }}{26}}
+\newlabel{fig:unshrunk-enet-coefs-1960}{{3}{26}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Simulation parameters for each setting.\relax }}{27}}
+\newlabel{table:simulation_settings}{{1}{27}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Selection frequency for the indicated variables.\relax }}{28}}
+\newlabel{table:selection}{{2}{28}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Mean squared error of $\mathaccentV {hat}05E{\beta _1}$ (\textbf  {minimum}, \emph  {next best}).\relax }}{29}}
+\newlabel{table:msex}{{3}{29}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Bias of $\mathaccentV {hat}05E{\beta _1}$ (\textbf  {minimum}, \emph  {next best}).\relax }}{30}}
+\newlabel{table:bx}{{4}{30}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Variance of $\mathaccentV {hat}05E{\beta _1}$ (\textbf  {minimum}, \emph  {next best}).\relax }}{31}}
+\newlabel{table:varx}{{5}{31}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Mean squared error of $\mathaccentV {hat}05E{Y}$ (\textbf  {minimum}, \emph  {next best}).\relax }}{32}}
+\newlabel{table:msey}{{6}{32}}

@@ -106,11 +106,11 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	%Local variable selection
 	Traditional GWR relies on \emph{a priori} global model selection to decide which variables should be included in the model. In the context of ordinary least squares regression, Lasso regularization for variable selection \citep{Tibshirani:1996}, while popular, does not generally produce consistent estimates of the relevant predictor variables \citep{Leng-2006}. Regularization methods such as the adaptive Lasso (AL) \citep{Zou:2006} were developed and shown to have appealing properties for automating variable selection, sometimes including the ``oracle" property of asymptotically selecting exactly the correct set of covariates for inclusion in a regression model.
 	
-	The idea of using Lasso regularization for local variable selection in a GWR model appeared in the literature as the geographically weighted Lasso (GWL) \citep{Wheeler:2009}. The GWL uses the Lasso with a jackknife criterion for selection of the tuning parameters. Because the jackknife criterion can only be computed at sampling locations where the response variable is observed, the GWL cannot be used for imputation of missing data nor for interpolation between sampling locations.
+	The idea of using Lasso regularization for local variable selection in a GWR model appeared in the literature as the geographically weighted Lasso (GWL) \citep{Wheeler:2009}. The GWL uses the Lasso with a jackknife criterion for selection of the tuning parameters. Because the jackknife criterion can only be computed at sampling locations where the response variable is observed, the GWL cannot be used for imputation of missing data nor for interpolation between sampling locations. By using the Lasso for variable selection, the GWL also imports known shortcomings of the Lasso, such as inconsistent model selection \citep{Zou:2006, Leng-2006} and poor prediction accuracy when the covariates are correlated \citep{Tibshirani:1996, Zou:2005}. 
 	
-	This paper introduces a new regularization method for local variable selection in GWR models that overcomes this limitation of the GWL by using a penalized-likelihood criterion to select the Lasso tuning parameters. In particular, a type of BIC is developed and used herein, but in principle another information criterion like the AIC is also possible. The local BIC presented here is based on the local likelihood \citep{Loader:1999} and a total BIC is based on an \emph{ad hoc} calculation of the sample size and degrees of freedom for estimating the spatially-varying coefficient surfaces.
+	This paper introduces a new regularization method, called the geographically weighted adaptive elastic net (GWAEN), for local variable selection in GWR models that overcomes these limitations of the GWL. A penalized-likelihood criterion to select the GWAEN tuning parameter, which means that a GWAEN can be fit at any location within the domain, whether or not data were observed at that location. In particular, a type of BIC is developed and used herein, but in principle another information criterion like the AIC is also possible. The local BIC presented here is based on the local likelihood \citep{Loader:1999} and a total BIC is based on an \emph{ad hoc} calculation of the sample size and degrees of freedom for estimating the spatially-varying coefficient surfaces.
 	
-	Three regularization methods were used in this work. The AL was implemented in two ways - once via the least angle regression (LARS) algorithm \citep{Efron:2004b} which uses least squares, and once via the coordinate descent algorithm using the {\tt R} package {\tt glmnet} \citep{Friedman:2010}. The third regularization method implemented here uses an adaptive elastic net (AEN) penalty \citep{Zou:2009}, also via the coordinate descent algorithm using the {\tt glmnet} package.
+	Model selection under the GWAEN uses the adaptive elastic net (AEN). The AEN achieves an oracle property and performs better than other oracle-like methods when there is collinearity in the covariates \citep{Zou:2009}. The AEN is a combination of a quadratic and a Lasso penalty to the log-likelihood. When the quadratic penalty is zero, the AEN is identical to the adaptive Lasso (AL), and in this case the GWAEN becomes the geographically weighted adaptive Lasso (GWAL). The AL was implemented in two ways - once via the least angle regression (LARS) algorithm \citep{Efron:2004b} which uses least squares, and once via the coordinate descent algorithm using the {\tt R} package {\tt glmnet} \citep{Friedman:2010}. The third regularization method implemented here uses an adaptive elastic net (AEN) penalty \citep{Zou:2009}, also via the coordinate descent algorithm using the {\tt glmnet} package.
 	
 	The remainder of this document is organized as follows: the traditional GWR is presented in Section \ref{section:GWR}. The geographically weighted adaptive Lasso (GWAL) and geographically weighted adaptive elastic net (GWAEN) are introduced in section \ref{section:model-selection}. Section \ref{section:simulation} Section \ref{section:data-analysis}
 
@@ -160,6 +160,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	 	\hat{\sigma}_i^2 = \left(\sum \limits_{i'=1}^{n} w_{ii'} \right)^{-1} \sum \limits_{i'=1}^n w_{ii'}\left(y_{i'} - \bm{x}_{i'}'\hat{\bm{\beta}}_i\right)^2
 	\end{align}
 	
+	\begin{comment}
 	\paragraph{Algorithmic details} Both $\hat{\bm{\beta}_i}$ and $\hat{\sigma}_i^2$ can be obtained by the method of least squares. Let $\bm{W}_i$ denote a diagonal weight matrix with diagonal entries $w_{ii'}$ for $i'=1, \dots, n$. That is,
 	\begin{align}
 		\bm{W}_i =  {\rm diag}\left\{w_{ii'}\right\}_{i' = 1}^n.
@@ -176,7 +177,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 		&= \left(\bm{1}_n'\bm{w}_i \right)^{-1}  \left(\bm{y}-\hat{\bm{y}}\right)' \bm{W}_i \left(\bm{y}-\hat{\bm{y}}\right),
 	\end{align}	
 	where $\bm{1}_n$ is an $n$-variate vector of ones.
-		
+	\end{comment}
 	
 	\begin{comment}
 	Estimation of $\hat{\bm{\beta}}_i$ and $\hat{\sigma}_i$ is by maximum local likelihood, which is implemented by setting the derivatives of (\ref{eq:local-log-likelihood}) to zero:
@@ -204,7 +205,8 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 \section{Model Selection \label{section:model-selection}}
 	\subsection{Local Variable Selection}
-	Both the adaptive Lasso (AL) and the adaptive elastic net (AEN) are explored as penalty functions for local variable selection in GWR models. 	
+	Both the AL and the AEN are explored as penalty functions for local variable selection in GWR models.
+	
 	The proposed local variable selection with AL penalty is an $\ell_1$ regularization method for variable selection in regression models \citep{Zou:2006}. Unlike the traditional Lasso penalty, which applies an equal penalty to each covariate in the local model at $\bm{s}_i$, the AL adjusts the penalty of each covariate based on the covariate's unpenalized local coefficient.	
 	
 	The proposed local variable selection with AEN penalty generalizes the AL penalty to include an additional ridge penalty \citep{Zou:2009}. Ridge regression is an $\ell_2$ regularization technique that differs from the Lasso in that the ridge penalty is applied to the sum of the squared local regression coefficients \citep{Hoerl:1970}. The ridge penalty is used to estimate coefficients in regression models with correlated covariates because it stabilizes the inversion of the covariance matrix, which improves the robustness of the coefficient estimates \citep{Hastie:2009}.
@@ -212,9 +214,11 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	In fact, since the AL is an $\ell_1$ regularization method while the AEN is a combined $\ell_1$ and $\ell_2$ regularization method, the AL can be viewed as a special case of the AEN where the $\ell_2$ penalty is set to zero.
 	
 	\subsubsection{Local variable selection with the adaptive Lasso}
-	The objective function for the local geographically weighted adaptive Lasso (GWAL) method at $\bm{s}_i$ is defined to be
+	The objective function for the local geographically weighted adaptive Lasso (GWAL) method at $\bm{s}_i$ consists of the log-likelihood and an additive penalty that is the weighted $\ell_1$-norm of the coefficients. The GWAL objective is defined to be
 	\begin{align}\label{eq:adaptive-lasso-WLS}
-		\mathcal{S}(\bm{\beta}_i) = \sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 +  \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij},
+		\mathcal{S}(\bm{\beta}_i) &= -2\ell_i\left(\bm{\beta}_i\right) + \mathcal{J}_1(\bm{\beta}_i) \notag \\
+		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} +  \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} \notag \\
+		&\propto \sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 +  \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij}
 	\end{align}
 	where $\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2$ is the weighted sum of squares minimized by traditional GWR, and $\lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ is the AL penalty. With the vector of unpenalized local coefficients $\bm{\gamma}_i$, the AL penalty for the $j$th coefficient $\beta_{ij}$ at location $\bm{s}_i$ is $\lambda_i / \gamma_{ij}$, where $\lambda_i > 0$ is a the local penalty that applies to all coefficients at location $\bm{s}_i$ and $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ is the vector of adaptive weights at location $\bm{s}_i$.
 	
@@ -234,10 +238,11 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	\end{comment}
 
 	\subsubsection{Local variable selection with the adaptive elastic net}
-	The objective function for the local geographically weighted adaptive elastic net (GWAEN) method at $\bm{s}_i$ is defined to be
+	The objective function for the local geographically weighted adaptive elastic net (GWAEN) method at $\bm{s}_i$ consists of the sum of the log-likelihood and an additive penalty that is a sum of weighted $\ell_1$- and $\ell_2$-norms of the coefficients. The objective function is defined to be
 	\begin{align}
-		\mathcal{S}\left(\bm{\beta}_i\right) &= \sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \alpha_i \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \lambda_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2\notag\\
-		&= \sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \lambda_i \left\{\alpha_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2 \right\}
+		\mathcal{S}(\bm{\beta}_i) &= -2 \ell_i(\bm{\beta}_i) + \mathcal{J}_2(\bm{\beta}_i) \notag \\
+		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} + \alpha_i \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2 \notag \\
+		&\propto \sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \lambda_i \left\{\alpha_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2 \right\}
 	\end{align}	
 	where the adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are calculated as for the AL, and the elastic net parameter $\alpha_i$ controls the balance between the $\ell_1$ and $\ell_2$ penalties.
 	
@@ -247,10 +252,10 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	A local tuning parameter $\lambda_i$ is required for the variable selection step of fitting each local model by the GWAL or GWAEN method. To select $\lambda_i$, we propose a locally-weighted version of the Bayesian Information Criterion (BIC) \citep{Schwarz-1978} which we call the local BIC ($\text{BIC}_{\text{loc}}$):
 	
 	\begin{align}
-		\mbox{BIC}_{\text{loc}, i} &= -2 \sum_{i'=1}^n \ell_{ii'}  + \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
-		&= -2 \times \sum_{i'=1}^n \log \left\{ \left(2 \pi \hat{\sigma}_i^2\right)^{-1/2} \exp \left[-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right] \right\}^{w_{ii'}} + \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
-		&= \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} + \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i \notag\\
-		&= \hat{\sigma}_i^{-2} \sum_{i'=1}^n w_{ii'} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i + C_i
+		\mbox{BIC}_{\text{loc}, i} &= -2 \sum_{i'=1}^n \ell_{ii'}  + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
+		&= -2 \times \sum_{i'=1}^n \log \left\{ \left(2 \pi \hat{\sigma}_i^2\right)^{-1/2} \exp \left[-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right] \right\}^{w_{ii'}} + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
+		&= \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i \notag\\
+		&= \hat{\sigma}_i^{-2} \sum_{i'=1}^n w_{ii'} \left( y_{i'} - \bm{x}'_{i'} \hat{\bm{\beta}}_i \right)^2 + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i + C_i
 	\end{align}
 	where $C_i = \sum \limits_{i'=1}^n w_{ii'} \left\{\log{2\pi} + \log{\hat{\sigma}_i^2} \right\}$.
 	
@@ -401,31 +406,18 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	\subsection{Tables}
 		\subsubsection{Selection}
-
-		
-\input{../../output/simulation/selection}
-
+			\input{../../output/simulation/selection}
 
 		\subsubsection{Estimation}
-\input{../../output/simulation/msex}
-\input{../../output/simulation/bx}
-\input{../../output/simulation/varx}
-
-\input{../../output/simulation/msey}
-		
-
-	%\subsection{Figures}
-	%The plots of bias demonstrate that GWL tended to ``fill the valleys" and ``trim the peaks" of the coefficient surface for $\beta_1$, which is not unexpected for a smoother like GWR. 
-	
-	%Figures \ref{fig:coveragemap1} - \ref{fig:coveragemap18} show the frequency with which the true value of the parameter $\beta_1$ was covered by the 95\% confidence intervals at each location under each simulation setting. The left column shows the coverage frequency of the 95\% CI of the GWL using the unshrunk-bootstrap method of CI construction. The middle column is the coverage frequency of the 95\% CI the O-GWR using the bootstrap to generate the CI. The right column is the relative efficiency of the GWL to O-GWR. In the first two columns, the color white is used to indicate areas where the nominal coverage frequency of 95\% is achieved, while blue codes areas that exceeded 95\% coverage and orange codes areas that fell short of 95\% coverage. In the third column, the color white indicates areas where the relative efficiency is unity, while orange indicates areas where the relative efficiency was less than unity and blue indicates areas where the relative efficiency exceeded unity.\\	
-
-	
-
+			\input{../../output/simulation/msex}
+			\input{../../output/simulation/bx}
+			\input{../../output/simulation/varx}			
+			\input{../../output/simulation/msey}
 
 			
 \section{Data Analysis\label{section:data-analysis}}
 	\subsection{Census Poverty Data}
-	An example data analysis is presented to demonstrate application of the GWAEN for local variable selection in an SVCR model of how poverty is related to a list of socio-economic variables. The data is from the U.S. Census Bureau's decennial census in the year 1970. This analysis looks specifically at the upper midwestern states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. This is areal data, aggregated at the county level.
+	An example data analysis is presented to demonstrate application of the GWAEN for local variable selection in an SVCR model of how poverty is related to a list of socio-economic variables. The data is from the U.S. Census Bureau's decennial census in the year 1960. This analysis looks specifically at the upper midwestern states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. This is areal data, aggregated at the county level.
 	
 	Three kinds of variables  were considered as potential predictors of county-level poverty rate.
 	\begin{itemize}
@@ -439,20 +431,22 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	The adaptive elastic net was used for variable selection, and then coefficients for the selected variables were estimated by weighted least squares without shrinkage. The standard {\tt gwr} algorithm was used to fit a model to the same data for the sake of comparison.
 	
 	\subsection{Figures}
-	The coefficient estimates are plotted on maps of the upper midwest in Figure \ref{fig:unshrunk-enet-coefs-1970} (based on the AEN) and Figure \ref{fig:gwr-coefs-1970} (for traditional GWR).
+	The coefficient estimates are plotted on maps of the upper midwest in Figure \ref{fig:unshrunk-enet-coefs-1960} (based on the AEN) and Figure \ref{fig:gwr-coefs-1960} (for traditional GWR).
 	\begin{figure}
 		\begin{center}
-			\includegraphics[height=8in]{../../figures/poverty/1970-linear-coefficients-unshrunk.pdf}
-			\caption{Coefficient surfaces for the logit of poverty rate, based on the 1970 census and estimated by the unshrunk AEN. \label{fig:unshrunk-enet-coefs-1970}}
+			\includegraphics[height=8in]{../../figures/poverty/1960-enet-linear-coefficients-unshrunk.pdf}
+			\caption{Coefficient surfaces for the logit of poverty rate, based on the 1960 census and selected by the AEN. \label{fig:unshrunk-enet-coefs-1960}}
 		\end{center}
 	\end{figure}	
 	
+	\begin{comment}
 	\begin{figure}
 		\begin{center}
 			\includegraphics[height=8in]{../../figures/poverty/1970-gwr.pdf}
 			\caption{Coefficient surfaces for the logit of poverty rate based on the 1970 census and estimated by traditional GWR. \label{fig:gwr-coefs-1970}}
 		\end{center}
-	\end{figure}	
+	\end{figure}
+	\end{comment}	
 			
 	\subsection{Discussion}
 	It is immediately apparent that the estimated coefficient surfaces are non-constant for most variables. The same large-scale patterns appear in both figures, but with differences. First of all, the AEN has selected a larger bandwidth than traditional GWR, so there is less variability in the coefficient estimates from the AEN. This may be one reason that the AEN coefficient estimates are less extreme than those for traditional GWR. In a model with a logit-transformed proportion as the output, the coefficients can be interpreted as log odds ratios, so, e.g., the estimate of -100 as the coefficient of \verb!phisp! (albeit at the edge of the domain) seems unrealistic.

@@ -18,16 +18,8 @@
  
 \begin{figure}
 \begin{center}
-\includegraphics[height=8in]{../../figures/poverty/1970-linear-coefficients-unshrunk.pdf}
-\caption{Coefficient surfaces for the logit of poverty rate, based on the 1970 census and estimated by the unshrunk AEN. \label{fig:unshrunk-enet-coefs-1970}}
-\end{center}
-\end{figure}
-\efloatseparator
- 
-\begin{figure}
-\begin{center}
-\includegraphics[height=8in]{../../figures/poverty/1970-gwr.pdf}
-\caption{Coefficient surfaces for the logit of poverty rate based on the 1970 census and estimated by traditional GWR. \label{fig:gwr-coefs-1970}}
+\includegraphics[height=8in]{../../figures/poverty/1960-enet-linear-coefficients-unshrunk.pdf}
+\caption{Coefficient surfaces for the logit of poverty rate, based on the 1960 census and selected by the AEN. \label{fig:unshrunk-enet-coefs-1960}}
 \end{center}
 \end{figure}
 \efloatseparator
