@@ -9,3 +9,4 @@ Adapting the GWAEN to the setting of an autocorrelated error structure is one ne
 
 #### Non-gaussian data
 To date, validation of the GWAEN has been for gaussian data. The extension to any exponential-family distribution is straightforward: since the selection procedure for the GWAEN is based on the penalized log-likelihood, the same procedure should work as well in principle for any exponential family. Preliminary simulations bear out this judgement but the generalized GWAEN still lags the development of the gaussian GWAEN.
+
