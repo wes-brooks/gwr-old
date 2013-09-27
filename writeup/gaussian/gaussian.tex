@@ -43,11 +43,25 @@
 \newcommand{\E}{\mathop{\mathbb E}}
 
 
+
+
+
+
 \title{Local Variable Selection and Parameter Estimation of Spatially Varying Coefficient Regression Models}
 \author{Wesley Brooks}
 \date{}                                           % Activate to display a given date or no date
 
+
 \begin{document}
+
+\begin{abstract}
+Spatially varying coefficient regression (SVCR) is a method of regression analysis for spatial data that allows the regression coefficients to vary across the spatial domain, describing a coefficient surface on the domain for each covariate. Among the methods for estimating the coefficients in a SVCR model is georaphically weighted regression (GWR), which is a kernel-based local regression method.
+
+At each model point a local GWR model is fitted by local likelihood, wherein each observation is weighted based on its location relative to the model point. This paper introduces the geographically weighted elastic net (GWEN) as a method for local model selection and coefficient estimation in GWR models. The GWEN minimizes the objective consisting of a penalty of the elastic net type added to (minus two times) the local likelihood, with the local elastic net tuning parameter selected via the BIC.
+
+The kernel that assigns weight to each observation based on its distance from the model point is governed by a bandwidth parameter. In the GWEN, the bandwidth is a global (as opposed to local) parameter. The bandwidth parameter is selected via the corrected AIC.
+\end{abstract}
+
 \maketitle
 %\section{}
 %\subsection{}
@@ -104,15 +118,15 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	Geographically weighted regression (GWR) is a kernel-based method of estimating the coefficients of an SVCR model where the kernel weights are based on the distance between sampling locations \cite{Brundson:1998a, Fotheringham:2002}. At each sampling location, traditional GWR estimates the local regression coefficients by the local likelihood \citep{Loader:1999}. As a kernel-based smoother for regression coefficients, traditional GWR tends to exhibit bias near the boundary of the region being modeled \citep{Hastie:1993b}. One way to reduce the boundary-effect bias is to model the coefficient surface as locally linear rather than locally constant by including coefficient-by-location interactions \cite{Wang:2008b}.
 	
 	%Local variable selection
-	Traditional GWR relies on \emph{a priori} global model selection to decide which variables should be included in the model. In the context of ordinary least squares regression, Lasso regularization for variable selection \citep{Tibshirani:1996}, while popular, does not generally produce consistent estimates of the relevant predictor variables \citep{Leng-2006}. Regularization methods such as the adaptive Lasso (AL) \citep{Zou:2006} were developed and shown to have appealing properties for automating variable selection, sometimes including the ``oracle" property of asymptotically selecting exactly the correct set of covariates for inclusion in a regression model.
+	Traditional GWR relies on \emph{a priori} global model selection to decide which variables should be included in the model. In the context of ordinary least squares regression, Lasso regularization for variable selection, while popular, does not generally produce consistent estimates of the relevant predictor variables \citep{Leng-2006}. Regularization methods such as the adaptive Lasso (AL) \citep{Zou:2006} were developed and shown to have appealing properties for automating variable selection, sometimes including the ``oracle" property of asymptotically selecting exactly the correct set of covariates for inclusion in a regression model.
 	
 	The idea of using Lasso regularization for local variable selection in a GWR model appeared in the literature as the geographically weighted Lasso (GWL) \citep{Wheeler:2009}. The GWL uses the Lasso with a jackknife criterion for selection of the tuning parameters. Because the jackknife criterion can only be computed at sampling locations where the response variable is observed, the GWL cannot be used for imputation of missing data nor for interpolation between sampling locations. By using the Lasso for variable selection, the GWL also imports known shortcomings of the Lasso, such as inconsistent model selection \citep{Zou:2006, Leng-2006} and poor prediction accuracy when the covariates are correlated \citep{Tibshirani:1996, Zou:2005}. 
 	
-	This paper introduces a new regularization method, called the geographically weighted adaptive elastic net (GWAEN), for local variable selection in GWR models that overcomes these limitations of the GWL. A penalized-likelihood criterion to select the GWAEN tuning parameter, which means that a GWAEN can be fit at any location within the domain, whether or not data were observed at that location. In particular, a type of BIC is developed and used herein, but in principle another information criterion like the AIC is also possible. The local BIC presented here is based on the local likelihood \citep{Loader:1999} and a total BIC is based on an \emph{ad hoc} calculation of the sample size and degrees of freedom for estimating the spatially-varying coefficient surfaces.
+	This paper introduces a new regularization method, called the geographically weighted elastic net (GWEN), for local variable selection in GWR models that overcomes these limitations of the GWL. A penalized-likelihood criterion is used to select the local GWEN tuning parameters, which means that a GWEN can be fit at any location within the domain, whether or not data were observed at that location. In particular, a type of BIC is developed and used herein, but in principle another information criterion like the AIC is also possible. The local BIC presented here is based on the local likelihood \citep{Loader:1999} and a total BIC is based on an \emph{ad hoc} calculation of the sample size and degrees of freedom for estimating the spatially-varying coefficient surfaces.
 	
-	Model selection under the GWAEN uses the adaptive elastic net (AEN). The AEN achieves an oracle property and performs better than other oracle-like methods when there is collinearity in the covariates \citep{Zou:2009}. The AEN is a combination of a quadratic and a Lasso penalty to the log-likelihood. When the quadratic penalty is zero, the AEN is identical to the adaptive Lasso (AL), and in this case the GWAEN becomes the geographically weighted adaptive Lasso (GWAL). The AL was implemented in two ways - once via the least angle regression (LARS) algorithm \citep{Efron:2004b} which uses least squares, and once via the coordinate descent algorithm using the {\tt R} package {\tt glmnet} \citep{Friedman:2010}. The third regularization method implemented here uses an adaptive elastic net (AEN) penalty \citep{Zou:2009}, also via the coordinate descent algorithm using the {\tt glmnet} package.
+	Model selection under the GWEN uses the adaptive elastic net (AEN). The AEN achieves an oracle property and performs better than other oracle-like methods when there is collinearity in the covariates \citep{Zou:2009}. The AEN is a combination of a quadratic and a Lasso penalty to the log-likelihood. When the quadratic penalty is zero, the AEN is identical to the adaptive Lasso (AL), and in this case the GWEN becomes the geographically weighted adaptive Lasso (GWAL). The AL was implemented in two ways - once via the least angle regression (LARS) algorithm \citep{Efron:2004b} which uses least squares, and once via the coordinate descent algorithm using the {\tt R} package {\tt glmnet} \citep{Friedman:2010}. The third regularization method implemented here uses an adaptive elastic net (AEN) penalty \citep{Zou:2009}, also via the coordinate descent algorithm using the {\tt glmnet} package.
 	
-	The remainder of this document is organized as follows: the traditional GWR is presented in Section \ref{section:GWR}. The geographically weighted adaptive Lasso (GWAL) and geographically weighted adaptive elastic net (GWAEN) are introduced in section \ref{section:model-selection}. Section \ref{section:simulation} Section \ref{section:data-analysis}
+	The remainder of this document is organized as follows: the traditional GWR is presented in Section \ref{section:GWR}. The GWEN is introduced in section \ref{section:model-selection}. Section \ref{section:simulation} Section \ref{section:data-analysis}
 
 \section{Geographically Weighted Regression \label{section:GWR}}
 	\subsection{Model}	
@@ -217,8 +231,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	The objective function for the local geographically weighted adaptive Lasso (GWAL) method at $\bm{s}_i$ consists of the log-likelihood and an additive penalty that is the weighted $\ell_1$-norm of the coefficients. The GWAL objective is defined to be
 	\begin{align}\label{eq:adaptive-lasso-WLS}
 		\mathcal{S}(\bm{\beta}_i) &= -2\ell_i\left(\bm{\beta}_i\right) + \mathcal{J}_1(\bm{\beta}_i) \notag \\
-		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} +  \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} \notag \\
-		&\propto \sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 +  \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij}
+		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} +  \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij}
 	\end{align}
 	where $\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2$ is the weighted sum of squares minimized by traditional GWR, and $\lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ is the AL penalty. With the vector of unpenalized local coefficients $\bm{\gamma}_i$, the AL penalty for the $j$th coefficient $\beta_{ij}$ at location $\bm{s}_i$ is $\lambda_i / \gamma_{ij}$, where $\lambda_i > 0$ is a the local penalty that applies to all coefficients at location $\bm{s}_i$ and $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ is the vector of adaptive weights at location $\bm{s}_i$.
 	
@@ -238,18 +251,17 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	\end{comment}
 
 	\subsubsection{Local variable selection with the adaptive elastic net}
-	The objective function for the local geographically weighted adaptive elastic net (GWAEN) method at $\bm{s}_i$ consists of the sum of the log-likelihood and an additive penalty that is a sum of weighted $\ell_1$- and $\ell_2$-norms of the coefficients. The objective function is defined to be
+	The objective function for the local geographically weighted elastic net (GWEN) method at $\bm{s}_i$ consists of the sum of the log-likelihood and an additive penalty that is a sum of weighted $\ell_1$- and $\ell_2$-norms of the coefficients. The objective function is defined to be
 	\begin{align}
 		\mathcal{S}(\bm{\beta}_i) &= -2 \ell_i(\bm{\beta}_i) + \mathcal{J}_2(\bm{\beta}_i) \notag \\
-		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} + \alpha_i \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2 \notag \\
-		&\propto \sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 + \lambda_i \left\{\alpha_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2 \right\}
+		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} + \alpha_i \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2
 	\end{align}	
 	where the adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are calculated as for the AL, and the elastic net parameter $\alpha_i$ controls the balance between the $\ell_1$ and $\ell_2$ penalties.
 	
-	Fitting a SVCR model by the GWAEN requires selecting the vector of elastic net parameters $\bm{\alpha} = \left( \alpha_1, \dots, \alpha_n \right)$. In the simulation study (Section \ref{sec:simulation}), the elastic net parameter is chosen globally ($\alpha_i \equiv \alpha$ for $i=1, \dots, n$). The global elastic net parameter is calculated as $\alpha = 1-\rho_{\text{max}}$ where $\rho_{\text{max}}$ is the maximum global (i.e. for all data without weighting) Pearson correlation between any two covariates.
+	Fitting a SVCR model by the GWEN requires selecting the vector of elastic net parameters $\bm{\alpha} = \left( \alpha_1, \dots, \alpha_n \right)$. In the simulation study (Section \ref{sec:simulation}), the elastic net parameter is chosen globally ($\alpha_i \equiv \alpha$ for $i=1, \dots, n$). The global elastic net parameter is calculated as $\alpha = 1-\rho_{\text{max}}$ where $\rho_{\text{max}}$ is the maximum global (i.e. for all data without weighting) Pearson correlation between any two covariates.
 
 	\subsection{Tuning Parameter Selection}	
-	A local tuning parameter $\lambda_i$ is required for the variable selection step of fitting each local model by the GWAL or GWAEN method. To select $\lambda_i$, we propose a locally-weighted version of the Bayesian Information Criterion (BIC) \citep{Schwarz-1978} which we call the local BIC ($\text{BIC}_{\text{loc}}$):
+	A local tuning parameter $\lambda_i$ is required for the variable selection step of fitting each local model by the GWAL or GWEN method. To select $\lambda_i$, we propose a locally-weighted version of the Bayesian Information Criterion (BIC) \citep{Schwarz-1978} which we call the local BIC ($\text{BIC}_{\text{loc}}$):
 	
 	\begin{align}
 		\mbox{BIC}_{\text{loc}, i} &= -2 \sum_{i'=1}^n \ell_{ii'}  + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
@@ -264,7 +276,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	\cite{Wheeler:2009} proposed selecting the tuning parameter for the Lasso at location $\bm{s}_i$ to minimize the jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$. Because the jackknife prediction error is undefined everywhere except for at observation locations, this choice restricts coefficient estimation to occur at the locations where data has been observed. By contrast, the local BIC can be calculated at any location where the local log-likelihood can be obtained. As a practical matter this allows for variable selection and coefficient surface estimation to be done at locations where no data are observed and for imputation of missing values of the response variable.
 	
 	\subsection{Coefficient estimation}
-	After the variables are selected for inclusion in the local model, either by the GWAL or the GWAEN, the coefficient estimates are computed via weighted least squares on the selected variables without regularization. That is, letting $\bm{\Omega}_i = \text{diag}\left\{\bm{\omega}_i\right\}$ where $\bm{\omega}_i = \left(\omega_{i1}, \dots \omega_{ip}\right)'$ and $\omega_{ij}= I \left(\beta_{ij} \neq 0\right)$, the local coefficient estimates are:
+	After the variables are selected for inclusion in the local model, either by the GWAL or the GWEN, the coefficient estimates are computed via weighted least squares on the selected variables without regularization. That is, letting $\bm{\Omega}_i = \text{diag}\left\{\bm{\omega}_i\right\}$ where $\bm{\omega}_i = \left(\omega_{i1}, \dots \omega_{ip}\right)'$ and $\omega_{ij}= I \left(\beta_{ij} \neq 0\right)$, the local coefficient estimates are:
 	\begin{align} \label{eq:coefficients}
 		\hat{\bm{\beta}}_i &= \argmax \limits_{\beta} \left\{-(1/2) \sum_{i'=1}^n w_{ii'} \left[ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\Omega}_i \bm{\beta}_i \right)^2 \right]\right\}.
 	\end{align}	
@@ -311,7 +323,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	\subsection{Simulation Setup}
 	A simulation study was conducted to assess the performance of the method described in Sections \ref{section:GWR}--\ref{section:model-selection}. 
 	
-	Data were simulated on the spatial domain $[0,1]^2$, which was divided into a $30 \times 30$ grid. Each of $p=5$ covariates $X_1, \dots, X_5$ was simulated by a Gaussian random field (GRF) with mean zero and exponential spatial covariance $\text{Cov} \left(X_{ji}, X_{ji'} \right) = \sigma_x^2 \exp{\left( -\tau_x^{-1} \delta_{ii'} \right)}$ where $\sigma_x^2=1$ is the variance, $\tau_x = 0$ is the range parameter, and $\delta_{ii'}$ is the Euclidean distance $\|\bm{s}_i - \bm{s}_{i'}\|_2$. Correlation was induced between the covariates by multiplying the $\bm{X}$ matrix by $\bm{R}$, where $\bm{R}$ is the Cholesky decomposition of the covariance matrix $\bm{\Sigma} = \bm{R}'\bm{R}$. The covariance matrix $\bm{\Sigma}$ is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.
+	Data were simulated on the domain $[0,1]^2$, which was divided into a $30 \times 30$ grid. Each of $p=5$ covariates $X_1, \dots, X_5$ was simulated by a Gaussian random field (GRF) with mean zero and exponential spatial covariance $\text{Cov} \left(X_{ji}, X_{ji'} \right) = \sigma_x^2 \exp{\left( -\tau_x^{-1} \delta_{ii'} \right)}$ where $\sigma_x^2=1$ is the variance, $\tau_x = 0$ is the range parameter, and $\delta_{ii'}$ is the Euclidean distance $\|\bm{s}_i - \bm{s}_{i'}\|_2$. Correlation was induced between the covariates by multiplying the $\bm{X}$ matrix by $\bm{R}$, where $\bm{R}$ is the Cholesky decomposition of the covariance matrix $\bm{\Sigma} = \bm{R}'\bm{R}$. The covariance matrix $\bm{\Sigma}$ is a $5 \times 5$ matrix that has ones on the diagonal and $\rho$ for all off-diagonal entries, where $\rho$ is the between-covariate correlation.
 		
 	The simulated response was $y_i = \bm{x}'_i \bm{\beta}_i + \varepsilon_i$ for $i=1, \dots, n$ where $n=900$ and for simplicity the $\varepsilon_i$'s were iid Gaussian with mean zero and variance $\sigma_\varepsilon^2$. The simulated data included the response $y$ and five covariates $x_1, \dots, x_5$. The true data-generating model uses only $x_1$, so $x_2, \dots, x_5$ are included to assess performance in variable-selection.
 	
@@ -319,7 +331,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	The three coefficient surfaces used to produce the response variable in the simulations are pictured in Figure \ref{fig:sim-actual}. The first is a ``step" function, which is equal to zero in 40\% of the spatial domain, equal to one in a different 40\% of the spatial domain, and increases linearly in the middle 20\% of the domain. The second is a gradient function, which increases linearly from zero at one end of the domain to one at the other. The final coefficient function is a parabola taking its maximum value of 0.535 at the center of the domain and falling to zero at each corner of the domain. The parabola is computed by finding the squared distance of each sampling location from the domain's center, multiplying by -1 and then adding an offset so that the corner points are equal to zero.
 	
-	The performance of the penalized GWR methods (AL via {\tt lars} and via {\tt glmnet}, and the AEN  via {\tt enet}) was compared to that of oracular GWR (O-GWR), which is ordinary GWR with ``oracular" variable selection, meaning that exactly the correct set of covariates was used to fit the GWR model at each location in the simulation. Also included in the comparison was the GWR algorithm of \cite{Fotheringham:2002} without variable selection ({\tt gwr}). Finally, there is a category of simulation results using the three penalized GWR methods for local variable selection and then ordinary GWR for coefficient estimation.
+	The performance of the penalized GWR methods (AL via {\tt lars} and via {\tt glmnet}, and the AEN  via {\tt enet}) was compared to that of oracular GWR (O-GWR), which is traditional GWR with ``oracular" variable selection, meaning that exactly the correct set of covariates was used to fit the GWR model at each location in the simulation. Also included in the comparison was the GWR algorithm of \cite{Fotheringham:2002} without variable selection ({\tt gwr}). Finally, there is a category of simulation results using the three penalized GWR methods for local variable selection and then ordinary GWR for coefficient estimation.
 	
 % latex table generated in R 2.15.1 by xtable 1.7-0 package
 % Fri Jan 18 10:19:47 2013
@@ -364,7 +376,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 		\end{center}
 	\end{figure}
 	
-	\paragraph{Summary locations}Results from the simulation were summarized at five locations on the domain (see Figure \ref{fig:summary-locations}). Locations one and five are at opposite corners of the domain, where we expect biased estimation from a kernel smoother like traditional GWR, particularly when the quantity being estimated has a nonzero gradient at the boundary, which is the case for the gradient and parabola functions. Because the GWAL and GWAEN use locally linear fitting, they are expected to exhibit less bias at the boundaries.
+	\paragraph{Summary locations}Results from the simulation were summarized at five locations on the domain (see Figure \ref{fig:summary-locations}). Locations one and five are at opposite corners of the domain, where we expect biased estimation from a kernel smoother like traditional GWR, particularly when the quantity being estimated has a nonzero gradient at the boundary, which is the case for the gradient and parabola functions. Because the GWAL and GWEN use locally linear fitting, they are expected to exhibit less bias at the boundaries.
 	
 	Locations two and four are at the `corners' of the step function. Because the step function is undifferentiable at these locations, locally linear fitting is not expected to be as effective at reducing bias here as in the case of the boundaries of the gradient and parabola functions. Local variable selection is expected to be ambiguous at location four of the step function because it is at the the boundary where the coefficient transitions from zero to nonzero.
 	
@@ -386,23 +398,17 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	%Otherwise, selection performance was good, with the rate of false positive selections for $X_2$--$X_5$ (and for $X_1$ where its true coefficient was zero) usually below 0.10. Selection (also bias, variance, and MSE of $\hat{\beta}_1(\bm{s})$) tended to suffer worse by the change from low to high error variance than by the change from low to high collinearity amongst the predictors.\\
 	
-	\paragraph{Coefficient Estimation} The MSE, bias, and variance of $\hat{\beta}_1$ are listed in Tables \ref{table:X1-mse}, \ref{table:X1-bias}, and \ref{table:X1-var}, respectively. The method of oracular selection led to the best MSE in 28 of the 60 cases, which is more than any other single method. In general, the methods that do local variable selection had lower MSE than traditional GWR. As was the case for selection, estimation accuracy (in terms of MSE) suffered more by an increase in $\sigma_{\varepsilon}$ from 0.5 to 1 than from an increase in $\rho$ from 0 to 0.5. Oracular selection was decisively superior to traditional GWR and to local variable selection for estimating the gradient $\beta_1$, turning in the best MSE for all combinations of location and simulation parameters.
+	\paragraph{Coefficient Estimation} The MSE, bias, and variance of $\hat{\beta}_1$ are listed in Tables \ref{table:msex}, \ref{table:bx}, and \ref{table:varx}, respectively. The method of oracular selection led to the best MSE in 28 of the 60 cases, which is more than any other single method. In general, the methods that do local variable selection had lower MSE than traditional GWR. As was the case for selection, estimation accuracy (in terms of MSE) suffered more by an increase in $\sigma_{\varepsilon}$ from 0.5 to 1 than from an increase in $\rho$ from 0 to 0.5. Oracular selection was decisively superior to traditional GWR and to local variable selection for estimating the gradient $\beta_1$, turning in the best MSE for all combinations of location and simulation parameters.
 	
 	In general, oracular selection and traditional GWR were quite similar in terms of $\text{var}\left(\hat{\beta_1}\right)$, with notably greater variance for the local selection methods. However, the local selection methods had less bias than traditional GWR, even exhibiting less bias than oracular selection in many settings. There was no simulation setting for which traditional GWR had the smallest or second-smallest bias.
 	
 	It seems, therefore, that the local selection methods reduce bias and increase variance of the coefficient estimates, as compared to traditional GWR. Whether traditional GWR or local selection is better in terms of MSE of the coefficient estimates is not clear in all cases, but when the actual coefficient is equal to zero (or nearly so), local selection does seem to reduce the MSE over traditional GWR.
 	
-	\paragraph{Autocorrelated Errors} Introducing autocorrelation in the errors causes a substantial degradation in the estimation accuracy of the GWAL and GWAEN, accompanied by a tendency to prefer smaller kernel bandwidths. The likely explanation is that when the kernel bandwidth is small, autocorrelated errors are indistinguishable from a varying intercept. The residuals are reduced to the extent that the errors are incorporated in the intercept term. Since this effect is absent in the case of uncorrelated errors, greater autocorrelation in the error term will tend to mean a greater reduction in the errors - and therefore a greater increase in the log likelihood - as the kernel bandwidth decreases.
-	
-	Since the optimal kernel bandwidth is balance between the log likelihood and the degrees of freedom consumed by the model, and because the effect of autocorrelated errors is an increase in log likelihood without an offsetting increase in the consumed degrees of freedom at a given kernel bandwidth, greater autocorrelation will tend to lead to a smaller optimal kernel bandwidth.
-	
-	This is an example of the bias-variance tradeoff: Accounting for the random noise within the systematic portion of the model decreases the bias but increases the variance.
-	
 	%There was not a clear and consistent difference in performance between the three selection methods. It might be expected that the adaptive elastic net would outperform the adaptive Lasso under greater covariate collinearity, but if such effect is real it is not apparent from this simulation. The unshrunk coefficient-estimation methods tended to exhibit more bias than the selection-plus-shrinkage methods when the true coefficient value was near zero, and vice versa when the true coefficient was not near zero. The unshrunk methods were perhaps more consistent in their performance and for that reason they are probably preferable in practice.\\
 	
 	%Bias in coefficient estimation was greater and variance less for the standard \verb!gwr! algorithm than for the methods described here. This is probably due to the fact that the methods described here show a preference for smaller bandwidths than those select by \verb!gwr!. Accuracy (as measured by MSE) in fitting the true Y variables was comparable for all the methods. \\	
 	
-	\paragraph{Fitted Values} The MSE of the $\hat{Y}$, $\text{MSE}\left(\hat{Y}\right)$, is listed in Table \ref{table:Y-mse}. Nominally, $\text{MSE}\left(\hat{Y}\right)$ should be equal to the noise variance, $\sigma_{\varepsilon}^2$, which is 1 for odd-numbered rows and 0.25 for even numbered rows. There is not much difference in $\text{MSE}\left(\hat{Y}\right)$ between the various estimation methods, except that it is larger for the oracular and \verb!gwr! methods where $\beta_1(\bm{s})$ is near or equal to zero.
+	\paragraph{Fitted Values} The MSE of the $\hat{Y}$, $\text{MSE}\left(\hat{Y}\right)$, is listed in Table \ref{table:msey}. Nominally, $\text{MSE}\left(\hat{Y}\right)$ should be equal to the noise variance, $\sigma_{\varepsilon}^2$, which is 1 for odd-numbered rows and 0.25 for even numbered rows. There is not much difference in $\text{MSE}\left(\hat{Y}\right)$ between the various estimation methods, except that it is larger for the oracular and \verb!gwr! methods where $\beta_1(\bm{s})$ is near or equal to zero.
 	
 	\subsection{Tables}
 		\subsubsection{Selection}
@@ -417,7 +423,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 			
 \section{Data Analysis\label{section:data-analysis}}
 	\subsection{Census Poverty Data}
-	An example data analysis is presented to demonstrate application of the GWAEN for local variable selection in an SVCR model of how poverty is related to a list of socio-economic variables. The data is from the U.S. Census Bureau's decennial census in the year 1960. This analysis looks specifically at the upper midwestern states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. This is areal data, aggregated at the county level.
+	An example data analysis is presented to demonstrate application of the GWEN for local variable selection in an SVCR model of how poverty is related to a list of socio-economic variables. The data is from the U.S. Census Bureau's decennial census in the year 1960. This analysis looks specifically at the upper midwestern states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan. This is areal data, aggregated at the county level.
 	
 	Three kinds of variables  were considered as potential predictors of county-level poverty rate.
 	\begin{itemize}
@@ -453,7 +459,16 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	Assessing variable selection for this data is difficult, since the AEN almost never removed any variables from the model. Indeed, some coefficients seem nearly constant across the domain. An exception is the coefficient surface for \verb!pex! (mining employment). That surface indicates an interaction whereby the proportion of people working in mining in southern parts of the domain is associated with an increase in the poverty rate, while in northern parts of the domain it is associated with a decrease in the poverty rate.
 
-%\end{spacing}
+
+\section{Future work}
+	\paragraph{Autocorrelated Errors} Introducing autocorrelation in the errors causes a substantial degradation in the estimation accuracy of the GWAL and GWEN, accompanied by a tendency to prefer smaller kernel bandwidths. The likely explanation is that when the kernel bandwidth is small, autocorrelated errors are indistinguishable from a varying intercept. The residuals are reduced to the extent that the errors are incorporated in the intercept term. Since this effect is absent in the case of uncorrelated errors, greater autocorrelation in the error term will tend to mean a greater reduction in the errors - and therefore a greater increase in the log likelihood - as the kernel bandwidth decreases.
+	
+	Since the optimal kernel bandwidth is balance between the log likelihood and the degrees of freedom consumed by the model, and because the effect of autocorrelated errors is an increase in log likelihood without an offsetting increase in the consumed degrees of freedom at a given kernel bandwidth, greater autocorrelation will tend to lead to a smaller optimal kernel bandwidth.
+	
+	This is an example of the bias-variance tradeoff: Accounting for the random noise within the systematic portion of the model decreases the bias but increases the variance.
+
+	\paragraph{Generalized linear models}
+	To date, validation of the GWEN has been for gaussian data. The extension to any exponential-family distribution is straightforward: since the selection procedure for the GWAEN is based on the penalized local likelihood, the same procedure should work as well in principle for any exponential family. Preliminary simulations bear out this judgement but the generalized GWAEN still lags the development of the gaussian GWEN.
 
 \section{References}
 \bibliographystyle{chicago}

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  20 SEP 2013 14:34
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  26 SEP 2013 21:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -667,94 +667,96 @@ Package: setspace 2011/12/19 v6.7a set line spacing
 (./gaussian.aux)
 \openout1 = `gaussian.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
-LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 50.
-LaTeX Font Info:    ... okay on input line 50.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
+LaTeX Font Info:    Checking defaults for U/mathx/m/n on input line 55.
+LaTeX Font Info:    ... okay on input line 55.
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+msa on input line 51.
+LaTeX Font Info:    Try loading font information for U+msa on input line 65.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 51.
+LaTeX Font Info:    Try loading font information for U+msb on input line 65.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 
 ] [2]
-[3] [4]
+[3] [4] [5]
 
-Package natbib Warning: Citation `Zou:2005' on page 5 undefined on input line 1
-09.
+Package natbib Warning: Citation `Zou:2005' on page 6 undefined on input line 1
+23.
 
-[5]
+[6]
 
-LaTeX Warning: Reference `section:simulation' on page 6 undefined on input line
- 115.
+LaTeX Warning: Reference `section:simulation' on page 7 undefined on input line
+ 129.
 
-[6] [7] [8] [9] [10] [11] [12] [13] [14]
+[7] [8] [9] [10] [11] [12] [13] [14]
 \openout5 = `gaussian.ttt'.
 
  (gaussian.ttt)
 \openout4 = `gaussian.fff'.
 
  (gaussian.fff) [15]
+[16]
 
-LaTeX Warning: Reference `table:X1-mse' on page 16 undefined on input line 389.
+LaTeX Warning: Reference `table:X1-mse' on page 17 undefined on input line 401.
 
 
 
-LaTeX Warning: Reference `table:X1-bias' on page 16 undefined on input line 389
+LaTeX Warning: Reference `table:X1-bias' on page 17 undefined on input line 401
 .
 
 
-LaTeX Warning: Reference `table:X1-var' on page 16 undefined on input line 389.
+LaTeX Warning: Reference `table:X1-var' on page 17 undefined on input line 401.
 
 
-[16] [17]
+[17]
 
-LaTeX Warning: Reference `table:Y-mse' on page 18 undefined on input line 405.
+LaTeX Warning: Reference `table:Y-mse' on page 18 undefined on input line 411.
 
 (../../output/simulation/selection.tex) (../../output/simulation/msex.tex)
 (../../output/simulation/bx.tex) (../../output/simulation/varx.tex)
-(../../output/simulation/msey.tex)
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 437.
+(../../output/simulation/msey.tex) [18]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 430.
 
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 437.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 430.
 
-Underfull \hbox (badness 10000) in paragraph at lines 437--438
-
- []
-
-[18]
-Underfull \hbox (badness 10000) in paragraph at lines 438--439
+Underfull \hbox (badness 10000) in paragraph at lines 430--431
 
  []
 
 
-LaTeX Warning: Reference `fig:gwr-coefs-1960' on page 19 undefined on input lin
-e 447.
+Underfull \hbox (badness 10000) in paragraph at lines 431--432
 
-[19] (./gaussian.bbl [20] [21] [22])
+ []
+
+[19]
+
+LaTeX Warning: Reference `fig:gwr-coefs-1960' on page 20 undefined on input lin
+e 440.
+
+[20] (./gaussian.bbl [21] [22] [23] [24])
 
 Package natbib Warning: There were undefined citations.
 
-AED endfloat: Processing end Figures and Tables [23] (./gaussian.fff
+AED endfloat: Processing end Figures and Tables [25] (./gaussian.fff
 File: ../../figures/simulation/step.pdf Graphic file (type QTm)
 
 <use  "../../figures/simulation/step.pdf" >
@@ -763,50 +765,53 @@ File: ../../figures/simulation/gradient.pdf Graphic file (type QTm)
 <use  "../../figures/simulation/gradient.pdf" >
 File: ../../figures/simulation/parabola.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/parabola.pdf" > [24]
+<use  "../../figures/simulation/parabola.pdf" > [26]
 File: ../../figures/simulation/summary-locations.pdf Graphic file (type QTm)
 
-<use  "../../figures/simulation/summary-locations.pdf" > [25]
+<use  "../../figures/simulation/summary-locations.pdf" > [27]
 File: ../../figures/poverty/1960-enet-linear-coefficients-unshrunk.pdf Graphic 
 file (type QTm)
 
 <use  "../../figures/poverty/1960-enet-linear-coefficients-unshrunk.pdf" >
 
-LaTeX Warning: Text page 26 contains only floats.
+LaTeX Warning: Text page 28 contains only floats.
 
 
 Overfull \vbox (5.72998pt too high) has occurred while \output is active []
 
 
-[26
+[28
 
 
 
 
-]) (./gaussian.ttt [27
+]) (./gaussian.ttt [29
 
 
-] [28
+] [30
 
 ]
 
 LaTeX Warning: Float too large for page by 79.90431pt on input line 153.
 
-[29]
+[31]
 
 LaTeX Warning: Float too large for page by 79.90431pt on input line 242.
 
-[30]
+[32]
 
 LaTeX Warning: Float too large for page by 79.90431pt on input line 331.
 
-[31]
+[33]
 
 LaTeX Warning: Float too large for page by 79.80429pt on input line 420.
 
-[32]) (./gaussian.aux)
+[34]) (./gaussian.aux)
 
 LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
@@ -816,6 +821,6 @@ Here is how much of TeX's memory you used:
  7986 multiletter control sequences out of 15000+200000
  22835 words of font info for 81 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 42i,17n,40p,1019b,455s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 42i,17n,40p,1013b,455s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on gaussian.pdf (32 pages).
+Output written on gaussian.pdf (34 pages).
