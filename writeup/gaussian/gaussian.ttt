@@ -31,7 +31,7 @@ Setting & function & $\rho$ & $\sigma^2$ \\
 \setlength\tabcolsep{4pt}
 \begin{tabular}{ccc|cc|cc|cc|cc|cc}
  & \multicolumn{4}{c}{step} & \multicolumn{4}{|c|}{gradient} & \multicolumn{4}{c}{parabola} \\
- & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c|}{\texttt{glmnet}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c|}{\texttt{glmnet}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{glmnet}} \\
+ & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c|}{\texttt{lasso}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c|}{\texttt{lasso}} & \multicolumn{2}{c}{\texttt{enet}} & \multicolumn{2}{c}{\texttt{lasso}} \\
  location & $\beta_1$ & $\beta_2$ - $\beta_5$ & $\beta_1$ & $\beta_2$ - $\beta_5$ & $\beta_1$ & $\beta_2$ - $\beta_5$ & $\beta_1$ & $\beta_2$ - $\beta_5$ & $\beta_1$ & $\beta_2$ - $\beta_5$ & $\beta_1$ & $\beta_2$ - $\beta_5$ \\
   \hline
 \multirow{4}{*}{ 1 }  & 1.00 & 0.00 & 1.00 & 0.00 & 1.00 & 0.00 & 1.00 & 0.00 & 0.37 & 0.00 & 0.37 & 0.00 \\
@@ -69,7 +69,7 @@ Setting & function & $\rho$ & $\sigma^2$ \\
 \begin{center}
 \resizebox{!}{12cm}{
 \begin{tabular}{ccrrrrrr}
- function & location & enet & glmnet & u.enet & u.glmnet & oracular & gwr \\
+ function & location & enet & lasso & u.enet & u.lasso & oracular & gwr \\
   \hline
 \multirow{20}{*}{ step }  & \multirow{4}{*}{ 1 }  & 0.007 & \emph{0.007} & 0.048 & 0.051 & 0.053 & \textbf{0.003} \\
    &  & 0.052 & \emph{0.045} & 0.184 & 0.200 & 0.072 & \textbf{0.008} \\
@@ -158,7 +158,7 @@ Setting & function & $\rho$ & $\sigma^2$ \\
 \begin{center}
 \resizebox{!}{12cm}{
 \begin{tabular}{ccrrrrrr}
- function & location & enet & glmnet & u.enet & u.glmnet & oracular & gwr \\
+ function & location & enet & lasso & u.enet & u.lasso & oracular & gwr \\
   \hline
 \multirow{20}{*}{ step }  & \multirow{4}{*}{ 1 }  & -0.025 & -0.023 & \emph{0.017} & 0.018 & 0.025 & \textbf{-0.004} \\
    &  & -0.099 & -0.087 & -0.022 & \textbf{-0.005} & 0.064 & \emph{-0.016} \\
@@ -247,7 +247,7 @@ Setting & function & $\rho$ & $\sigma^2$ \\
 \begin{center}
 \resizebox{!}{12cm}{
 \begin{tabular}{ccrrrrrr}
- function & location & enet & glmnet & u.enet & u.glmnet & oracular & gwr \\
+ function & location & enet & lasso & u.enet & u.lasso & oracular & gwr \\
   \hline
 \multirow{20}{*}{ step }  & \multirow{4}{*}{ 1 }  & 0.007 & \emph{0.007} & 0.048 & 0.051 & 0.052 & \textbf{0.003} \\
    &  & 0.043 & \emph{0.038} & 0.185 & 0.202 & 0.069 & \textbf{0.008} \\
@@ -336,7 +336,7 @@ Setting & function & $\rho$ & $\sigma^2$ \\
 \begin{center}
 \resizebox{!}{12cm}{
 \begin{tabular}{ccrrrrrr}
- function & location & enet & glmnet & u.enet & u.glmnet & oracular & gwr \\
+ function & location & enet & lasso & u.enet & u.lasso & oracular & gwr \\
   \hline
 \multirow{20}{*}{ step }  & \multirow{4}{*}{ 1 }  & 0.118 & \textbf{0.118} & 0.118 & \emph{0.118} & 0.119 & 0.124 \\
    &  & 0.608 & \textbf{0.594} & 0.608 & \emph{0.594} & 0.732 & 0.772 \\

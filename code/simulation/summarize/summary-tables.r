@@ -34,8 +34,9 @@ nsims = 100
 #no lars:
 functions = c('step', 'gradient', 'parabola')
 sim.modes = c("enet", "glmnet", "unshrunk.enet", "unshrunk.glmnet", "oracular", "gwr")
-sim.modes.output = c("enet", "glmnet", "u.enet", "u.glmnet", "oracular", "gwr")
+sim.modes.output = c("enet", "lasso", "u.enet", "u.lasso", "oracular", "gwr")
 selection.modes = c("enet", "glmnet")
+selection.titles = list(enet='enet', glmnet='lasso')
 columns = list(enet="enet", glmnet="glmnet", gwr="gwr",
                         unshrunk.enet="enet-U",
                         unshrunk.glmnet="glmnet-U", oracular="Oracle")

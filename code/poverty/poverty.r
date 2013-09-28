@@ -45,8 +45,8 @@ for (yr in years) {
     model[['lasso']][[year]] = gwglmnet(formula=f, data=df, family='gaussian', alpha=1, coords=df[,c('x','y')], longlat=TRUE, N=1, mode.select='BIC', bw=bw[['lasso']][[year]], gweight=bisquare, method='dist', simulation=TRUE, adapt=TRUE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
 
     #Elastic net model:
-    bw[['enet']][[year]] = gwglmnet.sel(formula=f, data=df, family='gaussian', alpha='adaptive', coords=df[,c('x','y')], longlat=TRUE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
-    model[['enet']][[year]] = gwglmnet(formula=f, data=df, family='gaussian', alpha='adaptive', coords=df[,c('x','y')], longlat=TRUE, N=1, mode.select='BIC', bw=bw[['enet']][[year]], gweight=bisquare, method='dist', simulation=TRUE, adapt=TRUE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
+    bw[['enet']][[year]] = gwglmnet.sel(formula=f, data=df, family='gaussian', alpha='adaptive', coords=df[,c('x','y')], longlat=TRUE, mode.select="AIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
+    model[['enet']][[year]] = gwglmnet(formula=f, data=df, family='gaussian', alpha='adaptive', coords=df[,c('x','y')], longlat=TRUE, N=1, mode.select='AIC', bw=bw[['enet']][[year]], gweight=bisquare, method='dist', simulation=TRUE, adapt=TRUE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
 
     #f.spgwr = as.formula(paste("logitindpov ~ ", paste(predictors, collapse="+"), sep=""))
     #bw.spgwr = gwr.sel(formula=f.spgwr, data=df, longlat=TRUE, coords=as.matrix(df[,c('x','y')]), gweight=gwr.bisquare, method="aic", show.error.messages=TRUE)
@@ -54,8 +54,8 @@ for (yr in years) {
 
     #Use my code to do the traditional GWR; (currently buggy)
     oracle = lapply(1:533, function(x) {return(predictors)})
-    bw.gwr = gwlars.sel(f, data=df, oracle=oracle, coords=df[,c('x','y')], mode.select='BIC', longlat=TRUE, gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
-    #model.gwr = gwlars(f, data=df, oracle=oracle, coords=df[,c('x','y')], mode.select='BIC', longlat=TRUE, bw=bw.gwr, gweight=bisquare, method='dist', simulation=TRUE, parallel=FALSE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+    bw.gwr = gwglmnet.sel(f, data=df, oracle=oracle, coords=df[,c('x','y')], family='gaussian', alpha=1, mode.select='BIC', longlat=TRUE, gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+    #model.gwr = gwglmnet(f, data=df, oracle=oracle, coords=df[,c('x','y')], family='gaussian', alpha=1, mode.select='BIC', longlat=TRUE, bw=bw.gwr, gweight=bisquare, method='dist', simulation=TRUE, parallel=FALSE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
 
 
     ####Plot a choropleth of the results:    
@@ -74,7 +74,7 @@ for (yr in years) {
         }
 
         pp = plots[[select]][[year]]
-        dev.new()
+        #dev.new()
         pdf(paste('figures/poverty/', year, '-', select, '-linear-coefficients-unshrunk.pdf', sep=''), width=8, height=16)
         grid.arrange(pp[['pag']], pp[['pex']], pp[['pman']], pp[['potprof']], pp[['pfire']], pp[['pserve']], pp[['pwh']], pp[['pblk']], pp[['phisp']], pp[['metro']], ncol=2)
         dev.off()
