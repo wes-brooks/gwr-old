@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2012)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: gaussian.aux
+The style file: chicago.bst
+Database file #1: ../../references/gwr.bib
+You've used 29 entries,
+            2861 wiz_defined-function locations,
+            813 strings with 9256 characters,
+and the built_in function-call counts, 19528 in all, are:
+= -- 1606
+> -- 1390
+< -- 0
++ -- 408
+- -- 474
+* -- 1775
+:= -- 3583
+add.period$ -- 89
+call.type$ -- 29
+change.case$ -- 199
+chr.to.int$ -- 29
+cite$ -- 29
+duplicate$ -- 515
+empty$ -- 1231
+format.name$ -- 554
+if$ -- 3635
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 34
+newline$ -- 149
+num.names$ -- 290
+pop$ -- 141
+preamble$ -- 1
+purify$ -- 380
+quote$ -- 0
+skip$ -- 546
+stack$ -- 0
+substring$ -- 1108
+swap$ -- 161
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 520
+warning$ -- 0
+while$ -- 268
+width$ -- 0
+write$ -- 383

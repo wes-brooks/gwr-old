@@ -2,9 +2,9 @@
 .PHONY : extract
 
 #Default variable values (in case none were specified on the command line):
-outdir ?= ~/git/gwr/output/simulation
-root ?= ~/misc/gwr
-cluster ?= 89
+outdir ?= ~/git/paleon/output/simulation
+root ?= ~/misc/paleon
+cluster ?= 18
 
 
 #Import the saved Rdata and turn it into simulation tables.
@@ -25,5 +25,4 @@ tables:
 extract: 
 	mkdir -p $(root)/output
 	sh extract.sh $(root) $(cluster)
-	python3 cleanup-results.py $(root) $(cluster)
-	Rscript summarize.r $(root) $(cluster)
+
