@@ -2,9 +2,9 @@
 .PHONY : extract
 
 #Default variable values (in case none were specified on the command line):
-outdir ?= ~/git/paleon/output/simulation
-root ?= ~/misc/paleon
-cluster ?= 18
+outdir ?= ~/git/gwr/output/simulation
+root ?= ~/misc/gwr
+cluster ?= 89
 
 
 #Import the saved Rdata and turn it into simulation tables.
