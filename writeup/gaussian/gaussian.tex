@@ -75,7 +75,7 @@ Spatially varying coefficient regression models allow the regression coefficient
 	%Spatial data / spatial regression
 	The methodology described herein is applicable to geostatistical data and areal data. Let $\mathcal{D}$ be a spatial domain on which data is collected. For geostatistical data, let $\bm{s}$ denote a location in $\mathcal{D}$. Let a univariate spatial process $\left\{Y(\bm{s}) : \bm{s} \in \mathcal{D}\right\}$ and a possibly multivariate spatial process $\left\{\bm{X}(\bm{s}) : \bm{s} \in \mathcal{D}\right\}$ denote random fields of the response and the covariates, respectively. For $i = 1, \dots, n$, let $\bm{s}_i$ denote the sampling location in $\mathcal{D}$ of the $i$th observation of the response and the covariates. Let the observed data be denoted $\left\{y(\bm{s}_i), \bm{x}(\bm{s}_i)\right\}$, $i=1, \dots, n$. Then the data are a realization of the random fields at the sampling locations $\left\{Y(\bm{s}_i), \bm{X}(\bm{s}_i)\right\}$ for $i=1, \dots, n$.
 	
-	For areal data, the spatial domain $\mathcal{D}$ is partitioned into $n$ regions $\{D_1, \dots, D_n\}$ such that $\mathcal{D} = \bigcup \limits_{i=1}^nD_i$. In the case of areal data, the random variables $\left\{Y(D_i), \bm{X}(D_i)\right\}$ are defined for regions instead of for point locations; population and spatial mean temperature are examples of areal data. The analytical method described herein can be applied to areal data if they are recast as geostatistical data by assuming that the data are point-referenced to a representative location of each region, such as the centroid. That is, $\left\{\bm{X}(\bm{s}_i), Y(\bm{s}_i)\right\} $ where $\bm{s}_i$ is the centroid of $D_i$ for $i=1, \dots, n$.
+	For areal data, the spatial domain $\mathcal{D}$ is partitioned into $n$ regions $\{D_1, \dots, D_n\}$ such that $\mathcal{D} = \bigcup \limits_{i=1}^n D_i$. In the case of areal data, the random variables $\left\{Y(D_i), \bm{X}(D_i)\right\}$ are defined for regions instead of for point locations; population and spatial mean temperature are examples of areal data. The analytical method described herein can be applied to areal data if they are recast as geostatistical data by assuming that the data are point-referenced to a representative location of each region, such as the centroid. That is, $\left\{\bm{X}(\bm{s}_i), Y(\bm{s}_i)\right\} $ where $\bm{s}_i$ is the centroid of $D_i$ for $i=1, \dots, n$.
 	
 	 Common practice in the analysis of geostatistical and areal data is to model the response variable with a spatial linear regression model consisting of the sum of a fixed mean function, a spatial random effect, and random error all on domain $\mathcal{D}$, as in: 
 \begin{align}\label{eq:spatial-regression}
@@ -95,7 +95,14 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 
 	%SVCR - justification
 	%Stationarity in spatial linear regression
-	A random field is said to be stationary if the joint distribution of a the response at a finite set of locations does not change when the set of locations are all shifted in space by a fixed spatial lag. That is, letting $\left\{T(\bm{s}) : \bm{s} \in \mathcal{D}\right\}$ be a random field on spatial domain $\mathcal{D}$ that takes value $T(\bm{s}_i)$ at location $\bm{s}_i \in \mathcal{D}$ for $i = 1, \dots, n$, the random field $T(\bm{s})$ is stationary if $F_n\left(T(\bm{s}_1), \dots, T(\bm{s}_n)\right) = F_n\left(T(\bm{s}_1+\bm{h}), \dots, T(\bm{s}_n+\bm{h})\right)$ where $F_n(\cdot)$ is the joint distribution of a length $n$ sample from $T(\bm{s})$ and $\bm{h}$ is a fixed spatial lag. A random field is second-order stationary if the joint distribution at any two locations in the domain does not change when the locations are shifted by a fixed spatial lag.
+	A random field is said to be stationary if the joint distribution of a the response at a finite set of locations does not change when the set of locations are all shifted in space by a fixed spatial lag. That is, letting $\left\{T(\bm{s}) : \bm{s} \in \mathcal{D}\right\}$ be a random field on spatial domain $\mathcal{D}$ that takes value $T(\bm{s}_i)$ at location $\bm{s}_i \in \mathcal{D}$ for $i = 1, \dots, n$, the random field $T(\bm{s})$ is stationary if $F_n\left(T(\bm{s}_1), \dots, T(\bm{s}_n)\right) = F_n\left(T(\bm{s}_1+\bm{h}), \dots, T(\bm{s}_n+\bm{h})\right)$ where $F_n(\cdot)$ is the joint distribution of a length $n$ sample from $T(\bm{s})$ and $\bm{h}$ is a fixed spatial lag. The random field $\left\{T(\bm{s}) : \bm{s} \in \mathcal{D}\right\}$ is second-order stationary if the following are satisfied:
+	\begin{align}
+		E\left\{ T(\bm{s}) \right\} &= \mu \text{ for all } \bm{s} \in \mathcal{D} \notag \\
+		\text{var}\left\{T(\bm{s})\right\} &= \sigma^2 < \infty \text{ for all } \bm{s} \in \mathcal{D} \notag \\
+		\text{cov}\left\{ T(\bm{s}), T(\bm{s} + \bm{h}) \right\} &= C(\bm{h})
+	\end{align}
+	where the function $C(\cdot)$ depends only on the spatial lag $\bm{h}$ and not on the location $\bm{s}$.
+	%the joint distribution at any two locations in the domain does not change when the locations are shifted by a fixed spatial lag.
 	
 	The coefficient vector $\bm{\beta}$ in (\ref{eq:spatial-regression}) is a fixed constant. The model can be made more flexible if the coefficients are described by a stationary random field. Such a model is written
 \begin{align}\label{eq:SVCR-process}
@@ -120,7 +127,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	Lasso regularization for model selection, while popular, can leave relevant covariates out of the model when they are correlated with other covariates, and the predictive performance of the Lasso may be dominated in such a case by ridge regression, which does not allow for local model selection \citep{Tibshirani:1996}. The elastic net is a regularization method that combines a $\ell_1$ (Lasso) and a $\ell_2$ (ridge) penalty on the estimated coefficients, overcoming these drawbacks of the Lasso \citep{Zou:2005}.
 	
-	Additionally, Lasso regularization does not generally produce consistent estimates of the relevant covariates \citep{Leng-2006}. The adaptive Lasso (AL) \citep{Zou:2006} is an improvement to the Lasso that does produce consistent estimates of the coefficients and has been shown to have appealing properties for automating variable selection, sometimes including the ``oracle" property of asymptotically selecting exactly the correct set of covariates for inclusion in a regression model.
+	Additionally, Lasso regularization does not generally produce consistent estimates of the relevant covariates \citep{Leng-2006}. The adaptive Lasso (AL) \citep{Zou:2006} is an improvement to the Lasso that does produce consistent estimates of the coefficients and has been shown to have appealing properties for automating variable selection, which under suitable conditions include the ``oracle" property of asymptotically selecting exactly the correct set of covariates for inclusion in a regression model.
 	
 	Combining these improvements to the Lasso, the adaptive elastic net (AEN) achieves an oracle property and performs better than other oracle-like methods when there is collinearity in the covariates \citep{Zou:2009}.
 	
@@ -283,7 +290,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	After the variables are selected for inclusion in the local model, either by the GWAL or the GWEN, the coefficient estimates are computed via weighted least squares on the selected variables without regularization. That is, letting $\bm{\Omega}_i = \text{diag}\left\{\bm{\omega}_i\right\}$ where $\bm{\omega}_i = \left(\omega_{i1}, \dots \omega_{ip}\right)'$ and $\omega_{ij}= I \left(\beta_{ij} \neq 0\right)$, the local coefficient estimates are:
 	\begin{align} \label{eq:coefficients}
-		\hat{\bm{\beta}}_i &= \argmax \limits_{\bm{\beta}_i} \left\{-(1/2) \sum_{i'=1}^n w_{ii'} \left[ \log{\sigma^2_i}  + \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\Omega}_i \bm{\beta}_i \right)^2 \right]\right\}.
+		\hat{\bm{\beta}}_i &= \argmax \limits_{\bm{\beta}_i} \left[-(1/2) \sum_{i'=1}^n w_{ii'} \left\{ \log{\sigma^2_i}  + \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\Omega}_i \bm{\beta}_i \right)^2 \right\}\right].
 	\end{align}
 	
 	%and $\tilde{\bm{X}}_i$ is the design matrix $\bm{X}$ with columns corresponding to zeroes in $\bm{\omega}_i$ removed.
