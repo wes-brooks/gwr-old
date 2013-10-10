@@ -6,6 +6,7 @@ library(grid)
 #Import the data
 setwd('~/git/gwr/code/poverty')
 source('poverty-data.r')
+source("~/git/brooks/code/multiplot.r")
 
 #Prepare something for plotting:
 df = pov2[pov2$year==1970,]
@@ -83,6 +84,6 @@ if (!is.null(borderlines)) {map2 <- map2 + geom_path(data=borderlines, colour='w
 map3 <- map3 + ggtitle("Proportion working in manufacturing") + theme(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
 
 
-jpeg("../../figures/practice-talk/poverty-data.jpg", width=12, height=4, units='in')
+jpeg("../../figures/practice-talk/poverty-data.jpg", width=12, height=4, units='in', res=72)
 multiplot(map, map2, map3, cols=3)
 dev.off()
