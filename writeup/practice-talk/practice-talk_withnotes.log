@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  8 OCT 2013 17:26
+This is XeTeX, Version 3.1415926-2.4-0.9998 (TeX Live 2012) (format=xelatex 2013.5.20)  11 OCT 2013 15:27
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1094,7 +1094,7 @@ LaTeX Info: Redefining \upshape on input line 2106.
 . <->"Helvetica Neue/BI/AAT:"
 .................................................
 
-No file practice-talk_withnotes.aux.
+(./practice-talk_withnotes.aux)
 \openout1 = `practice-talk_withnotes.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 64.
@@ -1117,6 +1117,7 @@ LaTeX Font Info:    Checking defaults for EU1/lmr/m/n on input line 64.
 LaTeX Font Info:    ... okay on input line 64.
 LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 64.
 LaTeX Font Info:    Try loading font information for T3+cmr on input line 64.
+
 (/usr/local/texlive/2012/texmf-dist/tex/latex/tipa/t3cmr.fd
 File: t3cmr.fd 2001/12/31 TIPA font definitions
 )
@@ -1171,12 +1172,10 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 64.
 LaTeX Info: Redefining \pageref on input line 64.
 LaTeX Info: Redefining \nameref on input line 64.
+
+(./practice-talk_withnotes.out) (./practice-talk_withnotes.out)
 \@outlinefile=\write5
 \openout5 = `practice-talk_withnotes.out'.
-
-
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
 
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/beamer/translator/dicts/translato
@@ -1275,32 +1274,31 @@ LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> EU1/lmtt/bx/n on input line 64.
 
-No file practice-talk_withnotes.nav.
-
+(./practice-talk_withnotes.nav)
 Overfull \hbox (5.0pt too wide) in paragraph at lines 64--64
 [][]| [][]  
  []
 
-LaTeX Font Info:    Try loading font information for EU1+lmtt on input line 81.
+LaTeX Font Info:    Try loading font information for EU1+lmtt on input line 72.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/euenc/eu1lmtt.fd
 File: eu1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 ) [1
 
 ]
-LaTeX Font Info:    Try loading font information for EU1+pplx on input line 81.
+LaTeX Font Info:    Try loading font information for EU1+pplx on input line 72.
 
-LaTeX Font Info:    No file EU1pplx.fd. on input line 81.
+LaTeX Font Info:    No file EU1pplx.fd. on input line 72.
 
 
 LaTeX Font Warning: Font shape `EU1/pplx/m/n' undefined
-(Font)              using `EU1/lmr/m/n' instead on input line 81.
+(Font)              using `EU1/lmr/m/n' instead on input line 72.
 
 [2
 
 ]
-File: Images/img01.jpg Graphic file (type QTm)
- <use  "Images/img01.jpg" >
+File: ../../figures/practice-talk/logitindpov-1970.jpg Graphic file (type QTm)
+ <use  "../../figures/practice-talk/logitindpov-1970.jpg" >
 Overfull \hbox (5.0pt too wide) has occurred while \output is active
 [][]| [][] 
  []
@@ -1314,7 +1312,7 @@ File: Images/img02.jpg Graphic file (type QTm)
  <use  "Images/img02.jpg" >
 File: Images/img03.jpg Graphic file (type QTm)
  <use  "Images/img03.jpg" >
-Overfull \vbox (2.23706pt too high) detected at line 121
+Overfull \vbox (2.23706pt too high) detected at line 119
  []
 
 
@@ -1327,11 +1325,11 @@ Overfull \hbox (5.0pt too wide) has occurred while \output is active
 ] [6
 
 ]
-LaTeX Font Info:    Try loading font information for U+msa on input line 158.
+LaTeX Font Info:    Try loading font information for U+msa on input line 157.
  (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 158.
+LaTeX Font Info:    Try loading font information for U+msb on input line 157.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -1345,7 +1343,7 @@ Overfull \hbox (5.0pt too wide) has occurred while \output is active
 ]
 
 LaTeX Font Warning: Font shape `EU1/pplx/bx/n' undefined
-(Font)              using `EU1/pplx/m/n' instead on input line 158.
+(Font)              using `EU1/pplx/m/n' instead on input line 157.
 
 [8
 
@@ -1359,12 +1357,12 @@ File: Images/img06.jpg Graphic file (type QTm)
 <use  "Images/img06.jpg" >
 File: Images/img03.jpg Graphic file (type QTm)
  <use  "Images/img03.jpg" >
-Overfull \hbox (2.22398pt too wide) in paragraph at lines 199--199
+Overfull \hbox (2.22398pt too wide) in paragraph at lines 202--202
  []|  [][][] 
  []
 
 
-Overfull \vbox (71.09926pt too high) detected at line 199
+Overfull \vbox (71.09926pt too high) detected at line 202
  []
 
 
@@ -1386,12 +1384,12 @@ File: Images/img09.jpg Graphic file (type QTm)
 <use  "Images/img09.jpg" >
 File: Images/img10.png Graphic file (type QTm)
  <use  "Images/img10.png" >
-Overfull \hbox (2.22398pt too wide) in paragraph at lines 235--235
+Overfull \hbox (2.22398pt too wide) in paragraph at lines 240--240
  []|  [][][] 
  []
 
 
-Overfull \vbox (33.2627pt too high) detected at line 235
+Overfull \vbox (33.2627pt too high) detected at line 240
  []
 
 
@@ -1422,13 +1420,13 @@ File: Images/img13.png Graphic file (type QTm)
 File: Images/free_in_pmc.png Graphic file (type QTm)
 
 <use  "Images/free_in_pmc.png" >
-Overfull \hbox (8.48448pt too wide) in paragraph at lines 291--291
+Overfull \hbox (8.48448pt too wide) in paragraph at lines 307--307
  []|  [][][] 
  []
 
 File: Images/img14.png Graphic file (type QTm)
 <use  "Images/img14.png" >
-Overfull \hbox (12.98727pt too wide) in paragraph at lines 291--291
+Overfull \hbox (12.98727pt too wide) in paragraph at lines 307--307
  []|  [][][] 
  []
 
@@ -1493,7 +1491,7 @@ Overfull \hbox (5.0pt too wide) has occurred while \output is active
 ]
 
 LaTeX Font Warning: Font shape `EU1/HelveticaNeue(0)/m/sc' undefined
-(Font)              using `EU1/HelveticaNeue(0)/m/n' instead on input line 489.
+(Font)              using `EU1/HelveticaNeue(0)/m/n' instead on input line 535.
 
 
 
@@ -1524,24 +1522,24 @@ Overfull \hbox (5.0pt too wide) has occurred while \output is active
 \tf@snm=\write8
 \openout8 = `practice-talk_withnotes.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 531.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 531.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 583.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 583.
  (./practice-talk_withnotes.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 531.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 531.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 583.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 583.
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 531.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 583.
  ) 
 Here is how much of TeX's memory you used:
- 31144 strings out of 493994
- 623287 string characters out of 3150335
- 616862 words of memory out of 3000000
- 33874 multiletter control sequences out of 15000+200000
+ 31188 strings out of 493994
+ 623853 string characters out of 3150335
+ 617946 words of memory out of 3000000
+ 33909 multiletter control sequences out of 15000+200000
  8502 words of font info for 51 fonts, out of 3000000 for 9000
  1144 hyphenation exceptions out of 8191
- 49i,14n,53p,599b,456s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 49i,14n,53p,599b,457s stack positions out of 5000i,500n,10000p,200000b,50000s
 
 Output written on practice-talk_withnotes.pdf (30 pages).
