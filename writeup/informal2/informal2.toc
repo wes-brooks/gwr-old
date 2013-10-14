@@ -1,9 +1,0 @@
-\beamer@endinputifotherversion {3.20pt}
-\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
-\beamer@sectionintoc {2}{Varying-coefficients regression}{4}{0}{2}
-\beamer@sectionintoc {3}{Geographically weighted regression}{8}{0}{3}
-\beamer@subsectionintoc {3}{1}{Local regression}{9}{0}{3}
-\beamer@sectionintoc {4}{Variable selection for spatial VCR models}{11}{0}{4}
-\beamer@subsectionintoc {4}{1}{Global variable selection}{12}{0}{4}
-\beamer@subsectionintoc {4}{2}{Local variable selection}{13}{0}{4}
-\beamer@sectionintoc {5}{References}{14}{0}{5}

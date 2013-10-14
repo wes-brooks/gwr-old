@@ -1,4 +1,0 @@
-\beamer@endinputifotherversion {3.20pt}
-\beamer@sectionintoc {1}{Varying-coefficients regression}{3}{0}{1}
-\beamer@sectionintoc {2}{Simulation study}{7}{0}{2}
-\beamer@sectionintoc {3}{Census data}{11}{0}{3}
