@@ -4,7 +4,10 @@
 library(ggplot2)
 library(gridExtra)
 library(mapproj)
+
+upper_midwest = c('illinois', 'indiana', 'iowa', 'michigan', 'minnesota', 'wisconsin')
 county = map_data('county')
+county = county[county$region %in% upper_midwest,]
 
 #Establish lists to hold the plots:
 plots = list()
