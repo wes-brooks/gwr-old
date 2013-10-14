@@ -1,5 +1,8 @@
 \documentclass[12pt,t]{beamer}
 \usepackage{graphicx}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage{multirow}
 \setbeameroption{hide notes}
 \setbeamertemplate{note page}[plain]
 
@@ -17,12 +20,12 @@
 
 % named colors
 \definecolor{offwhite}{RGB}{249,242,215}
-\definecolor{foreground}{RGB}{255,255,255}
-\definecolor{background}{RGB}{24,24,24}
-\definecolor{title}{RGB}{107,174,214}
-\definecolor{gray}{RGB}{155,155,155}
-\definecolor{subtitle}{RGB}{102,255,204}
-\definecolor{hilight}{RGB}{102,255,204}
+\definecolor{foreground}{RGB}{25,25,25}
+\definecolor{background}{RGB}{255,255,245}
+\definecolor{title}{RGB}{20,20,20}
+\definecolor{gray}{RGB}{80,80,80}
+\definecolor{subtitle}{RGB}{20,20,20}
+\definecolor{hilight}{RGB}{255,127,0}
 \definecolor{vhilight}{RGB}{255,111,207}
 \definecolor{lolight}{RGB}{155,155,155}
 %\definecolor{green}{RGB}{125,250,125}
@@ -61,6 +64,13 @@
 \date{\href{http://www.somesquares.org}{\tt \scriptsize somesquares.org}}
 
 
+%bibliography stuff
+\usepackage{natbib}
+\setbeamertemplate{bibliography entry title}{}
+\setbeamertemplate{bibliography entry location}{}
+\setbeamertemplate{bibliography entry note}{}
+
+
 \begin{document}
 
 % title slide
@@ -75,19 +85,19 @@
 
 
 
-\begin{frame}{Introduce the problem}
-\subt{Spatial regression models}
+\begin{frame}{Motivation}
+\subt{Take a look at some data}
 
 \bigskip
 \centerline{
-\ig[height=0.75\textheight]{../../figures/practice-talk/logitindpov-1970.jpg}
+\ig[width=\textwidth]{../../figures/practice-talk/poverty-data.jpg}
 }
 
-\note{I'll begin with an illustration of what I mean by
-  access.
+\note{
+This is the county-level poverty rate from 1970, as well as the proportion of people who worked in manufacturing, agriculture, and services.
 
-  The other day I was reading a manuscript and saw an
-  article of interest.}
+How is this data to be analyzed?
+}
 \end{frame}
 
 
@@ -95,64 +105,21 @@
 
 
 
-
-\begin{frame}{Access in action}
-\subt{Google Scholar}
+\begin{frame}{Motivation}
+\subt{Sensible questions about the data}
 
 \bigskip
-\begin{center}
-\ig[width=0.70\textwidth]{Images/img02.jpg}
+\begin{itemize}[<+->]
+    \item Which of the economic-structure variables is associated with poverty rate?
+    \item What are the sign and magnitude of that association?
+    \item Is poverty rate associated with the same economic-structure variables across the entire region?
+    \item Are the sign and magnitude of the associations constant across the region?
+\end{itemize}
 
-\onslide<2> {
-  \vspace*{-0.55\textheight}
-  \hspace*{0.15\textwidth}
-  \ig[width=0.70\textwidth]{Images/img03.jpg}
-}
-\end{center}
+\note{
+We're going to aim at answering these questions with the work I present today.
 
-\note{If I paste the article title into Google Scholar, I immediately
-  find the paper and can go directly to the journal.
-
-  But I was sitting at home on my couch.
-
-  And they charge \$40 for a 7 page paper!}
-\end{frame}
-
-
-
-
-
-\begin{frame}{What's the deal with the prices?}
-
-\vspace{24pt}
-
-{\scriptsize \color{gray}
-\renewcommand{\arraystretch}{3}
-\begin{tabular}{p{3.2in}@{\hspace*{1cm}}l}
-Broman K, Speed T, Tigges M ({\color{white} 1996}) Estimation of antigen-responsive T
-cell frequencies in PBMC from human subjects. {\color{white} \mbox{J Immunol Meth}} 198:119{\textendash}132
-& {\color{vhilight} \footnotesize \$39.95}  \\
-Broman KW, Weber JL ({\color{white} 1999}) Method for constructing confidently ordered
-linkage maps. {\color{white} Genet Epidemiol} 16:337{\textendash}343  & {\color{vhilight}
- \footnotesize   \$35.00} \\
-Broman KW, Feingold E ({\color{white} 2004}) SNPs made routine. {\color{white} Nat Methods} 1:104{\textendash}105
-& {\color{vhilight} \footnotesize  \$18.00} \\
-Broman KW ({\color{white} 2005}) Mapping expression in randomized rodent
-genomes. {\color{white} Nat Genet} 37:209{\textendash}210 & {\color{vhilight} \footnotesize  \$18.00}
-\end{tabular}
-}
-
-\note{I went back to some of my early papers, and found these
-  outrageous prices.
-
-  \$18 for a 2-page paper?
-
-  I understand that the publishing industry has a long history of
-  screwy pricing, but you'd have to be either \textbf{desperate} or
-  \textbf{stupid} to pay this.
-
-  And for that 1999 Genetic Epidemiology article, published by Wiley,
-  you have to register in order to find out that it's \$35 for 24-access.
+There are several other methods to answer at least some of these questions, which we'll cover next.
 }
 \end{frame}
 
@@ -160,83 +127,97 @@ genomes. {\color{white} Nat Genet} 37:209{\textendash}210 & {\color{vhilight} \f
 
 
 
+%\begin{frame}{Introduction}
+%\subt{Existing approaches}
+%
+%\bigskip
+%
+%\begin{center}
+%\ig[width=0.70\textwidth]{Images/img02.jpg}
+%
+%\onslide<2> {
+%  \vspace*{-0.55\textheight}
+%  \hspace*{0.15\textwidth}
+%  \ig[width=0.70\textwidth]{Images/img03.jpg}
+%}
+%\end{center}
+%
+%\note{
+%}
+%\end{frame}
 
 
-\begin{frame}{Access in action}
-\subt{
-  \only<1-3>{\tt {\color{gray} journal.com}.ezproxy.library.wisc.edu{\color{gray} /blah}}
-  \only<4| handout 0>{Oh, crap.}
-}
+\begin{frame}{Introduction}
+\subt{A review of existing methods}
 
 \bigskip
-\begin{center}
-\ig[width=0.7\textwidth]{Images/img04.jpg}
+\begin{itemize}[<+->]
+    \item Spatial regression
+    \item Varying coefficient regression
+    \begin{itemize}
+        \item Splines
+        \item Kernels
+        \item Wavelets
+    \end{itemize}
+    \item Model selection via regularization
+\end{itemize}
 
-\onslide<2->{
-  \vspace*{-0.55\textheight}
-  \hspace*{0.10\textwidth}
-  \ig[width=0.7\textwidth]{Images/img05.jpg}
-}
-
-\onslide<3->{
-  \vspace*{-0.55\textheight}
-  \hspace*{0.20\textwidth}
-  \ig[width=0.7\textwidth]{Images/img06.jpg}
-}
-
-\onslide<4>{
-  \vspace*{-0.35\textheight}
-  \hspace*{0.30\textwidth}
-  \ig[width=0.7\textwidth]{Images/img03.jpg}
-}
-
-\end{center}
-
-\note{One useful trick that I've learned (for folks at
-  UW{\textendash}Madison): If you paste {\tt ezproxy.library.wisc.edu}
-  into the URL for an article, then after entering your password, you
-  can sometimes get access to the article.
-
-  But it didn't work in this case.
+\note{
+Behind the methodology that I'm discussing is a wide range of literature.
 }
 \end{frame}
 
 
 
 
-
-
-
-\begin{frame}{Access in action}
-\subt{Library catalog}
+\begin{frame}{Introduction}
+\subt{Some definitions}
 
 \bigskip
-\begin{center}
-\ig[width=0.7\textwidth]{Images/img07.jpg}
+\begin{itemize}
+    \item Univariate spatial response process $\left\{ Y(\bm{s}) : \bm{s} \in \mathcal{D} \right\}$
+    \item Multivariate spatial covariate process $\left\{ \bm{X}(\bm{s}) : \bm{s} \in \mathcal{D} \right\}$
+    \item $n = $ number of observations
+    \item $p = $ number of covariates
+    \item Location (2-dimensional) $\bm{s}$
+    \item Spatial domain $\mathcal{D}$
+\end{itemize}
 
-\onslide<2->{
-  \vspace*{-0.45\textheight}
-  \hspace*{0.10\textwidth}
-  \ig[width=0.7\textwidth]{Images/img08.jpg}
+
+\note{
+We'll use these variables throughout. 
 }
+\end{frame}
 
-\onslide<3->{
-  \vspace*{-0.55\textheight}
-  \hspace*{0.20\textwidth}
-  \ig[width=0.7\textwidth]{Images/img09.jpg}
+
+
+
+
+\begin{frame}{Introduction}
+\subt{Further definitions}
+
+\bigskip
+\begin{itemize}
+    \item Geostatistical data:
+    \begin{itemize}
+        \item Observations are made at sampling locations $\bm{s}_i$ for $i = 1, \dots, n$
+        \item E.g. elevation, temperature
+    \end{itemize}
+    \item Areal data:
+    \begin{itemize}
+        \item Domain is partitioned into $n$ regions $\left\{ D_1, \dots, D_n \right\}$
+        \item The regions do not overlap, and they divide the domain completely: $\mathcal{D} = \bigcup_{i=1}^n D_i$
+        \item Sampling locations $\bm{s}_i$ for $i = 1, \dots, n$ are the centroids of the regions
+        \item E.g. poverty rate, population, spatial mean temperature
+    \end{itemize}
+\end{itemize}
+
+
+\note{
+The method I'm describing applies to geostatistical data, or to areal data when the observations are assumed to be located at the centroid.
+
+The poverty data example is areal data, the simulation study is based on simulated geostatistical data.
 }
-
-\onslide<4>{
-  \vspace*{-0.55\textheight}
-  \hspace*{0.30\textwidth}
-  \ig[width=0.7\textwidth]{Images/img10.png}
-}
-\end{center}
-
-\note{So I go back to the library catalog, search for the journal, get
-  to the journal site again, find the paper, and\dots
-}
-
 \end{frame}
 
 
@@ -246,63 +227,475 @@ genomes. {\color{white} Nat Genet} 37:209{\textendash}210 & {\color{vhilight} \f
 
 
 
-\begin{frame}{Access in action}
-\subt{Finally.}
+\begin{frame}{Introduction}
+\subt{Existing approaches: spatial regression}
+
+\bigskip
+\begin{itemize}
+    \item The typical spatial regression \citep{Cressie:1993}
+\end{itemize}
+\begin{align}
+    Y(\bm{s}) &= \bm{X}(\bm{s})'\bm{\beta} + W(\bm{s}) + \varepsilon(\bm{s}) \notag \\
+    \text{cov}(W(\bm{s}), W(\bm{t})) &= \Gamma\left(\delta(\bm{s}, \bm{t})\right) \notag \\
+    \delta(\bm{s}, \bm{t}) &= \sqrt{\|\bm{t} - \bm{s}\|_2} \notag \\
+    \text{E.g. } \Gamma(\delta(\bm{s}, \bm{t})) &= \exp \{ -\phi^{-1} \delta(\bm{s}, \bm{t}) \}    
+\end{align}
+\pause
+\begin{itemize}[<+->]
+    \item $W(\bm{s})$ is a spatial random effect that accounts for autocorrelation in the response variable
+    \item The coefficients $\bm{\beta}$ are constant
+    \item Relies on \emph{a priori} global variable selection
+\end{itemize}
+
+\note{
+This is the form of the usual spatial regression from e.g. Cressie (1993).
+
+The spatial random effect W captures autocorrelation of the response, while the white noise is iid error
+
+The Gamma function is a Matern-class covariance function, such as the exponential covariance function (listed here)
+}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Introduction}
+\subt{Existing approaches: varying coefficients regression}
+
+\[
+    Y(\bm{s}) = \bm{X}(\bm{s})' \textcolor{hilight}{\bm{\beta}(\bm{s})} + \varepsilon(\bm{s})
+\]
+
+\pause
+\begin{itemize}[<+->]
+    \item Assume an effect modifying variable $S$
+    \item Coefficients are functions of $S$
+    \item Generally assume that the coefficient functions are smooth
+    \item This is a varying coefficient regression (VCR) model \citep{Hastie:1993a}
+    \item If $\bm{s}$ is a spatial location then we have a spatially varying coefficient regression (SVCR) model
+\end{itemize}
+
+\note{}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Introduction}
+\subt{Existing approaches: spatially varying coefficient process}
+
+\bigskip
+\begin{itemize}
+    \item Making model more flexible: coefficients in a spatial regression model can be allowed to vary \citep{Gelfand:2003}
+\end{itemize}
+
+\[
+    Y(\bm{s}) = \bm{X}(\bm{s})' \textcolor{hilight}{\bm{\beta}(\bm{s})} + \varepsilon(\bm{s})
+\]
+
+\pause
+\begin{itemize}[<+->]
+    \item The spatial random effect has been incorporated into the spatially varying intercept
+    \item $\{ \beta_1(\bm{s}) : \bm{s} \in \mathcal{D}\}, \dots, \{\beta_p(\bm{s}) : \bm{s} \in \mathcal{D}\}$ are stationary spatial processes with Mat\`{e}rn covariance functions
+    \item Still relies on \emph{a priori} global variable selection
+\end{itemize}
+
+\note{}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Introduction}
+\subt{Existing approaches: spline-based VCR and SVCR models}
+
+\bigskip
+\begin{itemize}
+    \item Splines are a way to parameterize smooth functions
+    \item Splines can be incorporated into a generalized additive model (GAM):
+    \begin{itemize}
+        \item $E\{Y(t)\} = f\{X_1(t)\} + \cdots + f\{X_p(t)\}$
+    \end{itemize}
+    \item It is possible to parameterize a VCR model with splines for the coefficient functions:
+    \begin{itemize}
+        \item $E\{Y(t)\} = \beta_1(t) X_1(t) + \cdots + \beta_p(t) X_p(t)$
+    \end{itemize}
+\end{itemize}
+
+\note{}
+\end{frame}
+
+
+
+
+\begin{frame}{Introduction}
+\subt{Existing approaches: Global selection in spline-based VCR models}
+
+\bigskip
+Regularization methods for global variable selection in VCR models:
+\begin{itemize}
+    \item The integral of a function squared (e.g. $\int \{f(t)\}^2 dt$) is zero if and only if the function is zero everywhere.
+    \item Use regularization (maximize the likelihood plus a penalty) to encourage coefficient functions to be zero
+    \item SCAD penalty \citep{Fan:2001} on the integral of the square of the coefficient function \citep{Wang:2008a}
+    \item Non-negative garrote penalty \citep{Breiman:1995} on the integral of the square of the coefficient function \citep{Antoniadis:2012b}
+\end{itemize}
+
+\note{These selection methods are all global - that is, they select variables for the entire domain simultaneously}
+\end{frame}
+
+
+
+
+\begin{frame}{Introduction}
+\subt{Existing approaches: wavelet methods for VCR models}
+
+\bigskip
+Wavelet methods involve decomposing a function into local frequency components. Wavelet methods for VCR models include using Bayesian variable selection or the Lasso to estimate which local frequency components have nonzero coefficients \citep{Shang-2011,Zhang-2011}.
+
+\vspace{10mm}
+
+These methods achieve sparsity in the local frequency components but not in the local covariates, and so are not suitable for local variable selection.
+
+\note{}
+\end{frame}
+
+
+
+
+\begin{frame}{Introduction}
+\subt{Existing approaches: Local regression}
+
+\bigskip
+Local regression uses a kernel function at each sampling location to weight observations based on their distance from the sampling location. An example is the bisquare kernel:
+\begin{align}
+	w_{ii'} = \begin{cases} \left[1-\left(\phi^{-1}\delta_{ii'}\right)^2\right]^2 &\mbox{ if } \delta_{ii'} < \phi, \\ 0 &\mbox{ if } \delta_{ii'} \geq \phi. \end{cases}
+\end{align}
+Where $\phi$ is a bandwidth parameter.
+
+Given the weights, a local model is fit at each sampling location using the local likelihood \citep{Loader:1999}
+
+\note{}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Introduction}
+\subt{Existing approaches: Local likelihood}
+
+\bigskip
+Calibrate the model by doing the following at each sampling location:
+\begin{itemize}
+    \item Weight each observation's likelihood
+    \item Weights are given by the kernel
+\end{itemize}
+
+\begin{align}
+    L &= \prod_{i'=1}^n \left(L_{i'}\right)^{w_{ii'}} \notag \\
+    \ell &= \sum_{i'=1}^n w_{ii'} \left\{\log \sigma_i^{2} + \sigma_i^{-2}\left(y_{i'} - \bm{x}_{i'}'\bm{\beta}_i\right)^2 \right\} \notag
+\end{align}
+Where $\bm{\beta}_i = \bm{\beta}(\bm{s}_i)$.
+
+\note{
+Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.
+}
+\end{frame}
+
+
+
+\begin{frame}{Introduction}
+\subt{Existing approaches: geographically weighted regression}
+
+\bigskip
+When the effect modifying variable $\bm{s}$ refers to spatial location, the method of local regression is called geographically weighted regression (GWR) \citep{Brundson:1998a, Fotheringham:2002}
+
+\note{
+Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.
+}
+\end{frame}
+
+
+
+
+\begin{frame}{Introduction}
+\subt{Existing approaches: bandwidth estimation for GWR}
+
+\bigskip
+\begin{itemize}
+    \item Smaller bandwidth: less bias, more flexible coefficient surface
+    \item Large bandwidth: less variance, less flexible coefficient surface
+    \item Estimate the degrees of freedom used in estmating the coefficient surface \citep{Hurvich:1998}:
+    \begin{itemize}
+        \item $\hat{\bm{y}} = H\bm{y}$
+        \item $\nu = $ tr($H$)
+    \end{itemize}
+    \item Then the corrected AIC for bandwidth selection is:
+    \item $\text{AIC}_{\tt c} = 2 n \log{\sigma} + n \left\{\frac{n + \nu}{n - 2 - \nu}\right\}$
+\end{itemize}
+
+\note{
+Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.
+}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Introduction}
+\subt{Existing approaches: geographically weighted Lasso}
+
+\bigskip
+Within a GWR model, using the Lasso \citep{Tibshirani:1996} for local variable selection is called the geographically weighted Lasso (GWL) \citep{Wheeler:2009}.
+
+\begin{itemize}
+    \item The GWL requires estimating a Lasso tuning parameter for each local model
+    \item \cite{Wheeler:2009} estimates the local Lasso tuning parameter at location $\bm{s}_i$ by minimizing a jacknife criterion: $|y_i - \hat{y}_i|$
+    \item The jacknife criterion can only be calculated where data are observed, making it impossible to use the GWL to impute missing data or to estimate the value of the coefficient surface at new locations
+    \item Also, the Lasso is known to be biased in variable selection and suboptimal for coefficient estimation
+\end{itemize}
+
+\note{GWL does local variable selection}
+\end{frame}
+
+
+
+\begin{frame}{Methodology}
+\subt{Geographically weighted elastic net (GWEN)}
+
+\bigskip
+\begin{itemize}
+    \item Local variable selection in a GWR model using the adaptive elastic net (AEN) \citep{Zou:2009}
+    \item Under suitable conditions, the AEN has an oracle property for selection
+\end{itemize}
+
+\begin{align}
+		\mathcal{S}(\bm{\beta}_i) &= -2 \ell_i(\bm{\beta}_i) + \mathcal{J}_2(\bm{\beta}_i) \notag \\
+		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}   \notag \\
+		&+ \alpha_i \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} \notag \\
+		&+ (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2 \notag
+	\end{align}
+
+\note{
+The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
+
+}
+\end{frame}
+
+
+
+\begin{frame}{Methodology}
+\subt{Geographically weighted elastic net (GWEN)}
+
+\bigskip
+where $\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2$ is the weighted sum of squares minimized by traditional GWR, and $\mathcal{J}_2(\bm{\beta}_i) = \alpha_i \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$ is the AEN penalty.
+
+\note{
+The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
+
+}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Methodology}
+\subt{Geographically weighted elastic net (GWEN)}
+
+\bigskip
+It is necessary to estimate an AEN tuning parameter for each local model. Using the local BIC allows fitting a local model at any location within the domain
+	\begin{align}\label{eq:BIC_loc}
+		\mbox{BIC}_{\text{loc}, i} &= -2 \sum_{i'=1}^n \ell_{ii'}  + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
+		&= -2 \sum_{i'=1}^n \log \left[ \left(2 \pi \hat{\sigma}_i^2\right)^{-1/2} \exp \left\{-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right\} \right]^{w_{ii'}} \notag \\
+		&+ \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
+	\end{align}
+
+
+\note{
+The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
+
+}
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Methodology}
+\subt{Geographically weighted elastic net (GWEN)}
+
+\bigskip
+	\begin{align}
+		&= \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} \notag \\
+		&+ \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i \notag
+	\end{align}
+
+
+\note{We treat the sum of the weights around the sampling location as the number of observations for the local BIC.}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Simulation study}
+\subt{Simulating covariates}
+
+\bigskip
+Five covariates $\tilde{X}_1, \dots, \tilde{X}_5$ were simulated by Gaussian random fields on the domain $[0,1] \times [0,1]$ on a $30 \times 30$ grid of sampling locations:
+\begin{align}
+    \tilde{X}_j &\sim N(0, \Sigma) \text{ for } j = 1, \dots, 5 \notag \\
+    \left\{\Sigma\right\}_{i,i'} &= \exp \{ -\tau^{-1} \delta_{ii'}\} \text{ for } i,i' = 1, \dots, n \notag
+\end{align}
+
+Where the covariates were simulated with colinearity, the colinearity was induced by multiplying the design matrix by the square root of the colinearity matrix:
+\begin{align}
+    \text{diag}(\Omega_{5\times5}) = 1 \notag \\
+    \text{off-diag}(\Omega_{5\times5}) = \rho \notag \\
+    X = \tilde{X} R
+\end{align}
+Where $\Omega_{5\times5} = R'R$ is the Cholesky decomposition.
+
+\note{}
+\end{frame}
+
+
+\begin{frame}{Simulation study}
+\subt{Simulating the response}
+
+\bigskip
+\begin{itemize}
+    \item $Y(\bm{s}) = X(\bm{s})'\bm{\beta}(\bm{s}) = \sum_{j=1}^5 \beta_j(\bm{s}) X_j(\bm{s}) + \varepsilon(\bm{s})$
+    \item $\bm{\varepsilon} \sim \; iid \;\; N(0,\sigma^2) $ 
+    \item $\beta_1(\bm{s})$, the coefficient function for $X_1$, is nonzero in part of the domain.
+    \item Coefficients for $X_2, \dots, X_5$ are zero everywhere
+\end{itemize}
+
+\note{}
+\end{frame}
+
+
+
+\begin{frame}{Simulation study}
+\subt{Coefficient functions}
+
+\bigskip
+Call these functions step, gradient, and parabola:
+
+\begin{figure}
+    \begin{center}
+    \ig[width=0.35\textwidth]{../../figures/practice-talk/step.jpg}
+    \ig[width=0.35\textwidth]{../../figures/practice-talk/gradient.jpg}
+    \ig[width=0.35\textwidth]{../../figures/practice-talk/parabola.jpg}
+    \end{center}
+\end{figure}
+
+\note{}
+\end{frame}
+
+
+
+\begin{frame}{Simulation results}
+\subt{Selection}
+\hspace{-10mm}\input{../../output/practice-talk/selection}
+\note{}
+\end{frame}
+
+
+\begin{frame}{Simulation results}
+\subt{MSE of $\beta_1(\bm{s})$}
+\input{../../output/practice-talk/msex-step}
+\note{}
+\end{frame}
+
+
+\begin{frame}{Simulation results}
+\subt{MSE of $\beta_1(\bm{s})$}
+\input{../../output/practice-talk/msex-gradient}
+\note{}
+\end{frame}
+
+
+\begin{frame}{Simulation results}
+\subt{MSE of $\beta_1(\bm{s})$}
+\input{../../output/practice-talk/msex-parabola}
+\note{}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Simulation results}
+\subt{Variance of $\beta_1(\bm{s})$}
+\input{../../output/practice-talk/varx-step}
+\note{}
+\end{frame}
+
+
+\begin{frame}{Simulation results}
+\subt{Variance of $\beta_1(\bm{s})$}
+\input{../../output/practice-talk/varx-gradient}
+\note{}
+\end{frame}
+
+
+\begin{frame}{Simulation results}
+\subt{Variance of $\beta_1(\bm{s})$}
+\input{../../output/practice-talk/varx-parabola}
+\note{}
+\end{frame}
+
+
+
+
+\begin{frame}{Simulation results}
+\subt{Bias of $\beta_1(\bm{s})$}
+\input{../../output/practice-talk/bx-step}
+\note{}
+\end{frame}
+
+
+\begin{frame}{Simulation results}
+\subt{Bias of $\beta_1(\bm{s})$}
+\input{../../output/practice-talk/bx-gradient}
+\note{}
+\end{frame}
+
+
+\begin{frame}{Simulation results}
+\subt{Bias of $\beta_1(\bm{s})$}
+\input{../../output/practice-talk/bx-parabola}
+\note{}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Data analysis}
+\subt{Revisiting the introductory example}
 
 \bigskip
 \centerline{
-\ig[height=0.75\textheight]{Images/img11.jpg}
+\ig[width=\textwidth]{../../figures/practice-talk/poverty-data.jpg}
 }
 
-\note{I finally have a PDF of the paper.}
-\end{frame}
+\note{
+This is the county-level poverty rate from 1970, as well as the proportion of people who worked in manufacturing, agriculture, and services.
 
-
-
-
-
-
-
-
-
-\begin{frame}{Access in action}
-\subt{There's also PubMed}
-
-\bigskip
-\begin{center}
-\ig[width=0.7\textwidth]{Images/img12.png}
-
-\onslide<2->{
-  \vspace*{-0.45\textheight}
-  \hspace*{0.10\textwidth}
-  \ig[width=0.7\textwidth]{Images/img13.png}
-}
-
-\onslide<3>{
-  \vspace*{-0.45\textheight}
-  \hspace*{0.55\textwidth}
-  \ig[width=2in]{Images/free_in_pmc.png}
-}
-
-
-\onslide<4>{
-  \vspace*{-0.39\textheight}
-  \hspace*{0.38\textwidth}
-  \ig[height=0.85\textheight]{Images/img14.png}
-}
-\end{center}
-
-\note{If I'd used PubMed rather than Google Scholar, I could have
-  gotten to the published paper in just a few clicks, because the
-  manuscript is in PubMed Central.
-
-  PubMed Central is only for federally-funded research, has a one year
-  embargo, and (as here) might not include the published version of the
-  paper.
-
-  PubMed Central is a good thing, but one generally can't wait a year,
-  it's unfortunate that the published versions aren't always included,
-  and from an author's point of view it can be a real hassle.
+How is this data to be analyzed?
 }
 \end{frame}
 
@@ -310,274 +703,47 @@ genomes. {\color{white} Nat Genet} 37:209{\textendash}210 & {\color{vhilight} \f
 
 
 
+\begin{frame}{Data analysis}
+\subt{Results from traditional GWR}
 
-
-
-
-
-\begin{frame}{It's all about money}
-\subt{(Costs in scientific publishing)}
-
-\vspace{24pt}
-
-\bi
-\item {\color<3| handout 0>{hilight} Research}
-\item {\color<3| handout 0>{hilight} Writing}
-\item {\color<3| handout 0>{hilight} Peer review, editorial oversight}
-\item {\color<4| handout 0>{hilight} Journal administration}
-\item {\color<4| handout 0>{hilight} Copy editing, typesetting}
-\item {\color<4| handout 0>{hilight} Distribution}
-\item<2-> {\color<2| handout 0>{vhilight} \color<4| handout 0>{hilight} Profit}
-\ei
-
-\note{Open access is all about money.
-
-Most of the costs behind a research paper are paid by grants or
-institutional funds. For most journals, peer review and editorial
-oversight are unpaid.
-
-There are real costs associated with journals, but in the end they are
-all paid from the same sources (grants and institutional funds).
-
-Do we really want to give away the product of our research and then
-buy it back repeatedly, at great profit to the publishers?
-
-And shouldn't the literature be available generally and not just to
-those with access to well-funded research libraries?
+\centerline{
+\ig[width=\textwidth]{../../figures/poverty/1970-gwr}
 }
+
+\note{}
 \end{frame}
 
 
 
 
+\begin{frame}{Data analysis}
+\subt{Results from traditional GWR}
 
-
-
-
-\begin{frame}{It's not about}
-
-\vspace{36pt}
-
-\bi
-\itemsep6pt
-\item {Peer review}
-\item {Predatory publishing}
-\item {\color<3>{vhilight} Impact factors}
-\item {\color<3>{vhilight} Evaluating researchers} \\
-{\footnotesize \color{gray} (for grants \& promotions)}
-\ei
-
-\vspace{36pt}
-
-\onslide<2->{ \color{hilight} Well, it sort of is\dots }
-
-\note{The Open Access discussion often gets tied up with discussion
-  about peer review, predatory publishing, and journal impact
-  factors.
-
-  But to me, it is a completely separate issue, whether we want
-  stringent peer review before publication or instead leave the
-  evaluation entirely to post-publication review.
-
-  On the other hand, the current culture is to evaluate researchers
-  based on the perceived quality of the journals in which they've
-  published. This makes it difficult to change to open access.
-
-  If everyone's still going to send their best work to Science,
-  Nature, \& Cell, then that work will continue to be locked up behind
-  pay walls.
+\centerline{
+\ig[width=\textwidth]{../../figures/poverty/1970-enet-linear-coefficients-unshrunk}
 }
+
+\note{}
 \end{frame}
 
 
 
 
+\begin{frame}{Future work}
 
-
-
-
-\begin{frame}{Paying for it}
-
-\vspace{36pt}
-
-\bi
-\itemsep12pt
-\item Traditional approach
-\bi
-\item subscriptions
-\item page charges
-\ei
-\item Open access
-\bi
-\item bigger page charges
-\item charge submissions?
-\ei
-\item Endowments
-\item Direct grants to journals
-\ei
-
-\note{The usual way in which publishing costs are paid are through a
-  combination of subscriptions (both institutional and individual) and
-  direct charges to the author.
-
-  In the new open access model, the page charges are increased in
-  order to eliminate the subscription fees. One might have a fee for
-  all submitted manuscripts and not just those accepted for
-  publication.
-
-  I've not seen much discussion of other alternatives, but I would
-  prefer to see endowments established, particularly for
-  society journals.  Alternatively, journals might be
-  funded directly through grants.
-}
+\begin{itemize}
+    \item Apply the GWEN to data with non-Gaussian response variable
+    \item Incorporate spatial autocorrelation in the model (simulated errors were iid)
+\end{itemize}
+\note{}
 \end{frame}
 
 
 
-
-
-
-
-
-\begin{frame}{\$7000 page charges}
-
-\vspace{24pt}
-
-{\scriptsize \color{gray}
-\renewcommand{\arraystretch}{3}
-\begin{tabular}{p{3.0in}@{\hspace*{1cm}}l}
-Broman KW (2012) Genotype probabilities at intermediate generations in
-the construction of recombinant inbred lines. {\color{white} Genetics} 190:403{\textendash}412
-& {\color{vhilight} \footnotesize \$2,548} \\
-
-Broman KW (2012) Haplotype probabilities in advanced intercross
-populations. {\color{white} G3} 2:199{\textendash}202
-& {\color{vhilight} \footnotesize \$1,650 } \\
-
-Broman KW, Kim S, Sen \'S, An\'e C, Payseur BA (2012) Mapping quantitative
-trait loci onto a phylogenetic tree. {\color{white} Genetics} 192:267{\textendash}279
-& {\color{vhilight} \footnotesize \$2,891 }
-\end{tabular}
-}
-
-\note{To illustrate the costs, here are the pages charges for three
-  of my papers from 2012, for a combined \$7000.
-}
-\end{frame}
-
-
-
-
-
-
-
-\begin{frame}{Invoice}
-
-\bigskip
-\begin{center}
-\ig[height=0.75\textheight]{Images/invoice3.jpg}
-
-
-\onslide<2>{
-  \vspace*{-0.35\textheight}
-  \ig[width=\textwidth]{Images/invoice3_clip.jpg}
-}
-\end{center}
-
-\note{Here's the invoice for the most expensive of those three
-  papers.
-
-  The charges would have been ``just'' \$1700, but I paid an
-  additional \$1200 to have it freely available (otherwise it would
-  have been behind a pay wall for one year).
-}
-\end{frame}
-
-
-
-
-
-
-\begin{frame}{Choices for young investigators}
-
-\vspace{36pt}
-
-\bi
-\item Pay for open access
-\item Support young open access journals
-
-\vspace*{12pt}
-
-\hspace{2cm} {\color{vhilight} \sc or}
-
-\vspace*{12pt}
-
-\item Let subscribers pay \& do more experiments
-\item Continue to go after Science, Nature, \& Cell
-\ei
-
-\note{The page charges, and the continued reliance on impact factors,
-  lead to difficult choices, particularly for young investigators.
-
-  Should I pay for open access, or should I let the subscribers pay
-  and use the savings to do more experiments?
-
-  Should I support open access journals, or should I continue to
-  go after Science, Nature, \& Cell?
-
-  The best scientists may confidently maintain their pure publication
-  record.
-
-  But more mediocre scientists, who may be just scraping by,
-  probably don't feel they have that luxury.  A Nature paper can
-  ``make you.''
-}
-\end{frame}
-
-
-
-
-
-
-
-
-\begin{frame}{What can we do?}
-
-\vspace{36pt}
-
-\bi
-\itemsep12pt
-\item Send our best work to open access journals
-\item Support junior faculty to keep their papers open
-\item Pay attention to the quality of the work
-\bi
-\item[] (not the impact factor of the journal)
-\ei
-\item Raise endowments for trusted journals
-\item {\color<2>{vhilight} Reform copyright law}
-\ei
-
-\note{We need to send our best work to open access journals.
-
-We need to find ways to support our junior colleagues, so that they
-may do so as well.
-
-We need to evaluate people based on their work and not by the name of
-the journal in which it appeared. We all may say, ``Science and
-Nature are often crap and there are lots of fantastic papers that
-appear elsewhere.'' But somehow when we see Nature or Cell on
-someone's CV, we still have an immediate, positive reaction.
-
-I would like to see endowed journals, open forever.
-
-The quickest way to free the product of federally funded research
-would be to reform copyright law. If the product of our research were
-forced open by law, the publishing industry would figure out how to
-pay for it in short order.
-
-But given the state of politics in the US, I'm not too optimistic
-about that.
-}
+\begin{frame}[allowframebreaks]
+        \frametitle{References}
+        \bibliographystyle{chicago}
+        \bibliography{../../references/gwr}
 \end{frame}
 
 \end{document}
