@@ -1,14 +1,14 @@
 output/*
 */.DS_Store
 
-writeup/*.aux
-writeup/*.log
-writeup/*.nav
-writeup/*.out
-writeup/*.snm
-writeup/*.toc
-writeup/*.bbl
-writeup/*.fff
-writeup/*.spl
-writeup/*.ttt
-writeup/*.synctex.gz
+writeup/*/*.aux
+writeup/*/*.log
+writeup/*/*.nav
+writeup/*/*.out
+writeup/*/*.snm
+writeup/*/*.toc
+writeup/*/*.bbl
+writeup/*/*.fff
+writeup/*/*.spl
+writeup/*/*.ttt
+writeup/*/*.synctex.gz
