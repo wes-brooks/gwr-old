@@ -9,7 +9,7 @@ install_github("wesesque/brooks")
 
 #Import the data
 #setwd('~/git/gwr/code/poverty')
-brooks::source_https('https://raw.github.com/wesesque/gwr/code/poverty/poverty-data.r')
+brooks::source_https('https://raw.github.com/wesesque/gwr/master/code/poverty/poverty-data.r')
 
 #Establish lists to hold the bandwidths
 bw = list()

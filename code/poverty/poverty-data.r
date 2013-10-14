@@ -1,7 +1,7 @@
 require(brooks)
 
 #Import poverty data
-pov = brooks::load_https("https://raw.github.com/wesesque/gwr/data/poverty/upMidWestpov_Iowa_cluster_names.csv", header=TRUE, header=TRUE, sep=",", rownames=FALSE)
+pov = brooks::load_https("https://raw.github.com/wesesque/gwr/master/data/poverty/upMidWestpov_Iowa_cluster_names.csv", header=TRUE, header=TRUE, sep=",", rownames=FALSE)
 years = c('60', '70', '80', '90', '00', '06')
 column.map = list(pindpov='proportion individuals in poverty', 
     logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', 
