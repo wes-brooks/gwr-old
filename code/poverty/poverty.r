@@ -3,9 +3,13 @@ library(gwselect)
 library(spgwr)
 registerCores(n=3)
 
+#Import metatools:
+library(devtools)
+install_github("wesesque/brooks")
+
 #Import the data
 #setwd('~/git/gwr/code/poverty')
-source_https('https://github.com/wesesque/gwr/tree/master/code/poverty/poverty-data.r')
+brooks::source_https('https://github.com/wesesque/gwr/tree/master/code/poverty/poverty-data.r')
 
 #Establish lists to hold the bandwidths
 bw = list()

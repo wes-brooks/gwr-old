@@ -1,7 +1,7 @@
+require(brooks)
+
 #Import poverty data
-pops = read.table("~/git/gwr/data/poverty/historicalpops.txt", header=TRUE)
-pov = read.csv("~/git/gwr/data/poverty/upMidWestpov_Iowa_cluster_names.csv", header=TRUE)
-pov$X09pop = as.numeric(gsub(",", "", as.character(pov$X09pop)))
+pov = brooks::load_https("https://github.com/wesesque/gwr/tree/master/data/poverty/upMidWestpov_Iowa_cluster_names.csv", header=TRUE, header=TRUE, sep=",", rownames=FALSE)
 years = c('60', '70', '80', '90', '00', '06')
 column.map = list(pindpov='proportion individuals in poverty', 
     logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex', pman='pman', 
