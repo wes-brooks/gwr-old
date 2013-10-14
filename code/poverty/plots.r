@@ -20,19 +20,26 @@ for (yr in years) {
 
     #for (select in c("lasso", "enet")) {
     for (select in c("enet")) {
-        model[[select]][[year]][['model']][['models']][[n.counties+1]] = model[[select]][[year]][['model']][['models']][[cluster_id]]
+        #Pepin county:
         model[[select]][[year]][['coords']][df$STATE=='Wisconsin' & df$COUNTY=='PEPIN',] = c(-92.1048, 44.5823)
-        model[[select]][[year]][['coords']] = rbind(model[[select]][[year]][['coords']], c(-88.7285, 44.9291))
+
+        #Shawano county:
+        model[[select]][[year]][['model']][['models']][[n.counties+1]] = model[[select]][[year]][['model']][['models']][[cluster_id]]
+        model[[select]][[year]][['coords']] = rbind(model[[select]][[year]][['coords']], c(-88.707733, 44.788658))
+
+        #Oconto county:
+        model[[select]][[year]][['model']][['models']][[n.counties+2]] = model[[select]][[year]][['model']][['models']][[cluster_id]]
+        model[[select]][[year]][['coords']] = rbind(model[[select]][[year]][['coords']], c(-88.014221, 44.877282)) 
     
         plots[[select]][[year]] = list()
         for (v in predictors) {
             plots[[select]][[year]][[v]] = plot.gwselect(model[[select]][[year]], part='coef.unshrunk', var=v, polygons=county, title=v, col.bg='gray85') + theme(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
         }
 
-        pp = plots[[select]][[year]]
-        #dev.new()
-        pdf(paste('figures/poverty/', yr, '-', select, '-linear-coefficients-unshrunk.pdf', sep=''), width=8, height=16)
+        #pp = plots[[select]][[year]]
+        dev.new()
+        #pdf(paste('~/git/gwr/figures/poverty/', yr, '-', select, '-linear-coefficients-unshrunk.pdf', sep=''), width=8, height=16)
         grid.arrange(pp[['pag']], pp[['pex']], pp[['pman']], pp[['potprof']], pp[['pfire']], pp[['pserve']], ncol=2)
-        dev.off()
+        #dev.off()
     }
 }
