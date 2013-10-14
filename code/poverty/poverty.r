@@ -28,7 +28,6 @@ for (yr in years) {
     #Isolate one year of data
     year = as.character(yr)
     df = pov2[pov2$year==yr,]
-    df = merge(x=df, y=pops, by.x="fips", by.y="FIPS")
     
     ####Produce the models via lasso and via elastic net:
     #Define which variables we'll use as predictors of poverty:
