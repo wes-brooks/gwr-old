@@ -89,7 +89,7 @@ for (v in predictors) {
 }
 
 pdf("~/git/gwr/figures/practice-talk/poverty-response.pdf", width=6, height=6)
-map
+print(map)
 dev.off()
 
 pdf("~/git/gwr/figures/practice-talk/poverty-covariates.pdf", width=11, height=6)
