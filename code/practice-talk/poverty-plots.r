@@ -3,10 +3,12 @@ library(sp)
 library(scales)
 library(grid)
 
+#Bootstrap the source_https function
+library(devtools)
+install_github("wesesque/brooks")
+
 #Import the data
-setwd('~/git/gwr/code/poverty')
-source('poverty-data.r')
-source("~/git/brooks/code/multiplot.r")
+brooks::source_https('https://raw.github.com/wesesque/gwr/master/code/poverty/poverty-data.r')
 
 #Prepare something for plotting:
 year = 1970
@@ -83,10 +85,10 @@ for (v in predictors) {
         scale_y_continuous('')
 }
 
-pdf("../../figures/practice-talk/poverty-data.pdf", width=6, height=6, units='in')
+pdf("~/git/gwr/figures/practice-talk/poverty-response.pdf", width=6, height=6, units='in')
 map
 dev.off()
 
-pdf("../../figures/practice-talk/poverty-data.pdf", width=11, height=6, units='in')
+pdf("~/git/gwr/figures/practice-talk/poverty-covariates.pdf", width=11, height=6, units='in')
 multiplot(plotlist=maps, cols=3)
 dev.off()
