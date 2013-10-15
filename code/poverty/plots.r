@@ -27,8 +27,7 @@ for (yr in years) {
 	n.counties = nrow(df)
     year = as.character(yr)
 
-    #for (select in c("GWAL", "GWEN")) {
-    for (select in c("GWEN")) {
+    for (select in c("GWAL", "GWEN")) {
         #Pepin county:
         model[[select]][[year]][['coords']][df$STATE=='Wisconsin' & df$COUNTY=='PEPIN',] = c(-92.1048, 44.5823)
 
