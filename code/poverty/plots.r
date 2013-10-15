@@ -1,9 +1,10 @@
 ## You should run poverty.r to generate the plots for this script.
 
 #Import the county polygons
-library(ggplot2)
-library(gridExtra)
-library(mapproj)
+require(ggplot2)
+require(gridExtra)
+require(mapproj)
+require(brooks)
 
 upper_midwest = c('illinois', 'indiana', 'iowa', 'michigan', 'minnesota', 'wisconsin')
 county = map_data('county')
@@ -45,13 +46,18 @@ for (yr in years) {
                 col.bg='gray85') +
                 theme(plot.margin=unit(c(0,0,0,1), "cm")) +
                 scale_x_continuous('') +
-                scale_y_continuous('')
+                scale_y_continuous('') +
+                theme(plot.margin=unit(c(0,0,0,0),'cm'), legend.margin=unit(0,'cm'), panel.margin=unit(0,'cm'))
         }
 
         pp = plots[[select]][[year]]
-        dev.new()
-        #pdf(paste('~/git/gwr/figures/poverty/', yr, '-', select, '-linear-coefficients-unshrunk.pdf', sep=''), width=8, height=16)
-        grid.arrange(pp[['pag']], pp[['pex']], pp[['pman']], pp[['potprof']], pp[['pfire']], pp[['pserve']], ncol=2)
+        dev.new(width=11, height=6, units='in', res=72)
+        #pdf(paste('~/git/gwr/figures/poverty/', yr, '-',
+        #    select,
+        #    '-linear-coefficients-unshrunk.pdf',
+        #    sep=''),
+        #    width=11, height=6, units='in')
+        multiplot(plotlist=pp, cols=3)
         #dev.off()
     }
 }

@@ -17,7 +17,7 @@ column.map = list(pindpov='Proportion of individuals in poverty',
     metro='metro',
     pfampov='Proportion of families in poverty',
     logitfampov='logit of proportion of families in poverty',
-    pfire='Proportion working in finance, insurance, or real estate'
+    pfire='Proportion working in\nfinance, insurance, or real estate'
 )
 
 #Process the poverty data so that each column appears only once and the year is added as a column.

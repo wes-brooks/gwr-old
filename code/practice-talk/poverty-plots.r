@@ -9,24 +9,30 @@ source('poverty-data.r')
 source("~/git/brooks/code/multiplot.r")
 
 #Prepare something for plotting:
-df = pov2[pov2$year==1970,]
+year = 1970
+df = pov2[pov2$year==year,]
 polygons = map_data('county')
 
-#Some counties have their centroid outside their borders or are grouped into a cluster
-cluster_id = which(df$COUNTY=="WI_CLUSTER")
-n.counties = nrow(df)
-df = rbind(df, df[cluster_id,])
+#Some counties have their centroid outside their borders or are grouped into a cluster:
+#Pepin county:
 df[df$STATE=='Wisconsin' & df$COUNTY=='PEPIN',c('x','y')] = c(-92.1048, 44.5823)
-df[nrow(df),c('x','y')] = c(-88.7285, 44.9291)
+
+#Shawano county:
+cluster_id = which(df$COUNTY=="WI_CLUSTER")
+df = rbind(df, df[cluster_id,])
+df[nrow(df),c('x','y')] = c(-88.707733, 44.788658)
+
+#Oconto county:
+df = rbind(df, df[cluster_id,])
+df[nrow(df),c('x','y')] = c(-88.014221, 44.877282)
 
 locs = data.frame(df[,c('x','y')])
 locs = unique(locs)
 
 #Plotting constants:
 col.bg='gray85'
-name.var = "logitindpov"
+response = "logitindpov"
 group = 'group'
-title = 'Logit of county poverty rate, 1970'
 borderlines=NULL
 col.outline='white'
 
@@ -43,47 +49,44 @@ for (k in unique(polygons[,group])) {
 }
 
 
-
 #Draw the map of poverty rate
-name.var = 'logitindpov'
-map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes_string(fill=name.var))
-map <- map + scale_fill_gradient(high='orange', low='white', limits=range(mergedata[,name.var], na.rm=TRUE), na.value='gray50', name="") + coord_map(project='globular')
-map <- map + theme(panel.background=element_rect(fill=col.bg, colour=col.outline))
-
-#Annotate the map with borderlines
-if (!is.null(borderlines)) {map <- map + geom_path(data=borderlines, colour='white', size=0.75)}
-
-#Plot the map
-map <- map + ggtitle(title) + theme(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
-
-
-name.var = 'pag'
-#Draw the map of proportion in agriculture
-map2 <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes_string(fill=name.var))
-map2 <- map2 + scale_fill_gradient(high='orange', low='white', limits=range(mergedata[,name.var], na.rm=TRUE), na.value='gray50', name="") + coord_map(project='globular')
-map2 <- map2 + theme(panel.background=element_rect(fill=col.bg, colour=col.outline))
-
-#Annotate the map with borderlines
-if (!is.null(borderlines)) {map2 <- map2 + geom_path(data=borderlines, colour='white', size=0.75)}
-
-#Plot the map
-map2 <- map2 + ggtitle("Proportion working in agriculture") + theme(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
+ll = range(mergedata[,response], na.rm=TRUE)
+map <- ggplot(mergedata, aes(long,lat,group=group)) +
+    geom_polygon(aes_string(fill=response)) +
+    scale_fill_gradient(high='orange', low='white', limits=ll, na.value='gray50', name="") +
+    coord_map(project='globular') +
+    theme(panel.background=element_rect(fill=col.bg, colour=col.outline)) +
+    ggtitle(column.map[[response]]) +
+    theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.margin=unit(0,'cm')) +
+    scale_x_continuous('') +
+    scale_y_continuous('')
 
 
 
-name.var = 'pman'
-#Draw the map of proportion in agriculture
-map3 <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes_string(fill=name.var))
-map3 <- map3 + scale_fill_gradient(high='orange', low='white', limits=range(mergedata[,name.var], na.rm=TRUE), na.value='gray50', name="") + coord_map(project='globular')
-map3 <- map3 + theme(panel.background=element_rect(fill=col.bg, colour=col.outline))
+#######################################
+#Choropleth maps of the raw covariates:
+maps = list()
+predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof')
 
-#Annotate the map with borderlines
-if (!is.null(borderlines)) {map2 <- map2 + geom_path(data=borderlines, colour='white', size=0.75)}
+for (v in predictors) {
+    ll = range(mergedata[,name.var], na.rm=TRUE)
 
-#Plot the map
-map3 <- map3 + ggtitle("Proportion working in manufacturing") + theme(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
+    #Draw the map of proportion in agriculture
+    maps[[v]] <- ggplot(mergedata, aes(long,lat,group=group)) +
+        geom_polygon(aes_string(fill=v)) +
+        scale_fill_gradient(high='orange', low='white', limits=ll, na.value='gray50', name="") +
+        coord_map(project='globular') +
+        theme(panel.background=element_rect(fill=col.bg, colour=col.outline)) +
+        ggtitle(column.map[[v]]) +
+        theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.margin=unit(0, "cm")) +
+        scale_x_continuous('') +
+        scale_y_continuous('')
+}
 
+pdf("../../figures/practice-talk/poverty-data.pdf", width=6, height=6, units='in')
+map
+dev.off()
 
-jpeg("../../figures/practice-talk/poverty-data.jpg", width=12, height=4, units='in', res=72)
-multiplot(map, map2, map3, cols=3)
+pdf("../../figures/practice-talk/poverty-data.pdf", width=11, height=6, units='in')
+multiplot(plotlist=maps, cols=3)
 dev.off()
