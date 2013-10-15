@@ -85,10 +85,10 @@ for (v in predictors) {
         scale_y_continuous('')
 }
 
-pdf("~/git/gwr/figures/practice-talk/poverty-response.pdf", width=6, height=6, units='in')
+pdf("~/git/gwr/figures/practice-talk/poverty-response.pdf", width=6, height=6)
 map
 dev.off()
 
-pdf("~/git/gwr/figures/practice-talk/poverty-covariates.pdf", width=11, height=6, units='in')
+pdf("~/git/gwr/figures/practice-talk/poverty-covariates.pdf", width=11, height=6)
 multiplot(plotlist=maps, cols=3)
 dev.off()
