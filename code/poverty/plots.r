@@ -49,10 +49,10 @@ for (yr in years) {
                 title=column.map[[v]],
                 legend.name="",
                 col.bg='gray85') +
-                theme(plot.margin=unit(c(0,0,0,1), "cm")) +
                 scale_x_continuous('') +
                 scale_y_continuous('') +
-                theme(plot.margin=unit(c(0,0,0,0),'cm'), legend.margin=unit(0,'cm'), panel.margin=unit(0,'cm'))
+                theme(plot.margin=unit(c(0,0,0,0),'cm'), legend.margin=unit(0,'cm')) +
+                theme(title=element_text(vjust=1))
         }
 
         pdf(paste('~/git/gwr/figures/poverty/', yr, '-', select, '-coefficients.pdf', sep=''), width=11, height=6)

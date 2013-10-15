@@ -63,6 +63,7 @@ map <- ggplot(mergedata, aes(long,lat,group=group)) +
     theme(panel.background=element_rect(fill=col.bg, colour=col.outline)) +
     ggtitle(column.map[[response]]) +
     theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.margin=unit(0,'cm')) +
+    theme(title=element_text(vjust=1)) +
     scale_x_continuous('') +
     scale_y_continuous('')
 
@@ -84,6 +85,7 @@ for (v in predictors) {
         theme(panel.background=element_rect(fill=col.bg, colour=col.outline)) +
         ggtitle(column.map[[v]]) +
         theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.margin=unit(0, "cm")) +
+        theme(title=element_text(vjust=1)) +
         scale_x_continuous('') +
         scale_y_continuous('')
 }
