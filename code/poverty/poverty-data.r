@@ -3,13 +3,21 @@ require(brooks)
 #Import poverty data
 pov = brooks::load_https("https://raw.github.com/wesesque/gwr/master/data/poverty/upMidWestpov_Iowa_cluster_names.csv", header=TRUE, sep=",", row.names=NULL)
 years = c('60', '70', '80', '90', '00', '06')
-column.map = list(pindpov='proportion individuals in poverty', 
-    logitindpov='logit( proportion individuals in poverty )', pag='pag', pex='pex',
-    pman='pman', pserve='pserve', potprof='potprof', pwh='proportion white',
-    pblk='proportion black', pind='pind', phisp='proportion hispanic', metro='metro',
-    pfampov='proportion families in poverty',
-    logitfampov='logit( proportion families in poverty)',
-    pfire='proportion financial, insurance, real estate'
+column.map = list(pindpov='Proportion of individuals in poverty', 
+    logitindpov='logit of proportion of individuals in poverty',
+    pag='Proportion working in agriculture',
+    pex='Proportion working in mining',
+    pman='Proportion working in manufacturing',
+    pserve='Proportion working in services',
+    potprof='Proportion working in other professions',
+    pwh='Proportion white',
+    pblk='Proportion black',
+    pind='Proportion indiginous',
+    phisp='Proportion hispanic',
+    metro='metro',
+    pfampov='Proportion of families in poverty',
+    logitfampov='logit of proportion of families in poverty',
+    pfire='Proportion working in finance, insurance, or real estate'
 )
 
 #Process the poverty data so that each column appears only once and the year is added as a column.

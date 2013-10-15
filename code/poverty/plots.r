@@ -36,7 +36,16 @@ for (yr in years) {
     
         plots[[select]][[year]] = list()
         for (v in predictors) {
-            plots[[select]][[year]][[v]] = plot.gwselect(model[[select]][[year]], part='coef.unshrunk', var=v, polygons=county, title=v, col.bg='gray85') + theme(plot.margin=unit(c(0,0,0,1), "cm")) + scale_x_continuous('') + scale_y_continuous('')
+            plots[[select]][[year]][[v]] = plot.gwselect(model[[select]][[year]],
+                part='coef.unshrunk',
+                var=v,
+                polygons=county,
+                title=column.map[[v]],
+                legend.name="",
+                col.bg='gray85') +
+                theme(plot.margin=unit(c(0,0,0,1), "cm")) +
+                scale_x_continuous('') +
+                scale_y_continuous('')
         }
 
         pp = plots[[select]][[year]]

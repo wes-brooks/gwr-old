@@ -1,4 +1,4 @@
-plot.gwselect = function(model, values=NULL, part='coef', var=NULL, type='fitted', locs=NULL, polygons=NULL, s=NULL, group='group', title='', borderlines=NULL, by.locs=NULL, by.polygons=NULL, col.bg='green', col.outline='white') {
+plot.gwselect = function(model, values=NULL, part='coef', legend.name=NULL, var=NULL, type='fitted', locs=NULL, polygons=NULL, s=NULL, group='group', title='', borderlines=NULL, by.locs=NULL, by.polygons=NULL, col.bg='green', col.outline='white') {
     #Prepare something for plotting:
     name.var = var
 
@@ -26,9 +26,14 @@ plot.gwselect = function(model, values=NULL, part='coef', var=NULL, type='fitted
             }
         }
 
+        #get the name for the legend:
+        if (is.null(legend.name)) {legend.name = part}
+
         #Draw the map
-        map <- ggplot(mergedata, aes(long,lat,group=group)) + geom_polygon(aes(fill=output))
-        map <- map + scale_fill_gradient2(low = muted("blue"), mid = "white", high = "orange", limits=range(mergedata$output, na.rm=TRUE), name='coef') + coord_map(project='globular')   
+        map <- ggplot(mergedata, aes(long,lat,group=group))
+        map <- map + geom_polygon(aes(fill=output))
+        map <- map + scale_fill_gradient2(low=muted("blue"), mid="white", high="orange", limits=range(mergedata$output, na.rm=TRUE), name=legend.name)
+        map <- map + coord_map(project='globular')   
         map <- map + theme(panel.background=element_rect(fill=col.bg, colour=col.outline))
         
         #Annotate the map with borderlines
