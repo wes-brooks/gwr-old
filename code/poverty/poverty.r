@@ -11,11 +11,13 @@ source_url('https://raw.github.com/wesesque/gwr/master/code/poverty/poverty-data
 bw = list()
 bw[['GWEN']] = list()
 bw[['GWAL']] = list()
+bw[['GWR']] = list()
 
 #Establish lists to hold the models
 model = list()
 model[['GWEN']] = list()
 model[['GWAL']] = list()
+model[['GWR']] = list()
 
 years = c(1960, 1970, 1980, 1990, 2000, 2006)
 years = c(1970)
@@ -45,6 +47,6 @@ for (yr in years) {
 
     #Use my code to do the traditional GWR; (currently buggy)
     oracle = lapply(1:533, function(x) {return(predictors)})
-    bw.gwr = gwglmnet.sel(f, data=df, oracle=oracle, coords=df[,c('x','y')], family='gaussian', alpha=1, mode.select='BIC', longlat=TRUE, gweight=bisquare, tol=0.01, method='dist', parallel=TRUE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
-    model.gwr = gwglmnet(f, data=df, oracle=oracle, coords=df[,c('x','y')], family='gaussian', alpha=1, mode.select='BIC', longlat=TRUE, bw=bw.gwr, gweight=bisquare, method='dist', simulation=TRUE, parallel=TRUE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+    bw[['GWR']] = gwglmnet.sel(f, data=df, oracle=oracle, coords=df[,c('x','y')], family='gaussian', alpha=1, mode.select='BIC', longlat=TRUE, gweight=bisquare, tol=0.01, method='dist', parallel=TRUE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+    model[['GWR']] = gwglmnet(f, data=df, oracle=oracle, coords=df[,c('x','y')], family='gaussian', alpha=1, mode.select='BIC', longlat=TRUE, bw=bw[['GWR']], gweight=bisquare, method='dist', simulation=TRUE, parallel=TRUE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
 }
