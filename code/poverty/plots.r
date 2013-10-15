@@ -14,8 +14,8 @@ county = county[county$region %in% upper_midwest,]
 
 #Establish lists to hold the plots:
 plots = list()
-plots[['enet']] = list()
-plots[['lasso']] = list()
+plots[['GWEN']] = list()
+plots[['GWAL']] = list()
 
 for (yr in years) {
     ####Plot a choropleth of the results:    
@@ -24,8 +24,8 @@ for (yr in years) {
 	n.counties = nrow(df)
     year = as.character(yr)
 
-    #for (select in c("lasso", "enet")) {
-    for (select in c("enet")) {
+    #for (select in c("GWAL", "GWEN")) {
+    for (select in c("GWEN")) {
         #Pepin county:
         model[[select]][[year]][['coords']][df$STATE=='Wisconsin' & df$COUNTY=='PEPIN',] = c(-92.1048, 44.5823)
 
@@ -52,7 +52,7 @@ for (yr in years) {
                 theme(plot.margin=unit(c(0,0,0,0),'cm'), legend.margin=unit(0,'cm'), panel.margin=unit(0,'cm'))
         }
 
-        pdf(paste('~/git/gwr/figures/poverty/', yr, '-', select, '-linear-coefficients-unshrunk.pdf', sep=''),
+        pdf(paste('~/git/gwr/figures/poverty/', yr, '-', select, '-coefficients.pdf', sep=''),
             width=11, height=6, units='in')
         brooks::multiplot(plotlist=plots[[select]][[year]], cols=3)
         dev.off()
