@@ -52,8 +52,7 @@ for (yr in years) {
                 theme(plot.margin=unit(c(0,0,0,0),'cm'), legend.margin=unit(0,'cm'), panel.margin=unit(0,'cm'))
         }
 
-        pdf(paste('~/git/gwr/figures/poverty/', yr, '-', select, '-coefficients.pdf', sep=''),
-            width=11, height=6, units='in')
+        pdf(paste('~/git/gwr/figures/poverty/', yr, '-', select, '-coefficients.pdf', sep=''), width=11, height=6)
         brooks::multiplot(plotlist=plots[[select]][[year]], cols=3)
         dev.off()
     }
