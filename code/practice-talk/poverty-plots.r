@@ -71,7 +71,7 @@ maps = list()
 predictors = c('pag', 'pex', 'pman', 'pserve', 'pfire', 'potprof')
 
 for (v in predictors) {
-    ll = range(mergedata[,name.var], na.rm=TRUE)
+    ll = range(mergedata[,v], na.rm=TRUE)
 
     #Draw the map of proportion in agriculture
     maps[[v]] <- ggplot(mergedata, aes(long,lat,group=group)) +
