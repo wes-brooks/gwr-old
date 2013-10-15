@@ -4,7 +4,9 @@
 require(ggplot2)
 require(gridExtra)
 require(mapproj)
-require(brooks)
+
+#If the 'brooks' package isnt loaded then import it from github:
+if (!'package:brooks' %in% search()) { install_github('wesesque/brooks') }
 
 upper_midwest = c('illinois', 'indiana', 'iowa', 'michigan', 'minnesota', 'wisconsin')
 county = map_data('county')
@@ -57,7 +59,7 @@ for (yr in years) {
         #    '-linear-coefficients-unshrunk.pdf',
         #    sep=''),
         #    width=11, height=6, units='in')
-        multiplot(plotlist=pp, cols=3)
+        brooks::multiplot(plotlist=pp, cols=3)
         #dev.off()
     }
 }

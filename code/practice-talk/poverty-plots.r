@@ -1,11 +1,11 @@
-library(ggplot2)
-library(sp)
-library(scales)
-library(grid)
+require(ggplot2)
+require(sp)
+require(scales)
+require(grid)
+require(devtools)
 
-#Bootstrap the source_https function
-library(devtools)
-install_github("wesesque/brooks")
+#If the 'brooks' package isnt loaded then import it from github:
+if (!'package:brooks' %in% search()) { install_github('wesesque/brooks') }
 
 #Import the data
 brooks::source_https('https://raw.github.com/wesesque/gwr/master/code/poverty/poverty-data.r')
@@ -90,5 +90,5 @@ map
 dev.off()
 
 pdf("~/git/gwr/figures/practice-talk/poverty-covariates.pdf", width=11, height=6)
-multiplot(plotlist=maps, cols=3)
+brooks::multiplot(plotlist=maps, cols=3)
 dev.off()

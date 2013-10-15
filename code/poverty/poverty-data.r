@@ -1,4 +1,7 @@
-require(brooks)
+require(devtools)
+
+#If the 'brooks' package isnt loaded then import it from github:
+if (!'package:brooks' %in% search()) { install_github('wesesque/brooks') }
 
 #Import poverty data
 pov = brooks::load_https("https://raw.github.com/wesesque/gwr/master/data/poverty/upMidWestpov_Iowa_cluster_names.csv", header=TRUE, sep=",", row.names=NULL)

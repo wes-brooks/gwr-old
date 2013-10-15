@@ -1,14 +1,13 @@
 #Import external libraries
-library(gwselect)
-library(spgwr)
+require(gwselect)
+require(spgwr)
+require(devtools)
 registerCores(n=3)
 
-#Import metatools:
-library(devtools)
-install_github("wesesque/brooks")
+#If the 'brooks' package isnt loaded then import it from github:
+if (!'package:brooks' %in% search()) { install_github('wesesque/brooks') }
 
 #Import the data
-#setwd('~/git/gwr/code/poverty')
 brooks::source_https('https://raw.github.com/wesesque/gwr/master/code/poverty/poverty-data.r')
 
 #Establish lists to hold the bandwidths
