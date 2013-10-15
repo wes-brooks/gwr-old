@@ -52,14 +52,12 @@ for (yr in years) {
                 theme(plot.margin=unit(c(0,0,0,0),'cm'), legend.margin=unit(0,'cm'), panel.margin=unit(0,'cm'))
         }
 
-        pp = plots[[select]][[year]]
-        dev.new(width=11, height=6, units='in', res=72)
-        #pdf(paste('~/git/gwr/figures/poverty/', yr, '-',
-        #    select,
-        #    '-linear-coefficients-unshrunk.pdf',
-        #    sep=''),
-        #    width=11, height=6, units='in')
-        brooks::multiplot(plotlist=pp, cols=3)
-        #dev.off()
+        pdf(paste('~/git/gwr/figures/poverty/', yr, '-',
+            select,
+            '-linear-coefficients-unshrunk.pdf',
+            sep=''),
+            width=11, height=6, units='in')
+        brooks::multiplot(plotlist=plots[[select]][[year]], cols=3)
+        dev.off()
     }
 }
