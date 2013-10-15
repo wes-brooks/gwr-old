@@ -6,7 +6,10 @@ require(gridExtra)
 require(mapproj)
 
 #If the 'brooks' package isnt loaded then import it from github:
-if (!'package:brooks' %in% search()) { install_github('wesesque/brooks') }
+if (!'package:brooks' %in% search()) {
+    install_github('wesesque/brooks')
+    require(brooks)
+}
 
 upper_midwest = c('illinois', 'indiana', 'iowa', 'michigan', 'minnesota', 'wisconsin')
 county = map_data('county')

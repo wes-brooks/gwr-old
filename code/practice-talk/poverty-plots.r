@@ -5,10 +5,13 @@ require(grid)
 require(devtools)
 
 #If the 'brooks' package isnt loaded then import it from github:
-if (!'package:brooks' %in% search()) { install_github('wesesque/brooks') }
+if (!'package:brooks' %in% search()) {
+    install_github('wesesque/brooks')
+    require(brooks)
+}
 
 #Import the data
-brooks::source_https('https://raw.github.com/wesesque/gwr/master/code/poverty/poverty-data.r')
+source_url('https://raw.github.com/wesesque/gwr/master/code/poverty/poverty-data.r')
 
 #Prepare something for plotting:
 year = 1970
