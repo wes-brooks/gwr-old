@@ -49,22 +49,28 @@ for (yr in years) {
     year = as.character(yr)
 
     for (select in c("GWAL", "GWEN", "GWR")) {
+        #copy the model we will be plotting so we can alter it without affecting the original:
+        mm = model[[select]][[year]][['coords']]
+
         #Pepin county:
-        model[[select]][[year]][['coords']][df$STATE=='Wisconsin' & df$COUNTY=='PEPIN',] = c(-92.1048, 44.5823)
+        mm[['coords']][df$STATE=='Wisconsin' & df$COUNTY=='PEPIN',] = c(-92.1048, 44.5823)
 
         #Shawano county:
-        model[[select]][[year]][['model']][['models']][[n.counties+1]] = model[[select]][[year]][['model']][['models']][[cluster_id]]
-        model[[select]][[year]][['coords']] = rbind(model[[select]][[year]][['coords']], c(-88.707733, 44.788658))
+        mm[['model']][['models']][[n.counties+1]] = mm[['model']][['models']][[cluster_id]]
+        mm[['coords']] = rbind(mm[['coords']], c(-88.707733, 44.788658))
 
         #Oconto county:
-        model[[select]][[year]][['model']][['models']][[n.counties+2]] = model[[select]][[year]][['model']][['models']][[cluster_id]]
-        model[[select]][[year]][['coords']] = rbind(model[[select]][[year]][['coords']], c(-88.014221, 44.877282)) 
+        mm[['model']][['models']][[n.counties+2]] = mm[['model']][['models']][[cluster_id]]
+        mm[['coords']] = rbind(mm[['coords']], c(-88.014221, 44.877282)) 
     
         plots[[select]][[year]] = list()
-        if (select == 'GWR') {plotpart='coef'}
-        else {plotpart='coef.unsrunk'}
+        if (select == 'GWR') {
+            plotpart='coef'
+        } else { 
+            plotpart='coef.unshrunk'
+        }
         for (v in predictors) {
-            plots[[select]][[year]][[v]] = plot.gwselect(model[[select]][[year]],
+            plots[[select]][[year]][[v]] = plot.gwselect(mm,
                 part=plotpart,
                 var=v,
                 polygons=county,
