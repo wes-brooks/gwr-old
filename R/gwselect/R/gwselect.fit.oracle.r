@@ -78,6 +78,7 @@ gwselect.fit.oracle = function(x, y, coords, indx=NULL, loc, bw=NULL, family='ga
         names(coefs) = c("(Intercept)", colnames(x))
         coefs[c("(Intercept)", oracle)] = coef(model)[c("(Intercept)", oracle)]
         coefs = Matrix(coefs, ncol=1)
+        rownames(coefs) = c("(Intercept)", colnames(x))
         coef.list[[i]] = coefs
     
     	if (i==N) { 
