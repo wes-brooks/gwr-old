@@ -94,6 +94,12 @@ pdf("~/git/gwr/figures/practice-talk/poverty-response.pdf", width=6, height=6)
 print(map)
 dev.off()
 
+#For the prelim slides
 pdf("~/git/gwr/figures/practice-talk/poverty-covariates.pdf", width=11, height=6)
 brooks::multiplot(plotlist=maps, cols=3)
+dev.off()
+
+#For the prelim writeup
+pdf("~/git/gwr/figures/poverty/1970-covariates.pdf", width=8, height=11)
+brooks::multiplot(plotlist=maps, cols=2)
 dev.off()

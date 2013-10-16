@@ -55,8 +55,14 @@ for (yr in years) {
                 theme(title=element_text(vjust=1))
         }
 
-        pdf(paste('~/git/gwr/figures/poverty/', yr, '-', select, '-coefficients.pdf', sep=''), width=11, height=6)
+        #For the prelim slides
+        pdf(paste('~/git/gwr/figures/practice-talk/', yr, '-', select, '-coefficients.pdf', sep=''), width=11, height=6)
         brooks::multiplot(plotlist=plots[[select]][[year]], cols=3)
+        dev.off()
+
+        #For the prelim paper
+        pdf(paste('~/git/gwr/figures/poverty/', yr, '-', select, '-coefficients.pdf', sep=''), width=8, height=11)
+        brooks::multiplot(plotlist=plots[[select]][[year]], cols=2)
         dev.off()
     }
 }
