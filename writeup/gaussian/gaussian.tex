@@ -347,17 +347,12 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	An example data analysis is presented to demonstrate application of the GWEN for local model selection in an SVCR model of how poverty is related to a list of socio-economic variables.
 	
 	\subsection{Poverty data for the Upper Midwest}
-	An example demonstrates application of the GWEN to the identification of socio-economic covariates that are locally meaningful predictors of the county-level poverty rate in the Upper Midwest states of the U.S. (Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan). The data used in this example are aggregated at the level of counties, which are areal units. Each county's centroid is treated as its sampling location. The data are from the U.S. Census Bureau's decennial census in the year 1970.
+    An example demonstrates application of the GWEN for local model selection in a SVCR model of the poverty rate in the Upper Midwest states of the U.S. (Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan). The GWEN model is compared to a traditional GWR model for the same data.
+
+    The response variable for the models is the logit-transformed proportion of individuals in each county who were living below the poverty line in 1970. The covariates are related to the employment structure of each county, namely the proportion of each county's residents who were employed in the economic sectors of agriculture; finance, insurance, and real estate; manufacturing; mining; services; and other professions. While the response variable was logit transformed, raw proportions were used as the covariates.
+
+The data used in this example are aggregated at the level of counties, which are areal units. Each county's sampling location is assumed to be its centroid. The data are from the U.S. Census Bureau's decennial census in the year 1970. 
 	
-	Three kinds of covariates  were considered as potential predictors of county-level poverty rate.
-	\begin{itemize}
-		\item Covariates that describe the county's employment structure ($\verb!pag!$, the proportion of residents employed in agriculture, $\verb!pex!$, the proportion of residents employed in mining, $\verb!man!$, the proportion of residents employed in manufacturing, $\verb!pfire!$, the proportion of residents employed in finance, insurance, and real estate, $\verb!pserve!$, the proportion of residents employed in services, and $\verb!potprof!$, the proportion of residents employed in other professions)\\
-		\item Covariates that describe the county's racial makeup ($\verb!pwh!$, the proportion of residents who are white, $\verb!pblk!$, the proportion of residents who are black, and $\verb!phisp!$, the proportion of residents who are hispanic)\\
-		\item $\verb!pmetro!$: an indicator of whether the county is in a metropolitan area.
-	\end{itemize}
-	The response variable (poverty rate) is a proportion, taking values in $[0,1]$. To demonstrate the geographically-weighted Lasso in a linear regression context, we model the logit-transformed poverty rate. The predictor variables were not transformed - raw proportions were used.
-	
-	The GWEN was used for variable selection, and then coefficients for the selected variables were estimated by weighted least squares without shrinkage. Traditional GWR was used to fit a model to the same data for the sake of comparison.
 	
 	The coefficient estimates are plotted on maps of the upper midwest in Figure \ref{fig:unshrunk-enet-coefs-1970} (based on the GWEN) and Figure \ref{fig:gwr-coefs-1970} (based on traditional GWR).
 	\begin{figure}
