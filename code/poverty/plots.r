@@ -59,12 +59,14 @@ for (yr in years) {
         model[[select]][[year]][['coords']] = rbind(model[[select]][[year]][['coords']], c(-88.014221, 44.877282)) 
     
         plots[[select]][[year]] = list()
+        if (select == 'GWR') {plotpart='coef'}
+        else {plotpart='coef.unsrunk'}
         for (v in predictors) {
             plots[[select]][[year]][[v]] = plot.gwselect(model[[select]][[year]],
-                part='coef.unshrunk',
+                part=plotpart,
                 var=v,
                 polygons=county,
-                title=column.map[[v]],
+                title=coef.map[[v]],
                 legend.name="",
                 col.bg='gray85') +
                 scale_x_continuous('') +
