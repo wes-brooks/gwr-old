@@ -48,5 +48,5 @@ for (yr in years) {
     #Use my code to do the traditional GWR; (currently buggy)
     oracle = lapply(1:533, function(x) {return(predictors)})
     bw[['GWR']][[year]] = gwglmnet.sel(f, data=df, oracle=oracle, coords=df[,c('x','y')], family='gaussian', alpha=1, mode.select='BIC', longlat=TRUE, gweight=bisquare, tol=0.01, method='dist', parallel=TRUE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
-    model[['GWR']][[year]] = gwglmnet(f, data=df, oracle=oracle, coords=df[,c('x','y')], family='gaussian', alpha=1, mode.select='BIC', longlat=TRUE, bw=bw[['GWR']], gweight=bisquare, method='dist', simulation=TRUE, parallel=TRUE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+    model[['GWR']][[year]] = gwglmnet(f, data=df, oracle=oracle, coords=df[,c('x','y')], family='gaussian', alpha=1, mode.select='BIC', longlat=TRUE, bw=bw[['GWR']][[year]], gweight=bisquare, method='dist', simulation=TRUE, parallel=TRUE, interact=FALSE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
 }
