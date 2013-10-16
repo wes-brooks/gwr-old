@@ -39,6 +39,8 @@ plots[['GWEN']] = list()
 plots[['GWAL']] = list()
 plots[['GWR']] = list()
 
+years = c(1970)
+
 for (yr in years) {
     ####Plot a choropleth of the results:    
     #Correct the locations of some small counties (only affect plotting)
