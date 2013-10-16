@@ -11,6 +11,24 @@ if (!'package:brooks' %in% search()) {
     require(brooks)
 }
 
+coef.map = list(pindpov='Proportion of individuals in poverty', 
+    logitindpov='logit of proportion of individuals in poverty',
+    pag='Coefficient of\nagricultural employment',
+    pex='Coefficient of\nmining employment',
+    pman='Coefficient of\nmanufacturing employment',
+    pserve='Coefficient of\nservices employment',
+    potprof='Coefficient of\nemployment in other professions',
+    pwh='Coefficient of\nproportion white',
+    pblk='Coefficient of\nproportion white',
+    pind='Coefficient of\nproportion indigenous',
+    phisp='Coefficient of\nproportion hispanic',
+    metro='Coefficient of\nmetro area indicator',
+    pfampov='Proportion of families in poverty',
+    logitfampov='logit of proportion of families in poverty',
+    pfire='Coefficient of employment in \nfinance, insurance, or real estate'
+)
+
+
 upper_midwest = c('illinois', 'indiana', 'iowa', 'michigan', 'minnesota', 'wisconsin')
 county = map_data('county')
 county = county[county$region %in% upper_midwest,]
