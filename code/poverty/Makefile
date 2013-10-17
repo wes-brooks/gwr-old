@@ -3,4 +3,5 @@ poverty-plots: plots.r poverty.r
 	  require(devtools); \
 	  source_url('https://raw.github.com/wesesque/gwr/master/code/poverty/poverty.r'); \
 	  source_url('https://raw.github.com/wesesque/gwr/master/code/poverty/plots.r'); \
+	  source_url('https://raw.github.com/wesesque/gwr/master/code/poverty/gwen-gwr-scatter.r'); \
 	  source_url('https://raw.github.com/wesesque/gwr/master/code/practice-talk/poverty-plots.r');"
