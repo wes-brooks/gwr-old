@@ -12,6 +12,8 @@
 \usepackage{mathabx}
 \usepackage{bm}
 \usepackage{multirow}
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
 
 %\geometry{landscape}                % Activate for for rotated page geometry
 \usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
@@ -47,6 +49,7 @@
 
 
 
+
 \title{Local Variable Selection and Parameter Estimation of Spatially Varying Coefficient Regression Models}
 \author{Wesley Brooks}
 \date{}                                           % Activate to display a given date or no date
@@ -55,7 +58,7 @@
 \begin{document}
 
 \begin{abstract}
-Spatially varying coefficient regression models allow the regression coefficients to vary across a spatial domain of interest . Geographically weighted regression, a kernel-based method for estimating the local regression coefficients in a spatially varying coefficient regression model, is considered here. A new method is introduced for local model selection and coefficient estimation in spatially varying coefficient regression models. The idea is to apply a penalty of the elastic net type to a local likelihood function, with a local elastic net tuning parameter and a global bandwidth parameter selected via information criteria. Simulations are used to evaluate the performance of the new method in model selection and coefficient estimation, and the method is applied to a real data example in spatial demography.
+When analyzing spatial data, researchers are often interested in the relationship between a response variable and a set of covariates.  Spatially varying coefficient regression models allow the regression coefficients to vary across a spatial domain of interest . Geographically weighted regression, a kernel-based method for estimating the local regression coefficients in a spatially varying coefficient regression model, is considered here. A new method is introduced for local model selection and coefficient estimation in spatially varying coefficient regression models. The idea is to apply a penalty of the elastic net type to a local likelihood function, with a local elastic net tuning parameter and a global bandwidth parameter selected via information criteria. Simulations are used to evaluate the performance of the new method in model selection and coefficient estimation, and the method is applied to a real data example in spatial demography.
 \end{abstract}
 
 \maketitle
@@ -222,8 +225,12 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	For the geographically weighted Lasso (GWL), \cite{Wheeler:2009} proposed selecting the local Lasso tuning parameters for local selection in a SVCR model at location $\bm{s}_i$ to minimize the local jackknife prediction error $|y_i - \hat{y}_i^{(i)}|$. Because the jackknife prediction error is undefined everywhere except for at the sampling locations, this choice restricts coefficient estimation to occur at the locations where data has been observed. By contrast, the local BIC can be calculated at any location where the local log-likelihood can be obtained. As a practical matter this allows for variable selection and coefficient surface estimation to be done at locations where no data are observed and for imputation of missing values of the response variable.
 	
-	\subsection{Coefficient estimation}
-	The locally linear coefficients maximize the unpenalized local likelihood:
+	\subsection{Coefficient estimation}\label{section:LLE}
+	The GWEN and the GWAL each estimate the local coefficients for the variables that are selected for inclusion in the local model. Both the GWEN and the GWAL estimate coefficients as locally constant, as in the class of Nadaraya-Watson kernel smoothers \citep{Hardle-1990}. As such, they suffer from the problem of biased estimation that is common to that class of models, particularly where there is a gradient to the coefficient surface at the boundary of the domain \citep{Hastie:1993b}.
+
+    In the context of nonparametric regression, the boundary-effect bias is addressed by local polynomial modeling, usually in the form of a locally linear model \citep{Fan-1996}. Locally linear coefficient estimation was proposed for the traditional GWR to counter the boundary effect by \cite{Wang:2008b}.
+
+    The method of locally linear estimation is used to counter the boundary effect for the GWEN and GWAL, referred to as the GWEN with locally linear estimation (GWEN-LLE), (similarly the GWAL-LLE). For estimating the local coefficients by the GWEN-LLE (GWAL-LLE), the GWEN (GWAL) is used for local variable selection but local coefficient estimation proceeds without penalizing the local likelihood. The locally linear coefficients maximize the unpenalized local likelihood:
 	\begin{align} \label{eq:coefficients}
 		\hat{\bm{\beta}}_i &= \argmax \limits_{\bm{\beta}_i} \left[-(1/2) \sum_{i'=1}^n w_{ii'} \left\{ \log{\sigma^2_i}  + \sigma^{-2}_i  \left(y_{i'} - \bm{z}'_{i'} \bm{\beta}_i \right)^2 \right\}\right].
 	\end{align}
@@ -231,7 +238,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	\begin{align}
 		\bm{Z}_i = \left( \tilde{X}_i  \:\: L_i \tilde{X}_i \:\: M_i \tilde{X}_i \right)
 	\end{align}
-	where $L_i = \text{diag}\{s_{i',x} - s_{i,x}\}$ and $M_i = \text{diag}\{s_{i',y} - s_{i,y}\}$
+	where $L_i = \text{diag}\{s_{i',x} - s_{i,x}\}$ and $M_i = \text{diag}\{s_{i',y} - s_{i,y}\}$ for $i' = 1, dots, n$.
 	 
 	\subsection{Bandwidth parameter estimation}
 		The fitted values from the model are	
@@ -261,7 +268,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	The three coefficient surfaces used to produce the response variable in the simulations are pictured in Figure \ref{fig:sim-actual}. The first is a ``step" function, which is equal to zero in 40\% of the spatial domain, equal to one in a different 40\% of the spatial domain, and increases linearly in the middle 20\% of the domain. The second is a gradient function, which increases linearly from zero at one end of the domain to one at the other. The final coefficient function is a parabola taking its maximum value of 1 at the center of the domain and falling to zero at each corner of the domain.
 	
-	The performance of the GWEN (with both the AL and the AEN used for model selection) was compared to that of the traditional GWR algorithm of \cite{Fotheringham:2002} and that of ``oracular" GWR, which is traditional GWR with oracular variable selection and locally linear fitting. Oracular selection means that exactly the correct set of covariates was used to fit the GWR model at each location in the simulation. Finally, there is a category of simulation results using the three penalized GWR methods for local variable selection and then ordinary GWR for coefficient estimation. The implementation of the AEN uses coordinate descent via the {\tt R} package {\tt glmnet} \citep{Friedman:2010}.
+	The performance of the GWEN, GWAL, GWEN-LLE, and GWAL-LLE were compared to that of the traditional GWR algorithm of \cite{Fotheringham:2002} and that of ``oracular" GWR, which is traditional GWR with oracular variable selection and locally linear fitting as described in Section \ref{section:LLE}. Oracular selection means that exactly the correct set of covariates was used to fit the GWR model at each location in the simulation. The implementation of the AEN uses coordinate descent via the {\tt R} package {\tt glmnet} \citep{Friedman:2010}.
 
 
 % latex table generated in R 2.15.1 by xtable 1.7-0 package
@@ -307,7 +314,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 		\end{center}
 	\end{figure}
 	
-	Results of the simulation were summarized at five locations on the domain (Figure \ref{fig:summary-locations}). Due to edge effects, we expect biased estimation at locations one and five (which are at opposite corners of the domain) from traditional GWR, particularly when the coefficient surface has nonzero gradient at the boundary (which is the case for the gradient and parabola functions). Because the GWEN and oracular GWR use locally linear fitting, they are expected to exhibit less bias at the boundaries.
+	Results of the simulation were summarized at five locations on the domain (Figure \ref{fig:summary-locations}). Due to edge effects, we expect biased estimation at locations one and five (which are at opposite corners of the domain) from traditional GWR, particularly when the coefficient surface has nonzero gradient at the boundary (which is the case for the gradient and parabola functions). Because the GWEN-LLE, GWAL-LLE, and oracular GWR use locally linear fitting, they are expected to exhibit less bias at the boundaries.
 	
 	Locations two and four are at the `corners' of the step function. Because the step function is undifferentiable at these locations, locally linear fitting is not expected to be as effective at reducing bias here as at the boundaries of the gradient and parabola functions.
 	
@@ -326,15 +333,15 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	\paragraph{Coefficient estimation} The mean squared error, bias, and variance of $\hat{\beta}_1$ (MSE$(\beta_1)$, bias$(\hat{\beta}_1)$, var$(\hat{\beta}_1)$) are listed in Tables \ref{table:msex}, \ref{table:bx}, and \ref{table:varx}, respectively. The method of oracular selection led to the best MSE$(\hat{\beta}_1)$ in 41 of the 60 cases.
 	
-	In terms of MSE$(\hat{\beta}_1)$, while oracular selection clearly was the most accurate estimation method in most cases, the difference in accuracy between the estimation methods was modest in most cases. There were a few cases when the difference in MSE$(\hat{\beta}_1)$ between estimation methods amounted to at least an order of magnitude. At locations one and five of the parabola, oracular selection produces much more accurate estimation than GWEN, GWAL, or GWR because locations one and five are on the domain boundary where the parabola has a strong gradient, and those methods don't use locally linear fits to account for the boundary effect. This can also be seen from the fact that the bias$(\bm{\beta}_1)$ of GWEN, GWAL, and GWR is large at locations one and five of the parabola, where it is nearly zero for {\tt u.lasso}, {\tt u.enet}, and {\tt oracular}.
+	In terms of MSE$(\hat{\beta}_1)$, while oracular selection clearly was the most accurate estimation method in most cases, the difference in accuracy between the estimation methods was modest in most cases. There were a few cases when the difference in MSE$(\hat{\beta}_1)$ between estimation methods amounted to at least an order of magnitude. At locations one and five of the parabola, oracular selection produces much more accurate estimation than GWEN, GWAL, or GWR because locations one and five are on the domain boundary where the parabola has a strong gradient, and those methods don't use locally linear fits to account for the boundary effect. This can also be seen from the fact that the bias$(\bm{\beta}_1)$ of GWEN, GWAL, and GWR is large at locations one and five of the parabola, where it is nearly zero for GWEN-LLE, GWAL-LLE, and oracular GWR.
 	
-	A similar boundary effect is apparent at location five of the gradient, where GWEN, GWAL, and GWR produce a bias$(\hat{\beta}_1)$ and MSE$(\hat{\beta}_1)$ that are an order of magnitude or more greater than those of {\tt u.lasso}, {\tt u.enet}, and {\tt oracular} (the differences in var$(\hat{\beta}_1)$ are smaller).
+	A similar boundary effect is apparent at location five of the gradient, where GWEN, GWAL, and GWR produce a bias$(\hat{\beta}_1)$ and MSE$(\hat{\beta}_1)$ that are an order of magnitude or more greater than those of GWEN-LLE, GWAL-LLE, and oracular GWR (the differences in var$(\hat{\beta}_1)$ are smaller).
 	
-	At location one of the step function, the MSE$(\bm{\beta}_1)$ and var$(\bm{\beta}_1)$ for GWR are much smaller than for the other estimation methods, including {\tt oracular}, while the bias$(\bm{\beta}_1)$ doesn't vary much between estimation methods. It is not clear why this is the case.
+	At location one of the step function, the MSE$(\bm{\beta}_1)$ and var$(\bm{\beta}_1)$ for GWR are much smaller than for the other estimation methods, including oracular GWR, while the bias$(\bm{\beta}_1)$ doesn't vary much between estimation methods. It is not clear why this is the case.
 		
 	As was the case for selection, accuracy in coefficient estimation seemed to suffer more from an increase in the noise variance than from increased correlation in the covariates. Once again, this effect is probably most apparent at location three of the step function.	
 	
-	\paragraph{Fitted Values} The MSE of the $\hat{Y}$, $\text{MSE}\left(\hat{Y}\right)$, is listed in Table \ref{table:msey}. Nominally, $\text{MSE}\left(\hat{Y}\right)$ should be equal to the noise variance, $\sigma_{\varepsilon}^2$, which is 1 for odd-numbered rows and 0.25 for even numbered rows. Of the 60 simulation cases, GWR produced the minimal residual variance for 22, which is more than any other method. Where the residual noise 
+	\paragraph{Fitted Values} The MSE of the $\hat{y}$, MSE$(\hat{y})$, is listed in Table \ref{table:msey}. Nominally, MSE$(\hat{y})$ should be equal to the noise variance, $\sigma_{\varepsilon}^2$, which is 1 for odd-numbered rows and 0.25 for even numbered rows. Of the 60 simulation cases, GWR's MSE$(\hat{y})$ was nearest to the known noise variance for 16, compared to 15 for oracular GWR, 14 for the GWAL-LLE, nine for each of the GWEN and the GWAL, and seven for the GWAL-LLE.
 	
 	\input{../../output/simulation/selection}
 	\input{../../output/simulation/msex}
@@ -344,9 +351,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 
 			
 \section{Data analysis\label{section:data-analysis}}
-	An example data analysis is presented to demonstrate application of the GWEN for local model selection in an SVCR model of how poverty is related to a list of socio-economic variables.
-
-    An example demonstrates application of the GWEN for local model selection in a SVCR model of the poverty rate in the Upper Midwest states of the U.S. (Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan). The GWEN model is compared to a traditional GWR model for the same data.
+    An example data analysis is presented, demonstrating application of the GWEN-LLE for local model selection in a SVCR model of the poverty rate in the Upper Midwest states of the U.S. (Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan). The GWEN-LLE model is compared to a traditional GWR model for the same data.
 
     The response variable for the models is the logit-transformed proportion of individuals in each county who were living below the poverty line in 1970. The covariates are related to the employment structure of each county, namely the proportion of each county's residents who were employed in the economic sectors of agriculture; finance, insurance, and real estate; manufacturing; mining; services; and other professions. While the response variable was logit transformed, raw proportions were used as the covariates.
 
@@ -371,14 +376,20 @@ The data used in this example are aggregated at the level of counties, which are
 	\begin{figure}
 		\begin{center}
 			\includegraphics[height=8in]{../../figures/poverty/1970-GWR-coefficients}
-			\caption{Coefficient surfaces for the logit of poverty rate based on the 1970 census and estimated by traditional GWR. \label{fig:gwr-coefs-1970}}
+			\caption{Coefficient surfaces for the logit of poverty rate based on the 1970 census and estimated by traditional GWR.\label{fig:gwr-coefs-1970}}
+		\end{center}
+	\end{figure}
+
+	\begin{figure}
+		\begin{center}
+			\includegraphics[height=8in]{../../figures/poverty/1970-GWEN-GWR-comparison}
+			\caption{Comparison of the coefficients of employment structure variables for a SVCR model of poverty rate in the Upper Midwest states in 1970. Each plot includes a 1-1 line, along which the points would lie if GWR and the GWEN produced identical coefficient estimates. \label{fig:gwen-gwr-comparison-1970}}
 		\end{center}
 	\end{figure}
 			
-	It is immediately apparent that the estimated coefficient surfaces are non-constant for most covariates. The same large-scale patterns appear in both figures, but with differences. First of all, the GWEN has selected a larger bandwidth than traditional GWR, so there is less variability in the coefficient estimates from the GWEN. This may be one reason that the GWEN coefficient estimates are less extreme than those for traditional GWR. In a model with a logit-transformed proportion as the output, the coefficients can be interpreted as log odds ratios, so, e.g., the estimate of -100 as the coefficient of \verb!phisp! (albeit at the edge of the domain) seems unrealistic.
-	
-	Assessing variable selection for this data is difficult, since the GWEN almost never removed any variables from the model. Indeed, some coefficients seem nearly constant across the domain. An exception is the coefficient surface for \verb!pex! (mining employment). That surface indicates an interaction whereby the proportion of people working in mining in southern parts of the domain is associated with an increase in the poverty rate, while in northern parts of the domain it is associated with a decrease in the poverty rate.
+	The coefficient surfaces estimated by the GWEN are relatively constant as compared to the those estimated by GWR. The GWEN indicates that the proportion of residents employed in services or in the ``other professions" category does not affect the poverty rate anywhere within the Upper Midwest states, while the proportion of residents employed in mining or in agriculture affects the local poverty rate only in small areas of the Upper Midwest states.
 
+    The proportion of residents employed in manufacturing or in finance, insurance, and real estate have negative coefficients (meaning a negative association with poverty rate) in all but one county of the Upper Midwest states. That county is at the extreme northwest corner of Minnesota. The coefficients estimated by GWR indicate some areas where the coefficient of manufacturing employment and finance, insurance, or real estate employment are positive, indicating a positive association with poverty. For example, GWR estimates that the coefficient of manufacturing employment is positive for the counties near Chicago.
 
 \section{Future work \label{section:future-work}}
 	The GWEN is presented here as a method of analysis for data where the response variable follows a gaussian distribution with independent additive errors. A key feature of spatial data, though, is that the errors are typically autocorrelated. Additionally, it is common to encounter data that does not follow a gaussian distribution but for which the GWEN would otherwise be a valuable tool for analysis.

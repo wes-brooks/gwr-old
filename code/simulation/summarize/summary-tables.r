@@ -1,5 +1,11 @@
-library(xtable)
-source("~/git/brooks/code/xtable.printbold.r")
+require(xtable)
+require(RCurl)
+require(devtools)
+#If the 'brooks' package isnt loaded then import it from github:
+if (!'package:brooks' %in% search()) {
+    install_github('wesesque/brooks')
+    require(brooks)
+}
 
 #Load the simulation results
 args = commandArgs(trailingOnly=TRUE)
@@ -34,7 +40,7 @@ nsims = 100
 #no lars:
 functions = c('step', 'gradient', 'parabola')
 sim.modes = c("enet", "glmnet", "unshrunk.enet", "unshrunk.glmnet", "oracular", "gwr")
-sim.modes.output = c("GWEN", "GWAL", "u.enet", "u.lasso", "oracle", "GWR")
+sim.modes.output = c("GWEN", "GWAL", "GWEN-LLE", "GWAL-LLE", "oracle", "GWR")
 selection.modes = c("enet", "glmnet")
 selection.titles = list(enet='GWEN', glmnet='GWAL')
 groupings = list('1'=c(1,2,3,4), '2'=c(5,6,7,8), '3'=c(9,10,11,12))
@@ -87,14 +93,16 @@ msex.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) 
 #Write the table to disk
 sink(paste(outdir, "/msex.tex", sep=""))
 msex.table[msex.table=="NA"]=""
-msex.table = xtable(msex.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Mean squared error of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:msex}")
-xtable.printbold(msex.table, which.bold=msexbold, which.ital=msexital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)))
+msex.table = xtable(msex.table, digits=3, align=c('Y','Y','Y', rep('Y', length(sim.modes))), caption="Mean squared error of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:msex}")
+xtable.printbold(msex.table, which.bold=msexbold, which.ital=msexital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)), tabular.environment="tabularx", width="\\textwidth")
 sink()
 
 
 
 
 
+#We compare the MSE(y) to the known error variance, highlighting the method that comes closest.
+nominal = rep(c(0.25, 1), 30)
 
 msey = list()
 for (l in 1:length(locs)) {
@@ -124,9 +132,9 @@ mseybold = matrix(FALSE, nrow=nrow(msey.table), ncol=ncol(msey.table)+2)
 mseyital = matrix(FALSE, nrow=nrow(msey.table), ncol=ncol(msey.table)+2)
 for (i in 1:nrow(msey.table)) {
     row = msey.table[i,]
-    best = sort(unique(row))
-    mseybold[i,-(1:2)][row==best[1]] = TRUE
-    if (sum(row==best[1], na.rm=TRUE)==1) {mseyital[i,-(1:2)][row==best[2]] = TRUE}
+    best = sort(unique(abs(row-nominal[i])))
+    mseybold[i,-(1:2)][abs(row-nominal[i])==best[1]] = TRUE
+    if (sum(row==best[1], na.rm=TRUE)==1) {mseyital[i,-(1:2)][abs(row-nominal[i])==best[2]] = TRUE}
 }
 
 msey.table = round(msey.table, 3)
@@ -144,8 +152,8 @@ msey.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) 
 #Write the table to disk
 sink(paste(outdir, "/msey.tex", sep=""))
 msey.table[msey.table=="NA"]=""
-msey.table = xtable(msey.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Mean squared error of $\\hat{Y}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:msey}")
-xtable.printbold(msey.table, which.bold=mseybold, which.ital=mseyital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)))
+msey.table = xtable(msey.table, digits=3, align=c('Y','Y', 'Y', rep('Y', length(sim.modes))), caption="Mean squared error of $\\hat{y}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:msey}")
+xtable.printbold(msey.table, which.bold=mseybold, which.ital=mseyital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)), tabular.environment="tabularx", width="\\textwidth")
 sink()
 
 
@@ -199,8 +207,8 @@ bx.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) pa
 #Write the table to disk
 sink(paste(outdir, "/bx.tex", sep=""))
 bx.table[bx.table=="NA"]=""
-bx.table = xtable(bx.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Bias of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:bx}")
-xtable.printbold(bx.table, which.bold=bxbold, which.ital=bxital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)))
+bx.table = xtable(bx.table, digits=3, align=c('Y','Y', 'Y', rep('Y', length(sim.modes))), caption="Bias of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:bx}")
+xtable.printbold(bx.table, which.bold=bxbold, which.ital=bxital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)), tabular.environment="tabularx", width="\\textwidth")
 sink()
 
 
@@ -254,8 +262,8 @@ by.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) pa
 #Write the table to disk
 sink(paste(outdir, "/by.tex", sep=""))
 by.table[by.table=="NA"]=""
-by.table = xtable(by.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Bias of $\\hat{Y}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:by}")
-xtable.printbold(by.table, which.bold=bybold, which.ital=byital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)))
+by.table = xtable(by.table, digits=3, align=c('Y','Y', 'Y', rep('Y', length(sim.modes))), caption="Bias of $\\hat{y}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:by}")
+xtable.printbold(by.table, which.bold=bybold, which.ital=byital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)), tabular.environment="tabularx", width="\\textwidth")
 sink()
 
 
@@ -311,8 +319,8 @@ varx.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) 
 #Write the table to disk
 sink(paste(outdir, "/varx.tex", sep=""))
 varx.table[varx.table=="NA"]=""
-varx.table = xtable(varx.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Variance of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:varx}")
-xtable.printbold(varx.table, which.bold=varxbold, which.ital=varxital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)))
+varx.table = xtable(varx.table, digits=3, align=c('Y','Y', 'Y', rep('Y', length(sim.modes))), caption="Variance of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:varx}")
+xtable.printbold(varx.table, which.bold=varxbold, which.ital=varxital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)), tabular.environment="tabularx", width="\\textwidth")
 sink()
 
 
@@ -367,8 +375,8 @@ vary.table[0:2*20 + 1,1]= sapply(c("step", "gradient", "parabola"), function(x) 
 #Write the table to disk
 sink(paste(outdir, "/vary.tex", sep=""))
 vary.table[vary.table=="NA"]=""
-vary.table = xtable(vary.table, digits=3, align=c('c','c', 'c', rep('r', length(sim.modes))), caption="Variance of $\\hat{Y}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:vary}")
-xtable.printbold(vary.table, which.bold=varybold, which.ital=varyital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)))
+vary.table = xtable(vary.table, digits=3, align=c('Y','Y', 'Y', rep('Y', length(sim.modes))), caption="Variance of $\\hat{y}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:vary}")
+xtable.printbold(vary.table, which.bold=varybold, which.ital=varyital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)), tabular.environment="tabularx", width="\\textwidth")
 sink()
 
 

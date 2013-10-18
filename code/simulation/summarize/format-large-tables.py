@@ -45,7 +45,7 @@ with open(infile) as input_file:
             footer.append(line)
 
 
-multihead = ["&&&\\multicolumn{3}{c}{GWL}&\\multicolumn{3}{c}{GWL-U}&\\multicolumn{3}{c}{Oracle}\\\\", "MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\\\ "]
+multihead = ["&&&\\multicolumn{3}{c}{GWEN}&\\multicolumn{3}{c}{GWEN-LLE}&\\multicolumn{3}{c}{Oracle}\\\\", "MSE & bias & var &  MSE & bias & var &  MSE & bias & var\\\\ "]
 rows[0] = multihead[1]
 
 #Deal with the header: First, convert the column headers to latex code

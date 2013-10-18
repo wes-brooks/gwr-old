@@ -46,6 +46,9 @@ with open(infile) as input_file:
         elif re.search(r'\\begin{tabular}', l):
             lines.append(l)
             lines.append(header)
+        elif re.search(r'\\end{tabularx}', l):
+            l = re.sub(r'\\end{tabularx}', r'\end{tabularx}}', l)
+            lines.append(l)
         elif re.search(r'\\end{tabular}', l):
             l = re.sub(r'\\end{tabular}', r'\end{tabular}}', l)
             lines.append(l)
