@@ -70,13 +70,13 @@ map <- ggplot(mergedata, aes(long,lat,group=group)) +
 
 
 #Draw the map of poverty rate
-ll = range(mergedata[,response], na.rm=TRUE)
+ll2 = range(mergedata[,response2], na.rm=TRUE)
 map2 <- ggplot(mergedata, aes(long,lat,group=group)) +
     geom_polygon(aes_string(fill=response2)) +
-    scale_fill_gradient(high='orange', low='white', limits=ll, na.value='gray50', name="") +
+    scale_fill_gradient(high='orange', low='white', limits=ll2, na.value='gray50', name="") +
     coord_map(project='globular') +
     theme(panel.background=element_rect(fill=col.bg, colour=col.outline)) +
-    ggtitle(column.map[[response]]) +
+    ggtitle(column.map[[response2]]) +
     theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.margin=unit(0,'cm')) +
     theme(title=element_text(vjust=1)) +
     scale_x_continuous('') +
