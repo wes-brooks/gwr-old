@@ -11,6 +11,10 @@
 \beamertemplatenavigationsymbolsempty
 \hypersetup{pdfpagemode=UseNone} % don't show bookmarks on initial view
 
+% tables
+\usepackage{tabularx}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+
 % font
 \usefonttheme{professionalfonts}
 \usefonttheme{serif}
@@ -292,7 +296,7 @@ The Gamma function is a Matern-class covariance function, such as the exponentia
     \item If $\bm{s}$ is a spatial location then we have a spatially varying coefficient regression (SVCR) model
 \end{itemize}
 
-\note{}
+\note{note}
 \end{frame}
 
 
@@ -319,7 +323,7 @@ The Gamma function is a Matern-class covariance function, such as the exponentia
     \item Still relies on \emph{a priori} global variable selection
 \end{itemize}
 
-\note{}
+\note{note}
 \end{frame}
 
 
@@ -343,7 +347,7 @@ The Gamma function is a Matern-class covariance function, such as the exponentia
     \end{itemize}
 \end{itemize}
 
-\note{}
+\note{note}
 \end{frame}
 
 
@@ -377,7 +381,7 @@ Wavelet methods involve decomposing a function into local frequency components. 
 
 These methods achieve sparsity in the local frequency components but not in the local covariates, and so are not suitable for local variable selection.
 
-\note{}
+\note{note}
 \end{frame}
 
 
@@ -395,7 +399,7 @@ Where $\phi$ is a bandwidth parameter.
 
 Given the weights, a local model is fit at each sampling location using the local likelihood \citep{Loader:1999}
 
-\note{}
+\note{note}
 \end{frame}
 
 
@@ -501,7 +505,6 @@ Within a GWR model, using the Lasso \citep{Tibshirani:1996} for local variable s
 
 \note{
 The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
-
 }
 \end{frame}
 
@@ -515,7 +518,6 @@ where $\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2$
 
 \note{
 The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
-
 }
 \end{frame}
 
@@ -537,7 +539,6 @@ It is necessary to estimate an AEN tuning parameter for each local model. Using 
 
 \note{
 The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
-
 }
 \end{frame}
 
@@ -583,7 +584,7 @@ Where the covariates were simulated with colinearity, the colinearity was induce
 \end{align}
 Where $\Omega_{5\times5} = R'R$ is the Cholesky decomposition.
 
-\note{}
+\note{note}
 \end{frame}
 
 
@@ -598,7 +599,7 @@ Where $\Omega_{5\times5} = R'R$ is the Cholesky decomposition.
     \item Coefficients for $X_2, \dots, X_5$ are zero everywhere
 \end{itemize}
 
-\note{}
+\note{note}
 \end{frame}
 
 
@@ -617,7 +618,7 @@ Call these functions step, gradient, and parabola:
     \end{center}
 \end{figure}
 
-\note{}
+\note{note}
 \end{frame}
 
 
@@ -651,35 +652,38 @@ Call these functions step, gradient, and parabola:
         \end{center}
         \caption{Simulation parameters for each setting.\label{table:simulation_settings}}
     \end{table}
-\note{}
+\note{note}
 \end{frame}
 
 
 \begin{frame}{Simulation results}
 \subt{Selection}
-\hspace{-10mm}\input{../../output/practice-talk/selection}
-\note{}
+\input{../../output/prelim-talk/selection}
+\note{note}
+\end{frame}
+
+
+
+
+\begin{frame}{Simulation results}
+\subt{MSE of $\beta_1(\bm{s})$}
+\input{../../output/prelim-talk/msex-step}
+\note{note}
+\end{frame}
+
+
+
+\begin{frame}{Simulation results}
+\subt{MSE of $\beta_1(\bm{s})$}
+\input{../../output/prelim-talk/msex-gradient}
+\note{note}
 \end{frame}
 
 
 \begin{frame}{Simulation results}
 \subt{MSE of $\beta_1(\bm{s})$}
-\input{../../output/practice-talk/msex-step}
-\note{}
-\end{frame}
-
-
-\begin{frame}{Simulation results}
-\subt{MSE of $\beta_1(\bm{s})$}
-\input{../../output/practice-talk/msex-gradient}
-\note{}
-\end{frame}
-
-
-\begin{frame}{Simulation results}
-\subt{MSE of $\beta_1(\bm{s})$}
-\input{../../output/practice-talk/msex-parabola}
-\note{}
+\input{../../output/prelim-talk/msex-parabola}
+\note{note}
 \end{frame}
 
 
@@ -688,22 +692,22 @@ Call these functions step, gradient, and parabola:
 
 \begin{frame}{Simulation results}
 \subt{Variance of $\beta_1(\bm{s})$}
-\input{../../output/practice-talk/varx-step}
-\note{}
+\input{../../output/prelim-talk/varx-step}
+\note{note}
 \end{frame}
 
 
 \begin{frame}{Simulation results}
 \subt{Variance of $\beta_1(\bm{s})$}
-\input{../../output/practice-talk/varx-gradient}
-\note{}
+\input{../../output/prelim-talk/varx-gradient}
+\note{note}
 \end{frame}
 
 
 \begin{frame}{Simulation results}
 \subt{Variance of $\beta_1(\bm{s})$}
-\input{../../output/practice-talk/varx-parabola}
-\note{}
+\input{../../output/prelim-talk/varx-parabola}
+\note{note}
 \end{frame}
 
 
@@ -711,22 +715,22 @@ Call these functions step, gradient, and parabola:
 
 \begin{frame}{Simulation results}
 \subt{Bias of $\beta_1(\bm{s})$}
-\input{../../output/practice-talk/bx-step}
-\note{}
+\input{../../output/prelim-talk/bx-step}
+\note{note}
 \end{frame}
 
 
 \begin{frame}{Simulation results}
 \subt{Bias of $\beta_1(\bm{s})$}
-\input{../../output/practice-talk/bx-gradient}
-\note{}
+\input{../../output/prelim-talk/bx-gradient}
+\note{note}
 \end{frame}
 
 
 \begin{frame}{Simulation results}
 \subt{Bias of $\beta_1(\bm{s})$}
-\input{../../output/practice-talk/bx-parabola}
-\note{}
+\input{../../output/prelim-talk/bx-parabola}
+\note{note}
 \end{frame}
 
 
@@ -760,7 +764,7 @@ How is this data to be analyzed?
   \ig[width=\textwidth]{../../figures/practice-talk/1970-GWR-coefficients}
 \end{center}
 
-\note{}
+\note{note}
 \end{frame}
 
 
@@ -775,7 +779,7 @@ How is this data to be analyzed?
   \ig[width=\textwidth]{../../figures/practice-talk/1970-GWEN-coefficients}
 \end{center}
 
-\note{}
+\note{note}
 \end{frame}
 
 
@@ -786,7 +790,7 @@ How is this data to be analyzed?
     \item Apply the GWEN to data with non-Gaussian response variable
     \item Incorporate spatial autocorrelation in the model (simulated errors were iid)
 \end{itemize}
-\note{}
+\note{note}
 \end{frame}
 
 

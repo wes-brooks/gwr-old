@@ -1,5 +1,7 @@
 practice-talk.pdf: practice-talk.tex
 	xelatex practice-talk
+	bibtex practice-talk
+	xelatex practice-talk
 
 notes: practice-talk_withnotes.pdf
 

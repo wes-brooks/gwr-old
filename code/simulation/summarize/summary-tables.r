@@ -44,6 +44,7 @@ sim.modes.output = c("GWEN", "GWAL", "GWEN-LLE", "GWAL-LLE", "oracle", "GWR")
 selection.modes = c("enet", "glmnet")
 selection.titles = list(enet='GWEN', glmnet='GWAL')
 groupings = list('1'=c(1,2,3,4), '2'=c(5,6,7,8), '3'=c(9,10,11,12))
+rows = list('step'=1:20, 'gradient'=21:40, 'parabola'=41:60)
 
 
 msex = list()
@@ -98,6 +99,12 @@ xtable.printbold(msex.table, which.bold=msexbold, which.ital=msexital, include.r
 sink()
 
 
+#Write the table to disk, sized for slides
+for (f in functions) {
+    sink(paste(outdir, "/../prelim-talk/msex-", f, ".tex", sep=""))
+    xtable.printbold(msex.table[rows[[f]],], which.bold=msexbold[rows[[f]],], which.ital=msexital[rows[[f]],], include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 4)), tabular.environment="tabularx", width="2\\textwidth")
+    sink()
+}
 
 
 
@@ -157,6 +164,15 @@ xtable.printbold(msey.table, which.bold=mseybold, which.ital=mseyital, include.r
 sink()
 
 
+#Write the table to disk, sized for slides
+for (f in functions) {
+    sink(paste(outdir, "/../prelim-talk/msey-", f, ".tex", sep=""))
+    xtable.printbold(msey.table[rows[[f]],], which.bold=mseybold[rows[[f]],], which.ital=mseyital[rows[[f]],], include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 4)), tabular.environment="tabularx", width="2\\textwidth")
+    sink()
+}
+
+
+
 
 
 
@@ -210,6 +226,15 @@ bx.table[bx.table=="NA"]=""
 bx.table = xtable(bx.table, digits=3, align=c('Y','Y', 'Y', rep('Y', length(sim.modes))), caption="Bias of $\\hat{\\beta_1}$ (\\textbf{minimum}, \\emph{next best}).\\label{table:bx}")
 xtable.printbold(bx.table, which.bold=bxbold, which.ital=bxital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)), tabular.environment="tabularx", width="\\textwidth")
 sink()
+
+
+#Write the table to disk, sized for slides
+for (f in functions) {
+    sink(paste(outdir, "/../prelim-talk/bx-", f, ".tex", sep=""))
+    xtable.printbold(bx.table[rows[[f]],], which.bold=bxbold[rows[[f]],], which.ital=bxital[rows[[f]],], include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 4)), tabular.environment="tabularx", width="2\\textwidth")
+    sink()
+}
+
 
 
 
@@ -266,7 +291,12 @@ by.table = xtable(by.table, digits=3, align=c('Y','Y', 'Y', rep('Y', length(sim.
 xtable.printbold(by.table, which.bold=bybold, which.ital=byital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)), tabular.environment="tabularx", width="\\textwidth")
 sink()
 
-
+#Write the table to disk, sized for slides
+for (f in functions) {
+    sink(paste(outdir, "/../prelim-talk/by-", f, ".tex", sep=""))
+    xtable.printbold(by.table[rows[[f]],], which.bold=bybold[rows[[f]],], which.ital=byital[rows[[f]],], include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 4)), tabular.environment="tabularx", width="2\\textwidth")
+    sink()
+}
 
 
 
@@ -323,6 +353,12 @@ varx.table = xtable(varx.table, digits=3, align=c('Y','Y', 'Y', rep('Y', length(
 xtable.printbold(varx.table, which.bold=varxbold, which.ital=varxital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)), tabular.environment="tabularx", width="\\textwidth")
 sink()
 
+#Write the table to disk, sized for slides
+for (f in functions) {
+    sink(paste(outdir, "/../prelim-talk/varx-", f, ".tex", sep=""))
+    xtable.printbold(varx.table[rows[[f]],], which.bold=varxbold[rows[[f]],], which.ital=varxital[rows[[f]],], include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 4)), tabular.environment="tabularx", width="2\\textwidth")
+    sink()
+}
 
 
 
@@ -379,7 +415,12 @@ vary.table = xtable(vary.table, digits=3, align=c('Y','Y', 'Y', rep('Y', length(
 xtable.printbold(vary.table, which.bold=varybold, which.ital=varyital, include.rownames=FALSE, hline.after=c(0,20,40), add.to.row=list(pos=lapply(0:13*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 14)), tabular.environment="tabularx", width="\\textwidth")
 sink()
 
-
+#Write the table to disk, sized for slides
+for (f in functions) {
+    sink(paste(outdir, "/../prelim-talk/vary-", f, ".tex", sep=""))
+    xtable.printbold(vary.table[rows[[f]],], which.bold=varybold[rows[[f]],], which.ital=varyital[rows[[f]],], include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{3-8}\n", 4)), tabular.environment="tabularx", width="2\\textwidth")
+    sink()
+}
 
 
 
@@ -437,3 +478,10 @@ sink(paste(outdir, "/selection.tex", sep=""))
 selection.table[selection.table=="NA"]=""
 print(xtable(selection.table, digits=2, align=paste(c('cccc', rep('|cc',length(functions)*length(selection.modes)-1,)), collapse=""), caption="Selection frequency for the indicated variables.\\label{table:selection}"), floating.environment="table", sanitize.text.function=function(x){x}, sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{2-13}\n", 4)))
 sink()
+
+#Write the table to disk, sized for slides
+for (f in functions) {
+    sink(paste(outdir, "/../prelim-talk/selection.tex", sep=""))
+    print(xtable(selection.table, digits=2, align=paste(c('cccc', rep('|cc',length(functions)*length(selection.modes)-1,)), collapse=""), caption="Selection frequency for the indicated variables.\\label{table:selection}"), floating.environment="table", sanitize.text.function=function(x){x}, sanitize.colnames.function=function(x){x}, include.rownames=FALSE, hline.after=c(0), add.to.row=list(pos=lapply(0:3*4 + 4, function(x) x), command=rep("\\cline{2-13}\n", 4)))
+    sink()
+}

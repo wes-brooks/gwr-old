@@ -11,6 +11,7 @@ parser.add_argument('--sizex', type=str, nargs='?', default="")
 parser.add_argument('--sizey', type=str, nargs='?', default="")
 parser.add_argument('--tabcolsep', type=str, nargs='?', default="")
 parser.add_argument('--header', type=str, nargs='?', default="")
+parser.add_argument('--scale', type=str, nargs='?', default="")
 
 #Interpret the command line arguments:
 args = vars(parser.parse_args())
@@ -22,7 +23,8 @@ if args['sizex']: sizex = str(args['sizex'])
 else: sizex = "!"
 if args['sizey']: sizey = str(args['sizey'])
 else: sizey = "!"
-
+if args['scale']: scale = str(args['scale'])
+else: scale = ""
 
 #Import the header file if one is specified
 if header:
@@ -39,11 +41,17 @@ with open(infile) as input_file:
             lines.append(l)
             lines.append("\\thispagestyle{empty}\n")
             lines.append("\\begin{center}\n")
-            lines.append("\\resizebox{" + sizex + "}{" + sizey + "}{\n")
+            if scale:
+                lines.append("\\hspace*{-6mm}\n")
+                lines.append("\\scalebox{" + scale + "}{\n")
+            else: lines.append("\\resizebox{" + sizex + "}{" + sizey + "}{\n")
             if (tabcolsep): lines.append("\\setlength\\tabcolsep{" + tabcolsep + "}\n")
         elif re.search(r'\\centering', l):
             pass
         elif re.search(r'\\begin{tabular}', l):
+            lines.append(l)
+            lines.append(header)
+        elif re.search(r'\\begin{tabularx}', l):
             lines.append(l)
             lines.append(header)
         elif re.search(r'\\end{tabularx}', l):
