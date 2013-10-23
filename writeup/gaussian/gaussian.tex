@@ -116,7 +116,9 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	%The spatial random effect describes the spatial pattern in the deviations from the systematic part of the model. When fitting the spatial regression model (\ref{eq:spatial-regression}), it is usually required that the the fitted values of the spatial random effect and of the residuals sum to zero, i.e. $\sum\limits_{i=1}^n\hat{W}(\bm{s}_i) = 0$ and $\sum\limits_{i=1}^n\hat{\varepsilon}(\bm{s}_i) = 0$. This mode of analysis is appropriate when the systematic part of the regression model does not vary between locations. On the other hand, a VCR model is appropriate for the case where the systematic part of the regression model does vary across locations.
 
 	%Spatial VCR
-	Alternatively, kernel-based and spline-based methods can be considered for fitting VCR models without assuming the coefficients are described by a stationary random field. For example, it is straightforward to modify a thin plate regression spline model into a traditional, non-spatial VCR model \citep{Wood:2006}. A local likelihood can also be used to fit generalized linear models with varying coefficients using kernel smoothing \citep{Loader:1999}. \cite{Fan:1999} demonstrated that the optimal kernel bandwidth estimate for a VCR model can be found via a two-step technique.
+	Alternatively, kernel-based and spline-based methods can be considered for fitting VCR models without assuming the coefficients are described by a stationary random field. 
+
+Estimating coefficients for a spline-based VCR model is similar to fitting a generalized additive model (GAM), except that the design matrix, which for a GAM is calculated by decomposing the covariates via a spline basis, is further multiplied by a diagonal matrix of the effect-modifying variable to produce a VCR \citep{Wood:2006}. A local likelihood can also be used to fit generalized linear models with varying coefficients using kernel smoothing \citep{Loader:1999}. \cite{Fan:1999} demonstrated that the optimal kernel bandwidth estimate for a VCR model can be found via a two-step technique.
 	
 	Model selection in VCR models may be local or global. Global selection means including or excluding variables everywhere in the spatial domain, while local selection means including or excluding variables at individual locations within the spatial domain. For global model selection in spline-based VCR models, \cite{Wang:2008a} proposed a SCAD penalty \citep{Fan:2001} for variable selection in spline-based VCR models with a univariate effect-modifying variable. \cite{Antoniadis:2012a} used the nonnegative Garrote penalty \citep{Breiman:1995} in P-spline-based VCR models having a univariate effect-modifying variable.
 	
@@ -157,7 +159,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	Further, let $\bm{X} = \left( \bm{x}_1, \dots, \bm{x}_n \right)'$ and $\bm{y} = \left( y_1, \dots, y_n \right)'$. Thus, conditional on the design matrix $\bm{X}$, observations of the response variable at different locations are independent of each other. Then, a total log-likelihood of the observed data is the sum of the log-likelihood of each individual observation:
 	 \begin{align}
-	 	\ell\left( \bm{\beta} \right) = - \left(1/2\right) \left\{ n \log \left( 2 \pi \sigma^2\right) +  \left(\sigma^{2}\right)^{-1}  \sum_{i=1}^n \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2  \right\}.
+	 	\ell\left( \bm{\beta} \right) = - \left(1/2\right) \left\{ n \log \left( 2 \pi \sigma^2\right) +  \sigma^{-2}  \sum_{i=1}^n \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2  \right\}.
 	\end{align}
 	
 	Since there are a total of $n \times (p+1)$ free parameters for $n$ observations, the model is not identifiable and it is not possible to directly maximize the total likelihood. One way to effectively reduce the number of parameters is to assume that the coefficients $\bm{\beta}(\bm{s})$ are smoothly varying over space, and use a kernel smoother to make pointwise estimates of the coefficients by maximizing a local likelihood. In the setting of spatial data and with the kernel smoother based on the physical distance between sampling locations, this is the traditional GWR.
@@ -171,15 +173,15 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	
 	The bisquare kernel in (\ref{eq:bisquare}) assigns the maximum weight of one where $\bm{s}_i = \bm{s}_{i'}$ (i.e. $\delta_{ii'}=0$), is continuously differentiable, and assigns zero weight to observations at distances greater than one bandwidth from $\bm{s}_i$. For the purpose of estimation, define a local likelihood at each sampling location:
 	\begin{align}\label{eq:local-likelihood}
-		\mathcal{L}_i \left(\bm{\beta}_i \right) &= \prod_{i'=1}^n \left[ \left(2 \pi \sigma^2_i  \right)^{-1/2}  \exp\left\{-\left(2 \sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} \right] ^ {w_{ii'}},
+		\mathcal{L}_i \left(\bm{\beta}_i \right) &= \prod_{i'=1}^n \left[ \left(2 \pi \sigma^2_i  \right)^{-1/2}  \exp\left\{- 1/2 \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} \right] ^ {w_{ii'}},
 	\end{align}			
-	where $\sigma_i^2$ is a local approximation to the error variance $\sigma^2$ \citep{Fotheringham:2002}. Thus, the local log-likelihood function is, up to an additive constant:
+	where $\sigma_i^2$ is a local approximation to the error variance $\sigma^2$ \citep{Fotheringham:2002}. Thus, the local log-likelihood function is, up to an additive constant: 
 	\begin{align}\label{eq:local-log-likelihood}
-		\ell_i\left(\bm{\beta}_i\right) &= -(1/2) \sum_{i'=1}^n w_{ii'} \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}.
+		\ell_i\left(\bm{\beta}_i\right) &= -(1/2) \sum_{i'=1}^n w_{ii'} \left\{ \log{\sigma^2_i}  + \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}.
 	\end{align}
-	From (\ref{eq:local-likelihood}) and (\ref{eq:local-log-likelihood}), it is apparent that the GWR coefficient estimates $\hat{\bm{\beta}}_{i,\text{GWR}}$ maximizing the local likelihood at location $\bm{s}_i$ can be obtained using weighted least squares. 
+	From (\ref{eq:local-likelihood}) and (\ref{eq:local-log-likelihood}), the GWR coefficient estimates $\hat{\bm{\beta}}_{i,\text{GWR}}$ are obtained by maximizing the local likelihood at location $\bm{s}_i$. It is apparent that can this be accomplished using weighted least squares. 
 	
-	 Setting to zero the derivative of (\ref{eq:local-log-likelihood}) with respect to $\sigma_i^2$, the maximum likelihood estimate (MLE) $\hat{\sigma}_i^2$ is found to be:	 
+	 Setting to zero the derivative of (\ref{eq:local-log-likelihood}) with respect to $\sigma_i^2$, the maximum local likelihood estimate $\hat{\sigma}_i^2$ is found to be:	 
 	 \begin{align}
 	 	\hat{\sigma}_i^2 = \left(\sum \limits_{i'=1}^{n} w_{ii'} \right)^{-1} \sum \limits_{i'=1}^n w_{ii'}\left(y_{i'} - \bm{x}_{i'}'\hat{\bm{\beta}}_i\right)^2
 	\end{align}	
@@ -199,7 +201,7 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 	The objective function for the GWAL at $\bm{s}_i$ consists of the local log-likelihood and an additive penalty that is the weighted $\ell_1$-norm of the coefficients, defined to be
 	\begin{align}\label{eq:adaptive-lasso-WLS}
 		\mathcal{S}(\bm{\beta}_i) &= -2\ell_i\left(\bm{\beta}_i\right) + \mathcal{J}_1(\bm{\beta}_i) \notag \\
-		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} +  \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij}
+		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} +  \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij}
 	\end{align}
 	where $\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2$ is the weighted sum of squares minimized by traditional GWR, and $\mathcal{J}_1(\bm{\beta}_i) = \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ is the AL penalty. With the vector of unpenalized local coefficients $\bm{\gamma}_i$, the AL penalty for the $j$th coefficient $\beta_{ij}$ at location $\bm{s}_i$ is $\lambda_i / \gamma_{ij}$, where $\lambda_i > 0$ is a the local tuning parameter that applies to all coefficients at location $\bm{s}_i$ and $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ is the vector of adaptive weights at location $\bm{s}_i$.
 
@@ -351,14 +353,21 @@ where $\nu$ denotes the degree of smoothness, $K_{\nu}$ denotes the modified Bes
 
 			
 \section{Data analysis\label{section:data-analysis}}
-    An example data analysis is presented, demonstrating application of the GWEN-LLE for local model selection in a SVCR model of the poverty rate in the Upper Midwest states of the U.S. (Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan). The GWEN-LLE model is compared to a traditional GWR model for the same data.
+    An example data analysis is presented, demonstrating application of the GWEN-LLE for local model selection in a SVCR model of the poverty rate in the Upper Midwest states of the U.S. (Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan). The . The GWEN-LLE model is compared to a traditional GWR model for the same data.
 
     The response variable for the models is the logit-transformed proportion of individuals in each county who were living below the poverty line in 1970. The covariates are related to the employment structure of each county, namely the proportion of each county's residents who were employed in the economic sectors of agriculture; finance, insurance, and real estate; manufacturing; mining; services; and other professions. While the response variable was logit transformed, raw proportions were used as the covariates.
 
 The data used in this example are aggregated at the level of counties, which are areal units. Each county's sampling location is assumed to be its centroid. The data are from the U.S. Census Bureau's decennial census in the year 1970. 
 	
-	
-	The coefficient estimates are plotted on maps of the upper midwest in Figure \ref{fig:unshrunk-enet-coefs-1970} (based on the GWEN) and Figure \ref{fig:gwr-coefs-1970} (based on traditional GWR).
+The coefficient estimates are plotted on maps of the upper midwest in Figure \ref{fig:unshrunk-enet-coefs-1970} (based on the GWEN-LLE) and Figure \ref{fig:gwr-coefs-1970} (based on traditional GWR).
+
+	\begin{figure}
+		\begin{center}
+			\includegraphics[height=8in]{../../figures/practice-talk/poverty-response}
+			\caption{County-level poverty rate from the decennial U.S. census of 1970 for the Upper Midwest. \label{fig:1970-response}}
+		\end{center}
+	\end{figure}
+
 	\begin{figure}
 		\begin{center}
 			\includegraphics[height=8in]{../../figures/poverty/1970-covariates}
@@ -387,9 +396,15 @@ The data used in this example are aggregated at the level of counties, which are
 		\end{center}
 	\end{figure}
 			
-	The coefficient surfaces estimated by the GWEN are relatively constant as compared to the those estimated by GWR. The GWEN indicates that the proportion of residents employed in services or in the ``other professions" category does not affect the poverty rate anywhere within the Upper Midwest states, while the proportion of residents employed in mining or in agriculture affects the local poverty rate only in small areas of the Upper Midwest states.
+	The coefficient surfaces estimated by the GWEN-LLE are relatively constant as compared to the those estimated by GWR. The GWEN-LLE indicates that the proportion of residents employed in services or in the ``other professions" category does not affect the poverty rate anywhere within the Upper Midwest states, while the proportion of residents employed in manufacturing or in finance, insurance, and real estate have negative coefficients (meaning a negative association with poverty rate) in all but one county of the Upper Midwest states (that one county is at the extreme northwest corner of Minnesota).
 
-    The proportion of residents employed in manufacturing or in finance, insurance, and real estate have negative coefficients (meaning a negative association with poverty rate) in all but one county of the Upper Midwest states. That county is at the extreme northwest corner of Minnesota. The coefficients estimated by GWR indicate some areas where the coefficient of manufacturing employment and finance, insurance, or real estate employment are positive, indicating a positive association with poverty. For example, GWR estimates that the coefficient of manufacturing employment is positive for the counties near Chicago.
+The coefficient of employment in finance, insurance, and real estate has a larger magnitude than the other covariates (minimum value near -20, as opposed to the next-largest-magnitude coefficient, that of manufacturing employment, with a minimum near -3), indicating that counties with many workers in this sector tended to have low poverty rates in 1970. The local coefficients for employment in finance, insurance and real estate as estimated by GWR are comparable to those estimated by the GWEN-LLE.
+
+Manufacturing employment was also associated with reduced poverty rates across the entire Upper Midwest in 1970. While the coefficient is smaller than for employment in the finance, insurance and real estate sector, there were many more people employed in manufacturing. In the eastern part of the Upper Midwest, many counties have about half of their workers employed in manufacturing, while there are just a few counties scattered through the Upper Midwest that approach the maximum of ten percent of workers employed in finance, insurance, and real estate (Figure \ref{fig:1970-covariates}). Like the GWEN-LLE, traditional GWR estimates that the coefficient of manufacturing employment was negative across most of the Upper Midwest, but traditional GWR estimates that the coefficient was very slightly greater than zero around Chicago and in northwestern Minnesota.
+
+The proportion of residents employed in agriculture is estimated to have affected the poverty rate of 1970 only in the western half of Iowa. In the counties where agricultural employment was associated with the poverty rate, there was a north-south gradient to the coefficient surface, from 0.5 in the northern part of western Iowa to -1 in the southern part. In those counties, the proportion of residents employed in agriculture is between 0.25 and 0.5. In this part of western Iowa, GWR finds a very slight positive association between agricultural employment and the poverty rate. The coefficient estimated by GWR is of a greater magnitude almost everywhere else in the domain than in western Iowa.
+
+There were relatively few people employed in mining in the Upper Midwest in 1970. In the extreme northern part of the domain, some sparsely populated counties had about 25\% of residents working in mining, and in the extreme southern part of the domain, several counties had about 10\% of residents employed in mining. According to the GWEN-LLE, the coefficient of mining employment is zero except in the far southern part of the domain. There, mining employment is associated with an increased poverty rate (the coefficient is about 3). Within the far southern part of the domain, GWR and the GWEN-LLE produce similar estimates of the coefficient of mining employment, but in parts of the Upper Midwest where the GWEN-LLE says that mining employment is not associated with the poverty rate, GWR estimates large local coefficients for mining employment, ranging between 20 and -15.
 
 \section{Future work \label{section:future-work}}
 	The GWEN is presented here as a method of analysis for data where the response variable follows a gaussian distribution with independent additive errors. A key feature of spatial data, though, is that the errors are typically autocorrelated. Additionally, it is common to encounter data that does not follow a gaussian distribution but for which the GWEN would otherwise be a valuable tool for analysis.

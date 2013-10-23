@@ -37,6 +37,7 @@ locs = unique(locs)
 #Plotting constants:
 col.bg='gray85'
 response = "logitindpov"
+response2 = "pindpov"
 group = 'group'
 borderlines=NULL
 col.outline='white'
@@ -58,6 +59,20 @@ for (k in unique(polygons[,group])) {
 ll = range(mergedata[,response], na.rm=TRUE)
 map <- ggplot(mergedata, aes(long,lat,group=group)) +
     geom_polygon(aes_string(fill=response)) +
+    scale_fill_gradient(high='orange', low='white', limits=ll, na.value='gray50', name="") +
+    coord_map(project='globular') +
+    theme(panel.background=element_rect(fill=col.bg, colour=col.outline)) +
+    ggtitle(column.map[[response]]) +
+    theme(plot.margin=unit(c(0,0,0,0), "cm"), legend.margin=unit(0,'cm')) +
+    theme(title=element_text(vjust=1)) +
+    scale_x_continuous('') +
+    scale_y_continuous('')
+
+
+#Draw the map of poverty rate
+ll = range(mergedata[,response], na.rm=TRUE)
+map2 <- ggplot(mergedata, aes(long,lat,group=group)) +
+    geom_polygon(aes_string(fill=response2)) +
     scale_fill_gradient(high='orange', low='white', limits=ll, na.value='gray50', name="") +
     coord_map(project='globular') +
     theme(panel.background=element_rect(fill=col.bg, colour=col.outline)) +
@@ -90,8 +105,12 @@ for (v in predictors) {
         scale_y_continuous('')
 }
 
-pdf("~/git/gwr/figures/practice-talk/poverty-response.pdf", width=6, height=6)
+pdf("~/git/gwr/figures/practice-talk/logit-poverty-response.pdf", width=6, height=6)
 print(map)
+dev.off()
+
+pdf("~/git/gwr/figures/practice-talk/poverty-response.pdf", width=6, height=6)
+print(map2)
 dev.off()
 
 #For the prelim slides
