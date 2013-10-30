@@ -69,10 +69,13 @@
 
 
 %bibliography stuff
-\usepackage{natbib}
-\setbeamertemplate{bibliography entry title}{}
-\setbeamertemplate{bibliography entry location}{}
-\setbeamertemplate{bibliography entry note}{}
+\usepackage[autostyle]{csquotes}
+\usepackage[backend=biber,style=authoryear,natbib=true]{biblatex}
+\addbibresource{../../references/gwr.bib}
+
+
+\AtBeginSection{\frame{\sectionpage}}
+
 
 
 \begin{document}
@@ -87,6 +90,8 @@
 }
 
 
+
+\section{Motivation}
 
 
 
@@ -144,6 +149,9 @@ There are several other methods to answer at least some of these questions, whic
 
 
 
+\section{Introduction}
+
+
 
 \begin{frame}{Introduction}
 \subt{A review of existing methods}
@@ -164,6 +172,8 @@ There are several other methods to answer at least some of these questions, whic
 Behind the methodology that I'm discussing is a wide range of literature.
 }
 \end{frame}
+
+
 
 
 
@@ -365,7 +375,24 @@ These methods achieve sparsity in the local frequency components but not in the 
 
 
 
-\begin{frame}{Introduction}
+\section{Geographically weighted regression}
+
+
+
+\begin{frame}{Geographically weighted regression}
+\subt{Existing approaches: geographically weighted regression}
+
+\bigskip
+When the effect modifying variable $\bm{s}$ refers to spatial location, the method of local regression is called geographically weighted regression (GWR) \citep{Brundson:1998a, Fotheringham:2002}
+
+\note{
+Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.
+}
+\end{frame}
+
+
+
+\begin{frame}{Geographically weighted regression}
 \subt{Existing approaches: Local regression}
 
 \bigskip
@@ -385,7 +412,7 @@ Given the weights, a local model is fit at each sampling location using the loca
 
 
 
-\begin{frame}{Introduction}
+\begin{frame}{Geographically weighted regression}
 \subt{Existing approaches: Local likelihood}
 
 \bigskip
@@ -408,21 +435,9 @@ Maximizing the local likelihood for a model of Gaussian data with iid errors can
 
 
 
-\begin{frame}{Introduction}
-\subt{Existing approaches: geographically weighted regression}
-
-\bigskip
-When the effect modifying variable $\bm{s}$ refers to spatial location, the method of local regression is called geographically weighted regression (GWR) \citep{Brundson:1998a, Fotheringham:2002}
-
-\note{
-Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.
-}
-\end{frame}
 
 
-
-
-\begin{frame}{Introduction}
+\begin{frame}{Geographically weighted regression}
 \subt{Existing approaches: bandwidth estimation for GWR}
 
 \bigskip
@@ -447,7 +462,7 @@ Maximizing the local likelihood for a model of Gaussian data with iid errors can
 
 
 
-\begin{frame}{Introduction}
+\begin{frame}{Geographically weighted regression}
 \subt{Existing approaches: geographically weighted Lasso}
 
 \bigskip
@@ -465,7 +480,11 @@ Within a GWR model, using the Lasso \citep{Tibshirani:1996} for local variable s
 
 
 
-\begin{frame}{Methodology}
+\section{Local variable selection and parameter estimation}
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
 \subt{Geographically weighted elastic net (GWEN)}
 
 \bigskip
@@ -488,7 +507,7 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 
-\begin{frame}{Methodology}
+\begin{frame}{Local variable selection and  parameter estimation}
 \subt{Geographically weighted elastic net (GWEN)}
 
 \bigskip
@@ -503,7 +522,7 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 
-\begin{frame}{Methodology}
+\begin{frame}{Local variable selection and  parameter estimation}
 \subt{Geographically weighted elastic net (GWEN)}
 
 \bigskip
@@ -526,7 +545,7 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 
-\begin{frame}{Methodology}
+\begin{frame}{Local variable selection and  parameter estimation}
 \subt{Geographically weighted elastic net (GWEN)}
 
 \bigskip
@@ -540,6 +559,9 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 \end{frame}
 
 
+
+
+\section{Simulation study}
 
 
 
@@ -726,9 +748,11 @@ Call these functions step, gradient, and parabola:
 
 
 
+\section{Data example: poverty rate in the upper midwest}
 
 
-\begin{frame}{Data analysis}
+
+\begin{frame}{Data example: poverty rate in the upper midwest}
 \subt{Revisiting the introductory example}
 
 \bigskip
@@ -748,7 +772,7 @@ How is this data to be analyzed?
 
 
 
-\begin{frame}{Data analysis}
+\begin{frame}{Data example: poverty rate in the upper midwest}
 \subt{Results from traditional GWR}
 
 \begin{center}
@@ -763,7 +787,7 @@ How is this data to be analyzed?
 
 
 
-\begin{frame}{Data analysis}
+\begin{frame}{Data example: poverty rate in the upper midwest}
 \subt{Results from GWEN}
 
 \begin{center}
@@ -774,6 +798,8 @@ How is this data to be analyzed?
 \end{frame}
 
 
+
+\section{Future work}
 
 
 \begin{frame}{Future work}
@@ -786,10 +812,11 @@ How is this data to be analyzed?
 
 
 
-\begin{frame}[allowframebreaks]
-\frametitle{References}
-\bibliographystyle{chicago}
-\bibliography{../../references/gwr}
+\begin{frame}{Acknowledgements}
+
 \end{frame}
+
+
+
 
 \end{document}

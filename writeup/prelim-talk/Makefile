@@ -1,6 +1,6 @@
 prelim-talk.pdf: prelim-talk.tex
 	xelatex prelim-talk
-	bibtex prelim-talk
+	biber prelim-talk
 	xelatex prelim-talk
 
 notes: prelim-talk_withnotes.pdf

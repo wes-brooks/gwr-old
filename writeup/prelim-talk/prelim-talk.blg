@@ -1,46 +1,14 @@
-This is BibTeX, Version 0.99d (TeX Live 2012)
-Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
-The top-level auxiliary file: prelim-talk.aux
-The style file: chicago.bst
-Database file #1: ../../references/gwr.bib
-You've used 16 entries,
-            2861 wiz_defined-function locations,
-            723 strings with 7412 characters,
-and the built_in function-call counts, 10530 in all, are:
-= -- 867
-> -- 747
-< -- 0
-+ -- 214
-- -- 254
-* -- 923
-:= -- 1955
-add.period$ -- 48
-call.type$ -- 16
-change.case$ -- 109
-chr.to.int$ -- 16
-cite$ -- 16
-duplicate$ -- 275
-empty$ -- 665
-format.name$ -- 294
-if$ -- 1959
-int.to.chr$ -- 1
-int.to.str$ -- 0
-missing$ -- 18
-newline$ -- 83
-num.names$ -- 160
-pop$ -- 78
-preamble$ -- 1
-purify$ -- 209
-quote$ -- 0
-skip$ -- 297
-stack$ -- 0
-substring$ -- 596
-swap$ -- 80
-text.length$ -- 0
-text.prefix$ -- 0
-top$ -- 0
-type$ -- 290
-warning$ -- 0
-while$ -- 148
-width$ -- 0
-write$ -- 211
+[0] Config.pm:361> INFO - This is Biber 1.5
+[0] Config.pm:364> INFO - Logfile is 'prelim-talk.blg'
+[100] biber-darwin:193> INFO - === Wed Oct 30, 2013, 17:24:07
+[101] Biber.pm:327> INFO - Reading 'prelim-talk.bcf'
+[186] Biber.pm:619> INFO - Found 16 citekeys in bib section 0
+[199] Biber.pm:2976> INFO - Processing section 0
+[214] Biber.pm:3086> INFO - Looking for bibtex format file '../../references/gwr.bib' for section 0
+[223] bibtex.pm:889> INFO - Decoding LaTeX character macros into UTF-8
+[251] bibtex.pm:764> INFO - Found BibTeX data source '../../references/gwr.bib'
+[476] Biber.pm:2860> INFO - Overriding locale 'en_US.UTF-8' default tailoring 'variable = shifted' with 'variable = non-ignorable'
+[476] Biber.pm:2866> INFO - Sorting 'entry' list 'nyt' keys
+[477] Biber.pm:2870> INFO - No sort tailoring available for locale 'en_US.UTF-8'
+[620] bbl.pm:462> INFO - Writing 'prelim-talk.bbl' with encoding 'UTF-8'
+[621] bbl.pm:535> INFO - Output to prelim-talk.bbl
