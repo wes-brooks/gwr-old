@@ -1,6 +1,7 @@
 \documentclass[12pt,t,handout]{beamer}
 \usepackage{graphicx}
 \usepackage{bm}
+\usepackage{verbatim}
 \usepackage{xcolor}
 \usepackage{multirow}
 \setbeameroption{show notes}
@@ -21,6 +22,7 @@
 \usepackage{fontspec}
 \setmainfont{Helvetica Neue}
 \setbeamerfont{note page}{family*=pplx,size=\footnotesize} % Palatino for notes
+\setbeamerfont{frametitle}{size=\large}
 
 % named colors
 \definecolor{offwhite}{RGB}{249,242,215}
@@ -65,14 +67,28 @@
 %\subtitle{A researcher's perspective}
 \author{\href{http://www.somesquares.org}{Wesley Brooks}}
 \institute{\href{http://www.stat.wisc.edu}{Department of Statistics} \\[2pt] \href{http://www.wisc.edu}{University of Wisconsin{\textendash}Madison}}
-\date{\href{http://www.somesquares.org}{\tt \scriptsize somesquares.org}}
 
 
 %bibliography stuff
-\usepackage{natbib}
-\setbeamertemplate{bibliography entry title}{}
-\setbeamertemplate{bibliography entry location}{}
-\setbeamertemplate{bibliography entry note}{}
+\usepackage[autostyle]{csquotes}
+\usepackage[backend=biber,style=authoryear,natbib=true]{biblatex}
+\addbibresource{../../references/gwr.bib}
+
+
+\setbeamerfont{section title}{parent=title,size=\large}
+\setbeamercolor{section title}{parent=titlelike}
+\defbeamertemplate*{mod section page}{default}[1][]
+{
+  \centering
+    \vspace{3cm}
+    \begin{beamercolorbox}[sep=8pt,center,#1]{section title}
+      \usebeamerfont{section title}\insertsection\par
+    \end{beamercolorbox}
+}
+\newcommand*{\modsectionpage}{\usebeamertemplate*{mod section page}}
+
+\AtBeginSection{\frame{\modsectionpage}}
+
 
 
 \begin{document}
@@ -87,6 +103,8 @@
 }
 
 
+
+\section{Motivation}
 
 
 
@@ -128,7 +146,7 @@ How is this data to be analyzed?
 \subt{Sensible questions about the data}
 
 \bigskip
-\begin{itemize}[<+->]
+\begin{itemize}
     \item Which of the economic-structure variables is associated with poverty rate?
     \item What are the sign and magnitude of that association?
     \item Is poverty rate associated with the same economic-structure variables across the entire region?
@@ -144,12 +162,15 @@ There are several other methods to answer at least some of these questions, whic
 
 
 
+\section{Introduction}
+
+
 
 \begin{frame}{Introduction}
 \subt{A review of existing methods}
 
 \bigskip
-\begin{itemize}[<+->]
+\begin{itemize}
     \item Spatial regression
     \item Varying coefficient regression
     \begin{itemize}
@@ -164,6 +185,8 @@ There are several other methods to answer at least some of these questions, whic
 Behind the methodology that I'm discussing is a wide range of literature.
 }
 \end{frame}
+
+
 
 
 
@@ -221,12 +244,30 @@ The poverty data example is areal data, the simulation study is based on simulat
 
 
 
+\begin{frame}{Introduction}
+\subt{Varying coefficients regression \citep{Hastie:1993a}}
+
+\[
+    Y(\bm{s}) = \bm{X}(\bm{s})' \bm{\beta}(\bm{s}) + \varepsilon(\bm{s})
+\]
+
+\pause
+\begin{itemize}
+    \item Assume an effect modifying variable $S$
+    \item Coefficients are functions of $S$
+\end{itemize}
+
+\note{note}
+\end{frame}
+
+
+
 
 
 
 
 \begin{frame}{Introduction}
-\subt{Existing approaches: spatial regression}
+\subt{Spatial regression}
 
 \bigskip
 \begin{itemize}
@@ -239,7 +280,7 @@ The poverty data example is areal data, the simulation study is based on simulat
     \text{E.g. } \Gamma(\delta(\bm{s}, \bm{t})) &= \exp \{ -\phi^{-1} \delta(\bm{s}, \bm{t}) \}    
 \end{align}
 \pause
-\begin{itemize}[<+->]
+\begin{itemize}
     \item $W(\bm{s})$ is a spatial random effect that accounts for autocorrelation in the response variable
     \item The coefficients $\bm{\beta}$ are constant
     \item Relies on \emph{a priori} global variable selection
@@ -258,44 +299,21 @@ The Gamma function is a Matern-class covariance function, such as the exponentia
 
 
 
-\begin{frame}{Introduction}
-\subt{Existing approaches: varying coefficients regression}
-
-\[
-    Y(\bm{s}) = \bm{X}(\bm{s})' \textcolor{hilight}{\bm{\beta}(\bm{s})} + \varepsilon(\bm{s})
-\]
-
-\pause
-\begin{itemize}[<+->]
-    \item Assume an effect modifying variable $S$
-    \item Coefficients are functions of $S$
-    \item Generally assume that the coefficient functions are smooth
-    \item This is a varying coefficient regression (VCR) model \citep{Hastie:1993a}
-    \item If $\bm{s}$ is a spatial location then we have a spatially varying coefficient regression (SVCR) model
-\end{itemize}
-
-\note{note}
-\end{frame}
-
-
-
-
-
 
 \begin{frame}{Introduction}
-\subt{Existing approaches: spatially varying coefficient process}
+\subt{Spatially varying coefficient process \citep{Gelfand:2003}}
 
 \bigskip
 \begin{itemize}
-    \item Making model more flexible: coefficients in a spatial regression model can be allowed to vary \citep{Gelfand:2003}
+    \item Making model more flexible: coefficients in a spatial regression model can be allowed to vary
 \end{itemize}
 
 \[
-    Y(\bm{s}) = \bm{X}(\bm{s})' \textcolor{hilight}{\bm{\beta}(\bm{s})} + \varepsilon(\bm{s})
+    Y(\bm{s}) = \bm{X}(\bm{s})' \bm{\beta}(\bm{s}) + \varepsilon(\bm{s})
 \]
 
 \pause
-\begin{itemize}[<+->]
+\begin{itemize}
     \item The spatial random effect has been incorporated into the spatially varying intercept
     \item $\{ \beta_1(\bm{s}) : \bm{s} \in \mathcal{D}\}, \dots, \{\beta_p(\bm{s}) : \bm{s} \in \mathcal{D}\}$ are stationary spatial processes with Mat\`{e}rn covariance functions
     \item Still relies on \emph{a priori} global variable selection
@@ -310,7 +328,7 @@ The Gamma function is a Matern-class covariance function, such as the exponentia
 
 
 \begin{frame}{Introduction}
-\subt{Existing approaches: spline-based VCR and SVCR models}
+\subt{Spline-based VCR models \citep{Wood:2006}}
 
 \bigskip
 \begin{itemize}
@@ -332,15 +350,15 @@ The Gamma function is a Matern-class covariance function, such as the exponentia
 
 
 \begin{frame}{Introduction}
-\subt{Existing approaches: Global selection in spline-based VCR models}
+\subt{Global selection in spline-based VCR models \citep{Wang:2008a, Antoniadis:2012b}}
 
 \bigskip
 Regularization methods for global variable selection in VCR models:
 \begin{itemize}
     \item The integral of a function squared (e.g. $\int \{f(t)\}^2 dt$) is zero if and only if the function is zero everywhere.
     \item Use regularization (maximize the likelihood plus a penalty) to encourage coefficient functions to be zero
-    \item SCAD penalty \citep{Fan:2001} on the integral of the square of the coefficient function \citep{Wang:2008a}
-    \item Non-negative garrote penalty \citep{Breiman:1995} on the integral of the square of the coefficient function \citep{Antoniadis:2012b}
+    \item SCAD penalty \citep{Fan:2001} on the integral of the square of the coefficient function 
+    \item Non-negative garrote penalty \citep{Breiman:1995} on the integral of the square of the coefficient function
 \end{itemize}
 
 \note{These selection methods are all global - that is, they select variables for the entire domain simultaneously}
@@ -365,7 +383,24 @@ These methods achieve sparsity in the local frequency components but not in the 
 
 
 
-\begin{frame}{Introduction}
+\section{Geographically weighted regression}
+
+
+
+\begin{frame}{Geographically weighted regression}
+\subt{Existing approaches: geographically weighted regression}
+
+\bigskip
+When the effect modifying variable $\bm{s}$ refers to spatial location, the method of local regression is called geographically weighted regression (GWR) \citep{Brundson:1998a, Fotheringham:2002}
+
+\note{
+Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.
+}
+\end{frame}
+
+
+
+\begin{frame}{Geographically weighted regression}
 \subt{Existing approaches: Local regression}
 
 \bigskip
@@ -385,7 +420,7 @@ Given the weights, a local model is fit at each sampling location using the loca
 
 
 
-\begin{frame}{Introduction}
+\begin{frame}{Geographically weighted regression}
 \subt{Existing approaches: Local likelihood}
 
 \bigskip
@@ -408,21 +443,9 @@ Maximizing the local likelihood for a model of Gaussian data with iid errors can
 
 
 
-\begin{frame}{Introduction}
-\subt{Existing approaches: geographically weighted regression}
-
-\bigskip
-When the effect modifying variable $\bm{s}$ refers to spatial location, the method of local regression is called geographically weighted regression (GWR) \citep{Brundson:1998a, Fotheringham:2002}
-
-\note{
-Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.
-}
-\end{frame}
 
 
-
-
-\begin{frame}{Introduction}
+\begin{frame}{Geographically weighted regression}
 \subt{Existing approaches: bandwidth estimation for GWR}
 
 \bigskip
@@ -447,7 +470,7 @@ Maximizing the local likelihood for a model of Gaussian data with iid errors can
 
 
 
-\begin{frame}{Introduction}
+\begin{frame}{Geographically weighted regression}
 \subt{Existing approaches: geographically weighted Lasso}
 
 \bigskip
@@ -465,7 +488,11 @@ Within a GWR model, using the Lasso \citep{Tibshirani:1996} for local variable s
 
 
 
-\begin{frame}{Methodology}
+\section{Local variable selection and parameter estimation}
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
 \subt{Geographically weighted elastic net (GWEN)}
 
 \bigskip
@@ -488,7 +515,7 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 
-\begin{frame}{Methodology}
+\begin{frame}{Local variable selection and  parameter estimation}
 \subt{Geographically weighted elastic net (GWEN)}
 
 \bigskip
@@ -503,7 +530,7 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 
-\begin{frame}{Methodology}
+\begin{frame}{Local variable selection and  parameter estimation}
 \subt{Geographically weighted elastic net (GWEN)}
 
 \bigskip
@@ -526,7 +553,7 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 
-\begin{frame}{Methodology}
+\begin{frame}{Local variable selection and  parameter estimation}
 \subt{Geographically weighted elastic net (GWEN)}
 
 \bigskip
@@ -540,6 +567,9 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 \end{frame}
 
 
+
+
+\section{Simulation study}
 
 
 
@@ -647,6 +677,9 @@ Call these functions step, gradient, and parabola:
 \end{frame}
 
 
+
+
+
 \begin{frame}{Simulation results}
 \subt{Selection}
 \input{../../output/prelim-talk/selection}
@@ -654,7 +687,7 @@ Call these functions step, gradient, and parabola:
 \end{frame}
 
 
-
+\begin{comment}
 
 \begin{frame}{Simulation results}
 \subt{MSE of $\beta_1(\bm{s})$ - step coefficient surface}
@@ -725,10 +758,14 @@ Call these functions step, gradient, and parabola:
 \end{frame}
 
 
+\end{comment}
+
+
+\section{Data example: poverty rate in the upper midwest}
 
 
 
-\begin{frame}{Data analysis}
+\begin{frame}{Data example: poverty rate in the upper midwest}
 \subt{Revisiting the introductory example}
 
 \bigskip
@@ -748,7 +785,7 @@ How is this data to be analyzed?
 
 
 
-\begin{frame}{Data analysis}
+\begin{frame}{Data example: poverty rate in the upper midwest}
 \subt{Results from traditional GWR}
 
 \begin{center}
@@ -761,9 +798,47 @@ How is this data to be analyzed?
 
 
 
+\begin{frame}{Data example: poverty rate in the upper midwest}
+\subt{Data description}
+
+  \begin{itemize}
+    \item Response: logit-transformed poverty rate in the Upper Midwest states of the U.S.
+    \begin{itemize}
+      \item Minnesota, Iowa, Wisconsin, Illinois, Indiana, Michigan
+    \end{itemize}
+    \item Covariates: employment structure (raw proportion employed in:)
+    \begin{itemize}
+      \item agriculture
+      \item finance, insurance, and real estate
+      \item manufacturing
+      \item mining
+      \item services
+      \item other professions
+    \end{itemize}
+    \item Data source: U.S. Census Bureau's decennial census of 1970
+  \end{itemize}
+
+\note{note}
+\end{frame}
 
 
-\begin{frame}{Data analysis}
+
+\begin{frame}{Data example: poverty rate in the upper midwest}
+\subt{Data description}
+
+  \begin{itemize}
+    \item Data aggregated to the county level
+    \begin{itemize}
+      \item counties are areal units
+    \end{itemize}
+    \item county centroid treated as sampling location
+  \end{itemize}
+
+\note{note}
+\end{frame}
+
+
+\begin{frame}{Data example: poverty rate in the upper midwest}
 \subt{Results from GWEN}
 
 \begin{center}
@@ -774,6 +849,8 @@ How is this data to be analyzed?
 \end{frame}
 
 
+
+\section{Future work}
 
 
 \begin{frame}{Future work}
@@ -786,10 +863,11 @@ How is this data to be analyzed?
 
 
 
-\begin{frame}[allowframebreaks]
-\frametitle{References}
-\bibliographystyle{chicago}
-\bibliography{../../references/gwr}
+\begin{frame}{Acknowledgements}
+
 \end{frame}
+
+
+
 
 \end{document}

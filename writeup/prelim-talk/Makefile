@@ -9,6 +9,8 @@ all: prelim-talk.pdf notes
 
 prelim-talk_withnotes.pdf: prelim-talk_withnotes.tex
 	xelatex prelim-talk_withnotes
+	biber prelim-talk_withnotes
+	xelatex prelim-talk_withnotes
 	pdfnup prelim-talk_withnotes.pdf --nup 1x2 --no-landscape --paper letterpaper --frame true --scale 0.9
 	mv prelim-talk_withnotes-nup.pdf prelim-talk_withnotes.pdf
 
