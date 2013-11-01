@@ -11,4 +11,5 @@ writeup/*/*.bbl
 writeup/*/*.fff
 writeup/*/*.spl
 writeup/*/*.ttt
+writeup/*/*.run.xml
 writeup/*/*.synctex.gz
