@@ -61,6 +61,13 @@
 \newcommand{\ei}{\end{itemize}}
 \newcommand{\ig}{\includegraphics}
 \newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\bw}{\mbox{bw}}
+\DeclareMathOperator*{\df}{\mbox{df}}
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\E}{\mathop{\mathbb E}}
 
 % title info
 \title{Local variable selection and parameter estimation for spatially varying coefficient models}
@@ -524,8 +531,35 @@ Within a GWR model, using the Lasso for local variable selection is called the g
 
 
 
+
 \begin{frame}{Local variable selection and  parameter estimation}
-\subt{Geographically weighted elastic net (GWEN)}
+\subt{Geographically weighted adaptive Lasso (GWAL)}
+
+\bigskip
+\begin{itemize}
+    \item Local variable selection in a GWR model using the adaptive Lasso (AL) \citep{Zou:2006}
+    \item Under suitable conditions, the AL has an oracle property for selection
+\end{itemize}
+
+\begin{align}
+		\mathcal{S}(\bm{\beta}_i) &= -2 \ell_i(\bm{\beta}_i) + \mathcal{J}_2(\bm{\beta}_i) \notag \\
+		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}   \notag \\
+		&+ \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} \notag
+	\end{align}
+
+\note{
+The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
+}
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Geographically weighted adaptive elastic net (GWEN)}
 
 \bigskip
 \begin{itemize}
@@ -548,7 +582,7 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 \begin{frame}{Local variable selection and  parameter estimation}
-\subt{Geographically weighted elastic net (GWEN)}
+\subt{Geographically weighted adaptive elastic net (GWEN)}
 
 \bigskip
 where $\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2$ is the weighted sum of squares minimized by traditional GWR, and $\mathcal{J}_2(\bm{\beta}_i) = \alpha_i \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$ is the AEN penalty.
@@ -563,11 +597,11 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 \begin{frame}{Local variable selection and  parameter estimation}
-\subt{Geographically weighted elastic net (GWEN)}
+\subt{Tuning parameter estimation}
 
 \bigskip
-It is necessary to estimate an AEN tuning parameter for each local model. Using the local BIC allows fitting a local model at any location within the domain
-	\begin{align}\label{eq:BIC_loc}
+It is necessary to estimate an AL (or AEN) tuning parameter for each local model. Using the local BIC allows fitting a local model at any location within the domain
+	\begin{align}
 		\mbox{BIC}_i &= -2 \sum_{i'=1}^n \ell_{ii'}  + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
 		&= -2 \sum_{i'=1}^n \log \left[ \left(2 \pi \hat{\sigma}_i^2\right)^{-1/2} \exp \left\{-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right\} \right]^{w_{ii'}} \notag \\
 		&+ \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
@@ -596,6 +630,40 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 \note{We treat the sum of the weights around the sampling location as the number of observations for the local BIC.}
+\end{frame}
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Locally linear coefficient estimation}
+
+	The GWEN and the GWAL each estimate the local coefficients for the variables that are selected for inclusion in the local model. Both the GWEN and the GWAL estimate coefficients as locally constant, as in the class of Nadaraya-Watson kernel smoothers \citep{Hardle-1990}. As such, they suffer from the problem of biased estimation that is common to that class of models, particularly where there is a gradient to the coefficient surface at the boundary of the domain \citep{Hastie:1993b}.
+
+    In the context of nonparametric regression, the boundary-effect bias is addressed by local polynomial modeling, usually in the form of a locally linear model \citep{Fan-1996}. Locally linear coefficient estimation was proposed for the traditional GWR to counter the boundary effect by \cite{Wang:2008b}.
+
+    The method of locally linear estimation is used to counter the boundary effect for the GWEN and GWAL, referred to as the GWEN with locally linear estimation (GWEN-LLE), (similarly the GWAL-LLE). For estimating the local coefficients by the GWEN-LLE (GWAL-LLE), the GWEN (GWAL) is used for local variable selection but local coefficient estimation proceeds without penalizing the local likelihood. The locally linear coefficients maximize the unpenalized local likelihood:
+	\begin{align} \label{eq:coefficients}
+		\hat{\bm{\beta}}_i &= \argmax \limits_{\bm{\beta}_i} \left[-(1/2) \sum_{i'=1}^n w_{ii'} \left\{ \log{\sigma^2_i}  + \sigma^{-2}_i  \left(y_{i'} - \bm{z}'_{i'} \bm{\beta}_i \right)^2 \right\}\right].
+	\end{align}
+	where $Z_i  = \left(z_1 \cdots z_n\right)'$ is the augmented local design design matrix at location $\bm{s}_i$, consisting of the original design matrix $X$ reduced to the covariates selected locally by the GWEN or GWAL and augmented with covariate-by-location interactions. Letting $\tilde{X}_i$ be the reduced local design matrix consisting of the columns of $X$ that correspond to covariates that are selected for inclusion in the local model at location $\bm{s}_i$, the augmented local design matrix is
+	\begin{align}
+		\bm{Z}_i = \left( \tilde{X}_i  \:\: L_i \tilde{X}_i \:\: M_i \tilde{X}_i \right)
+	\end{align}
+	where $L_i = \text{diag}\{s_{i',x} - s_{i,x}\}$ and $M_i = \text{diag}\{s_{i',y} - s_{i,y}\}$ for $i' = 1, dots, n$.
+	 
+	\subsection{Bandwidth parameter estimation}
+		The fitted values from the model are	
+	\begin{align}
+		\hat{\bm{y}} = \bm{H} \bm{y}
+	\end{align}
+	Where $\bm{H} = \left(H_1 \cdots H_n \right)'$ and $H_i$ denotes the $i$th row of the matrix $\bm{W}_i^{1/2} Z_i \left( Z_i'\bm{W}_i \tilde{\bm{X}} \right)^{-1} Z_i'\bm{W}_i^{1/2}$.
+	
+	The bandwidth parameter $\phi$ in (\ref{eq:bisquare}) is selected globally by minimizing the corrected AIC:	
+	\begin{align}\label{eq:AICc}
+		\text{AIC}_{\tt c} = 2 n \log{\sigma} + n \left\{\frac{n + \nu}{n - 2 - \nu}\right\}
+	\end{align}	
+	where $\nu$ is the trace of the linear smoothing matrix $\bm{H}$, and approximates the total degrees of freedom of the SVCR \citep{Hurvich:1998}.
+\note{note}
 \end{frame}
 
 
@@ -796,15 +864,34 @@ Call these functions step, gradient, and parabola:
 
 
 \begin{frame}{Simulation results}
+  \begin{itemize}
+    \item 52 saw no false negatives
+    \item 72 had no false positives
+    \item 26 neither false positives nor false negatives
+    
 	Table \ref{table:selection} lists the results of variable selection. The correct covariate was usually included in the local models, and the unimportant covariates were usually excluded. Ignore for now the ambiguous locations where the true $\beta_1$ surface transitions from zero to nonzero. Of the eighty simulated cases where $\beta_1(\bm{s})$ is unambiguously nonzero, more than half (52) saw no false negatives (over 100 simulations). The number with no false negatives and no false positives (i.e. exactly the correct model was recovered in all 100 simulations) was 26. Of the 120 total simulated cases, 72 had no false positives (i.e. no variable whose true coefficient is zero was included in the model during any of the 100 simulation runs). 
 	
 	Selection performance was more affected by an increase in the noise variance from $\sigma^2_{\varepsilon}=0.25$ to $\sigma^2_{\varepsilon}=1$ than by an increase in colinearity from $\rho = 0$ to $\rho = 0.5$. Of the 44 cases where model selection recovered exactly the correct model in all 100 runs of the simulation, only five arose from cases where $\sigma^2_{\varepsilon}=1$, while 19 arose from cases where $\rho = 0.5$. The worst error rates that were observed in these unambiguous cases were a false positive rate of 6\% (location one of the step function with $\sigma^2_{\varepsilon}=1$, $\rho=0.5$, and selection via the elastic net) and a false negative rate of 16\% (location three of the step function with $\sigma^2_{\varepsilon}=1$, $\rho=0.5$, and selection via the lasso).
-			
+	
+	\item Selection at ambiguous locations:
+	\begin{itemize}
+	  \item ranged from 43\% to 60\%
+	\end{itemize}
 	Model selection was ambiguous at locations where the true $\beta_1(\bm{s})$ transitions from zero to nonzero. At location four of the step function, the selection rate of $\beta_1$ ranged from 43\% to 60\% among the different simulation settings. At location five of the gradient, the range of selection rates was 63\% to 82\%, and the selection rate across locations one and five of the parabola ranged from 27\% to 66\%. 
 
 	There is no indication that the GWEN performed better in selection than the GWAL, even in cases where the covariates were moderately correlated ($\rho=0.5$).
+  \end{itemize}
+\note{note}
+\end{frame}
+
+
+
 	
-    The mean squared error, bias, and variance of $\hat{\beta}_1$ (MSE$(\beta_1)$, bias$(\hat{\beta}_1)$, var$(\hat{\beta}_1)$) are listed in Tables \ref{table:msex}, \ref{table:bx}, and \ref{table:varx}, respectively. The method of oracular selection led to the best MSE$(\hat{\beta}_1)$ in 41 of the 60 cases.
+	
+\begin{frame}{Simulation results}
+  \begin{itemize}
+    \item 
+      The mean squared error, bias, and variance of $\hat{\beta}_1$ (MSE$(\beta_1)$, bias$(\hat{\beta}_1)$, var$(\hat{\beta}_1)$) are listed in Tables \ref{table:msex}, \ref{table:bx}, and \ref{table:varx}, respectively. The method of oracular selection led to the best MSE$(\hat{\beta}_1)$ in 41 of the 60 cases.
 	
 	In terms of MSE$(\hat{\beta}_1)$, while oracular selection clearly was the most accurate estimation method in most cases, the difference in accuracy between the estimation methods was modest in most cases. There were a few cases when the difference in MSE$(\hat{\beta}_1)$ between estimation methods amounted to at least an order of magnitude. At locations one and five of the parabola, oracular selection produces much more accurate estimation than GWEN, GWAL, or GWR because locations one and five are on the domain boundary where the parabola has a strong gradient, and those methods don't use locally linear fits to account for the boundary effect. This can also be seen from the fact that the bias$(\bm{\beta}_1)$ of GWEN, GWAL, and GWR is large at locations one and five of the parabola, where it is nearly zero for GWEN-LLE, GWAL-LLE, and oracular GWR.
 	
@@ -815,7 +902,7 @@ Call these functions step, gradient, and parabola:
 	As was the case for selection, accuracy in coefficient estimation seemed to suffer more from an increase in the noise variance than from increased correlation in the covariates. Once again, this effect is probably most apparent at location three of the step function.	
 	
 The MSE of the $\hat{y}$, MSE$(\hat{y})$, is listed in Table \ref{table:msey}. Nominally, MSE$(\hat{y})$ should be equal to the noise variance, $\sigma_{\varepsilon}^2$, which is 1 for odd-numbered rows and 0.25 for even numbered rows. Of the 60 simulation cases, GWR's MSE$(\hat{y})$ was nearest to the known noise variance for 16, compared to 15 for oracular GWR, 14 for the GWAL-LLE, nine for each of the GWEN and the GWAL, and seven for the GWAL-LLE.
-
+  \end{itemize}
 \note{note}
 \end{frame}
 	
