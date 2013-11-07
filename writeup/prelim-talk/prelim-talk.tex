@@ -517,7 +517,6 @@ Maximizing the local likelihood for a model of Gaussian data with iid errors can
 
 \bigskip
 Within a GWR model, using the Lasso for local variable selection is called the geographically weighted Lasso (GWL).
-
 \begin{itemize}
     \item The GWL requires estimating a Lasso tuning parameter for each local model
     \item \cite{Wheeler:2009} estimates the local Lasso tuning parameter at location $\bm{s}_i$ by minimizing a jacknife criterion: $|y_i - \hat{y}_i|$
@@ -551,6 +550,25 @@ Within a GWR model, using the Lasso for local variable selection is called the g
 The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
 }
 \end{frame}
+
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Geographically weighted adaptive elastic net (GWEN)}
+
+\bigskip
+Note:
+\begin{itemize}
+  \item $\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2$ is the weighted sum of squares minimized by traditional GWR
+  \item $\mathcal{J}_1(\bm{\beta}_i) = \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ is the AL penalty.
+\end{itemize}
+
+\note{
+The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
+}
+\end{frame}
+
 
 
 
@@ -631,6 +649,23 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 \note{We treat the sum of the weights around the sampling location as the number of observations for the local BIC.}
 \end{frame}
+
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Bandwidth parameter estimation}
+
+\bigskip
+\begin{align*}
+  \hat{\bm{y}} = \bm{H} \bm{y}
+\end{align*}
+
+
+\note{note}
+\end{frame}
+
+
 
 
 

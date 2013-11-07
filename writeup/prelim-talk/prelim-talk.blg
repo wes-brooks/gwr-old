@@ -1,14 +1,14 @@
 [1] Config.pm:387> INFO - This is Biber 1.6
 [1] Config.pm:390> INFO - Logfile is 'prelim-talk.blg'
-[100] biber-darwin:218> INFO - === Fri Nov  1, 2013, 11:42:21
-[100] Biber.pm:325> INFO - Reading 'prelim-talk.bcf'
-[184] Biber.pm:623> INFO - Found 19 citekeys in bib section 0
-[196] Biber.pm:2995> INFO - Processing section 0
-[212] Biber.pm:3129> INFO - Looking for bibtex format file '../../references/gwr.bib' for section 0
-[318] bibtex.pm:898> INFO - Decoding LaTeX character macros into UTF-8
-[343] bibtex.pm:775> INFO - Found BibTeX data source '../../references/gwr.bib'
-[612] Biber.pm:2881> INFO - Overriding locale 'en_US.UTF-8' default tailoring 'variable = shifted' with 'variable = non-ignorable'
-[612] Biber.pm:2887> INFO - Sorting 'entry' list 'nyt' keys
-[612] Biber.pm:2891> INFO - No sort tailoring available for locale 'en_US.UTF-8'
-[801] bbl.pm:472> INFO - Writing 'prelim-talk.bbl' with encoding 'UTF-8'
-[805] bbl.pm:545> INFO - Output to prelim-talk.bbl
+[104] biber-darwin:218> INFO - === Thu Nov  7, 2013, 07:07:48
+[104] Biber.pm:325> INFO - Reading 'prelim-talk.bcf'
+[193] Biber.pm:623> INFO - Found 19 citekeys in bib section 0
+[206] Biber.pm:2995> INFO - Processing section 0
+[222] Biber.pm:3129> INFO - Looking for bibtex format file '../../references/gwr.bib' for section 0
+[230] bibtex.pm:898> INFO - Decoding LaTeX character macros into UTF-8
+[256] bibtex.pm:775> INFO - Found BibTeX data source '../../references/gwr.bib'
+[517] Biber.pm:2881> INFO - Overriding locale 'en_US.UTF-8' default tailoring 'variable = shifted' with 'variable = non-ignorable'
+[518] Biber.pm:2887> INFO - Sorting 'entry' list 'nyt' keys
+[518] Biber.pm:2891> INFO - No sort tailoring available for locale 'en_US.UTF-8'
+[707] bbl.pm:472> INFO - Writing 'prelim-talk.bbl' with encoding 'UTF-8'
+[710] bbl.pm:545> INFO - Output to prelim-talk.bbl

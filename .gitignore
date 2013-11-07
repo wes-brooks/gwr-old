@@ -8,6 +8,7 @@ writeup/*/*.out
 writeup/*/*.snm
 writeup/*/*.toc
 writeup/*/*.bbl
+writeup/*/*.blg
 writeup/*/*.fff
 writeup/*/*.spl
 writeup/*/*.ttt
