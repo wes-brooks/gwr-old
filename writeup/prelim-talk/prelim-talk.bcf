@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bcf:controlfile version="2.4" xmlns:bcf="https://sourceforge.net/projects/biblatex">
+<bcf:controlfile version="2.3" xmlns:bcf="https://sourceforge.net/projects/biblatex">
   <!-- BIBER OPTIONS -->
   <bcf:options component="biber" type="global">
     <bcf:option type="singlevalued">
@@ -64,16 +64,15 @@
       <bcf:value>0</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
-      <bcf:key>labeldate</bcf:key>
+      <bcf:key>labelyear</bcf:key>
       <bcf:value>1</bcf:value>
     </bcf:option>
     <bcf:option type="multivalued">
-      <bcf:key>labeldatespec</bcf:key>
-      <bcf:value order="1" type="field">date</bcf:value>
-      <bcf:value order="2" type="field">eventdate</bcf:value>
-      <bcf:value order="3" type="field">origdate</bcf:value>
-      <bcf:value order="4" type="field">urldate</bcf:value>
-      <bcf:value order="5" type="string">nodate</bcf:value>
+      <bcf:key>labelyearspec</bcf:key>
+      <bcf:value order="1">year</bcf:value>
+      <bcf:value order="2">eventyear</bcf:value>
+      <bcf:value order="3">origyear</bcf:value>
+      <bcf:value order="4">urlyear</bcf:value>
     </bcf:option>
     <bcf:option type="singlevalued">
       <bcf:key>maxalphanames</bcf:key>
@@ -655,7 +654,6 @@
       <bcf:entrytype>movie</bcf:entrytype>
       <bcf:entrytype>music</bcf:entrytype>
       <bcf:entrytype>mvcollection</bcf:entrytype>
-      <bcf:entrytype>mvreference</bcf:entrytype>
       <bcf:entrytype>mvbook</bcf:entrytype>
       <bcf:entrytype>online</bcf:entrytype>
       <bcf:entrytype>patent</bcf:entrytype>
@@ -1959,24 +1957,19 @@
     <bcf:citekey order="3">Hastie:1993a</bcf:citekey>
     <bcf:citekey order="4">Wood:2006</bcf:citekey>
     <bcf:citekey order="5">Wang:2008a</bcf:citekey>
-    <bcf:citekey order="5">Antoniadis:2012b</bcf:citekey>
-    <bcf:citekey order="6">Shang-2011</bcf:citekey>
-    <bcf:citekey order="6">Zhang-2011</bcf:citekey>
-    <bcf:citekey order="7">Brundson:1998a</bcf:citekey>
-    <bcf:citekey order="7">Fotheringham:2002</bcf:citekey>
-    <bcf:citekey order="8">Brundson:1998a</bcf:citekey>
-    <bcf:citekey order="8">Fotheringham:2002</bcf:citekey>
-    <bcf:citekey order="9">Loader:1999</bcf:citekey>
-    <bcf:citekey order="10">Loader:1999</bcf:citekey>
-    <bcf:citekey order="11">Hurvich:1998</bcf:citekey>
-    <bcf:citekey order="12">Wheeler:2009</bcf:citekey>
-    <bcf:citekey order="13">Wheeler:2009</bcf:citekey>
-    <bcf:citekey order="14">Zou:2006</bcf:citekey>
-    <bcf:citekey order="15">Zou:2009</bcf:citekey>
-    <bcf:citekey order="16">Hardle-1990</bcf:citekey>
-    <bcf:citekey order="17">Hastie:1993b</bcf:citekey>
-    <bcf:citekey order="18">Fan-1996</bcf:citekey>
-    <bcf:citekey order="19">Wang:2008b</bcf:citekey>
-    <bcf:citekey order="20">Hurvich:1998</bcf:citekey>
+    <bcf:citekey order="6">Antoniadis:2012b</bcf:citekey>
+    <bcf:citekey order="7">Shang-2011</bcf:citekey>
+    <bcf:citekey order="8">Zhang-2011</bcf:citekey>
+    <bcf:citekey order="9">Brundson:1998a</bcf:citekey>
+    <bcf:citekey order="9">Fotheringham:2002</bcf:citekey>
+    <bcf:citekey order="10">Brundson:1998a</bcf:citekey>
+    <bcf:citekey order="10">Fotheringham:2002</bcf:citekey>
+    <bcf:citekey order="11">Loader:1999</bcf:citekey>
+    <bcf:citekey order="12">Loader:1999</bcf:citekey>
+    <bcf:citekey order="13">Hurvich:1998</bcf:citekey>
+    <bcf:citekey order="14">Wheeler:2009</bcf:citekey>
+    <bcf:citekey order="15">Wheeler:2009</bcf:citekey>
+    <bcf:citekey order="16">Zou:2006</bcf:citekey>
+    <bcf:citekey order="17">Zou:2009</bcf:citekey>
   </bcf:section>
 </bcf:controlfile>
