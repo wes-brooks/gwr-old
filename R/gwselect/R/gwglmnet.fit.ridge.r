@@ -46,20 +46,15 @@ gwglmnet.fit.ridge = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
     xx = xx[weighted,]
     if (interact) {xx.interacted = xx.interacted[weighted,]}
     yy = as.matrix(yy[weighted])
+    meany = mean(yy)
+    yy = yy - meany
     w = w[weighted]
-    
-    colocated = which(gwr.weights[weighted]==1)
-    sqrt.w <- diag(sqrt(w))
 
     if (interact) { 
         xxx = xx.interacted
     } else {
         xxx = xx
     }
-    
-    yyy = yy
-    meany = sum(w*yy)/sum(w)
-
     if (precondition==TRUE) {
         s = svd(xxx)
         F = s$u  %*% diag(1/sqrt(s$d**2 + tau))  %*%  t(s$u)
@@ -67,9 +62,15 @@ gwglmnet.fit.ridge = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
         yyy = F %*% yyy
     }
     
-    if (family == 'binomial') { ridge = glmnet(x=xxx, y=cbind(1-yyy, yyy), standardize=FALSE, intercept=TRUE, family=family, weights=w, alpha=0) }
-    else { ridge = glmnet(x=xxx, y=yyy, standardize=FALSE, intercept=TRUE, family=family, weights=w, alpha=0) }
-    nsteps = length(ridge$lambda) + 1
-        
-        
+    n = length(yy)
+    p = dim(xs)[2]
+
+    lambda = seq(0,1,length.out=100000)
+    ridge = glmnet(y=yy, x=xs, standardize=FALSE, intercept=TRUE, family=family, weights=w, alpha=0, lambda=lambda)
+    ridge.pen = cv.glmnet(y=yy, x=xs, standardize=FALSE, intercept=TRUE, family=family, weights=w, alpha=0, lambda=lambda, nfolds=n)
+    
+
+    res2 = (matrix(rep(yy,length(lambda)), n, length(lambda)) - cbind(1,xs) %*% coef(ridge))**2
+    tr = c(tr, sum(diag(diag(w) %*% cbind(1,xs) %*% solve(t(cbind(1,xs)) %*% diag(w) %*% cbind(1,xs) + diag(rep(lambda[k], p+1))) %*% t(cbind(1,xs)))))
+
 }
