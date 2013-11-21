@@ -1,4 +1,4 @@
-gwglmnet.fit.ridge = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, s=NULL, family, verbose, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, interact, precondition, tau=3) {
+gwglmnet.fit.ridge = function(x, y, coords, S, indx=NULL, loc, bw=NULL, dist=NULL, s=NULL, family, verbose, gwr.weights=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, interact, precondition, tau=3) {
     if (!is.null(indx)) {
         colocated = which(round(coords[indx,1],5)==round(as.numeric(loc[1]),5) & round(coords[indx,2],5) == round(as.numeric(loc[2]),5))
     }
@@ -87,12 +87,12 @@ gwglmnet.fit.ridge = function(x, y, coords, indx=NULL, loc, bw=NULL, dist=NULL, 
 #print(lambda.min)
 #    lambda = seq(lambda.min*2, 0.1, length.out=10001)
     lambda = seq(0, 0.1, length.out=1001)
-    ridge.pen = cv.glmnet(y=yy, x=xs, standardize=FALSE, intercept=TRUE, family=family, weights=w, alpha=0, lambda=lambda, nfolds=10)$lambda.1se
+    ridge.pen = cv.glmnet(y=yy, x=xs, standardize=FALSE, intercept=TRUE, family=family, weights=w, alpha=0, lambda=lambda, nfolds=5)$lambda.1se
 print("ridge.pen:")
 print(ridge.pen)
     ridge = glmnet(y=yy, x=xs, standardize=FALSE, intercept=TRUE, family=family, weights=w, alpha=0, lambda=ridge.pen)
 
-    coefs = coef(ridge)
+    coefs = as.matrix(coef(ridge))
     xtxswrI = solve(t(cbind(1,xs)) %*% diag(w) %*% cbind(1,xs) + diag(c(0,rep(ridge.pen, p))))
     tr = sum(w * diag(cbind(1,xs) %*% xtxswrI %*% t(cbind(1,xs))))
 print("tr:")
@@ -100,10 +100,14 @@ print(tr)
     sig2 = sum(w*(yy - cbind(1,xs) %*% coef(ridge))**2) / (sum(w) - tr)
 print("sig2:")
 print(sig2)
-    Vb = sig2 * xtxswrI
+    Vb = as.matrix(sig2 * xtxswrI)
+print("coefs:")
+print(coefs)
+print("Vb:")
+print(Vb)
+    beta.resampled = t(mvrnorm(n=S, mu=coefs, Sigma=Vb))
+    resampled = (cbind(1,xs) %*%  beta.resampled + meany)[colocated,]
 
-    resampled = (cbind(1,xs) %*% mvrnorm(n=1, mu=coefs, Sigma=Vb) + meany)[colocated]
-print(resampled)
     return(resampled)
 }
 

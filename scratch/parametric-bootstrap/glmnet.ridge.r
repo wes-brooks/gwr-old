@@ -1,4 +1,4 @@
-gwglmnet.ridge <- function(formula, data, family, weights=NULL, coords, fit.loc=NULL, indx=NULL, oracle=NULL, gweight, bw=NULL, verbose=FALSE, longlat, tol, N=1, parallel=FALSE, precondition=FALSE, D=NULL, interact=FALSE) {
+gwglmnet.ridge <- function(formula, data, family, weights=NULL, coords, S=1, fit.loc=NULL, indx=NULL, oracle=NULL, gweight, bw=NULL, verbose=FALSE, longlat, tol, N=1, parallel=FALSE, precondition=FALSE, D=NULL, interact=FALSE) {
     if (is(data, "Spatial")) {
         if (!missing(coords)) 
             warning("data is Spatial* object, ignoring coords argument")
@@ -49,6 +49,6 @@ gwglmnet.ridge <- function(formula, data, family, weights=NULL, coords, fit.loc=
 
     weight.matrix = gweight(D, bw)
 
-    res = gwglmnet.tune.ridge(x=x, y=y, family=family, prior.weights=weights, indx=indx, N=N, coords=coords, oracle=oracle, bw=bw, fit.loc=fit.loc, gwr.weights=weight.matrix, verbose=verbose, precondition=precondition, interact=interact)
+    res = gwglmnet.tune.ridge(x=x, y=y, family=family, S=S, prior.weights=weights, indx=indx, N=N, coords=coords, oracle=oracle, bw=bw, fit.loc=fit.loc, gwr.weights=weight.matrix, verbose=verbose, precondition=precondition, interact=interact)
     res
 }

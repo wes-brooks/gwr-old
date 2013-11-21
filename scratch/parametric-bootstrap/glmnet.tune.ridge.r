@@ -1,4 +1,4 @@
-gwglmnet.tune.ridge = function(models, x, y, family, coords, fit.loc=NULL, oracle, bw, D=NULL, verbose=FALSE, gwr.weights=NULL, indx=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, precondition=FALSE, interact, N) {
+gwglmnet.tune.ridge = function(models, x, y, family, S, coords, fit.loc=NULL, oracle, bw, D=NULL, verbose=FALSE, gwr.weights=NULL, indx=NULL, prior.weights=NULL, gweight=NULL, longlat=FALSE, precondition=FALSE, interact, N) {
     if (!is.null(fit.loc)) {
         coords.unique = fit.loc
     } else {
@@ -18,19 +18,23 @@ gwglmnet.tune.ridge = function(models, x, y, family, coords, fit.loc=NULL, oracl
         gweights[[j]] = as.vector(gwr.weights[j,])
     }      
 
+    quant = vector()
+
     for (i in 1:n) {
         #Fit one location's model here
         loc = coords.unique[i,]
         gw = gweights[[i]]
 
 		if (is.null(oracle)) {
-	        resampled = c(resampled, gwglmnet.fit.ridge(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, precondition=precondition, interact=interact))
+	        resampled = rbind(resampled, gwglmnet.fit.ridge(x=x, y=y, family=family, S=S, bw=bw, coords=coords, loc=loc, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, precondition=precondition, interact=interact))
 		} else {
-            resampled = c(resampled, gwselect.fit.ridge(x=x, y=y, family=family, bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, AICc=AICc))
+            resampled = rbind(resampled, gwselect.fit.ridge(x=x, y=y, family=family, S=S, bw=bw, coords=coords, loc=loc, indx=indx, oracle=oracle[[i]], N=N, mode.select=mode.select, tuning=tuning, predict=predict, simulation=simulation, verbose=verbose, gwr.weights=gw, prior.weights=prior.weights, gweight=gweight, AICc=AICc))
         }
         
-        if (verbose) {
-	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); resampled=", round(tail(resampled,1),3), "; truth=", y[i], ".\n", sep=''))
+        ee = ecdf(resampled[nrow(resampled),])
+        quant = c(quant, ee(y[i]))
+        if (verbose) {            
+	        cat(paste("For i=", i, "; location=(", paste(round(loc,3), collapse=","), "); quantile=", tail(quant, 1), "; resampled=", paste(round(resampled[nrow(resampled),],3), collapse=" "), "; truth=", round(y[i],3), ".\n", sep=''))
 		}
     }
 	
