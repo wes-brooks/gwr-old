@@ -121,6 +121,19 @@ for (i in 1:N**2) {
     if (vars[i,'B1']) { oracle[[i]] = c(oracle[[i]] , "X1") }
 }
 
+coords = cbind(loc.x, loc.y)
+#Get the matrices of distances and weights
+if (is.null(D)) {
+    n = dim(coords)[1]
+    if (longlat) {
+        D = as.matrix(earth.dist(coords),n,n)
+    } else {
+        Xmat = matrix(rep(coords[,1], times=n), n, n)
+        Ymat = matrix(rep(coords[,2], times=n), n, n)
+        D = sqrt((Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2)
+    }
+}
+
 
 #Find the optimal bandwidth and use it to generate a model:
 #bw.lars = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
@@ -130,8 +143,13 @@ bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=
 model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
 resampled = gwglmnet.ridge(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', bw=bw.glmnet, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, gweight=bisquare, tol=0.01, parallel=FALSE, interact=TRUE, verbose=TRUE, S=100)
-sim$resampled = resampled[,2]
-model.glmnet = gwglmnet(resampled~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+Sig2 = cov.spatial(D, cov.model='cubic', cov.pars=c(1,0.1))
+Sig = chol(Sig2)
+resampled = Sig %*% resampled
+
+sim$resampled = resampled[,6]
+bw.glmnet = gwglmnet.sel(resampled~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+model.glmnet = gwglmnet(resampled~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
 
 
 #bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
