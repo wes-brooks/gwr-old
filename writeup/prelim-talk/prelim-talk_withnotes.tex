@@ -61,6 +61,13 @@
 \newcommand{\ei}{\end{itemize}}
 \newcommand{\ig}{\includegraphics}
 \newcommand{\subt}[1]{{\footnotesize \color{subtitle} {#1}}}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+\DeclareMathOperator*{\argmin}{\arg\!\min}
+\DeclareMathOperator*{\argmax}{\arg\!\max}
+\DeclareMathOperator*{\bw}{\mbox{bw}}
+\DeclareMathOperator*{\df}{\mbox{df}}
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\E}{\mathop{\mathbb E}}
 
 % title info
 \title{Local variable selection and parameter estimation for spatially varying coefficient models}
@@ -115,9 +122,7 @@
   \ig[width=0.6\textwidth]{../../figures/practice-talk/poverty-response}
 \end{center}
 
-\note{This is the county-level poverty rate from 1970, as well as the proportion of people who worked in manufacturing, agriculture, and services.
-
-How is this data to be analyzed?}
+\note{This is the county-level poverty rate from 1970}
 \end{frame}
 
 
@@ -131,11 +136,9 @@ How is this data to be analyzed?}
   \ig[width=\textwidth]{../../figures/practice-talk/poverty-covariates}
 \end{center}
 
-\note{
-This is the county-level poverty rate from 1970, as well as the proportion of people who worked in manufacturing, agriculture, and services.
+\note{Here we have the proportion of people in each county who worked in manufacturing, agriculture, and services in 1970.
 
-How is this data to be analyzed?
-}
+How is this data to be analyzed?}
 \end{frame}
 
 
@@ -153,11 +156,9 @@ How is this data to be analyzed?
     \item Are the sign and magnitude of the associations constant across the region?
 \end{itemize}
 
-\note{
-We're going to aim at answering these questions with the work I present today.
+\note{These are some sensible questions to ask about the county-level poverty rate. The work I'm presenting today attempts to answer these questions.
 
-There are several other methods to answer at least some of these questions, which we'll cover next.
-}
+There are several other methods to answer at least some of these questions, which we'll cover next.}
 \end{frame}
 
 
@@ -181,9 +182,7 @@ There are several other methods to answer at least some of these questions, whic
     \item Model selection via regularization
 \end{itemize}
 
-\note{
-Behind the methodology that I'm discussing is a wide range of literature.
-}
+\note{The existing methods to address the questions draw from these areas. Behind the methodology that I'm discussing is a wide range of literature.}
 \end{frame}
 
 
@@ -205,9 +204,7 @@ Behind the methodology that I'm discussing is a wide range of literature.
 \end{itemize}
 
 
-\note{
-We'll use these variables throughout. 
-}
+\note{We'll use these variables throughout.}
 \end{frame}
 
 
@@ -234,30 +231,9 @@ We'll use these variables throughout.
 \end{itemize}
 
 
-\note{
-The method I'm describing applies to geostatistical data, or to areal data when the observations are assumed to be located at the centroid.
+\note{The method I'm describing applies to geostatistical data, or to areal data when the observations are assumed to be located at the centroid.
 
-The poverty data example is areal data, the simulation study is based on simulated geostatistical data.
-}
-\end{frame}
-
-
-
-
-\begin{frame}{Introduction}
-\subt{Varying coefficients regression \citep{Hastie:1993a}}
-
-\[
-    Y(\bm{s}) = \bm{X}(\bm{s})' \bm{\beta}(\bm{s}) + \varepsilon(\bm{s})
-\]
-
-\pause
-\begin{itemize}
-    \item Assume an effect modifying variable $S$
-    \item Coefficients are functions of $S$
-\end{itemize}
-
-\note{note}
+The poverty data example is areal data; the simulation study I'll present later is based on simulated geostatistical data.}
 \end{frame}
 
 
@@ -266,33 +242,37 @@ The poverty data example is areal data, the simulation study is based on simulat
 
 
 
+
 \begin{frame}{Introduction}
-\subt{Spatial regression}
+\subt{Spatial regression \citep{Cressie:1993}}
 
 \bigskip
 \begin{itemize}
-    \item The typical spatial regression \citep{Cressie:1993}
+    \item The typical spatial regression
 \end{itemize}
-\begin{align}
-    Y(\bm{s}) &= \bm{X}(\bm{s})'\bm{\beta} + W(\bm{s}) + \varepsilon(\bm{s}) \notag \\
-    \text{cov}(W(\bm{s}), W(\bm{t})) &= \Gamma\left(\delta(\bm{s}, \bm{t})\right) \notag \\
-    \delta(\bm{s}, \bm{t}) &= \sqrt{\|\bm{t} - \bm{s}\|_2} \notag \\
-    \text{E.g. } \Gamma(\delta(\bm{s}, \bm{t})) &= \exp \{ -\phi^{-1} \delta(\bm{s}, \bm{t}) \}    
-\end{align}
-\pause
+\begin{align*}
+    Y(\bm{s}) &= \bm{X}(\bm{s})'\bm{\beta} + W(\bm{s}) + \varepsilon(\bm{s}) \\
+    \text{cov}(W(\bm{s}), W(\bm{t})) &\text{: Mat\`{e}rn class}    
+\end{align*}
+
 \begin{itemize}
     \item $W(\bm{s})$ is a spatial random effect that accounts for autocorrelation in the response variable
     \item The coefficients $\bm{\beta}$ are constant
     \item Relies on \emph{a priori} global variable selection
 \end{itemize}
 
-\note{
-This is the form of the usual spatial regression from e.g. Cressie (1993).
+\note{Here we have the usual spatial regression as described by Cressie in his 1993 book.
 
-The spatial random effect W captures autocorrelation of the response, while the white noise is iid error
+This model assumes that the model coefficients are constant across the spatial domain and that the residuals can be separated into :
 
-The Gamma function is a Matern-class covariance function, such as the exponential covariance function (listed here)
-}
+ - The spatial random effect W that captures autocorrelation of the response, and
+ - epsilon, which is iid white noise
+
+The autocorrelation of the W's is from a Mat\'{e}rn class covariance function, like the exponential covariance function.
+
+This model relies on a priori model selection.
+
+Typically Bayesian methods are used to estimate the coefficients.}
 \end{frame}
 
 
@@ -305,24 +285,54 @@ The Gamma function is a Matern-class covariance function, such as the exponentia
 
 \bigskip
 \begin{itemize}
-    \item Making model more flexible: coefficients in a spatial regression model can be allowed to vary
+    \item Making the spatial regression model more flexible: coefficients in a spatial regression model can be allowed to vary
 \end{itemize}
 
 \[
     Y(\bm{s}) = \bm{X}(\bm{s})' \bm{\beta}(\bm{s}) + \varepsilon(\bm{s})
 \]
+\begin{itemize}
+  \item $\{ \beta_1(\bm{s}) : \bm{s} \in \mathcal{D}\}, \dots, \{\beta_p(\bm{s}) : \bm{s} \in \mathcal{D}\}$ are stationary spatial processes with Mat\`{e}rn covariance functions
+  \item Still relies on \emph{a priori} global variable selection
+\end{itemize}
 
-\pause
+\note{
 \begin{itemize}
     \item The spatial random effect has been incorporated into the spatially varying intercept
     \item $\{ \beta_1(\bm{s}) : \bm{s} \in \mathcal{D}\}, \dots, \{\beta_p(\bm{s}) : \bm{s} \in \mathcal{D}\}$ are stationary spatial processes with Mat\`{e}rn covariance functions
     \item Still relies on \emph{a priori} global variable selection
 \end{itemize}
+}
 
-\note{note}
+\note{The spatial regression model can be made more flexible by using stationary spatial processes to model the coefficients, rather than constants. The method was introduced by Gelfand in 2003.
+
+As for the autocorrelated errors W in the traditional spatial regression, the coefficient processes have matern class covariance functions.
+
+The autocorrelated errors W are now incorporated in the spatially varying intercept process.
+
+This model also relies on a priori model selection and uses Bayesian methods to estimate the coefficients.}
 \end{frame}
 
 
+
+
+
+\begin{frame}{Introduction}
+\subt{Varying coefficients regression \citep{Hastie:1993a}}
+
+\[
+    Y(\bm{s}) = \bm{X}(\bm{s})' \bm{\beta}(\bm{s}) + \varepsilon(\bm{s})
+\]
+
+\begin{itemize}
+    \item Assume an effect modifying variable $S$
+    \item Coefficients are functions of $S$
+\end{itemize}
+
+\note{The varying coefficient regression model was described by Hastie and Tibshirani in 1993. This model looks like the spatially varying coefficient process, but is more general.
+
+Any effect modifying variable s - not just the spatial location - can be used in this model, and there are non-Bayesian methods to fit the model. We'll look at three.}
+\end{frame}
 
 
 
@@ -333,51 +343,67 @@ The Gamma function is a Matern-class covariance function, such as the exponentia
 \bigskip
 \begin{itemize}
     \item Splines are a way to parameterize smooth functions
-    \item Splines can be incorporated into a generalized additive model (GAM):
-    \begin{itemize}
-        \item $E\{Y(t)\} = f\{X_1(t)\} + \cdots + f\{X_p(t)\}$
-    \end{itemize}
-    \item It is possible to parameterize a VCR model with splines for the coefficient functions:
+    \item Estimate the varying coefficients via splines:
     \begin{itemize}
         \item $E\{Y(t)\} = \beta_1(t) X_1(t) + \cdots + \beta_p(t) X_p(t)$
     \end{itemize}
 \end{itemize}
 
-\note{note}
+\note{There is a good overview in Simon Wood's 2006 book of how to use regression splines to fit a varying coefficients regression model.
+
+Regression splines are a way to parameterize a smooth function. In this case, the coefficient is a smooth function of the spatial location
+
+fitting a spline-based VCR requires a priori model selection(?).}
 \end{frame}
 
 
 
 
 \begin{frame}{Introduction}
-\subt{Global selection in spline-based VCR models \citep{Wang:2008a, Antoniadis:2012b}}
+\subt{Global selection in spline-based VCR models}
 
 \bigskip
 Regularization methods for global variable selection in VCR models:
 \begin{itemize}
-    \item The integral of a function squared (e.g. $\int \{f(t)\}^2 dt$) is zero if and only if the function is zero everywhere.
-    \item Use regularization (maximize the likelihood plus a penalty) to encourage coefficient functions to be zero
-    \item SCAD penalty \citep{Fan:2001} on the integral of the square of the coefficient function 
-    \item Non-negative garrote penalty \citep{Breiman:1995} on the integral of the square of the coefficient function
+  \item The integral of a function squared (e.g. $\int \{f(t)\}^2 dt$) is zero if and only if the function is zero everywhere.
+  \item Use regularization to encourage coefficient functions to be zero
+  \begin{itemize}
+    \item SCAD penalty \citep{Wang:2008a}
+    \item Non-negative garrote penalty \citep{Antoniadis:2012b}
+  \end{itemize}
 \end{itemize}
 
-\note{These selection methods are all global - that is, they select variables for the entire domain simultaneously}
+\note{There are at least two references that describe how to select the covariates for a spline-based VCR model. Both rely on regularization.
+
+The regularization penalizes the smooth coefficient function for being non-zero. Antoniadis et al. used a non-negative garrote penalty and Wang et al. used a SCAD penalty.
+
+These selection methods are global - that is, they select variables for the entire domain simultaneously.}
 \end{frame}
 
 
 
 
 \begin{frame}{Introduction}
-\subt{Existing approaches: wavelet methods for VCR models}
+\subt{Wavelet methods for VCR models}
 
 \bigskip
-Wavelet methods involve decomposing a function into local frequency components. Wavelet methods for VCR models include using Bayesian variable selection or the Lasso to estimate which local frequency components have nonzero coefficients \citep{Shang-2011,Zhang-2011}.
+\begin{itemize}
+  \item Wavelet methods: decompose coefficient function into local frequency components
+  \item Selection of nonzero local frequency components with nonzero coefficients:
+  \begin{itemize}
+    \item Bayesian variable selection \citep{Shang-2011}
+    \item Lasso \citep{Zhang-2011}
+  \end{itemize} 
+  \item Sparsity in the local frequency components; not in the local covariates
+\end{itemize}
 
-\vspace{10mm}
+\note{Another way to fit a VCR model is to use a wavelet decomposition, which decomposes the coefficient function into its local frequency components. Model selection is then used to identify which local frequency components to use in the model.
 
-These methods achieve sparsity in the local frequency components but not in the local covariates, and so are not suitable for local variable selection.
+Murray Clayton's students Zuofeng Shang and Jun Zhang used Bayesian variable selection and the Lasso, respectively, to select the local frequency components.
 
-\note{note}
+However, these methods achieve sparsity in the wavelet coefficients, which does not imply sparsity in the covariates. So these methods don't achieve local model selection.
+
+Now let's take a look at geographically weighted regression.}
 \end{frame}
 
 
@@ -388,29 +414,333 @@ These methods achieve sparsity in the local frequency components but not in the 
 
 
 \begin{frame}{Geographically weighted regression}
-\subt{Existing approaches: geographically weighted regression}
+\subt{\citep{Brundson:1998a, Fotheringham:2002}}
 
 \bigskip
-When the effect modifying variable $\bm{s}$ refers to spatial location, the method of local regression is called geographically weighted regression (GWR) \citep{Brundson:1998a, Fotheringham:2002}
+\begin{itemize}
+  \item Consider observations at sampling locations $\bm{s}_1, \dots, \bm{s}_n$
+  \item $y(\bm{s}_i) = y_i$ the univariate response at location $\bm{s}_i$
+  \item $\bm{x}(\bm{s}_i) = \bm{x}_i$ the $(p+1)$-variate vector of covariates at location $\bm{s}_i$
+  \item Assume $y_i = \bm{x}'_i \bm{\beta}_i + \varepsilon_i$ where $\varepsilon \overset{iid}{\sim} \mathcal{N} \left( 0,\sigma^2 \right)$
+\end{itemize} 
 
-\note{
-Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.
+\note{Geographically weighted regression is the method of using local regression to estimate the coefficients in a spatially varying coefficient regression model.
+
+Our sampling locations are called s, the response is y and the covariates (which number p) are called x.
+
+Assume that the errors are iid normal.}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Geographically weighted regression}
+\subt{\citep{Brundson:1998a, Fotheringham:2002}}
+
+\bigskip
+\begin{itemize}
+  \item The total log likelihood is $\ell\left( \bm{\beta} \right) = - \left(1/2\right) \left\{ n \log \left( 2 \pi \sigma^2\right) +  \sigma^{-2}  \sum_{i=1}^n \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2  \right\}$
+  \item With $n$ observations and $n(p+1)$ free parameters, the model is not identifiable.
+  \item Estimate parameters by borrowing strength from nearby observations
+\end{itemize} 
+
+\note{We have here the total log likelihood of the observed data.
+
+since there are n observations and n x (p+1) free parameters, the model is not identifiable.
+
+We will estimate the parameters by borrowing strength from nearby observations}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Geographically weighted regression}
+\subt{Local regression \citep{Loader:1999}}
+
+\bigskip
+Local regression uses a kernel function at each sampling location to weight observations based on their distance from the sampling location.
+\begin{align}
+    L_i &= \prod_{i'=1}^n \left(L_{i'}\right)^{w_{ii'}} \notag \\
+    \ell_i &= \sum_{i'=1}^n w_{ii'} \left\{\log \sigma_i^{2} + \sigma_i^{-2}\left(y_{i'} - \bm{x}_{i'}'\bm{\beta}_i\right)^2 \right\} \notag
+\end{align}
+
+Given the weights, a local model is fit at each sampling location using the local likelihood
+
+\note{Local regression uses a kernel function at each sampling location to weight the observations. For a GWR model, the kernel weights are based on an observation's distance from the sampling location.
+
+Here we have the likelihood at one sampling location. Note that each observation is given a weight w(i, i')
+
+Given the weights, a local model is fit at each sampling location using the local likelihood
+
+Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.}
+\end{frame}
+
+
+
+
+
+
+
+\begin{frame}{Geographically weighted regression}
+\subt{Local likelihood\citep{Loader:1999}}
+
+\bigskip
+Weights are calculated via a kernel, e.g. the bisquare kernel:
+\begin{align}
+	w_{ii'} = \begin{cases} \left[1-\left(\phi^{-1}\delta_{ii'}\right)^2\right]^2 &\mbox{ if } \delta_{ii'} < \phi, \\ 0 &\mbox{ if } \delta_{ii'} \geq \phi. \end{cases}
+\end{align}
+
+Where
+\begin{itemize}
+  \item $\phi$ is a bandwidth parameter
+  \item $\delta_{ii'} = \delta(\bm{s}_i,\bm{s}_{i'}) = \|\bm{s}_i - \bm{s}_{i'}\|_2$ is the Euclidean distance
+\end{itemize}
+
+\note{This is the form of the bisquare kernel, which is what I've used in this work.
+
+phi is a bandwidth parameter and delta (i, i') is the distance between points i and i'.}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Geographically weighted regression}
+\subt{Bandwidth estimation via the $\text{AIC}_{\tt c}$ \citep{Hurvich:1998}}
+
+\bigskip
+\begin{itemize}
+    \item Smaller bandwidth: less bias, more flexible coefficient surface
+    \item Large bandwidth: less variance, less flexible coefficient surface
+    \item Estimate the degrees of freedom used in estmating the coefficient surface:
+    \begin{itemize}
+        \item $\hat{\bm{y}} = H\bm{y}$
+        \item $\nu = $ tr($H$)
+    \end{itemize}
+    \item Then the corrected AIC for bandwidth selection is: $\text{AIC}_{\tt c} = 2 n \log{\sigma} + n \left\{\frac{n + \nu}{n - 2 - \nu}\right\}$
+\end{itemize}
+
+\note{Selecting the bandwidth in a GWR model is done by the AIC. There is a bias-variance tradeoff in selecting an optimal bandwidth.}
+\end{frame}
+
+
+
+
+
+
+
+\section{Local variable selection and parameter estimation}
+
+
+
+\begin{frame}{Geographically weighted regression}
+\subt{Geographically weighted Lasso \citep{Wheeler:2009}}
+
+\bigskip
+Within a GWR model, using the Lasso for local variable selection is called the geographically weighted Lasso (GWL).
+\begin{itemize}
+    \item The GWL requires estimating a Lasso tuning parameter for each local model
+    \item \cite{Wheeler:2009} estimates the local Lasso tuning parameter at location $\bm{s}_i$ by minimizing a jacknife criterion: $|y_i - \hat{y}_i|$
+    \item The jacknife criterion can only be calculated where data are observed, making it impossible to use the GWL to impute missing data or to estimate the value of the coefficient surface at new locations
+    \item Also, the Lasso is known to be biased in variable selection and suboptimal for coefficient estimation
+\end{itemize}
+
+\note{For local model selection in a GWR model, Wheeler proposed the geographically weighted lasso (GWL) in 2009.
+
+At each model location, the Lasso is used to select the locally-relevant predictors
+
+The GWL uses a jacknife criterion to select the local lasso tuning parameters, which means the GWL cannot be used at model locations other than sample locations.
+
+That means the GWL cannot be used for interpolating the coefficient surface or for imputing missing values of the response variable.}
+\end{frame}
+
+
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Geographically weighted adaptive Lasso (GWAL)}
+
+\bigskip
+\begin{itemize}
+    \item Local variable selection in a GWR model using the adaptive Lasso (AL) \citep{Zou:2006}
+    \item Under suitable conditions, the AL has an oracle property for selection
+\end{itemize}
+\begin{align}
+		\mathcal{S}(\bm{\beta}_i) &= -2 \ell_i(\bm{\beta}_i) + \mathcal{J}_2(\bm{\beta}_i) \notag \\
+		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}   \notag \\
+		&+ \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} \notag
+\end{align}
+
+\note{The geographically weighted adaptive lasso (GWAL) overcomes these shortcomings of the GWL. 
+
+The GWAL uses the adaptive lasso, which has an oracle property under suitable conditions.
+
+S here is the penalized likelihood for a local GWAL model
+
+The adaptive lasso consists of applying a different penalty to each covariate based on the adaptive weights, which are derived from the weighted least squares coefficients.
+
+
+
+The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
 }
 \end{frame}
 
 
 
-\begin{frame}{Geographically weighted regression}
-\subt{Existing approaches: Local regression}
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Geographically weighted adaptive elastic net (GWAL)}
 
 \bigskip
-Local regression uses a kernel function at each sampling location to weight observations based on their distance from the sampling location. An example is the bisquare kernel:
-\begin{align}
-	w_{ii'} = \begin{cases} \left[1-\left(\phi^{-1}\delta_{ii'}\right)^2\right]^2 &\mbox{ if } \delta_{ii'} < \phi, \\ 0 &\mbox{ if } \delta_{ii'} \geq \phi. \end{cases}
-\end{align}
-Where $\phi$ is a bandwidth parameter.
+Note:
+\begin{itemize}
+  \item $\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2$ is the weighted sum of squares minimized by traditional GWR
+  \item $\mathcal{J}_1(\bm{\beta}_i) = \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ is the AL penalty.
+\end{itemize}
 
-Given the weights, a local model is fit at each sampling location using the local likelihood \citep{Loader:1999}
+\note{
+The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
+}
+\end{frame}
+
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Tuning parameter estimation}
+
+\bigskip
+It is necessary to estimate an AL tuning parameter for each local model. Using the local BIC allows fitting a local model at any location within the domain
+	\begin{align}
+		\mbox{BIC}_i &= -2 \sum_{i'=1}^n \ell_{ii'}  + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
+		&= \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} \notag \\
+		&+ \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i \notag
+	\end{align}
+
+
+\note{
+The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
+
+We treat the sum of the weights around the sampling location as the number of observations for the local BIC.
+}
+\end{frame}
+
+
+
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Geographically weighted adaptive elastic net (GWEN)}
+
+\bigskip
+\begin{itemize}
+    \item Local variable selection in a GWR model using the adaptive elastic net (AEN) \citep{Zou:2009}
+    \item Under suitable conditions, the AEN has an oracle property for selection
+\end{itemize}
+\begin{align*}
+		\mathcal{S}(\bm{\beta}_i) &= -2 \ell_i(\bm{\beta}_i) + \mathcal{J}_2(\bm{\beta}_i) \notag \\
+		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}   \notag \\
+		&+ \alpha_i \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} \notag \\
+		&+ (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2 \notag
+\end{align*}
+
+\note{The geographically weighted adaptive elastic net (GWEN) is similar to the GWAL but uses the elastic net for local model selection
+
+The adaptive elastic net also has an oracle property under suitable conditions.
+
+The adaptive elastic net consists of adding an L2 penalty to the regularization in addition to the L1 penalty of the adaptive lasso.
+
+S here is the penalized likelihood for a local GWEN model
+
+The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
+}
+\end{frame}
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Geographically weighted adaptive elastic net (GWEN)}
+
+\bigskip
+Note:
+
+  \begin{align*}
+    \mathcal{J}_2(\bm{\beta}_i) &= \\
+    \alpha_i \lambda^*_i &\sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + \\
+    (1-\alpha_i) \lambda^*_i &\sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2
+  \end{align*}
+
+\begin{itemize}
+  \item This is the AEN penalty
+\end{itemize}
+
+\note{
+The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
+}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{comment}
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Bandwidth parameter estimation}
+
+\bigskip
+Letting $H_i = \bm{W}_i \bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'$, where $\bm{W}_i$ is the diagonal weight matrix diag$(w_{ii'})$,
+ 
+\begin{align*}
+  \hat{\bm{y}} = \bm{H} \bm{y}
+\end{align*}
+
+\note{note}
+\end{frame}
+\end{comment}
+
+
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Bandwidth parameter estimation}
+
+\bigskip 
+\begin{itemize}
+  \item Traditional GWR:
+  \begin{itemize}
+    \item $\hat{\bm{y}} = \bm{H} \bm{y}$
+    \item So traditional GWR is a linear smoother
+    \item $\nu = $ tr$(\bm{H})$ is the degrees of freedom for the model
+  \end{itemize}
+  \item GWAL:
+  \begin{itemize}
+    \item $\hat{\bm{y}} = \bm{H}^{\dagger}\bm{y} + \bm{T}^{\dagger}\bm{\gamma}$
+  \end{itemize}  
+  \item GWEN:
+  \begin{itemize}
+    \item $\hat{\bm{y}} = \bm{H}^{*}\bm{y} + \bm{T}^{*}\bm{\gamma}$
+  \end{itemize}  
+  \item Neither GWEN nor GWAL is a linear smoother
+  \begin{itemize}
+    \item df not equal to trace of projection matrix for GWAL, GWEN
+  \end{itemize} 
+  \item Solution: use GWEN or GWAL for selection then fit local model for the selected variables via traditional GWR
+  \begin{itemize}
+    \item Now df $= \nu = $ tr$(\bm{H})$
+  \end{itemize} 
+\end{itemize}
 
 \note{note}
 \end{frame}
@@ -419,151 +749,28 @@ Given the weights, a local model is fit at each sampling location using the loca
 
 
 
-
-\begin{frame}{Geographically weighted regression}
-\subt{Existing approaches: Local likelihood}
-
-\bigskip
-Calibrate the model by doing the following at each sampling location:
-\begin{itemize}
-    \item Weight each observation's likelihood
-    \item Weights are given by the kernel
-\end{itemize}
-
-\begin{align}
-    L &= \prod_{i'=1}^n \left(L_{i'}\right)^{w_{ii'}} \notag \\
-    \ell &= \sum_{i'=1}^n w_{ii'} \left\{\log \sigma_i^{2} + \sigma_i^{-2}\left(y_{i'} - \bm{x}_{i'}'\bm{\beta}_i\right)^2 \right\} \notag
-\end{align}
-Where $\bm{\beta}_i = \bm{\beta}(\bm{s}_i)$.
-
-\note{
-Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.
-}
-\end{frame}
-
-
-
-
-
-\begin{frame}{Geographically weighted regression}
-\subt{Existing approaches: bandwidth estimation for GWR}
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Locally linear coefficient estimation}
 
 \bigskip
 \begin{itemize}
-    \item Smaller bandwidth: less bias, more flexible coefficient surface
-    \item Large bandwidth: less variance, less flexible coefficient surface
-    \item Estimate the degrees of freedom used in estmating the coefficient surface \citep{Hurvich:1998}:
-    \begin{itemize}
-        \item $\hat{\bm{y}} = H\bm{y}$
-        \item $\nu = $ tr($H$)
-    \end{itemize}
-    \item Then the corrected AIC for bandwidth selection is:
-    \item $\text{AIC}_{\tt c} = 2 n \log{\sigma} + n \left\{\frac{n + \nu}{n - 2 - \nu}\right\}$
+  \item GWR, GWEN, GWAL: coefficients locally constant
+  \begin{itemize}
+    \item as in Nadaraya-Watson kernel smoother
+    \item Leads to bias where there is a gradient at the boundary 
+  \end{itemize}
+  \item Solution: local polynomial modeling
+  \begin{itemize}
+    \item First-order polynomial: locally linear coefficients
+  \end{itemize}
+  \item Augment with covariate-by-location interactions
+  \begin{itemize}
+    \item Two-dimensional
+    \item Augment with selected covariates only
+  \end{itemize}
 \end{itemize}
 
-\note{
-Maximizing the local likelihood for a model of Gaussian data with iid errors can be done by weighted least squares.
-}
-\end{frame}
-
-
-
-
-
-\begin{frame}{Geographically weighted regression}
-\subt{Existing approaches: geographically weighted Lasso}
-
-\bigskip
-Within a GWR model, using the Lasso \citep{Tibshirani:1996} for local variable selection is called the geographically weighted Lasso (GWL) \citep{Wheeler:2009}.
-
-\begin{itemize}
-    \item The GWL requires estimating a Lasso tuning parameter for each local model
-    \item \cite{Wheeler:2009} estimates the local Lasso tuning parameter at location $\bm{s}_i$ by minimizing a jacknife criterion: $|y_i - \hat{y}_i|$
-    \item The jacknife criterion can only be calculated where data are observed, making it impossible to use the GWL to impute missing data or to estimate the value of the coefficient surface at new locations
-    \item Also, the Lasso is known to be biased in variable selection and suboptimal for coefficient estimation
-\end{itemize}
-
-\note{GWL does local variable selection}
-\end{frame}
-
-
-
-\section{Local variable selection and parameter estimation}
-
-
-
-\begin{frame}{Local variable selection and  parameter estimation}
-\subt{Geographically weighted elastic net (GWEN)}
-
-\bigskip
-\begin{itemize}
-    \item Local variable selection in a GWR model using the adaptive elastic net (AEN) \citep{Zou:2009}
-    \item Under suitable conditions, the AEN has an oracle property for selection
-\end{itemize}
-
-\begin{align}
-		\mathcal{S}(\bm{\beta}_i) &= -2 \ell_i(\bm{\beta}_i) + \mathcal{J}_2(\bm{\beta}_i) \notag \\
-		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}   \notag \\
-		&+ \alpha_i \lambda_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} \notag \\
-		&+ (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2 \notag
-	\end{align}
-
-\note{
-The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
-}
-\end{frame}
-
-
-
-\begin{frame}{Local variable selection and  parameter estimation}
-\subt{Geographically weighted elastic net (GWEN)}
-
-\bigskip
-where $\sum_{i'=1}^n w_{ii'} \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2$ is the weighted sum of squares minimized by traditional GWR, and $\mathcal{J}_2(\bm{\beta}_i) = \alpha_i \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$ is the AEN penalty.
-
-\note{
-The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
-}
-\end{frame}
-
-
-
-
-
-\begin{frame}{Local variable selection and  parameter estimation}
-\subt{Geographically weighted elastic net (GWEN)}
-
-\bigskip
-It is necessary to estimate an AEN tuning parameter for each local model. Using the local BIC allows fitting a local model at any location within the domain
-	\begin{align}\label{eq:BIC_loc}
-		\mbox{BIC}_{\text{loc}, i} &= -2 \sum_{i'=1}^n \ell_{ii'}  + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
-		&= -2 \sum_{i'=1}^n \log \left[ \left(2 \pi \hat{\sigma}_i^2\right)^{-1/2} \exp \left\{-\frac{1}{2} \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2\right\} \right]^{w_{ii'}} \notag \\
-		&+ \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
-	\end{align}
-
-
-\note{
-The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
-}
-\end{frame}
-
-
-
-
-
-
-
-\begin{frame}{Local variable selection and  parameter estimation}
-\subt{Geographically weighted elastic net (GWEN)}
-
-\bigskip
-	\begin{align}
-		&= \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log \hat{\sigma}_i^2 + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} \notag \\
-		&+ \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i \notag
-	\end{align}
-
-
-\note{We treat the sum of the weights around the sampling location as the number of observations for the local BIC.}
+\note{note}
 \end{frame}
 
 
@@ -578,19 +785,16 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 \subt{Simulating covariates}
 
 \bigskip
-Five covariates $\tilde{X}_1, \dots, \tilde{X}_5$ were simulated by Gaussian random fields on the domain $[0,1] \times [0,1]$ on a $30 \times 30$ grid of sampling locations:
-\begin{align}
-    \tilde{X}_j &\sim N(0, \Sigma) \text{ for } j = 1, \dots, 5 \notag \\
-    \left\{\Sigma\right\}_{i,i'} &= \exp \{ -\tau^{-1} \delta_{ii'}\} \text{ for } i,i' = 1, \dots, n \notag
-\end{align}
-
-Where the covariates were simulated with colinearity, the colinearity was induced by multiplying the design matrix by the square root of the colinearity matrix:
-\begin{align}
-    \text{diag}(\Omega_{5\times5}) = 1 \notag \\
-    \text{off-diag}(\Omega_{5\times5}) = \rho \notag \\
-    X = \tilde{X} R
-\end{align}
-Where $\Omega_{5\times5} = R'R$ is the Cholesky decomposition.
+\begin{itemize}
+  \item Five covariates $\tilde{X}_1, \dots, \tilde{X}_5$ 
+  \item Gaussian random fields
+  \item $30 \times 30$ grid on $[0,1] \times [0,1]$
+  \item \begin{align}
+  \tilde{X}_j &\sim N(0, \Sigma) \text{ for } j = 1, \dots, 5 \notag \\
+  \left\{\Sigma\right\}_{i,i'} &= \exp \{ -\tau^{-1} \delta_{ii'}\} \text{ for } i,i' = 1, \dots, n \notag
+  \end{align}
+  \item Colinearity: $\rho$
+\end{itemize}
 
 \note{note}
 \end{frame}
@@ -634,8 +838,8 @@ Call these functions step, gradient, and parabola:
 
 \begin{frame}{Simulation study}
 \subt{Simulation settings}
-    % latex table generated in R 2.15.1 by xtable 1.7-0 package
-    % Fri Jan 18 10:19:47 2013
+
+Each setting simulated 100 times:
     \begin{table}[h!]
         \begin{center}
         \begin{tabular}{cccc}
@@ -658,7 +862,6 @@ Call these functions step, gradient, and parabola:
             12 & parabola & 0.5 & 1 
         \end{tabular}
         \end{center}
-        \caption{Simulation parameters for each setting.\label{table:simulation_settings}}
     \end{table}
 \note{note}
 \end{frame}
@@ -678,7 +881,7 @@ Call these functions step, gradient, and parabola:
 
 
 
-
+\begin{comment}
 
 \begin{frame}{Simulation results}
 \subt{Selection}
@@ -687,7 +890,7 @@ Call these functions step, gradient, and parabola:
 \end{frame}
 
 
-\begin{comment}
+
 
 \begin{frame}{Simulation results}
 \subt{MSE of $\beta_1(\bm{s})$ - step coefficient surface}
@@ -761,6 +964,58 @@ Call these functions step, gradient, and parabola:
 \end{comment}
 
 
+
+
+\begin{frame}{Simulation results}
+\subt{Selection performance}
+
+\bigskip
+\begin{itemize}
+  \item Non-ambiguous locations (80):
+  \begin{itemize}
+    \item 52 saw no false negatives
+    \item 72 had no false positives
+    \item 26 neither false positives nor false negatives
+  \end{itemize}
+
+  \item Noise variance had more effect on selection than colinearity
+  \item No difference between GWEN, GWAL
+\end{itemize}
+
+\note{note}
+\end{frame}
+
+
+
+	
+	
+\begin{frame}{Simulation results}
+\subt{Estimation performance}
+
+
+\begin{itemize}
+  \item Oracular selection
+  \begin{itemize}
+    \item best MSE$(\hat{\beta}_1)$ in 41 of the 60 cases
+  \end{itemize}
+
+  \item Oracular selection
+  \begin{itemize}
+    \item best MSE$(\hat{\beta}_1)$ in 41 of the 60 cases
+  \end{itemize}
+
+  \item Generally small difference between GWR, oracular, GWEN-LLE, and GWAL-LLE
+
+  \item Noise variance had more effect on selection than colinearity
+  \item No difference between GWEN, GWAL
+
+  \item Fitting $\hat{y}$: best MSE split evenly between 
+\end{itemize}
+\note{note}
+\end{frame}
+	
+
+
 \section{Data example: poverty rate in the upper midwest}
 
 
@@ -801,6 +1056,7 @@ How is this data to be analyzed?
 \begin{frame}{Data example: poverty rate in the upper midwest}
 \subt{Data description}
 
+\bigskip
   \begin{itemize}
     \item Response: logit-transformed poverty rate in the Upper Midwest states of the U.S.
     \begin{itemize}
@@ -826,6 +1082,7 @@ How is this data to be analyzed?
 \begin{frame}{Data example: poverty rate in the upper midwest}
 \subt{Data description}
 
+\bigskip
   \begin{itemize}
     \item Data aggregated to the county level
     \begin{itemize}
@@ -848,6 +1105,40 @@ How is this data to be analyzed?
 \note{note}
 \end{frame}
 
+
+\begin{frame}{Data example: poverty rate in the upper midwest}
+\subt{Results from GWEN-LLE}
+
+\begin{itemize}
+  \item Relatively constant compared to GWR
+  \item Services, ``other professions" do not affect the poverty rate
+  \item Manufacturing: negative coefficient everywhere
+  \item Finance, insurance, and real estate negative coefficient everywhere
+  \begin{itemize}
+    \item Largest magnitude (min: -20, next-largest: -3)
+    \item GWR comparable to GWEN-LLE
+  \end{itemize}
+
+  \item Manufacturing: negative coefficient everywhere
+  \begin{itemize}
+    \item GWR: coefficient greater than zero near Chicago and in NW Minnesota
+  \end{itemize}
+
+  \item Agriculture: nonzero in western Iowa
+  \begin{itemize}
+    \item North-south gradient to coefficient
+    \item ranges positive to negative
+  \end{itemize}
+
+  \item Mining: nonzero in parts south 
+  \begin{itemize}
+    \item Associated with increased poverty rate
+    \item Comparable to GWR within far southern range
+  \end{itemize}
+\end{itemize}
+
+\note{note}
+\end{frame}
 
 
 \section{Future work}

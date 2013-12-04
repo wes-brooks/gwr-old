@@ -1,14 +1,14 @@
-[0] Config.pm:361> INFO - This is Biber 1.5
-[0] Config.pm:364> INFO - Logfile is 'prelim-talk_withnotes.blg'
-[101] biber-darwin:193> INFO - === Thu Oct 31, 2013, 13:31:50
-[102] Biber.pm:327> INFO - Reading 'prelim-talk_withnotes.bcf'
-[188] Biber.pm:619> INFO - Found 17 citekeys in bib section 0
-[201] Biber.pm:2976> INFO - Processing section 0
-[296] Biber.pm:3086> INFO - Looking for bibtex format file '../../references/gwr.bib' for section 0
-[304] bibtex.pm:889> INFO - Decoding LaTeX character macros into UTF-8
-[335] bibtex.pm:764> INFO - Found BibTeX data source '../../references/gwr.bib'
-[636] Biber.pm:2860> INFO - Overriding locale 'en_US.UTF-8' default tailoring 'variable = shifted' with 'variable = non-ignorable'
-[636] Biber.pm:2866> INFO - Sorting 'entry' list 'nyt' keys
-[636] Biber.pm:2870> INFO - No sort tailoring available for locale 'en_US.UTF-8'
-[810] bbl.pm:462> INFO - Writing 'prelim-talk_withnotes.bbl' with encoding 'UTF-8'
-[812] bbl.pm:535> INFO - Output to prelim-talk_withnotes.bbl
+[1] Config.pm:361> INFO - This is Biber 1.5
+[1] Config.pm:364> INFO - Logfile is 'prelim-talk_withnotes.blg'
+[115] biber-darwin:193> INFO - === Wed Dec  4, 2013, 13:54:55
+[115] Biber.pm:327> INFO - Reading 'prelim-talk_withnotes.bcf'
+[213] Biber.pm:619> INFO - Found 15 citekeys in bib section 0
+[227] Biber.pm:2976> INFO - Processing section 0
+[241] Biber.pm:3086> INFO - Looking for bibtex format file '../../references/gwr.bib' for section 0
+[249] bibtex.pm:889> INFO - Decoding LaTeX character macros into UTF-8
+[276] bibtex.pm:764> INFO - Found BibTeX data source '../../references/gwr.bib'
+[515] Biber.pm:2860> INFO - Overriding locale 'en_US.UTF-8' default tailoring 'variable = shifted' with 'variable = non-ignorable'
+[515] Biber.pm:2866> INFO - Sorting 'entry' list 'nyt' keys
+[515] Biber.pm:2870> INFO - No sort tailoring available for locale 'en_US.UTF-8'
+[650] bbl.pm:462> INFO - Writing 'prelim-talk_withnotes.bbl' with encoding 'UTF-8'
+[651] bbl.pm:535> INFO - Output to prelim-talk_withnotes.bbl
