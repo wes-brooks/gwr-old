@@ -1,6 +1,6 @@
 #Import external libraries
 require(devtools)
-install_github('wesesque/gwselect')
+install_github('gwselect', 'wesesque')
 require(gwselect)
 require(spgwr)
 registerCores(n=2)

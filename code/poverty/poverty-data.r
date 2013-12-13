@@ -2,7 +2,7 @@ require(devtools)
 
 #If the 'brooks' package isnt loaded then import it from github:
 if (!'package:brooks' %in% search()) {
-    install_github('wesesque/brooks')
+    install_github('brooks', 'wesesque')
     require(brooks)
 }
 
