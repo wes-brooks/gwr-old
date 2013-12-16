@@ -11,7 +11,7 @@ load_https <- function(url, sep=',', header=TRUE, row.names=NULL, ...) {
     sep=sep, header=header, row.names=row.names, ...)
 }
 
-aphids = load_https("https://raw.github.com/wesesque/gwr/master/data/SoybeanAphids/data_8 covariates.csv")
+aphids = load_https("https://raw.github.com/wesesque/gwr/master/data/SoybeanAphids/data_8_covariates.csv")
 
 #Remove rows with NAs:
 n = nrow(aphids)
