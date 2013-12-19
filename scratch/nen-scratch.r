@@ -3,7 +3,7 @@ require(devtools)
 install_github('gwselect', 'wesesque')
 require(gwselect)
 require(spgwr)
-registerCores(n=2)
+registerCores(n=3)
 
 #Import the data
 source_url('https://raw.github.com/wesesque/gwr/master/code/poverty/poverty-data.r')
@@ -39,4 +39,4 @@ yr=1970
 
 
 
-bw[['GWAL']][[year]] = gwglmnet.sel(formula=f, data=df, family='gaussian', alpha=1, coords=df[,c('x','y')], longlat=TRUE, mode.select="BIC", gweight=spherical, tol=0.01, s=NULL, method='nen', adapt=TRUE, parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
+bw[['GWAL']][[year]] = gwglmnet.sel(formula=f, data=df, family='gaussian', alpha=1, coords=df[,c('x','y')], longlat=TRUE, mode.select="BIC", gweight=spherical, tol=0.01, s=NULL, method='nen', adapt=TRUE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
