@@ -21,7 +21,7 @@ mpb = mpb[-na.rows,]
 
 predictors = c('meanelevation', 'warm', 'Tmin', 'Tmean', 'Tmax', 'cold', 'precip', 'dd', 'ddegg')
 f = as.formula(paste("nifestations ~ -1 + ", paste(predictors, collapse="+"), sep=""))
-bw = gwglmnet.sel(formula=f, data=mpb, family='poisson', alpha=1, coords=mpb[,c('X','Y')], longlat=FALSE, mode.select="BIC", gweight=spherical, tol=1, s=NULL, method='knn', adapt=TRUE, parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
+bw = gwglmnet.sel(formula=f, data=mpb, family='poisson', alpha=1, coords=mpb[,c('X','Y')], longlat=FALSE, mode.select="BIC", gweight=spherical, tol=0.01, s=NULL, method='knn', adapt=TRUE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, AICc=TRUE)
 
 sink("~/mpb-knn.out.txt")
 print(bw)
