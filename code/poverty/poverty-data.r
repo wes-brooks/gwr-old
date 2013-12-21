@@ -1,13 +1,14 @@
 require(devtools)
 
-#If the 'brooks' package isnt loaded then import it from github:
-if (!'package:brooks' %in% search()) {
-    install_github('brooks', 'wesesque')
-    require(brooks)
+load_https <- function(url, sep=',', header=TRUE, row.names=NULL, ...) {
+  # Import the data:
+  read.table(text = getURL(url,
+    followlocation=TRUE, cainfo=system.file("CurlSSL", "cacert.pem", package="RCurl")),
+    sep=sep, header=header, row.names=row.names, ...)
 }
 
 #Import poverty data
-pov = brooks::load_https("https://raw.github.com/wesesque/gwr/master/data/poverty/upMidWestpov_Iowa_cluster_names.csv", header=TRUE, sep=",", row.names=NULL)
+pov = load_https("https://raw.github.com/wesesque/gwr/master/data/poverty/upMidWestpov_Iowa_cluster_names.csv", header=TRUE, sep=",", row.names=NULL)
 years = c('60', '70', '80', '90', '00', '06')
 column.map = list(pindpov='Proportion of individuals in poverty', 
     logitindpov='logit of proportion of individuals in poverty',
