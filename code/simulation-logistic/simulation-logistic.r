@@ -32,9 +32,9 @@ N = 30
 coord = seq(0, 1, length.out=N)
 
 #Establish the simulation parameters
-settings = 6
+settings = 9
 tau = rep(0, settings)
-rho = rep(c(0,0.5), settings/2)
+rho = rep(c(0, 0.5, 0.95), settings/3)
 
 params = data.frame(tau, rho)
 
@@ -85,11 +85,11 @@ X3 = matrix(D[,3], N, N)
 X4 = matrix(D[,4], N, N)
 X5 = matrix(D[,5], N, N)
 
-if ((setting-1) %/% 2 == 0) {
+if ((setting-1) %/% 3 == 0) {
     B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)
-} else if ((setting-1) %/% 2 == 1) {
+} else if ((setting-1) %/% 3 == 1) {
     B1 = matrix(rep(coord, N), N, N)
-} else if ((setting-1) %/% 2 == 2) {
+} else if ((setting-1) %/% 3 == 2) {
     Xmat = matrix(rep(rep(coord, times=N), times=N), N**2, N**2)
     Ymat = matrix(rep(rep(coord, each=N), times=N), N**2, N**2)
     D = (Xmat-t(Xmat))**2 + (Ymat-t(Ymat))**2
@@ -113,7 +113,7 @@ for (i in 1:N**2) {
 
 
 #Find the optimal bandwidth and use it to generate a model:
-bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, bw.select='AICc', resid.type='deviance')
 model.glmnet = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='BIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
 
 bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='binomial', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="BIC", gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE, verbose=FALSE, shrunk.fit=FALSE, AICc=TRUE)
