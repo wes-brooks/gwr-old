@@ -50,7 +50,7 @@ for (yr in years) {
 
     for (select in c("GWAL", "GWEN", "GWR")) {
         #copy the model we will be plotting so we can alter it without affecting the original:
-        mm = model[[select]][[year]][['coords']]
+        mm = model[[select]][[year]]
 
         #Pepin county:
         mm[['coords']][df$STATE=='Wisconsin' & df$COUNTY=='PEPIN',] = c(-92.1048, 44.5823)
