@@ -88,9 +88,9 @@ where $\bm{X}(\bm{s})'\bm{\beta}$ is the mean function consisting of a vector of
 
 It is common to pre-specify the form of a covariance function for the spatial random effect $W(\bm{s})$ \citep{Diggle:2007}. For example, the exponential covariance function (a special case of the Mat\'{e}rn class of covariance functions) has the form
 \begin{align}\label{eq:exponential-covariance}
-    \text{Cov}(W(\bm{s}), W(\bm{t})) = \exp\left\{-\phi^{-1} \delta(\bm{s}, \bm{t}) \right\}
+    \text{Cov}(W(\bm{s}), W(\bm{t})) = \sigma^2 \exp\left\{-\phi^{-1} \delta(\bm{s}, \bm{t}) \right\}
 \end{align}
-where $\phi$ denotes a range parameter and $\delta(\bm{s}, \bm{t})$ denotes the Euclidean distance between locations $\bm{s}$ and $\bm{t}$. The general form of a covariance function in the Mat\'{e}rn class is
+where $\sigma^2$ is a variance parameter, $\phi$ is a range parameter, and $\delta(\bm{s}, \bm{t})$ is the Euclidean distance between locations $\bm{s}$ and $\bm{t}$. The general form of a covariance function in the Mat\'{e}rn class is
 \begin{align}\label{eq:matern-covarinace}
     \text{Cov}(W(\bm{s}), W(\bm{t})) = \left\{\Gamma(\nu) 2^{\nu-1} \right\}^{-1} \left\{\delta(\bm{s}, \bm{t}) \phi^{-1}\sqrt{2\nu}\right\}^\nu K_{\nu} \left(\delta(\bm{s}, \bm{t}) \phi^{-1}\sqrt{2\nu}\right)
     \end{align}
@@ -179,7 +179,7 @@ Coefficients for a spline-based VCR model are estimated by maximizing a penalize
 	\begin{align}\label{eq:local-log-likelihood}
 		\ell_i\left(\bm{\beta}_i\right) &= -(1/2) \sum_{i'=1}^n w_{ii'} \left\{ \log{\sigma^2_i}  + \sigma^{-2}_i  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}.
 	\end{align}
-	From (\ref{eq:local-likelihood}) and (\ref{eq:local-log-likelihood}), the GWR coefficient estimates $\hat{\bm{\beta}}_{i,\text{GWR}}$ are obtained by maximizing the local likelihood at location $\bm{s}_i$. It is apparent that can this be accomplished using weighted least squares. 
+	From (\ref{eq:local-likelihood}) and (\ref{eq:local-log-likelihood}), the GWR coefficient estimates $\hat{\bm{\beta}}_{i,\text{GWR}}$ are obtained by maximizing the local likelihood at location $\bm{s}_i$. It is apparent that this can be accomplished using weighted least squares. 
 	
 	 Setting to zero the derivative of (\ref{eq:local-log-likelihood}) with respect to $\sigma_i^2$, the maximum local likelihood estimate $\hat{\sigma}_i^2$ is found to be:	 
 	 \begin{align}
@@ -240,7 +240,7 @@ Coefficients for a spline-based VCR model are estimated by maximizing a penalize
 	\begin{align}
 		\bm{Z}_i = \left( \tilde{X}_i  \:\: L_i \tilde{X}_i \:\: M_i \tilde{X}_i \right)
 	\end{align}
-	where $L_i = \text{diag}\{s_{i',x} - s_{i,x}\}$ and $M_i = \text{diag}\{s_{i',y} - s_{i,y}\}$ for $i' = 1, dots, n$.
+	where $L_i = \text{diag}\{s_{i',x} - s_{i,x}\}$ and $M_i = \text{diag}\{s_{i',y} - s_{i,y}\}$ for $i' = 1, \dots, n$.
 	 
 	\subsection{Bandwidth parameter estimation}
 		The fitted values from the model are	
@@ -256,7 +256,7 @@ Coefficients for a spline-based VCR model are estimated by maximizing a penalize
 	where $\nu$ is the trace of the linear smoothing matrix $\bm{H}$, and approximates the total degrees of freedom of the SVCR \citep{Hurvich:1998}.
 
 
-\section{Simulation \label{section:simulation}}
+\section{Simulation study \label{section:simulation}}
 	\subsection{Simulation setup}
 	A simulation study was conducted to assess the performance of the method described in Sections \ref{section:GWR}--\ref{section:model-selection}. 
 	
@@ -327,7 +327,7 @@ Coefficients for a spline-based VCR model are estimated by maximizing a penalize
 	\subsection{Simulation results}	
 	\paragraph{Variable selection} Table \ref{table:selection} lists the results of variable selection. The correct covariate was usually included in the local models, and the unimportant covariates were usually excluded. Ignore for now the ambiguous locations where the true $\beta_1$ surface transitions from zero to nonzero. Of the eighty simulated cases where $\beta_1(\bm{s})$ is unambiguously nonzero, more than half (52) saw no false negatives (over 100 simulations). The number with no false negatives and no false positives (i.e. exactly the correct model was recovered in all 100 simulations) was 26. Of the 120 total simulated cases, 72 had no false positives (i.e. no variable whose true coefficient is zero was included in the model during any of the 100 simulation runs). 
 	
-	Selection performance was more affected by an increase in the noise variance from $\sigma^2_{\varepsilon}=0.25$ to $\sigma^2_{\varepsilon}=1$ than by an increase in colinearity from $\rho = 0$ to $\rho = 0.5$. Of the 44 cases where model selection recovered exactly the correct model in all 100 runs of the simulation, only five arose from cases where $\sigma^2_{\varepsilon}=1$, while 19 arose from cases where $\rho = 0.5$. The worst error rates that were observed in these unambiguous cases were a false positive rate of 6\% (location one of the step function with $\sigma^2_{\varepsilon}=1$, $\rho=0.5$, and selection via the elastic net) and a false negative rate of 16\% (location three of the step function with $\sigma^2_{\varepsilon}=1$, $\rho=0.5$, and selection via the lasso).
+	Selection performance worsens at the increase of the noise variance from $\sigma^2_{\varepsilon}=0.25$ to $\sigma^2_{\varepsilon}=1$ and at the increase in colinearity from $\rho = 0$ to $\rho = 0.5$. Of the 44 cases where model selection recovered exactly the correct model in all 100 runs of the simulation, only five arose from cases where $\sigma^2_{\varepsilon}=1$, while 19 arose from cases where $\rho = 0.5$. The worst error rates that were observed in these unambiguous cases were a false positive rate of 6\% (location one of the step function with $\sigma^2_{\varepsilon}=1$, $\rho=0.5$, and selection via the elastic net) and a false negative rate of 16\% (location three of the step function with $\sigma^2_{\varepsilon}=1$, $\rho=0.5$, and selection via the lasso).
 			
 	Model selection was ambiguous at locations where the true $\beta_1(\bm{s})$ transitions from zero to nonzero. At location four of the step function, the selection rate of $\beta_1$ ranged from 43\% to 60\% among the different simulation settings. At location five of the gradient, the range of selection rates was 63\% to 82\%, and the selection rate across locations one and five of the parabola ranged from 27\% to 66\%. 
 
@@ -339,9 +339,9 @@ Coefficients for a spline-based VCR model are estimated by maximizing a penalize
 	
 	A similar boundary effect is apparent at location five of the gradient, where GWEN, GWAL, and GWR produce a bias$(\hat{\beta}_1)$ and MSE$(\hat{\beta}_1)$ that are an order of magnitude or more greater than those of GWEN-LLE, GWAL-LLE, and oracular GWR (the differences in var$(\hat{\beta}_1)$ are smaller).
 	
-	At location one of the step function, the MSE$(\bm{\beta}_1)$ and var$(\bm{\beta}_1)$ for GWR are much smaller than for the other estimation methods, including oracular GWR, while the bias$(\bm{\beta}_1)$ doesn't vary much between estimation methods. It is not clear why this is the case.
+	At location one of the step function, the MSE$(\hat{\beta}_1)$ and var$(\hat{\beta}_1)$ for GWR are much smaller than for the other estimation methods, including oracular GWR, while the bias$(\hat{\beta}_1)$ doesn't vary much between estimation methods. It is not clear why this is the case.
 		
-	As was the case for selection, accuracy in coefficient estimation seemed to suffer more from an increase in the noise variance than from increased correlation in the covariates. Once again, this effect is probably most apparent at location three of the step function.	
+	As was the case for selection, accuracy in coefficient estimation seemed to suffer at the increase of the noise variance or the increase of correlation in the covariates. Once again, this effect is probably most apparent at location three of the step function.	
 	
 	\paragraph{Fitted Values} The MSE of the $\hat{y}$, MSE$(\hat{y})$, is listed in Table \ref{table:msey}. Nominally, MSE$(\hat{y})$ should be equal to the noise variance, $\sigma_{\varepsilon}^2$, which is 1 for odd-numbered rows and 0.25 for even numbered rows. Of the 60 simulation cases, GWR's MSE$(\hat{y})$ was nearest to the known noise variance for 16, compared to 15 for oracular GWR, 14 for the GWAL-LLE, nine for each of the GWEN and the GWAL, and seven for the GWAL-LLE.
 	
@@ -352,14 +352,14 @@ Coefficients for a spline-based VCR model are estimated by maximizing a penalize
 	\input{../../output/simulation/msey}
 
 			
-\section{Data analysis\label{section:data-analysis}}
+\section{Data example\label{section:data-analysis}}
     An example data analysis is presented, demonstrating application of the GWEN-LLE for local model selection in a SVCR model of the poverty rate in the Upper Midwest states of the U.S. (Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan). The GWEN-LLE model is compared to a traditional GWR model for the same data.
 
     The response variable for the models is the logit-transformed proportion of individuals in each county who were living below the poverty line in 1970. The covariates are related to the employment structure of each county, namely the proportion of each county's residents who were employed in the economic sectors of agriculture; finance, insurance, and real estate; manufacturing; mining; services; and other professions. While the response variable was logit transformed, raw proportions were used as the covariates.
 
 The data used in this example are aggregated at the level of counties, which are areal units. Each county's sampling location is assumed to be its centroid. The data are from the U.S. Census Bureau's decennial census in the year 1970. The county-level poverty rate for the Upper Midwest from the 1970 census is plotted in Figure \ref{fig:1970-response}, and the covariates are plotted in Figure \ref{fig:1970-covariates}.
 	
-The coefficient estimates are plotted on maps of the upper midwest in Figure \ref{fig:unshrunk-enet-coefs-1970} (based on the GWEN-LLE) and Figure \ref{fig:gwr-coefs-1970} (based on traditional GWR). The GWR coefficient estimates are compared to those from the GWEN-LLE in Figure \ref{gwen-gwr-comparison-1970}, where a 1-1 line is included as a guide for where the points would lie if the two methods produced identical coefficient estimates.
+The coefficient estimates are plotted on maps of the upper midwest in Figure \ref{fig:unshrunk-enet-coefs-1970} (based on the GWEN-LLE) and Figure \ref{fig:gwr-coefs-1970} (based on traditional GWR). The GWR coefficient estimates are compared to those from the GWEN-LLE in Figure \ref{fig:gwen-gwr-comparison-1970}, where a 1-1 line is included as a guide for where the points would lie if the two methods produced identical coefficient estimates.
 
 	\begin{figure}
 		\begin{center}
@@ -407,13 +407,13 @@ The proportion of residents employed in agriculture is estimated to have affecte
 There were relatively few people employed in mining in the Upper Midwest in 1970. In the extreme northern part of the domain, some sparsely populated counties had about 25\% of residents working in mining, and in the extreme southern part of the domain, several counties had about 10\% of residents employed in mining. According to the GWEN-LLE, the coefficient of mining employment is zero except in the far southern part of the domain. There, mining employment is associated with an increased poverty rate (the coefficient is about 3). Within the far southern part of the domain, GWR and the GWEN-LLE produce similar estimates of the coefficient of mining employment, but in parts of the Upper Midwest where the GWEN-LLE says that mining employment is not associated with the poverty rate, GWR estimates large local coefficients for mining employment, ranging between 20 and -15.
 
 \section{Future work \label{section:future-work}}
-	The GWEN is presented here as a method of analysis for data where the response variable follows a gaussian distribution with independent additive errors. A key feature of spatial data, though, is that the errors are typically autocorrelated. Additionally, it is common to encounter data that does not follow a gaussian distribution but for which the GWEN would otherwise be a valuable tool for analysis.
+	The GWEN is presented here as a method of analysis for data where the response variable follows a Gaussian distribution with independent additive errors. A key feature of spatial data, though, is that the errors are typically autocorrelated. Additionally, it is common to encounter data that does not follow a Gaussian distribution but for which the GWEN would otherwise be a valuable tool for analysis.
 
 	\paragraph{Autocorrelated Errors} In order to get a sense of how the GWEN will perform when the assumption of independent errors is violated, the simulation study from Section \ref{section:simulation} was repeated with the addition of a Mat\`{e}rn-class spatial covariance structure in the noise (results not included here). Introducing autocorrelation in the errors causes a substantial degradation in the estimation accuracy of the GWAL and GWEN, accompanied by a tendency to prefer smaller kernel bandwidths. The likely explanation is that when the kernel bandwidth is small, autocorrelated errors are indistinguishable from a varying intercept. The residuals are reduced to the extent that the errors are incorporated in the intercept term. Since this effect is absent in the case of uncorrelated errors, greater autocorrelation in the error term will tend to mean a greater reduction in the errors - and therefore a greater increase in the log likelihood - as the kernel bandwidth decreases.
 	
 	Since the optimal kernel bandwidth is balance between the log likelihood and the degrees of freedom consumed by the model, and because the effect of autocorrelated errors is an increase in log likelihood without an offsetting increase in the consumed degrees of freedom at a given kernel bandwidth, greater autocorrelation will tend to lead to a smaller optimal kernel bandwidth. One quick way to counter this effect is to increase the penalty that is added to the total log likelihood in (\ref{eq:AICc}). There is currently no rule to set the penalty based on the data, which would be necessary before using this adjustment to analyze real data.
 	
-	\paragraph{Generalized linear models} To date, validation of the GWEN has been for gaussian data. The extension to any exponential-family distribution involves generalizing the likelihood that is used to select AEN tuning parameters and the kernel bandwidth. Exploratory simulations of the generalized GWEN have been carried out with Poisson and binomial data.
+	\paragraph{Generalized linear models} To date, validation of the GWEN has been for Gaussian data. The extension to any exponential-family distribution involves generalizing the likelihood that is used to select AEN tuning parameters and the kernel bandwidth. Exploratory simulations of the generalized GWEN have been carried out with Poisson and binomial data.
 
 \section{References}
 \bibliographystyle{chicago}

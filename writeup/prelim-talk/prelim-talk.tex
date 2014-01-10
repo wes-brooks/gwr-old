@@ -519,6 +519,8 @@ phi is a bandwidth parameter and delta (i, i') is the distance between points i 
     \begin{itemize}
         \item $\hat{\bm{y}} = \bm{H}\bm{y}$
         \item $\nu = $ tr($\bm{H}$)
+        \item $\bm{H}_i = \left\{\bm{W}\bm{X}(\bm{X}'\bm{W}\bm{X})^{-1}\bm{X}\right\}_i$
+        \item Where subscript $i$ indicates the $i$th row of the matrix
     \end{itemize}
     \item Then the corrected AIC for bandwidth selection is:
       \begin{align*}
@@ -977,8 +979,9 @@ Each setting simulated 100 times:
     \item 26 neither false positives nor false negatives
   \end{itemize}
 
-  \item Noise variance had more effect on selection than colinearity
-  \item No difference between GWEN, GWAL
+  \item Incerased noise variance led to worse selection performance
+  \item Increased colinearity in the covariates led to worse selection performance
+  \item No difference between GWEN and GWAL
 \end{itemize}
 
 \note{note}
@@ -998,16 +1001,9 @@ Each setting simulated 100 times:
     \item best MSE$(\hat{\beta}_1)$ in 41 of the 60 cases
   \end{itemize}
 
-  \item Oracular selection
-  \begin{itemize}
-    \item best MSE$(\hat{\beta}_1)$ in 41 of the 60 cases
-  \end{itemize}
-
-  \item Generally small difference between GWR, oracular, GWEN-LLE, and GWAL-LLE
-
-  \item Noise variance had more effect on selection than colinearity
-  \item No difference between GWEN, GWAL
-
+  \item Generally small difference between GWR, oracular, GWEN-LLE, and GWAL-LLE\
+  \item Incerased noise variance led to worse estimation accuracy
+  \item Increased colinearity in the covariates led to worse estimation accuracy
   \item Fitting $\hat{y}$: best MSE split evenly between 
 \end{itemize}
 \note{note}
@@ -1020,7 +1016,7 @@ Each setting simulated 100 times:
 
 
 \begin{frame}{Data example: poverty rate in the upper midwest}
-\subt{Revisiting the introductory example}
+\subt{Revisiting the motivating example}
 
 \bigskip
 \begin{center}
@@ -1036,18 +1032,6 @@ How is this data to be analyzed?
 
 
 
-
-
-
-\begin{frame}{Data example: poverty rate in the upper midwest}
-\subt{Results from traditional GWR}
-
-\begin{center}
-  \ig[width=\textwidth]{../../figures/practice-talk/1970-GWR-coefficients}
-\end{center}
-
-\note{note}
-\end{frame}
 
 
 
@@ -1089,6 +1073,17 @@ How is this data to be analyzed?
     \end{itemize}
     \item county centroid treated as sampling location
   \end{itemize}
+
+\note{note}
+\end{frame}
+
+
+\begin{frame}{Data example: poverty rate in the upper midwest}
+\subt{Results from traditional GWR}
+
+\begin{center}
+  \ig[width=\textwidth]{../../figures/practice-talk/1970-GWR-coefficients}
+\end{center}
 
 \note{note}
 \end{frame}
@@ -1146,7 +1141,8 @@ How is this data to be analyzed?
 \begin{frame}{Future work}
 \begin{itemize}
     \item Apply the GWEN to models for non-Gaussian response variable
-    \item Incorporate spatial autocorrelation in the model (simulated errors were iid)
+    \item Incorporate spatial autocorrelation in the model
+    \item PalEON project: modeling and mapping tree biomass in the upper midwest
 \end{itemize}
 \note{note}
 \end{frame}
