@@ -441,14 +441,17 @@ Assume that the errors are iid normal.}
 
 \bigskip
 \begin{itemize}
-  \item The total log likelihood is $\ell\left( \bm{\beta} \right) = - \left(1/2\right) \left\{ n \log \left( 2 \pi \sigma^2\right) +  \sigma^{-2}  \sum_{i=1}^n \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2  \right\}$
+  \item The total log likelihood is
+\begin{align*}
+\ell\left( \bm{\beta} \right) = - \left(1/2\right) \left\{ n \log \left( 2 \pi \sigma^2\right) +  \sigma^{-2}  \sum_{i=1}^n \left(y_i - \bm{x}'_i\bm{\beta}_i \right)^2  \right\}
+\end{align*}
   \item With $n$ observations and $n(p+1)$ parameters, the model is not identifiable.
   \item Idea: to estimate parameters by borrowing strength from nearby observations
 \end{itemize} 
 
 \note{We have here the total log likelihood of the observed data.
 
-since there are n observations and n x (p+1) free parameters, the model is not identifiable.
+since there are n observations and n(p+1) free parameters, the model is not identifiable.
 
 We will estimate the parameters by borrowing strength from nearby observations}
 \end{frame}
@@ -471,7 +474,7 @@ Given the weights, a local model is fit at each sampling location using the loca
 
 \note{Local regression uses a kernel function at each sampling location to weight the observations. For a GWR model, the kernel weights are based on an observation's distance from the sampling location.
 
-Here we have the likelihood at one sampling location. Note that each observation is given a weight w(i, i')
+Here we have the likelihood at one sampling location. Note that each observation is given a weight $w_{ii'}$
 
 Given the weights, a local model is fit at each sampling location using the local likelihood
 
@@ -501,7 +504,7 @@ where
 
 \note{This is the form of the bisquare kernel, which is what I've used in this work.
 
-phi is a bandwidth parameter and delta (i, i') is the distance between points i and i'.}
+phi is a bandwidth parameter and $\delta_{ii'}$ is the distance between points i and i'.}
 \end{frame}
 
 
