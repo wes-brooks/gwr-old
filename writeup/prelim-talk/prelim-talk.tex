@@ -137,7 +137,7 @@
   \ig[width=\textwidth]{../../figures/practice-talk/poverty-covariates}
 \end{center}
 
-\note{Here we have the proportion of people in each county who worked in manufacturing, agriculture, and services in 1970.
+\note{Here we have the proportion of people in each county who worked in agriculture, manufacturing, finance, mining, services, and other professions in 1970.
 
 How is this data to be analyzed?}
 \end{frame}
@@ -543,8 +543,8 @@ When the bandwidth is large, the coefficient surface is less flexible so it has 
     \begin{itemize}
         \item $\hat{\bm{y}} = \bm{H}\bm{y}$
         \item $\nu = $ tr($\bm{H}$)
-        \item $\bm{H}_i = \left\{\bm{W}\bm{X}(\bm{X}'\bm{W}\bm{X})^{-1}\bm{X}\right\}_i$
-        \item Where subscript $i$ indicates the $i$th row of the matrix
+        \item $\bm{H}_j = \left\{\bm{W}\bm{X}(\bm{X}'\bm{W}\bm{X})^{-1}\bm{X}\right\}_j$
+        \item Where subscript $j$ indicates the $j$th row of the matrix
     \end{itemize}
 \end{itemize}
 
@@ -562,13 +562,13 @@ When the bandwidth is large, the coefficient surface is less flexible so it has 
 \begin{itemize}
     \item The GCV criterion for bandwidth selection is:
     \begin{align*}
-      \text{GCV} = \frac{\sum_i=1^n\left(y - \hat{y}\right)^2}{(n-\nu)^2}
+      \text{GCV} = \frac{\sum_{i=1}^n \left(y_i - \hat{y}_i\right)^2}{(n-\nu)^2}
     \end{align*}
     \begin{itemize}
         \item $\hat{\bm{y}} = \bm{H}\bm{y}$
-        \item $\nu = $ tr($\bm{H}$)
-        \item $\bm{H}_i = \left\{\bm{W}\bm{X}(\bm{X}'\bm{W}\bm{X})^{-1}\bm{X}\right\}_i$
-        \item Where subscript $i$ indicates the $i$th row of the matrix
+        \item $\nu = \text{tr}(\bm{H})$
+        \item $\bm{H}_j = \left\{ \bm{W} \bm{X} (\bm{X}'\bm{W}\bm{X})^{-1} \bm{X} \right\}_j$
+        \item Where subscript $j$ indicates the $j$th row of the matrix
     \end{itemize}
 \end{itemize}
 
@@ -584,6 +584,7 @@ When the bandwidth is large, the coefficient surface is less flexible so it has 
 
 
 
+
 \begin{frame}{Geographically weighted Lasso}
 \subt{Geographically weighted Lasso (Wheeler, 2009)}
 
@@ -591,7 +592,7 @@ When the bandwidth is large, the coefficient surface is less flexible so it has 
 Within a GWR model, using the Lasso for local variable selection is called the geographically weighted Lasso (GWL).
 \begin{itemize}
     \item The GWL requires estimating a Lasso tuning parameter for each local model
-    \item \Wheeler (2009) estimates the local Lasso tuning parameter at location $\bm{s}_i$ by minimizing a jacknife criterion: $|y_i - \hat{y}_i|$
+    \item Wheeler (2009) estimates the local Lasso tuning parameter at location $\bm{s}_i$ by minimizing a jacknife criterion: $|y_i - \hat{y}_i^{(i)}|$
     \item The jacknife criterion can only be calculated where data are observed, making it impossible to use the GWL to impute missing data or to estimate the value of the coefficient surface at new locations
     \item Also, the Lasso is known to be biased in variable selection and suboptimal for coefficient estimation
 \end{itemize}
@@ -641,6 +642,7 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 
+
 \begin{frame}{Local variable selection and  parameter estimation}
 \subt{Geographically weighted adaptive elastic net (GWAL)}
 
@@ -657,26 +659,6 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 \end{frame}
 
 
-
-
-\begin{frame}{Local variable selection and  parameter estimation}
-\subt{Tuning parameter estimation}
-
-\bigskip
-To estimate an AL tuning parameter for each local, use a local BIC that allows fitting a local model at any location within the spatial domain
-	\begin{align}
-		\mbox{BIC}_i &= -2 \sum_{i'=1}^n \ell_{ii'}  + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\notag\\
-		&= \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log{ \left(\hat{\sigma}_i^2\right)} + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} \notag \\
-		&+ \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i \notag
-	\end{align}
-
-
-\note{
-The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
-
-We treat the sum of the weights around the sampling location as the number of observations for the local BIC.
-}
-\end{frame}
 
 \end{comment}
 
@@ -700,17 +682,20 @@ We treat the sum of the weights around the sampling location as the number of ob
 		&+ (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2 \notag
 \end{align*}
 
-\note{The geographically weighted adaptive elastic net (GWEN) is similar to the GWAL but uses the elastic net for local model selection
+\note{The geographically weighted adaptive elastic net (GWEN) overcomes these shortcomings of the GWL. 
 
-The adaptive elastic net also has an oracle property under suitable conditions.
+The GWEN uses the adaptive elastic net for model selection, which has an oracle property under suitable conditions.
 
 The adaptive elastic net consists of adding an L2 penalty to the regularization in addition to the L1 penalty of the adaptive lasso.
+
+The geographically weighted adaptive lasso (GWAL) is a particular case of the GWEN, with no $\ell_2$ penalty it uses the adaptive lasso for model selection, which also has an oracle property under suitable conditions.
 
 S here is the penalized likelihood for a local GWEN model
 
 The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
 }
 \end{frame}
+
 
 
 
@@ -737,6 +722,25 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 
+
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Tuning parameter estimation}
+
+\bigskip
+To estimate an AEN tuning parameter for each local model, use a local BIC that allows fitting a local model at any location within the spatial domain
+	\begin{align*}
+		\mbox{BIC}_i &= -2 \sum_{i'=1}^n \ell_{ii'}  + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\\
+		&= \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log{ \left(\hat{\sigma}_i^2\right)} + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} \\
+		&+ \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i
+	\end{align*}
+
+
+\note{Model selection via the adaptive elastic net requires selecting the tuning parameter $\lambda$. For the GWEN, $\lambda$ is selected by a BIC.
+
+We treat the sum of the weights around the sampling location as the number of observations for the local BIC.
+
+This BIC can be computed for a model at any location within the domain, allowing the GWEN to be used for imputing missing data or interpolating a model between observation locations.}
+\end{frame}
 
 
 
@@ -784,7 +788,7 @@ Letting $H_i = \bm{W}_i \bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'$, w
   \end{itemize}  
   \item Neither GWEN nor GWAL is a linear smoother
   \begin{itemize}
-    \item df not equal to trace of projection matrix for GWAL, GWEN
+    \item There is no projection matrix for GWAL, GWEN so the degrees of freedom cannot be estimated by the trace of the projection matrix.
   \end{itemize} 
   \item Solution: use GWEN or GWAL for selection then fit local model for the selected variables via traditional GWR
   \begin{itemize}
@@ -820,7 +824,11 @@ Letting $H_i = \bm{W}_i \bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'$, w
   \end{itemize}
 \end{itemize}
 
-\note{note}
+\note{The traditional GWR fits models with locally constant coefficients, and can be thought of as a Nadaraya-Watson kernel smoother for the regression coefficients. Such a smoother is known to exhibit a "boundary effect", meaning that the smoother produces estimates that are biased near the boundary of the domain, especially when there is a gradient at the boundary.
+
+To reduce the boundary effect, the GWEN and GWAL can be fit with coefficient estimates that are locally linear, rather than locally constant. This is done after model selection by augmenting the selected covariates with covariate-by-coordinate interactions.
+
+The interactions are on both the x and y coordinates, so each covariate that is selected for the model will appear three times in the model.}
 \end{frame}
 
 
@@ -839,14 +847,24 @@ Letting $H_i = \bm{W}_i \bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'$, w
   \item $30 \times 30$ grid on $[0,1] \times [0,1]$
   \item Five covariates $\tilde{X}_1, \dots, \tilde{X}_5$ 
   \item Gaussian random fields:
-  \begin{align}
+  \begin{align*}
     \tilde{X}_j &\sim N\left(0, \bm{\Sigma}\right) \text{ for } j = 1, \dots, 5 \notag \\
-    \left\{\Sigma\right\}_{i,i'} &= \exp \{ -\tau^{-1} \delta_{ii'}\} \text{ for } i,i' = 1, \dots, n \notag
-  \end{align}
+    \left\{\Sigma\right\}_{i,i'} &= \exp \{ -\tau^{-1} \delta_{ii'}\} \text{ for } i,i' = 1, \dots, n 
+  \end{align*}
   \item Colinearity: $\rho$
+  \begin{itemize}
+    \item none ($\rho=0$)
+    \item moderate ($\rho=0.5$)
+  \end{itemize}
 \end{itemize}
 
-\note{note}
+\note{In order to assess the utility of the GWEN for model selection and coefficient estimation in a varying coefficients model, I performed a simulation study.
+
+Spatial data were simulated on a 30 by 30 grid covering the domain [0,1]x[0,1]. Five covariates were simulated using Gaussian random fields with an exponential covariance function.
+
+The marginal variance of the covariates was one, and the range of the covariance function was 0.1.
+
+The covariates were simulated at two levels of collinearity: none, and moderate, for which the Pearson correlation was set to 0.5}
 \end{frame}
 
 
@@ -856,12 +874,22 @@ Letting $H_i = \bm{W}_i \bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'$, w
 \bigskip
 \begin{itemize}
     \item $Y(\bm{s}) = \bm{X}(\bm{s})'\bm{\beta}(\bm{s}) = \sum_{j=1}^5 \beta_j(\bm{s}) X_j(\bm{s}) + \varepsilon(\bm{s})$
-    \item $\varepsilon(\bm{s}) \sim \; iid \;\; N(0,\sigma^2) $ 
     \item $\beta_1(\bm{s})$, the coefficient function for $X_1$, is nonzero in part of the domain.
     \item Coefficients for $X_2, \dots, X_5$ are zero everywhere
+    \item $\varepsilon(\bm{s}) \sim \; iid \;\; N(0,\sigma^2)$
+    \begin{itemize}
+      \item Low noise: $\sigma = 0.5$
+      \item High noise: $\sigma = 1$
+    \end{itemize} 
 \end{itemize}
 
-\note{note}
+\note{With the covariates in hand, the response variable was generated via a linear model. 
+
+There are five covariates; four of them ($\beta_2$ through $\beta_5$) have a coefficient of zero everywhere on the domain.
+
+For all the simulation settings, the coefficient of $\beta_1$ ranges within the domain from a minimum of zero to a maximum of one.
+
+The random noise added to the linear model was iid Gaussian noise at two different settings for the variance. The low-noise setting was $\sigma=0.5$ and the high-noise setting was $\sigma=1$.}
 \end{frame}
 
 
@@ -879,7 +907,13 @@ Letting $H_i = \bm{W}_i \bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'$, w
     \end{center}
 \end{figure}
 
-\note{note}
+\note{The response variable was simulated for three different types of coefficient surface $\beta_1$.
+
+First is a step function where the "step" is on a slope rather than a discontinuity.
+
+Second is a constant gradient.
+
+Third is a parabola centered at the center of the domain.}
 \end{frame}
 
 
@@ -912,7 +946,21 @@ Each setting simulated 100 times:
         \end{tabular}
         \end{center}
     \end{table}
-\note{note}
+\note{The table lists the twelve settings for the simulation study, where once again the parameters being varied across the settings are the coefficient surface $\beta_1$, the amount of colinearity in the covariates, and the variance of the random noise.
+
+Each setting was simulated 100 times and each time, each of the following models was used to estimate the varying coefficient regression model:
+
+traditional GWR
+
+oracular GWR (with locally linear estimation of the coefficients)
+
+the GWEN with locally constant coefficients
+
+the GWAL with locally constant coefficients
+
+the GWEN with locally linear coefficients
+
+the GWAL with locally linear coefficients.}
 \end{frame}
 
 
@@ -925,7 +973,17 @@ Each setting simulated 100 times:
     \end{center}
 \end{figure}
 
-\note{note}
+\note{The results of the simulation were summarized at these five locations.
+
+Locations two and four are at the "corners" of the step function.
+
+The correct result of selection is ambiguous at some locations where the summary location is at the spot where the true coefficient surface $\beta_4$ changes from zero to nonzero.
+
+In particular, selection is ambiguous at location four for the step function, at location five for the gradient, and at locations one and five for the parabola.
+
+We'll ignore selection accuracy of $\beta_1$ where that is ambiguous
+
+First we will consider the model selection results of the simulation.}
 \end{frame}
 
 
@@ -1020,16 +1078,23 @@ Each setting simulated 100 times:
 
 \bigskip
 \begin{itemize}
-  \item Non-ambiguous locations (80):
+  \item GWEN selection (60 cases):
   \begin{itemize}
-    \item 52 saw no false negatives
-    \item 72 had no false positives
-    \item 26 neither false positives nor false negatives
+    \item 21 with no false positives (3 came when $\sigma = 1$, 8 when $\rho = 0.5$)
+    \item 30 with no false negatives 
+    \item 13 with neither
+  \end{itemize}
+
+  \item GWAL selection (60 cases):
+  \begin{itemize}
+    \item 27 with no false positives
+    \item 26 with no false negatives
+    \item 17 with neither
   \end{itemize}
 
   \item Incerased noise variance led to worse selection performance
   \item Increased colinearity in the covariates led to worse selection performance
-  \item No difference between GWEN and GWAL
+  \item No consistent difference between GWEN and GWAL
 \end{itemize}
 
 \note{note}
@@ -1046,13 +1111,13 @@ Each setting simulated 100 times:
 \begin{itemize}
   \item Oracular selection
   \begin{itemize}
-    \item best MSE$(\hat{\beta}_1)$ in 41 of the 60 cases
+    \item best MSE$(\hat{\beta}_1)$ in 38 of the 60 cases
   \end{itemize}
 
   \item Generally small difference between GWR, oracular, GWEN-LLE, and GWAL-LLE\
   \item Incerased noise variance led to worse estimation accuracy
   \item Increased colinearity in the covariates led to worse estimation accuracy
-  \item Fitting $\hat{y}$: best MSE split between GWAL-LLE, oracle, and GWR
+  \item Fitting $\hat{y}$: MSE nearest $\sigma^2$ split between GWAL-LLE, oracle, and GWR
 \end{itemize}
 \note{note}
 \end{frame}
@@ -1071,11 +1136,9 @@ Each setting simulated 100 times:
   \ig[width=\textwidth]{../../figures/practice-talk/poverty-covariates}
 \end{center}
 
-\note{
-This is the county-level poverty rate from 1970, as well as the proportion of people who worked in manufacturing, agriculture, and services.
+\note{We return to the data example that was introduced at the beginning of the talk.
 
-How is this data to be analyzed?
-}
+Again, these are the covariates for a model of the county-level poverty rate.}
 \end{frame}
 
 
@@ -1105,7 +1168,11 @@ How is this data to be analyzed?
     \item Data source: U.S. Census Bureau's decennial census of 1970
   \end{itemize}
 
-\note{note}
+\note{The covariates are the proportion of the county's population working in the economic sectors of agriculture, finance, manufacturing, mining, services, and other professions.
+
+The response variable in this model is the logit-transformed county-level poverty rate from the 1970 US census.
+
+The model's domain is the upper midwest states of Minnesota, Iowa, Wisconsin, Illinois, Indiana, and Michigan.}
 \end{frame}
 
 
@@ -1122,7 +1189,11 @@ How is this data to be analyzed?
     \item county centroid treated as sampling location
   \end{itemize}
 
-\note{note}
+\note{Since data is aggregated on counties and the counties exactly divide the domain, this is actually areal data.
+
+We'll treat is as geostatistical data by assuming each counties data is sampled at the county's centroid.
+
+The data is modeled using both traditional GWR and the GWEN with locally linear coefficient estimates.}
 \end{frame}
 
 
@@ -1133,8 +1204,10 @@ How is this data to be analyzed?
   \ig[width=\textwidth]{../../figures/practice-talk/1970-GWR-coefficients}
 \end{center}
 
-\note{note}
+\note{Here are plots of the coefficient estimates from the model fit by traditional GWR.}
 \end{frame}
+
+
 
 
 \begin{frame}{Data example: poverty rate in the upper midwest}
@@ -1144,8 +1217,25 @@ How is this data to be analyzed?
   \ig[width=\textwidth]{../../figures/practice-talk/1970-GWEN-coefficients}
 \end{center}
 
+\note{These are plots of the coefficients estimates from the model fit by the GWEN with locally linear coefficients.
+
+It is obvious by glancing at the plots that the GWEN has selected just a few covariates as being important predictors of the county level poverty rate.}
+\end{frame}
+
+
+
+
+\begin{frame}{Data example: poverty rate in the upper midwest}
+\subt{Comparing the coefficients from GWR and the GWEN}
+
+\begin{center}
+  \ig[width=\textwidth]{../../figures/practice-talk/1970-GWEN-GWR-comparison}
+\end{center}
+
 \note{note}
 \end{frame}
+
+
 
 
 \begin{frame}{Data example: poverty rate in the upper midwest}
@@ -1179,7 +1269,13 @@ How is this data to be analyzed?
   \end{itemize}
 \end{itemize}
 
-\note{note}
+\note{Some observations about the models produced by traditional GWR and the GWEN-LLE:
+
+The GWEN resulted in coefficient estimates that are less variable than traditional GWR. Employment in services and the "other professions" sectors did not affect the poverty rate anywhere, according to the GWEN.
+
+Employment in manufacturing and finance were both associated with a decreased poverty rate across the entire domain. This was not dissimilar to the relationship estimated by traditional GWR.
+
+Agricultural employment was a selected as a meaningful predictor of the poverty rate only in western Iowa. Within that region there was a north-south gradient to the coefficient.}
 \end{frame}
 
 

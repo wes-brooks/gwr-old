@@ -1964,6 +1964,5 @@
     <bcf:datasource type="file" datatype="bibtex">../../references/gwr.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">Wheeler:2009</bcf:citekey>
   </bcf:section>
 </bcf:controlfile>
