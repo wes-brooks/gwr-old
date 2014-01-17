@@ -363,9 +363,9 @@ There are many ways to fit a varying coefficient regression model. Splines and k
 \begin{itemize}
     \item Parameterize each coefficient function using splines
     \item Provides some 
-    \begin{comment}\begin{align*}
+    \begin{align*}
         Y(\bm{s}) = \bm{X}(\bm{s})' \bm{\beta}(\bm{s}) + \varepsilon(\bm{s})
-    \end{align*}\end{comment}
+    \end{align*}
 \end{itemize}
 
 \note{Splines are a method of parameterizing smooth functions as a sum of smooth basis functions
@@ -384,7 +384,7 @@ It is possible to use splines to represent the coefficients in a varying coeffic
 \bigskip
 Global variable selection can be done via regularization in a VCR model where the coefficient functions are modeled as splines
 \begin{itemize}
-  \item The $\mathcal{L}_2$ norm of a function (e.g. $\int \{f(t)\}^2 dt$) is zero if and only if the function is zero everywhere.
+  \item The $L_2$ norm of a function (e.g. $\int \{f(t)\}^2 dt$) is zero if and only if the function is zero everywhere.
   \item Use regularization to penalize nonzero coefficient functions
   \begin{itemize}
     \item SCAD penalty and B-splines (Wang \emph{et al.}, 2008a)
@@ -398,7 +398,7 @@ It is possible to use splines to represent the coefficients in a varying coeffic
 
 There are at least two references that describe how to select the covariates for a spline-based VCR model. Both use a similar regularization technique.
 
-The regularization penalizes the smooth coefficient function for being non-zero. Antoniadis et al. used a non-negative garrote penalty and Wang et al. used a SCAD penalty.
+The regularization penalizes the smooth coefficient function for being non-zero. Antoniadis et al. used P-splines with a non-negative garrote penalty on the $L_2$ norm and Wang et al. used B-splines with a SCAD penalty on the $L_2$ norm.
 
 These methods select variables globally - that is, the variables are included or excluded on the entire domain. That doesn't suit our goal of selecting locally relevant covariates.}
 \end{frame}
@@ -422,7 +422,7 @@ These methods select variables globally - that is, the variables are included or
 
 \note{Another way to fit a VCR model is to use a wavelet decomposition, which decomposes the coefficient function into its local frequency components. Model selection is then used to identify which local frequency components to use in the model.
 
-Murray Clayton's students Zuofeng Shang and Jun Zhang used Bayesian variable selection and the Lasso, respectively, to select the local frequency components.
+Murray Clayton's students Zuofeng Shang and Jun Zhang used Bayesian variable selection and the Lasso, respectively, to select the relevant local frequency components.
 
 However, these methods achieve sparsity in the wavelet coefficients, which does not imply sparsity in the covariates. So these methods don't achieve local variable selection.
 
@@ -489,10 +489,10 @@ We will estimate the parameters by borrowing strength from nearby observations}
 
 \bigskip
 Local regression uses a kernel function at each sampling location to weight observations based on their distance from the sampling location.
-\begin{align}
-    \mathcal{L}_i &= \prod_{i'=1}^n \left(\mathcal{L}_{i'}\right)^{w_{ii'}} \notag \\
-    \ell_i &= \sum_{i'=1}^n w_{ii'} \left\{\log \left(\sigma^2\right) + \sigma^{-2}\left(y_{i'} - \bm{x}_{i'}'\bm{\beta}_i\right)^2 \right\} \notag
-\end{align}
+\begin{align*}
+    \mathcal{L}_i &= \prod_{i'=1}^n \left(\mathcal{L}_{i'}\right)^{w_{ii'}}  \\
+    \ell_i &= \sum_{i'=1}^n w_{ii'} \left\{\log \left(\sigma^2\right) + \sigma^{-2}\left(y_{i'} - \bm{x}_{i'}'\bm{\beta}_i\right)^2 \right\}
+\end{align*}
 
 Given the weights, a local model is fit at each sampling location using the local likelihood
 
@@ -558,7 +558,7 @@ When the bandwidth is large, the coefficient surface is less flexible so it has 
 
 
 
-
+\begin{comment}
 \begin{frame}{Geographically weighted regression}
 \subt{Bandwidth estimation via the $\text{AIC}_{\tt c}$ (Hurvich \emph{et al.}, 1998)}
 
@@ -578,7 +578,7 @@ When the bandwidth is large, the coefficient surface is less flexible so it has 
 
 \note{One way to estimate the GWR bandwidth is via the corrected AIC of Hurvich \emph{et al.}. }
 \end{frame}
-
+\end{comment}
 
 
 
@@ -620,9 +620,9 @@ When the bandwidth is large, the coefficient surface is less flexible so it has 
 Within a GWR model, using the Lasso for local variable selection is called the geographically weighted Lasso (GWL).
 \begin{itemize}
     \item The GWL requires estimating a Lasso tuning parameter for each local model
-    \item Wheeler (2009) estimates the local Lasso tuning parameter at location $\bm{s}_i$ by minimizing a jacknife criterion: $|y_i - \hat{y}_i^{(i)}|$
+    \item Wheeler (2009) estimates the local Lasso tuning parameter at location $\bm{s}_i$ by minimizing a jacknife criterion: $|y_i - \hat{y}_i^{(-i)}|$
     \item The jacknife criterion can only be calculated where data are observed, making it impossible to use the GWL to impute missing data or to estimate the value of the coefficient surface at new locations
-    \item Also, the Lasso is known to be biased in variable selection and suboptimal for coefficient estimation
+    \item Lasso not generally unbiased in variable selection (Fan and Li, 2001; Zou, 2006)
 \end{itemize}
 
 \note{For local variable selection in a GWR model, Wheeler proposed the geographically weighted lasso (GWL) in 2009.
@@ -631,7 +631,9 @@ At each model location, the Lasso is used to select the locally-relevant predict
 
 The GWL uses a jacknife criterion to select the local lasso tuning parameters, which means the GWL cannot be used at model locations other than sample locations.
 
-That means the GWL cannot be used for interpolating the coefficient surface or for imputing missing values of the response variable.}
+That means the GWL cannot be used for interpolating the coefficient surface or for imputing missing values of the response variable.
+
+Furthermore, the Lasso is generally not unbiased in variable selection, as was suggested in the Fan and Li 2001 paper and proven in Hui Zou's 2006 paper. }
 \end{frame}
 
 
@@ -693,30 +695,51 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 
+\begin{frame}{Local variable selection and  parameter estimation}
+\subt{Geographically weighted adaptive elastic net (GWEN)}
+
+\bigskip
+To overcome the shortcomings of the GWL, use a variable selection technique with potential for oracle properties and a tuning technique that can be applied anywhere on the domain.
+
+\begin{itemize}
+    \item Local variable selection via the adaptive elastic net (AEN) (Zou and Zhang, 2009)
+    \item Tuning parameters for local models selected by the BIC (Schwarz, 1978)
+\end{itemize}
+
+\note{A modeling method with the potential for an oracle property in variable selection and that can be tuned at model locations other than sampling locations would be superior to the GWL.
+
+I'm proposing in this work the geographically weighted adaptive elastic net, or the GWEN for short. It is a technique for fitting spatially varying coefficient models that uses the adaptive elastic net for local variable selection and the BIC to select the tuning parameters for the local models.}
+\end{frame}
+
+
+
 
 
 \begin{frame}{Local variable selection and  parameter estimation}
 \subt{Geographically weighted adaptive elastic net (GWEN)}
 
 \bigskip
-\begin{itemize}
-    \item Local variable selection in a GWR model using the adaptive elastic net (AEN) (Zou and Zhang, 2009)
-\end{itemize}
+The adaptive elastic net:
 \begin{align*}
-		\mathcal{S}(\bm{\beta}_i) &= -2 \ell_i(\bm{\beta}_i) + \mathcal{J}_2(\bm{\beta}_i) \notag \\
-		&= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\}   \notag \\
-		&+ \alpha_i \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} \notag \\
-		&+ (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2 \notag
+  \mathcal{S}(\bm{\beta}_i) &= -2 \ell_i(\bm{\beta}_i) + \mathcal{J}_2(\bm{\beta}_i) \\
+  &= \sum_{i'=1}^n w_{ii'}  \left\{ \log{\sigma^2_i}  + \left(\sigma^2_i\right)^{-1}  \left(y_{i'} - \bm{x}'_{i'} \bm{\beta}_i \right)^2 \right\} \\
+  &+ \alpha_i \lambda_i \sum_{j=1}^p |\beta_{ij}| / |\gamma_{ij}| \\
+  &+ (1-\alpha_i) \lambda_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2
 \end{align*}
 
-\note{The geographically weighted adaptive elastic net (GWEN) overcomes these shortcomings of the GWL. 
+Where 
 
-The adaptive elastic net consists of applying a different penalty to each covariate based on the adaptive weights, which are derived from traditional GWR's weighted least squares coefficients.
+\begin{align*}
+  \bm{\gamma}_i = \left( \bm{X}' \bm{W}_i \bm{X} \right)^{-1} \bm{X}' \bm{W}_i \bm{Y}
+\end{align*}
 
-S here is the penalized likelihood for a local GWEN model
+\note{The adaptive elastic net is a penalized regression technique that applies a different penalty to each covariate based on adaptive weights, which are derived from traditional GWR's weighted least squares coefficients.
 
-The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\right)'$ are defined in the same way as for the AL, and the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty $\lambda^*_i\sum \limits_{j=1}^p |\beta_{ij}| / \gamma_{ij}$ and $\ell_2$ penalty $\lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2$.
-}
+S here is the penalized likelihood for a local GWEN model. The elastic net incorporates both an $\ell_1$ and an $\ell_2$ penalty 
+
+The adaptive weights $\bm{\gamma}_i$ are defined in the same way as for the AL, and 
+
+the elastic net parameter $\alpha_i \in [0,1]$ controls the balance between $\ell_1$ penalty and $\ell_2$ penalty}
 \end{frame}
 
 
@@ -727,23 +750,22 @@ The adaptive weights $\bm{\gamma}_i = \left(\gamma_{i1}, \dots, \gamma_{ip}\righ
 
 
 \begin{frame}{Local variable selection and  parameter estimation}
-\subt{Geographically weighted adaptive elastic net (GWEN)}
+\subt{Geographically weighted adaptive elastic net (GWAL)}
 
 \bigskip
 \begin{itemize}
-  \item The AEN penalty function is
+  \item The adaptive Lasso penalty function is (Zou, 2006)
   \begin{align*}
-    \mathcal{J}_2(\bm{\beta}_i) = \alpha_i \lambda^*_i \sum_{j=1}^p |\beta_{ij}| / \gamma_{ij} + (1-\alpha_i) \lambda^*_i \sum_{j=1}^p  \left( \beta_{ij} / \gamma_{ij} \right)^2
+    \mathcal{J}_1(\bm{\beta}_i) = \lambda_i \sum_{j=1}^p |\beta_{ij}| / |\gamma_{ij}|
   \end{align*}
-    \item Under suitable conditions, the AEN has an oracle property for selection in linear regression
+    \item Under suitable conditions, the AL has an oracle property for selection in linear regression
 \end{itemize}
 
-\note{The GWEN uses the adaptive elastic net for variable selection, which has an oracle property under suitable conditions.
+\note{The geographically weighted adaptive lasso (GWAL) is a particular case of the GWEN that uses the adaptive lasso for variable selection.
 
-The adaptive elastic net consists of adding an L2 penalty to the regularization in addition to the L1 penalty of the adaptive lasso.
+The adaptive Lasso penalty consists of an L1 penalty with adaptive weights.
 
-The geographically weighted adaptive lasso (GWAL) is a particular case of the GWEN, with no $\ell_2$ penalty it uses the adaptive lasso for variable selection, which also has an oracle property under suitable conditions.
-}
+The adaptive lasso also has an oracle property under suitable conditions in linear regression.}
 \end{frame}
 
 
@@ -758,14 +780,14 @@ The geographically weighted adaptive lasso (GWAL) is a particular case of the GW
 To estimate an AEN tuning parameter for each local model, use a local BIC that allows fitting a local model at any location within the spatial domain
 	\begin{align*}
 		\mbox{BIC}_i &= -2 \sum_{i'=1}^n \ell_{ii'}  + \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i\\
-		&= \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log{ \left(\hat{\sigma}_i^2\right)} + \hat{\sigma}_i^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} \\
+		&= \sum_{i'=1}^n w_{ii'} \left\{ \log \left(2 \pi \right) + \log{ \left(\hat{\sigma}^2\right)} + \hat{\sigma}^{-2} \left(y_{i'} - \bm{x}_{i'}' \hat{\bm{\beta}}_{i'} \right)^2 \right\} \\
 		&+ \log \left( \sum_{i'=1}^n w_{ii'} \right) \mbox{df}_i
 	\end{align*}
 
 
 \note{Variable selection via the adaptive elastic net requires selecting the tuning parameter $\lambda$. For the GWEN, $\lambda$ is selected by the BIC.
 
-We treat the sum of the weights around the sampling location as the number of observations for the local BIC.
+We treat the sum of the weights around the sampling location as the number of observations for the local BIC. The number of variables selected for the model is the degrees of freedom of the local model.
 
 This BIC can be computed for a model at any location within the domain, allowing the GWEN to be used for imputing missing data or interpolating a model between observation locations.}
 \end{frame}
@@ -809,23 +831,18 @@ Letting $H_i = \bm{W}_i \bm{X}\left(\bm{X}'\bm{W}_i\bm{X}\right)^{-1}\bm{X}'$, w
 
   \item GWEN:
   \begin{itemize}
-    \item $\hat{\bm{y}} = \bm{H}^{*}\bm{y} + \bm{T}^{*}\bm{\gamma}$
+    \item $\hat{\bm{y}} = \bm{H}^{*}\bm{y} - \bm{T}$
+    \item Where $T_i = \left\{ \bm{W}_i^{1/2} \bm{X} \left(\bm{X}' \bm{W}_i \bm{X} + (1-\alpha)\lambda I_p\right)^{-1} \frac{\lambda_i}{\bm{\gamma}_i}\right\}_i$
   \end{itemize}  
   \item GWEN is not a linear smoother
-  \begin{itemize}
-    \item There is no projection matrix for GWEN so the degrees of freedom cannot be estimated by the trace of the projection matrix.
-  \end{itemize} 
   \item Solution: use GWEN for selection then fit local model for the selected variables via traditional GWR
-  \begin{itemize}
-    \item Now df $= \nu = $ tr$(\bm{H})$
-  \end{itemize} 
 \end{itemize}
 
 \note{As in the case of traditional GWR, it is necessary to estimate the bandwidth parameter for a GWEN model.
 
-We for traditional GWR we can use the corrected AIC or generalized cross validation. Both methods use the the trace of the projection matrix as the degrees of freedom for the model.
+For traditional GWR we can use the corrected AIC or generalized cross validation. Both methods use the the trace of the projection matrix as the degrees of freedom for the model.
 
-Because it incorporates an $\mathcal{L}_1$ penalty, the adaptive elastic net is not a linear smoother and so there is no projection matrix for a GWEN model.
+Because it incorporates an $\mathcal{L}_1$ penalty, the fitted values from the GWEN are note a linear combination of the observed response. So the adaptive elastic net is not a linear smoother and so there is no projection matrix for a GWEN model.
 
 For this reason, the GWEN is used for local variable selection and the coefficients of the resulting local model are fit using weighted least squares, as in traditional GWR.}
 \end{frame}
@@ -843,23 +860,29 @@ For this reason, the GWEN is used for local variable selection and the coefficie
   \begin{itemize}
     \item as in Nadaraya-Watson kernel smoother
     \item Leads to bias where there is a gradient at the boundary 
+    \item Counter with locally linear coefficients
   \end{itemize}
-  \item Solution: local polynomial modeling
-  \begin{itemize}
-    \item First-order polynomial: locally linear coefficients
-  \end{itemize}
-  \item Augment with covariate-by-location interactions
-  \begin{itemize}
-    \item Two-dimensional
-    \item Augment with selected covariates only
-  \end{itemize}
+  \item Augment with covariate-by-location interactions:
 \end{itemize}
+
+  \begin{align*}
+    Z_i = \left(\tilde{X}_i \;\; L_i\tilde{X}_i \;\; M_i\tilde{X}_i\right)
+  \end{align*}
+
+  Where
+  \begin{itemize}
+    \item $\tilde{X}_i$ is the matrix of covariates selected for the model at location $\bm{s}_i$
+    \item $L_i = \text{diag}\{s_{i',x} - s_{i,x}\}$ for $i' = 1, \dots, n$
+    \item $M_i = \text{diag}\{s_{i',y} - s_{i,y}\}$ for $i' = 1, \dots, n$
+  \end{itemize}
 
 \note{The traditional GWR fits models with locally constant coefficients, and can be thought of as a Nadaraya-Watson kernel smoother for the regression coefficients. Such a smoother is known to exhibit a "boundary effect", meaning that the smoother produces estimates that are biased near the boundary of the domain, especially when there is a gradient at the boundary.
 
-To reduce the boundary effect, the GWEN and GWAL can be fit with coefficient estimates that are locally linear, rather than locally constant. This is done after variable selection by augmenting the selected covariates with covariate-by-coordinate interactions.
+To reduce the boundary effect, the GWEN can be fit with coefficient estimates that are locally linear, rather than locally constant. This is done after variable selection by augmenting the selected covariates with covariate-by-location interactions.
 
-The interactions are on both the x and y coordinates, so each covariate that is selected for the model will appear three times in the model.}
+The interactions are on both the x and y coordinates, so each covariate that is selected for the model will appear three times in the model.
+
+Now I'd like to discuss a simulation study.}
 \end{frame}
 
 
@@ -979,7 +1002,31 @@ Each setting simulated 100 times:
     \end{table}
 \note{The table lists the twelve settings for the simulation study, where once again the parameters being varied across the settings are the coefficient surface $\beta_1$, the amount of colinearity in the covariates, and the variance of the random noise.
 
-Each setting was simulated 100 times and each time, each of the following models was used to estimate the varying coefficient regression model:
+Each setting was simulated 100 times and each time, and...}
+\end{frame}
+
+
+
+
+\begin{frame}{Simulation study}
+\subt{Estimation methods}
+
+    \begin{table}[h!]
+        \begin{center}
+        \begin{tabular}{l|cc}
+method & selection & locally linear \\ 
+\hline
+GWR & NA & \\
+oracular GWR & oracle & x \\
+GWEN & GWEN & \\
+GWAL & GWAL & \\
+GWEN-LLE & GWEN & x\\
+GWAL-LLE & GWAL & x
+        \end{tabular}
+        \end{center}
+    \end{table}
+
+\note{The following methods were used to estimate the varying coefficient regression model:
 
 traditional GWR
 
@@ -993,6 +1040,9 @@ the GWEN with locally linear coefficients
 
 the GWAL with locally linear coefficients.}
 \end{frame}
+
+
+
 
 
 \begin{frame}{Simulation results}
@@ -1111,7 +1161,7 @@ First we will consider the variable selection results of the simulation.}
 \begin{itemize}
   \item GWEN selection (60 cases):
   \begin{itemize}
-    \item 21 with no false positives (3 came when $\sigma = 1$, 8 when $\rho = 0.5$)
+    \item 21 with no false positives
     \item 30 with no false negatives 
     \item 13 with neither
   \end{itemize}
@@ -1123,34 +1173,76 @@ First we will consider the variable selection results of the simulation.}
     \item 17 with neither
   \end{itemize}
 
-  \item Incerased noise variance led to worse selection performance
-  \item Increased colinearity in the covariates led to worse selection performance
+  \item Selection errors almost always below five percent
+  \item Worst false positive rate: 8\% at location three of the step function (GWEN selection)
+  \item Worst false negative rate: 13\% (same location, GWAL selection)
   \item No consistent difference between GWEN and GWAL
 \end{itemize}
 
-\note{note}
+\note{The GWEN and the GWAL seem to perform well in selection in the simulation.
+
+considering each simulation case to be a specific location for a specific setting,
+
+the GWEN produced 13 cases out of 60 with no selection errors over 100 simulations. The GWAL had 17 cases with no selection errors.
+
+Increased noise variance and Increased colinearity both led to worse selection performance
+
+Several of the cases without selection errors occurred for the settings with moderate colinearity. Only four of the cases without selection errors occurred in settings with high noise variance.
+}
 \end{frame}
 
 
 
 	
-	
+\begin{comment}
 \begin{frame}{Simulation results}
 \subt{Estimation performance}
 
+Best MSE$(\hat{\beta}_1)$ (out of 60 cases):
+
+    \begin{table}[h!]
+        \begin{center}
+        \begin{tabular}{l|c}
+method & count \\ 
+\hline
+GWR & 7\\
+oracular GWR & \textbf{38}\\
+GWEN & 11\\
+GWAL & 3\\
+GWEN-LLE & 5\\
+GWAL-LLE & 4
+        \end{tabular}
+        \end{center}
+    \end{table}
+
+\note{note}
+\end{frame}
+\end{comment}
+
+
+
+\begin{frame}{Simulation results}
+\subt{Estimation performance}
 
 \begin{itemize}
-  \item Oracular selection
+  \item Cases where oracular GWR clearly had the best performance
   \begin{itemize}
-    \item best MSE$(\hat{\beta}_1)$ in 38 of the 60 cases
+    \item Minimum MSE$(\hat{\beta}_1)$: 38 of 60
+    \item Minimum var$(\hat{\beta}_1)$: 44 of 60
   \end{itemize}
-
-  \item Generally small difference between GWR, oracular, GWEN-LLE, and GWAL-LLE\
-  \item Incerased noise variance led to worse estimation accuracy
-  \item Increased colinearity in the covariates led to worse estimation accuracy
+  \item Generally small differences between GWR, oracular GWR, GWEN-LLE, and GWAL-LLE
+  \item Methods with locally constant coefficients had larger bias at the boundaries
   \item Fitting $\hat{y}$: MSE nearest $\sigma^2$ split between GWAL-LLE, oracle, and GWR
 \end{itemize}
-\note{note}
+\note{The method or oracular selection produced the best performance in terms of the MSE in estimating $\beta_1$, producing the smallest MSE in 38 of the 60 summarized simulation locations. It also had the lowest variance of estimating $\beta_1$ for 44 of 60 cases.
+
+In most cases the estimation accuracy in terms of MSE was not much different between  GWR, oracular GWR, GWEN-LLE, and GWAL-LLE.
+
+At the boundaries of the domain, especially for the parabola coefficient function, the lower bias of the locally linear estimators led them to have lower MSE than the methods that fit locally constant coefficients.
+
+Incerased noise variance led to worse estimation accuracy
+
+Increased colinearity in the covariates led to worse estimation accuracy}
 \end{frame}
 	
 
@@ -1250,7 +1342,7 @@ The data is modeled using both traditional GWR and the GWEN with locally linear 
 
 \note{These are plots of the coefficients estimates from the model fit by the GWEN with locally linear coefficients.
 
-It is obvious by glancing at the plots that the GWEN has selected just a few covariates as being important predictors of the county level poverty rate.}
+The GWEN has selected just a few covariates as being important predictors of the county level poverty rate.}
 \end{frame}
 
 
@@ -1263,7 +1355,9 @@ It is obvious by glancing at the plots that the GWEN has selected just a few cov
   \ig[width=\textwidth]{../../figures/practice-talk/1970-GWEN-GWR-comparison}
 \end{center}
 
-\note{note}
+\note{This slide plots the estimates from the GWEN against those from traditional GWR. Each plot has a 1-1 line, along which the data points would lie if the GWEN and GWR produced identical results.
+
+The GWEN resulted in coefficient estimates that are less variable than traditional GWR.}
 \end{frame}
 
 
@@ -1274,7 +1368,7 @@ It is obvious by glancing at the plots that the GWEN has selected just a few cov
 
 \begin{itemize}
   \item Relatively constant compared to GWR
-  \item Services, "other professions" do not affect the poverty rate
+  \item Not associated with poverty rate: Services, "other professions" sector
   \item Manufacturing: negative coefficient everywhere
   \item Finance, insurance, and real estate negative coefficient everywhere
   \begin{itemize}
@@ -1302,7 +1396,7 @@ It is obvious by glancing at the plots that the GWEN has selected just a few cov
 
 \note{Some observations about the models produced by traditional GWR and the GWEN-LLE:
 
-The GWEN resulted in coefficient estimates that are less variable than traditional GWR. Employment in services and the "other professions" sectors did not affect the poverty rate anywhere, according to the GWEN.
+per the GWEN, Employment in services and the "other professions" sectors did not affect the poverty rate anywhere.
 
 Employment in manufacturing and finance were both associated with a decreased poverty rate across the entire domain. This was not dissimilar to the relationship estimated by traditional GWR.
 
@@ -1315,17 +1409,19 @@ Agricultural employment was a selected as a meaningful predictor of the poverty 
 
 \begin{frame}{Future work}
 \begin{itemize}
-    \item Apply the GWEN to models for non-Gaussian response variable
-    \item Incorporate spatial autocorrelation in the model
-    \item PalEON project: modeling and mapping tree biomass in the upper midwest
+  \item Apply the GWEN to models for non-Gaussian response variable
+  \item Investigate the asymptotic properties of the GWEN
+  \item Incorporate spatial autocorrelation in the model
+  \item PalEON project: modeling and mapping tree biomass in the upper midwest
 \end{itemize}
 \note{note}
 \end{frame}
 
 
 
-\begin{frame}{Acknowledgements}
+\begin{frame}{Thank you!}
 
+\note{Thank you all, that concludes my presentation. I'd like to especially acknowledge Jun for her patient work advising my research, and Katherine for her collaboration on the analysis of the county-level poverty data.}
 \end{frame}
 
 
