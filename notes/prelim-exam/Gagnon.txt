@@ -1,0 +1,16 @@
+Questions from Ron Gagnon during the prelim:
+
+ - Can the estimated coefficient surfaces be made to transition gradually to zero?
+ - How confident are we of the local selection results (how confident of zeros, non-zeros, and the regions where the transition occurs)?
+ - Why use AICc for bandwidth selection but BIC for local variable selection?
+ - Is there a BIC for the bandwidth?
+ - Why would a person use one of the AICc, BIC, or GCV over the others?
+ - Is there - or should there be - any spatial structure in the local Lasso tuning parameters?
+ - Is there ever a reason not to use locally linear estimation?
+ - Can the GWEN use the Lasso for shrinkage in addition to variable selection?
+ - Poverty data example: 
+  - Should counties be weighted by population for estimation and/or k-nearest neighbors?
+  - Are areas with "no effect" of mining employment that way because there are so few people employed in mining there?
+  - Validate by simulating individual people, aggregating them at county level, and then analyzing?
+  - Can prior weights be incorporated into the model? (e.g. var[logit(p)] is not independent of p)
+  - Incorporate negatively correlated covariates (e.g. more in manufacturing takes workers from agriculture) into the model?
