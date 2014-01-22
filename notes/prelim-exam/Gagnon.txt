@@ -14,3 +14,4 @@ Questions from Ron Gagnon during the prelim:
   - Validate by simulating individual people, aggregating them at county level, and then analyzing?
   - Can prior weights be incorporated into the model? (e.g. var[logit(p)] is not independent of p)
   - Incorporate negatively correlated covariates (e.g. more in manufacturing takes workers from agriculture) into the model?
+  - Are coefficients believable for rare occupations (e.g. mining)?
