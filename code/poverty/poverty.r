@@ -36,7 +36,7 @@ for (yr in years) {
     f = as.formula(paste("logitindpov ~ -1 + ", paste(predictors, collapse="+"), sep=""))
 
     #Lasso model
-    bw[['GWAL']][[year]] = gwglmnet.sel(formula=f, data=df, family='gaussian', alpha=1, coords=df[,c('x','y')], longlat=TRUE, mode.select='BIC', gweight=spherical, tol.bw=0.01, bw.method='knn', parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE, bw.select='AICc', resid.type='pearson')
+    bw[['GWAL']][[year]] = gwglmnet.sel(formula=f, data=df, family='gaussian', alpha=1, coords=df[,c('x','y')], longlat=TRUE, mode.select='AICc', gweight=spherical, tol.bw=0.01, bw.method='knn', parallel=TRUE, interact=FALSE, verbose=TRUE, shrunk.fit=TRUE, bw.select='AICc', resid.type='pearson')
     model[['GWAL']][[year]] = gwglmnet(formula=f, data=df, family='gaussian', alpha=1, coords=df[,c('x','y')], longlat=TRUE, N=1, mode.select='BIC', bw=bw[['GWAL']][[year]][['bw']], gweight=spherical, bw.method='knn', simulation=TRUE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
 
     #Elastic net model:
