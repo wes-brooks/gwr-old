@@ -1,30 +1,26 @@
+require(devtools)
+install_github('agLasso', 'wrbrooks')
+install_github('gwselect', 'wrbrooks', ref='agLasso')
+require(agLasso)
+require(gwselect)
 library(geoR)
-library(gwselect)
 library(doMC)
-library(spgwr)
 registerCores(n=3)
 
-seeds = as.vector(read.csv("seeds.csv", header=FALSE)[,1])
 B = 100
 N = 30
 coord = seq(0, 1, length.out=N)
 
 #Establish the simulation parameters
-#tau = rep(c(0.03, 0.1), each=9)
 tau = rep(c(0, 0.1), each=9)
 rho = rep(rep(c(0, 0.5, 0.8), each=3), times=2)
 sigma.tau = rep(c(0, 0.03, 0.1), times=6)
-b = 25
-#B1 = matrix(rep(ifelse(coord<=0.4, 0, ifelse(coord<0.6,5*(coord-0.4),1)), N), N, N)
-B1 = matrix(rep(coord, N), N, N)
-
-
 params = data.frame(tau, rho, sigma.tau)
 
+#This is the gradient function:
+B1 = matrix(rep(coord, N), N, N)
+
 #Read command-line parameters
-#args = commandArgs(trailingOnly=TRUE)
-#cluster = as.integer(args[1])
-#process = as.integer(args[2])
 cluster=NA
 process=2
 
@@ -33,7 +29,6 @@ setting = process %/% B + 1
 parameters = params[setting,]
 
 #Get two (independent) Gaussian random fields:
-set.seed(seeds[process+1])
 d1 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
 d2 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
 d3 = grf(n=N**2, grid='reg', cov.model='exponential', cov.pars=c(1,parameters[['tau']]))
@@ -72,6 +67,10 @@ Y = mu + epsilon
 sim = data.frame(Y=as.vector(Y), X1=as.vector(X1), X2=as.vector(X2), X3=as.vector(X3), X4=as.vector(X4), X5=as.vector(X5), loc.x, loc.y)
 fitloc = cbind(rep(seq(0,1, length.out=N), each=N), rep(seq(0,1, length.out=N), times=N))
 
+#Reduce the sample size
+indx = sample(1:900, 100)
+fitloc = fitloc[indx,]
+
 vars = as.vector(B1!=0)
 oracle = list()
 for (i in 1:N**2) { 
@@ -83,9 +82,9 @@ for (i in 1:N**2) {
 }
 
 #Find the optimal bandwidth and use it to generate a model:
-bw = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
-#bw=0.25
-ml = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='AIC', bw=bw, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
+bw = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AICc", range=c(0,1), gweight=bisquare, tol.bw=0.01, bw.method='knn', parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=TRUE, family='gaussian')
+bw=0.25
+ml = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], fit.loc=fitloc, longlat=FALSE, N=1, mode.select='AICc', bw=bw, gweight=bisquare, bw.method='knn', parallel=FALSE, interact=TRUE, verbose=TRUE, shrunk.fit=TRUE, family='gaussian', resid.type='pearson', simulation=TRUE)
 
 #oracle2 = lapply(1:900, function(x) {return(c("X1", "X2", "X3", "X4", "X5"))})
 #bw.gwr = gwlars.sel(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle2, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, method='dist', parallel=FALSE, interact=FALSE)
@@ -99,8 +98,9 @@ ml = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, coords=sim[,c('loc.x','loc.y')], longl
 #model.oracular = gwlars(Y~X1+X2+X3+X4+X5-1, data=sim, oracle=oracle, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='AIC', bw=bw.oracular, gweight=bisquare, tol=0.01, method='dist', simulation=TRUE, parallel=FALSE, interact=TRUE)
 
 
-bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
-mg = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, N=1, mode.select='AIC', bw=bw.glmnet, gweight=bisquare, tol=0.01, s=NULL, method='dist', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
+bw.glmnet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AICc", range=c(0,1), gweight=spherical, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
+bw=0.3
+mg = gwglmnet(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha=1, coords=sim[,c('loc.x','loc.y')], fit.loc=fitloc, longlat=FALSE, N=1, mode.select='AICc', bw=bw, gweight=spherical, tol=0.01, s=NULL, method='knn', simulation=TRUE, adapt=TRUE, precondition=FALSE, parallel=TRUE, interact=TRUE, verbose=TRUE, shrunk.fit=FALSE)
 
 #bw.enet = gwglmnet.sel(Y~X1+X2+X3+X4+X5-1, data=sim, family='gaussian', alpha='adaptive', coords=sim[,c('loc.x','loc.y')], longlat=FALSE, mode.select="AIC", range=c(0,1), gweight=bisquare, tol=0.01, s=NULL, method='dist', adapt=TRUE, precondition=FALSE, parallel=FALSE, interact=TRUE)
 #bw.enet=0.5
